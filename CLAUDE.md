@@ -4,14 +4,14 @@
 
 pnpm 전용. 루트에서 실행.
 
-| 명령 | 동작 |
-|---|---|
-| `pnpm dev:web` | 학생 앱 → localhost:3000 |
+| 명령             | 동작                       |
+| ---------------- | -------------------------- |
+| `pnpm dev:user`  | 학생 앱 → localhost:3000   |
 | `pnpm dev:admin` | 관리자 앱 → localhost:5173 |
-| `pnpm build` | 두 앱 빌드 |
-| `pnpm typecheck` | 두 앱 타입 검사 |
-| `pnpm lint` | 두 앱 린트 |
-| `pnpm format` | Prettier |
+| `pnpm build`     | 두 앱 빌드                 |
+| `pnpm typecheck` | 두 앱 타입 검사            |
+| `pnpm lint`      | 두 앱 린트                 |
+| `pnpm format`    | Prettier                   |
 
 작업 완료 전 필수:
 
@@ -26,7 +26,7 @@ DB 접근·인증·비즈니스 규칙은 전부 외부 Django. Route Handler에
 Server Action으로 쓰기를 처리하는 것 모두 금지.
 백엔드 변경이 필요하면 코드 대신 외부 팀에 넘길 요청 사항을 정리한다.
 
-**`apps/web`을 동적으로 만들지 않는다.**
+**`apps/user`을 동적으로 만들지 않는다.**
 `next build` 출력에서 학생용 라우트는 `○` 또는 `●`여야 한다. `ƒ`면 잘못된 것.
 빌드는 그대로 성공하므로 출력을 직접 확인할 것.
 
