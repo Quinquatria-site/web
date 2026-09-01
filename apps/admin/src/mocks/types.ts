@@ -54,6 +54,8 @@ export type PerformanceKind = 'celebrity' | 'student'
 
 export interface Performance {
   id: string
+  /** 운영자는 시간축으로 본다. 연예인·학우 구분은 화면을 가르지 않고 뱃지로 내린다 */
+  day: string
   kind: PerformanceKind
   /** 출연자명 */
   artist: string
@@ -68,6 +70,11 @@ export interface Notice {
   body: string
   /** 사용자 화면에 팝업으로 띄울지 */
   urgent: boolean
+  /**
+   * 팝업을 언제까지 띄울지. 없으면 끄러 오는 사람이 없어 계속 떠 있는다.
+   * ISO 시각 또는 빈 문자열(만료 없음)
+   */
+  expiresAt: string
   published: boolean
   createdAt: string
 }

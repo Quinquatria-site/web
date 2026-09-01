@@ -13,5 +13,8 @@ export function useFormFields<T extends Record<string, string>>(initial: T) {
       setValues((prev) => ({ ...prev, [name]: value })),
   })
 
-  return { values, bind }
+  const setField = (name: keyof T & string, value: string) =>
+    setValues((prev) => ({ ...prev, [name]: value }))
+
+  return { values, bind, setField }
 }

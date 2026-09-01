@@ -124,9 +124,16 @@ export const TRUCKS: FoodTruck[] = [
   },
 ]
 
+export const FESTIVAL_DAYS = [
+  { value: '2026-10-07', label: '10/7 (수)' },
+  { value: '2026-10-08', label: '10/8 (목)' },
+]
+
+/** 시간순으로 둔다. 운영자는 카테고리가 아니라 시간축으로 본다 */
 export const PERFORMANCES: Performance[] = [
   {
     id: 'f1',
+    day: '2026-10-07',
     kind: 'student',
     artist: '밴드 소나기',
     startsAt: '15:00',
@@ -135,6 +142,7 @@ export const PERFORMANCES: Performance[] = [
   },
   {
     id: 'f2',
+    day: '2026-10-07',
     kind: 'student',
     artist: '댄스동아리 HYPE',
     startsAt: '15:40',
@@ -143,6 +151,16 @@ export const PERFORMANCES: Performance[] = [
   },
   {
     id: 'f3',
+    day: '2026-10-07',
+    kind: 'student',
+    artist: '아카펠라 보이스',
+    startsAt: '16:20',
+    endsAt: '16:50',
+    stage: '대운동장',
+  },
+  {
+    id: 'f4',
+    day: '2026-10-07',
     kind: 'celebrity',
     artist: '미정 (라인업 공개 전)',
     startsAt: '19:00',
@@ -150,7 +168,17 @@ export const PERFORMANCES: Performance[] = [
     stage: '메인 스테이지',
   },
   {
-    id: 'f4',
+    id: 'f5',
+    day: '2026-10-08',
+    kind: 'student',
+    artist: '힙합동아리 CYPHER',
+    startsAt: '15:00',
+    endsAt: '15:40',
+    stage: '대운동장',
+  },
+  {
+    id: 'f6',
+    day: '2026-10-08',
     kind: 'celebrity',
     artist: '미정 (라인업 공개 전)',
     startsAt: '20:10',
@@ -165,6 +193,7 @@ export const NOTICES: Notice[] = [
     title: '우천 시 공연 일정 안내',
     body: '비가 오면 대운동장 공연은 학생회관 대강당으로 옮겨 진행합니다.',
     urgent: false,
+    expiresAt: '',
     published: true,
     createdAt: '2026-10-05',
   },
@@ -173,6 +202,7 @@ export const NOTICES: Notice[] = [
     title: '의무실 위치 안내',
     body: '의무실은 본관 1층 로비에 있습니다. 24시간 운영합니다.',
     urgent: false,
+    expiresAt: '',
     published: true,
     createdAt: '2026-10-06',
   },
@@ -181,6 +211,7 @@ export const NOTICES: Notice[] = [
     title: '주점 구역 입장 통제 안내',
     body: '안전을 위해 22시부터 주점 구역 신규 입장을 제한합니다.',
     urgent: true,
+    expiresAt: '2026-10-07 23:59',
     published: false,
     createdAt: '2026-10-07',
   },

@@ -94,3 +94,40 @@
   font: var(--seed-font-label-l6-regular);
   color: var(--seed-color-fg-neutral-muted);
 }
+
+.linkButton {
+  padding: var(--seed-dimension-x1) var(--seed-dimension-x2);
+  font: var(--seed-font-label-l5-bold);
+  color: var(--seed-color-fg-brand);
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--seed-dimension-x2);
+}
+
+.rowButton {
+  display: block;
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.sheetActions {
+  display: flex;
+  gap: var(--seed-dimension-x2);
+  width: 100%;
+}
+
+.sheetActions > * {
+  flex: 1;
+}
