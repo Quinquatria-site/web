@@ -11,11 +11,15 @@
     "typecheck": "tsc -b"
   },
   "dependencies": {
+    "@karrotmarket/react-monochrome-icon": "^1.26.0",
+    "@seed-design/css": "^2.6.1",
+    "@seed-design/react": "^2.4.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
+    "@seed-design/vite-plugin": "^2.1.0",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",

@@ -1,30 +1,37 @@
 ---
 name: ui-primitive
-description: apps/admin 의 src/ui/ 디자인 시스템 프리미티브를 규칙대로 만들거나 고친다. admin 에 버튼·인풋·모달·테이블·배지 같은 공용 컴포넌트를 추가할 때, 어떤 컴포넌트를 ui/ 와 components/ 중 어디에 둘지 판단할 때 사용한다.
+description: apps/admin 의 UI 컴포넌트를 SEED Design 우선으로 조달한다. admin 에 버튼·인풋·모달·테이블·배지 같은 공용 컴포넌트가 필요할 때, 어떤 컴포넌트를 SEED 에서 가져오고 어떤 것을 직접 만들지 판단할 때 사용한다.
 ---
 
-# admin UI 프리미티브
+# admin UI 컴포넌트
 
-`apps/admin/src/ui/` 에 디자인 시스템 프리미티브를 만든다.
-admin 은 Vite + React SPA 이고, 이 저장소의 tsconfig·eslint 설정이 아래 제약을 강제한다.
-설정 파일을 열어보지 않으면 모르는 것들이라, 모르고 짜면 반드시 걸린다.
+admin 은 당근의 SEED Design System 을 파일럿으로 쓰는 중이다.
+**있는 것을 다시 만들지 않는다.** 아래 순서를 지킨다.
 
-## 먼저: 여기가 맞는 자리인가
+## 1. SEED 에 있는지 먼저 확인
 
-**`src/ui/` 는 축제 도메인을 모른다.**
+```bash
+pnpm dlx @seed-design/cli@latest docs "<컴포넌트 이름>"
+```
 
-이름이나 props 에 "부스", "공연", "주점", "학생회", "타임테이블" 이 등장하면 `src/ui/` 가 아니다.
-`src/components/` 로 보낸다.
+있으면 가져온다. 소스가 `apps/admin/seed-design/ui/` 로 복사된다.
 
-| 가는 곳 | 예 |
-| ------- | -- |
-| `src/ui/` | `Table` — 컬럼 정의를 props 로 받는 범용 |
-| `src/components/` | `BoothTable` — 부스 스키마를 아는 조합물 |
+```bash
+pnpm dlx @seed-design/cli@latest add ui:<id>
+```
 
-판단이 애매하면 묻는다: **다른 프로젝트에 그대로 복사해서 쓸 수 있는가.**
-아니면 `components/` 다.
+id 는 케밥 케이스다. 문서 이름과 다를 수 있으니 위 `docs` 로 확인한다.
+`ui:text-field-input` 이 아니라 `ui:text-field` 인 식이다.
 
-## 파일 구조
+가져온 파일은 **수정하지 않는다.** CLI 가 다시 받을 때 덮어쓴다.
+동작을 바꿔야 하면 감싸는 컴포넌트를 `src/components/` 에 만든다.
+
+## 2. SEED 에 없으면 직접 만든다
+
+대표적으로 **Table 이 없다.** `pagination`, `table-pagination` 만 있다.
+목록 화면을 만들 때 이 결정을 다시 해야 한다.
+
+직접 만들 때는 `src/ui/<Name>/` 에 둔다.
 
 ```
 src/ui/<Name>/
@@ -34,64 +41,55 @@ src/ui/<Name>/
 └── index.ts
 ```
 
-`src/ui/index.ts` 배럴에 새 컴포넌트를 추가한다.
+### 도메인 무지 경계
 
-## 반드시 지킬 것
+**`src/ui/` 는 축제 도메인을 모른다.**
+이름이나 props 에 "부스", "공연", "주점", "학생회", "타임테이블" 이 나오면 `src/components/` 로 보낸다.
 
-이 저장소 설정이 강제하는 제약이다. 어기면 컴파일이나 린트에서 막힌다.
+| 가는 곳 | 예 |
+| ------- | -- |
+| `src/ui/` | `Table` — 컬럼 정의를 props 로 받는 범용 |
+| `src/components/` | `BoothTable` — 부스 스키마를 아는 조합물 |
 
-**enum 을 쓰지 않는다.** `tsconfig.app.json` 에 `erasableSyntaxOnly: true` 라 컴파일되지 않는다.
+애매하면 묻는다: 다른 프로젝트에 그대로 복사해 쓸 수 있는가. 아니면 `components/` 다.
+
+### 저장소 제약
+
+직접 만든 코드에만 적용된다. `seed-design/` 은 eslint 에서 제외돼 있다.
+
+**enum 을 쓰지 않는다.** `erasableSyntaxOnly: true` 라 컴파일되지 않는다.
 
 ```ts
 type Variant = 'primary' | 'secondary' | 'danger'   // O
-enum Variant { Primary, Secondary }                  // X — 컴파일 실패
+enum Variant { Primary }                             // X
 ```
 
 **컴포넌트 파일에서 컴포넌트가 아닌 값을 export 하지 않는다.**
 eslint `react-refresh/only-export-components` 에 걸린다. 타입 export 는 괜찮다.
-
-```ts
-// Button.tsx
-export type ButtonProps = { ... }        // O — 타입은 허용
-export const BUTTON_SIZES = [...]        // X — constants.ts 로 분리
-export default function Button() { ... }
-```
+상수는 `constants.ts` 로 분리한다.
 
 **타입 import 에 `import type` 을 명시한다.** `verbatimModuleSyntax: true`.
 
-```ts
-import type { ReactNode } from 'react'
-```
+## 3. 스타일은 SEED 토큰을 쓴다
 
-**색·간격·폰트를 하드코딩하지 않는다.** `src/styles/tokens.css` 의 CSS 변수만 쓴다.
+자체 `tokens.css` 를 만들지 않는다. `@seed-design/css` 가 CSS 변수를 이미 깔아둔다.
 
 ```css
-/* Button.module.css */
-.primary {
-  background: var(--color-brand);      /* O */
-  padding: var(--space-2) var(--space-4);
+.row {
+  background: var(--seed-color-bg-layer-default);
+  color: var(--seed-color-fg-neutral);
+  font: var(--seed-font-body-medium-default);
 }
-.bad { background: #4f46e5; padding: 8px; }   /* X */
 ```
 
-## 전제
-
-`src/ui/`, `src/styles/tokens.css` 가 아직 없으면 이 스킬을 쓸 수 없다.
-먼저 디자인 시스템 뼈대를 세워야 한다고 알리고, 무엇이 필요한지 말한다.
-
-- `src/styles/tokens.css` — 색·간격·반경·폰트 변수
-- `src/ui/index.ts` — 배럴
-- Vite 템플릿 잔해(`App.css`, `index.css`, `App.tsx` 카운터) 정리
-
-`src/ui/` 안에서 상대 경로가 깊어지면 path alias 를 제안하되,
-**`tsconfig.app.json` 의 `paths` 와 `vite.config.ts` 의 `resolve.alias` 를 반드시 같이 고친다.**
-한쪽만 고치면 타입 검사나 번들 중 하나가 조용히 깨진다.
+hex·px 하드코딩 금지. 쓸 변수를 모르면 `node_modules/@seed-design/css` 에서 찾는다.
 
 ## 검증
 
 ```bash
-pnpm --filter admin typecheck   # enum·import type 위반을 잡는다
-pnpm --filter admin lint        # react-refresh export 위반을 잡는다
+pnpm --filter admin typecheck   # enum·import type 위반
+pnpm --filter admin lint        # react-refresh export 위반
 ```
 
-둘 다 통과해야 끝이다. 그리고 새 컴포넌트 이름과 props 에 축제 도메인 용어가 없는지 다시 본다.
+둘 다 통과해야 끝이다. 그리고 새 컴포넌트가 `src/ui/` 에 있다면
+이름과 props 에 축제 용어가 없는지 다시 본다.
