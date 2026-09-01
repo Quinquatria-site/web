@@ -9,6 +9,21 @@
 
 `apps/user` 와 루트 설정 파일도 같은 이유로 건드리지 않는다.
 
+### 그래도 공통 파일을 고치게 되면
+
+팀이 승인해서 루트나 공유 설정을 수정하게 되면, **브랜치를 파기 전에 원격부터 확인한다.**
+
+```bash
+git fetch origin
+git rev-list --left-right --count main...origin/main
+```
+
+로컬 `main` 이 "up to date" 로 보여도 fetch 전에는 오래된 정보다.
+원격이 앞서 있으면 pull 한 뒤에 브랜치를 판다.
+다른 팀원이 먼저 고친 것을 오래된 시작점에서 덮어쓰는 사고를 막는다.
+
+`apps/admin` 안에서 끝나는 작업에는 해당하지 않는다.
+
 ## 워크로그
 
 `apps/admin/docs/worklog/<ISO주차>.md` 에 남긴다. 예: `2026-W36.md`
