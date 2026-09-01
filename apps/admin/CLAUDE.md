@@ -1,5 +1,21 @@
 # admin 작업 규칙
 
+## 작업 시작
+
+**항상 `dev` 를 최신으로 맞추고 시작한다.**
+
+```bash
+git switch dev
+git pull
+git switch -c <타입>/admin-<설명>
+```
+
+`dev` 가 작업 기준선이다. `main` 에서 브랜치를 따지 않는다.
+오래된 `dev` 에서 시작하면 남이 이미 고친 것 위에서 작업하게 되고,
+머지 시점에 충돌이 한꺼번에 몰린다.
+
+PR 도 `dev` 로 낸다. `main` 은 릴리즈 때만 받는다.
+
 ## 루트 CLAUDE.md 를 수정하지 않는다
 
 루트 `CLAUDE.md` 는 팀 공용 정책이다. admin 담당이 단독으로 편집하지 않는다.
@@ -15,14 +31,12 @@
 
 ```bash
 git fetch origin
-git rev-list --left-right --count main...origin/main
+git rev-list --left-right --count dev...origin/dev
 ```
 
-로컬 `main` 이 "up to date" 로 보여도 fetch 전에는 오래된 정보다.
+로컬 `dev` 가 "up to date" 로 보여도 fetch 전에는 오래된 정보다.
 원격이 앞서 있으면 pull 한 뒤에 브랜치를 판다.
 다른 팀원이 먼저 고친 것을 오래된 시작점에서 덮어쓰는 사고를 막는다.
-
-`apps/admin` 안에서 끝나는 작업에는 해당하지 않는다.
 
 ## 워크로그
 
