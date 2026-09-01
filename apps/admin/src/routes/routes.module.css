@@ -1,0 +1,96 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x6);
+  padding: var(--seed-dimension-x4) 0 var(--seed-dimension-x10);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x2);
+}
+
+.sectionTitle {
+  margin: 0;
+  padding: 0 var(--seed-dimension-x4);
+  font: var(--seed-font-title-t6-bold);
+  color: var(--seed-color-fg-neutral);
+}
+
+.inset {
+  padding: 0 var(--seed-dimension-x4);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x6);
+  padding: var(--seed-dimension-x5) var(--seed-dimension-x4) var(--seed-dimension-x10);
+}
+
+.row {
+  display: flex;
+  gap: var(--seed-dimension-x3);
+}
+
+.row > * {
+  flex: 1;
+}
+
+/* 편집 화면 하단 고정 저장 바 */
+.footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  gap: var(--seed-dimension-x2);
+  padding: var(--seed-dimension-x3) var(--seed-dimension-x4);
+  background: var(--seed-color-bg-layer-default);
+  border-top: 1px solid var(--seed-color-stroke-neutral-weak);
+}
+
+.footer > * {
+  flex: 1;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x2);
+  align-items: center;
+  padding: var(--seed-dimension-x16) var(--seed-dimension-x4);
+  font: var(--seed-font-body-b3-regular);
+  color: var(--seed-color-fg-neutral-muted);
+  text-align: center;
+}
+
+.muted {
+  font: var(--seed-font-body-b4-regular);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+.stat {
+  display: flex;
+  gap: var(--seed-dimension-x2);
+  padding: 0 var(--seed-dimension-x4);
+}
+
+.statCard {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--seed-dimension-x1);
+  padding: var(--seed-dimension-x3);
+  background: var(--seed-color-bg-layer-basement);
+  border-radius: var(--seed-radius-r4);
+}
+
+.statValue {
+  font: var(--seed-font-title-t4-bold);
+  color: var(--seed-color-fg-neutral);
+}
+
+.statLabel {
+  font: var(--seed-font-label-l6-regular);
+  color: var(--seed-color-fg-neutral-muted);
+}

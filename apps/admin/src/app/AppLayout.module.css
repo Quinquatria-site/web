@@ -1,0 +1,29 @@
+/* 데스크톱에서도 모바일 폭으로 고정한다.
+   SEED 가 모바일 앱용 디자인 시스템이라 터치 기준 크기를 그대로 살린다. */
+.page {
+  --app-viewport-width: 430px;
+
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--seed-color-bg-layer-basement);
+}
+
+/* 앱바와 탭바는 고정, 가운데 body 만 스크롤한다 */
+.viewport {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--app-viewport-width);
+  height: 100%;
+  overflow: hidden;
+  background: var(--seed-color-bg-layer-default);
+}
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}

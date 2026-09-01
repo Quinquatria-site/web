@@ -1,2 +1,6 @@
+export { AppBar } from './AppBar'
+export type { AppBarProps } from './AppBar'
+export { BottomTabBar } from './BottomTabBar'
+export type { BottomTab, BottomTabBarProps } from './BottomTabBar'
 export { Table } from './Table'
 export type { TableColumn, TableProps } from './Table'

@@ -1,0 +1,40 @@
+.canvas {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--seed-color-bg-layer-basement);
+  border: 1px dashed var(--seed-color-stroke-neutral-muted);
+  border-radius: var(--seed-radius-r4);
+}
+
+.hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--seed-dimension-x4);
+  font: var(--seed-font-body-b4-regular);
+  color: var(--seed-color-fg-neutral-muted);
+  text-align: center;
+}
+
+.pin {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--seed-dimension-x7);
+  height: var(--seed-dimension-x7);
+  padding: 0 var(--seed-dimension-x2);
+  font: var(--seed-font-label-l6-bold);
+  color: var(--seed-color-fg-neutral-inverted);
+  cursor: pointer;
+  background: var(--seed-color-bg-neutral-solid);
+  border: 0;
+  border-radius: var(--seed-radius-full);
+  transform: translate(-50%, -50%);
+}
+
+.selected {
+  background: var(--seed-color-bg-brand-solid);
+}

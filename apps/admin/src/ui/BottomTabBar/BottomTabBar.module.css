@@ -1,0 +1,25 @@
+.bar {
+  flex-shrink: 0;
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--seed-color-bg-layer-default);
+  border-top: 1px solid var(--seed-color-stroke-neutral-weak);
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x1);
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  font: var(--seed-font-label-l6-regular);
+  color: var(--seed-color-fg-neutral-muted);
+  text-decoration: none;
+}
+
+.active {
+  color: var(--seed-color-fg-brand);
+}
