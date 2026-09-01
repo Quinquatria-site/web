@@ -19,6 +19,49 @@ pnpm 전용. 루트에서 실행.
 pnpm typecheck && pnpm lint && pnpm build
 ```
 
+## 브랜치
+
+`<타입>/<범위>-<설명>` 형식.
+
+| 구분 | 값                                |
+| ---- | --------------------------------- |
+| 타입 | `feat`, `hotfix`, `docs`, `chore` |
+| 범위 | `admin`, `user`, `shared`         |
+
+```
+feat/admin-booth-form-design
+hotfix/user-timetable-scroll
+chore/shared-eslint-config
+```
+
+한 작업이 크면 범위 뒤를 쪼갠다.
+
+```
+feat/admin-booth-form-section-a
+feat/admin-booth-form-section-b
+```
+
+작업이 끝나면 `dev` 로 PR 을 낸다. 승인되면 머지한다.
+릴리즈 시점에 `dev` 를 `main` 으로 머지한다.
+
+`hotfix` 만 예외다. `dev` 를 거치지 않고 `main` 으로 바로 낸다.
+
+## 배포
+
+Vercel 프로젝트 2개. 앱마다 하나씩, Root Directory 로 구분한다.
+
+| 프로젝트 | Root Directory | 스택       |
+| -------- | -------------- | ---------- |
+| user     | `apps/user`    | Next.js    |
+| admin    | `apps/admin`   | Vite (SPA) |
+
+브랜치가 환경을 결정한다.
+
+| 브랜치 | 환경          |
+| ------ | ------------- |
+| `main` | 배포 서버     |
+| `dev`  | 스테이징 서버 |
+
 ## 금지
 
 **Next.js에 백엔드 로직을 넣지 않는다.**
