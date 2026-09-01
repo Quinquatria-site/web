@@ -3,3 +3,7 @@ node_modules
 dist
 out
 pnpm-lock.yaml
+
+# 벤더링한 원본 (수정하면 업스트림과 어긋난다)
+apps/admin/seed-design
+apps/admin/.claude/skills
