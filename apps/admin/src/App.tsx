@@ -1,101 +1,88 @@
 import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { ActionButton } from 'seed-design/ui/action-button'
+import { Callout } from 'seed-design/ui/callout'
+import { RadioSelectBoxItem, RadioSelectBoxRoot } from 'seed-design/ui/select-box'
+import { Switch } from 'seed-design/ui/switch'
+import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/text-field'
+import styles from './App.module.css'
+
+const CATEGORIES = [
+  { value: 'food', label: '음식', description: '조리·판매' },
+  { value: 'experience', label: '체험', description: '참여형 부스' },
+  { value: 'goods', label: '판매', description: '물품 판매' },
+  { value: 'exhibit', label: '전시', description: '작품·홍보' },
+]
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [name, setName] = useState('')
+  const [intro, setIntro] = useState('')
+  const [category, setCategory] = useState('food')
+  const [published, setPublished] = useState(false)
+
+  const nameInvalid = name.trim().length === 0
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button type="button" className="counter" onClick={() => setCount((count) => count + 1)}>
-          Count is {count}
-        </button>
-      </section>
+    <div className={styles.page}>
+      <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+        <h1 className={styles.heading}>부스 등록</h1>
 
-      <div className="ticks"></div>
+        <Callout description="SEED Design 파일럿 화면입니다. 저장은 아직 동작하지 않습니다." />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        <TextField
+          label="부스명"
+          description="축제 안내 페이지에 그대로 노출됩니다"
+          errorMessage="부스명을 입력해주세요"
+          invalid={nameInvalid}
+          showRequiredIndicator
+          value={name}
+          onValueChange={({ value }) => setName(value)}
+          maxGraphemeCount={20}
+        >
+          <TextFieldInput placeholder="예: 외대떡볶이" />
+        </TextField>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+        <TextField
+          label="소개"
+          description="학생들에게 보여줄 한두 문장"
+          value={intro}
+          onValueChange={({ value }) => setIntro(value)}
+          maxGraphemeCount={100}
+        >
+          <TextFieldTextarea placeholder="무엇을 파는 부스인지 적어주세요" />
+        </TextField>
+
+        <RadioSelectBoxRoot
+          label="분류"
+          columns={2}
+          value={category}
+          onValueChange={(value) => setCategory(value)}
+        >
+          {CATEGORIES.map((c) => (
+            <RadioSelectBoxItem
+              key={c.value}
+              value={c.value}
+              label={c.label}
+              description={c.description}
+            />
+          ))}
+        </RadioSelectBoxRoot>
+
+        <Switch
+          label="지금 공개"
+          checked={published}
+          onCheckedChange={(checked) => setPublished(checked)}
+        />
+
+        <div className={styles.actions}>
+          <ActionButton variant="neutralWeak" type="button">
+            취소
+          </ActionButton>
+          <ActionButton type="submit" disabled={nameInvalid}>
+            저장
+          </ActionButton>
+        </div>
+      </form>
+    </div>
   )
 }
 
