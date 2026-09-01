@@ -32,71 +32,73 @@ function App() {
 
   return (
     <div className={styles.page}>
-      <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
-        <h1 className={styles.heading}>부스 등록</h1>
+      <div className={styles.viewport}>
+        <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+          <h1 className={styles.heading}>부스 등록</h1>
 
-        <Callout description="SEED Design 파일럿 화면입니다. 저장은 아직 동작하지 않습니다." />
+          <Callout description="SEED Design 파일럿 화면입니다. 저장은 아직 동작하지 않습니다." />
 
-        <TextField
-          label="부스명"
-          description="축제 안내 페이지에 그대로 노출됩니다"
-          errorMessage="부스명을 입력해주세요"
-          invalid={nameInvalid}
-          showRequiredIndicator
-          value={name}
-          onValueChange={({ value }) => setName(value)}
-          maxGraphemeCount={20}
-        >
-          <TextFieldInput placeholder="예: 외대떡볶이" />
-        </TextField>
+          <TextField
+            label="부스명"
+            description="축제 안내 페이지에 그대로 노출됩니다"
+            errorMessage="부스명을 입력해주세요"
+            invalid={nameInvalid}
+            showRequiredIndicator
+            value={name}
+            onValueChange={({ value }) => setName(value)}
+            maxGraphemeCount={20}
+          >
+            <TextFieldInput placeholder="예: 외대떡볶이" />
+          </TextField>
 
-        <TextField
-          label="소개"
-          description="학생들에게 보여줄 한두 문장"
-          value={intro}
-          onValueChange={({ value }) => setIntro(value)}
-          maxGraphemeCount={100}
-        >
-          <TextFieldTextarea placeholder="무엇을 파는 부스인지 적어주세요" />
-        </TextField>
+          <TextField
+            label="소개"
+            description="학생들에게 보여줄 한두 문장"
+            value={intro}
+            onValueChange={({ value }) => setIntro(value)}
+            maxGraphemeCount={100}
+          >
+            <TextFieldTextarea placeholder="무엇을 파는 부스인지 적어주세요" />
+          </TextField>
 
-        <RadioSelectBoxRoot
-          label="분류"
-          columns={2}
-          value={category}
-          onValueChange={(value) => setCategory(value)}
-        >
-          {CATEGORIES.map((c) => (
-            <RadioSelectBoxItem
-              key={c.value}
-              value={c.value}
-              label={c.label}
-              description={c.description}
-            />
-          ))}
-        </RadioSelectBoxRoot>
+          <RadioSelectBoxRoot
+            label="분류"
+            columns={2}
+            value={category}
+            onValueChange={(value) => setCategory(value)}
+          >
+            {CATEGORIES.map((c) => (
+              <RadioSelectBoxItem
+                key={c.value}
+                value={c.value}
+                label={c.label}
+                description={c.description}
+              />
+            ))}
+          </RadioSelectBoxRoot>
 
-        <Switch
-          label="지금 공개"
-          checked={published}
-          onCheckedChange={(checked) => setPublished(checked)}
-        />
+          <Switch
+            label="지금 공개"
+            checked={published}
+            onCheckedChange={(checked) => setPublished(checked)}
+          />
 
-        <div className={styles.actions}>
-          <ActionButton variant="neutralWeak" type="button">
-            취소
-          </ActionButton>
-          <ActionButton type="submit" disabled={nameInvalid}>
-            저장
-          </ActionButton>
-        </div>
-      </form>
+          <div className={styles.actions}>
+            <ActionButton variant="neutralWeak" type="button">
+              취소
+            </ActionButton>
+            <ActionButton type="submit" disabled={nameInvalid}>
+              저장
+            </ActionButton>
+          </div>
+        </form>
 
-      <section className={styles.list}>
-        <h2 className={styles.heading}>부스 목록</h2>
-        <BoothTable booths={BOOTHS} />
-        <TablePagination totalItems={BOOTHS.length} />
-      </section>
+        <section className={styles.list}>
+          <h2 className={styles.heading}>부스 목록</h2>
+          <BoothTable booths={BOOTHS} />
+          <TablePagination totalItems={BOOTHS.length} />
+        </section>
+      </div>
     </div>
   )
 }
