@@ -6,6 +6,7 @@ import {
   IconMegaphoneLine,
 } from '@karrotmarket/react-monochrome-icon'
 import { Outlet, useMatches } from 'react-router'
+import { SnackbarProvider } from 'seed-design/ui/snackbar'
 import { AppBar, BottomTabBar, type BottomTab } from '../ui'
 import styles from './AppLayout.module.css'
 
@@ -33,14 +34,16 @@ export function AppLayout() {
     .find((value) => value?.title)
 
   return (
-    <div className={styles.page}>
-      <div className={styles.viewport}>
-        <AppBar title={handle?.title ?? ''} back={handle?.back} />
-        <main className={styles.body}>
-          <Outlet />
-        </main>
-        {!handle?.hideTabs && <BottomTabBar tabs={TABS} />}
+    <SnackbarProvider>
+      <div className={styles.page}>
+        <div className={styles.viewport}>
+          <AppBar title={handle?.title ?? ''} back={handle?.back} />
+          <main className={styles.body}>
+            <Outlet />
+          </main>
+          {!handle?.hideTabs && <BottomTabBar tabs={TABS} />}
+        </div>
       </div>
-    </div>
+    </SnackbarProvider>
   )
 }
