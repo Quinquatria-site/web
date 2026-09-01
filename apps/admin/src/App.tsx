@@ -3,7 +3,9 @@ import { ActionButton } from 'seed-design/ui/action-button'
 import { Callout } from 'seed-design/ui/callout'
 import { RadioSelectBoxItem, RadioSelectBoxRoot } from 'seed-design/ui/select-box'
 import { Switch } from 'seed-design/ui/switch'
+import { TablePagination } from 'seed-design/ui/table-pagination'
 import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/text-field'
+import { BoothTable, type Booth } from './components/BoothTable'
 import styles from './App.module.css'
 
 const CATEGORIES = [
@@ -11,6 +13,13 @@ const CATEGORIES = [
   { value: 'experience', label: '체험', description: '참여형 부스' },
   { value: 'goods', label: '판매', description: '물품 판매' },
   { value: 'exhibit', label: '전시', description: '작품·홍보' },
+]
+
+const BOOTHS: Booth[] = [
+  { id: '1', name: '외대떡볶이', category: 'food', club: '요리연구회', published: true },
+  { id: '2', name: '타로 점집', category: 'experience', club: '심리학회', published: true },
+  { id: '3', name: '과잠 굿즈', category: 'goods', club: '총학생회', published: false },
+  { id: '4', name: '사진전 「가을」', category: 'exhibit', club: '사진동아리', published: false },
 ]
 
 function App() {
@@ -82,6 +91,12 @@ function App() {
           </ActionButton>
         </div>
       </form>
+
+      <section className={styles.list}>
+        <h2 className={styles.heading}>부스 목록</h2>
+        <BoothTable booths={BOOTHS} />
+        <TablePagination totalItems={BOOTHS.length} />
+      </section>
     </div>
   )
 }

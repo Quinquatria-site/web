@@ -26,6 +26,12 @@ importers:
       '@seed-design/react':
         specifier: ^2.4.1
         version: 2.4.1(@seed-design/css@2.6.1)(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(embla-carousel@8.6.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@seed-design/react-pagination':
+        specifier: ^1.0.0
+        version: 1.0.0(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       react:
         specifier: ^19.2.8
         version: 19.2.8
@@ -873,6 +879,12 @@ packages:
 
   '@seed-design/react-navigation-menu@2.0.1':
     resolution: {integrity: sha512-96Rn0E/z4IcMowhw02f4074awjcl7wm80158GS2ncWDZYZUROrDTDGvNjJVT2wisIvR96JDT2vAK+G+1+Dk5Bw==}
+    peerDependencies:
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+
+  '@seed-design/react-pagination@1.0.0':
+    resolution: {integrity: sha512-uhgO10kwSzOmae/74nSWurHNCPEHOhkkzopOFnEf0hRW/mbIb5SGzGCO6rCLEnhwt5r8KESmO9LXgbcnZmAAkQ==}
     peerDependencies:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
@@ -3533,6 +3545,15 @@ snapshots:
       '@radix-ui/react-compose-refs': 1.1.5(@types/react@19.2.18)(react@19.2.8)
       '@seed-design/dom-utils': 2.1.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@seed-design/react-primitive': 2.0.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@seed-design/react-use-controllable-state': 2.0.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+    transitivePeerDependencies:
+      - '@types/react'
+
+  '@seed-design/react-pagination@1.0.0(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+    dependencies:
+      '@seed-design/dom-utils': 2.1.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@seed-design/react-use-controllable-state': 2.0.1(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)

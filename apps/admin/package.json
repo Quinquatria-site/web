@@ -14,6 +14,8 @@
     "@karrotmarket/react-monochrome-icon": "^1.26.0",
     "@seed-design/css": "^2.6.1",
     "@seed-design/react": "^2.4.1",
+    "@seed-design/react-pagination": "^1.0.0",
+    "clsx": "^2.1.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },

@@ -23,3 +23,11 @@
   gap: 8px;
   justify-content: flex-end;
 }
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x4);
+  max-width: 56rem;
+  margin: var(--seed-dimension-x16) auto 0;
+}
