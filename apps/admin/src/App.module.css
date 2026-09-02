@@ -1,15 +1,34 @@
+/* 데스크톱에서도 모바일 폭으로 고정한다.
+   SEED 가 모바일 앱용 디자인 시스템이라 터치 기준 크기를 그대로 살린다. */
 .page {
-  min-height: 100vh;
-  padding: 40px 24px;
+  --app-viewport-width: 430px;
+
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--seed-color-bg-layer-basement);
+}
+
+/* 창이 아니라 이 안쪽만 스크롤한다. 폰 화면처럼 높이가 고정된다. */
+.viewport {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x10);
+  width: 100%;
+  max-width: var(--app-viewport-width);
+  height: 100%;
+  padding: var(--seed-dimension-x8) var(--seed-dimension-x4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--seed-color-bg-layer-default);
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  max-width: 560px;
-  margin: 0 auto;
+  gap: var(--seed-dimension-x6);
 }
 
 .heading {
@@ -20,7 +39,7 @@
 
 .actions {
   display: flex;
-  gap: 8px;
+  gap: var(--seed-dimension-x2);
   justify-content: flex-end;
 }
 
@@ -28,6 +47,4 @@
   display: flex;
   flex-direction: column;
   gap: var(--seed-dimension-x4);
-  max-width: 56rem;
-  margin: var(--seed-dimension-x16) auto 0;
 }
