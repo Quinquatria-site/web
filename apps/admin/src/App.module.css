@@ -15,7 +15,9 @@
 .viewport {
   display: flex;
   flex-direction: column;
-  gap: var(--seed-dimension-x10);
+  gap: var(--seed-dimension-x3);
+  align-items: center;
+  justify-content: center;
   width: 100%;
   max-width: var(--app-viewport-width);
   height: 100%;
@@ -25,26 +27,15 @@
   background: var(--seed-color-bg-layer-default);
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--seed-dimension-x6);
-}
-
 .heading {
   margin: 0;
   font: var(--seed-font-title-t2-bold);
   color: var(--seed-color-fg-neutral);
 }
 
-.actions {
-  display: flex;
-  gap: var(--seed-dimension-x2);
-  justify-content: flex-end;
-}
-
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--seed-dimension-x4);
+.description {
+  margin: 0;
+  font: var(--seed-font-body-b3-regular);
+  color: var(--seed-color-fg-neutral-muted);
+  text-align: center;
 }
