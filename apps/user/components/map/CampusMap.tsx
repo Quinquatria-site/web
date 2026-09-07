@@ -16,6 +16,7 @@ import { SectionButton } from './SectionButton'
 import { BoothMarkers } from './BoothMarkers'
 import { BOOTHS, type Booth } from './booths'
 import { BoothSheet, peekHeight } from './BoothSheet'
+import { ZoomControl } from './ZoomControl'
 
 function FitToImage() {
   const map = useMap()
@@ -45,9 +46,21 @@ function MapClick({ onClick }: { onClick: () => void }) {
   return null
 }
 
+function ZoomWatcher({ onChange }: { onChange: (canIn: boolean, canOut: boolean) => void }) {
+  const map = useMapEvents({
+    zoomend: () => report(),
+    zoomlevelschange: () => report(),
+  })
+  const report = () =>
+    onChange(map.getZoom() < map.getMaxZoom() - 0.01, map.getZoom() > map.getMinZoom() + 0.01)
+  useEffect(report)
+  return null
+}
+
 export function CampusMap() {
   const [map, setMap] = useState<Map | null>(null)
   const [selected, setSelected] = useState<Booth | null>(null)
+  const [zoomable, setZoomable] = useState({ in: true, out: true })
 
   const selectBooth = (booth: Booth) => {
     setSelected(booth)
@@ -87,8 +100,23 @@ export function CampusMap() {
         <FitToImage />
         <BoothMarkers booths={BOOTHS} onSelect={selectBooth} />
         <MapClick onClick={() => setSelected(null)} />
+        <ZoomWatcher
+          onChange={(canIn, canOut) =>
+            setZoomable((prev) =>
+              prev.in === canIn && prev.out === canOut ? prev : { in: canIn, out: canOut },
+            )
+          }
+        />
       </MapContainer>
-      <SectionButton sections={SECTIONS} onSelect={moveTo} />
+      <div className="absolute right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-[1000] flex flex-col items-center gap-3">
+        <SectionButton sections={SECTIONS} onSelect={moveTo} />
+        <ZoomControl
+          onZoomIn={() => map?.zoomIn()}
+          onZoomOut={() => map?.zoomOut()}
+          canZoomIn={zoomable.in}
+          canZoomOut={zoomable.out}
+        />
+      </div>
       <BoothSheet booth={selected} onClose={() => setSelected(null)} />
     </div>
   )

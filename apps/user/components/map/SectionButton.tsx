@@ -20,7 +20,7 @@ export function SectionButton({ sections, onSelect }: Props) {
   }
 
   return (
-    <div className="absolute right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-[1000] flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2">
       {open && (
         <ul className="flex flex-col items-center gap-2">
           {sections.map((section) => (
