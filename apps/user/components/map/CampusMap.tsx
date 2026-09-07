@@ -5,6 +5,8 @@ import { CRS, type Map } from 'leaflet'
 import { ImageOverlay, MapContainer, useMap } from 'react-leaflet'
 import { IMAGE_BOUNDS, IMAGE_HEIGHT, IMAGE_URL, IMAGE_WIDTH, SECTIONS, toBounds } from './campus'
 import { SectionButton } from './SectionButton'
+import { BoothMarkers } from './BoothMarkers'
+import { BOOTHS } from './booths'
 
 function FitToImage() {
   const map = useMap()
@@ -58,6 +60,7 @@ export function CampusMap() {
       >
         <ImageOverlay url={IMAGE_URL} bounds={IMAGE_BOUNDS} />
         <FitToImage />
+        <BoothMarkers booths={BOOTHS} />
       </MapContainer>
       <SectionButton sections={SECTIONS} onSelect={moveTo} />
     </div>
