@@ -2,11 +2,20 @@
 
 import { useEffect, useState } from 'react'
 import { CRS, type Map } from 'leaflet'
-import { ImageOverlay, MapContainer, useMap } from 'react-leaflet'
-import { IMAGE_BOUNDS, IMAGE_HEIGHT, IMAGE_URL, IMAGE_WIDTH, SECTIONS, toBounds } from './campus'
+import { ImageOverlay, MapContainer, useMap, useMapEvents } from 'react-leaflet'
+import {
+  IMAGE_BOUNDS,
+  IMAGE_HEIGHT,
+  IMAGE_URL,
+  IMAGE_WIDTH,
+  SECTIONS,
+  toBounds,
+  toLatLng,
+} from './campus'
 import { SectionButton } from './SectionButton'
 import { BoothMarkers } from './BoothMarkers'
-import { BOOTHS } from './booths'
+import { BOOTHS, type Booth } from './booths'
+import { BoothSheet, peekHeight } from './BoothSheet'
 
 function FitToImage() {
   const map = useMap()
@@ -31,8 +40,24 @@ function FitToImage() {
   return null
 }
 
+function MapClick({ onClick }: { onClick: () => void }) {
+  useMapEvents({ click: onClick })
+  return null
+}
+
 export function CampusMap() {
   const [map, setMap] = useState<Map | null>(null)
+  const [selected, setSelected] = useState<Booth | null>(null)
+
+  const selectBooth = (booth: Booth) => {
+    setSelected(booth)
+    if (!map) return
+    const size = map.getSize()
+    // 시트에 가리지 않도록, 마커가 피크 시트 위쪽에 오게 지도를 위로 민다.
+    const limit = size.y - peekHeight(size.y) - 48
+    const point = map.latLngToContainerPoint(toLatLng(booth))
+    if (point.y > limit) map.panBy([0, point.y - limit])
+  }
 
   const moveTo = (id: (typeof SECTIONS)[number]['id'] | 'all') => {
     if (!map) return
@@ -60,9 +85,11 @@ export function CampusMap() {
       >
         <ImageOverlay url={IMAGE_URL} bounds={IMAGE_BOUNDS} />
         <FitToImage />
-        <BoothMarkers booths={BOOTHS} />
+        <BoothMarkers booths={BOOTHS} onSelect={selectBooth} />
+        <MapClick onClick={() => setSelected(null)} />
       </MapContainer>
       <SectionButton sections={SECTIONS} onSelect={moveTo} />
+      <BoothSheet booth={selected} onClose={() => setSelected(null)} />
     </div>
   )
 }
