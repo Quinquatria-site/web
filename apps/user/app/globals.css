@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'leaflet/dist/leaflet.css';
 
 @theme {
   --container-app: 430px;
@@ -10,4 +11,8 @@
 body {
   background: var(--color-canvas);
   color: var(--color-foreground);
+}
+
+.leaflet-container {
+  background: var(--color-canvas);
 }
