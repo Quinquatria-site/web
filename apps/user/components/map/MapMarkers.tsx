@@ -4,20 +4,20 @@ import { useEffect } from 'react'
 import { divIcon } from 'leaflet'
 import { Marker, useMap, useMapEvents } from 'react-leaflet'
 import { toLatLng } from './campus'
-import type { Booth } from './booths'
+import { markerLabel, type MapItem } from './items'
 
 const LABEL_ZOOM = 1
 
 type Props = {
-  booths: Booth[]
-  onSelect?: (booth: Booth) => void
+  items: MapItem[]
+  onSelect?: (item: MapItem) => void
 }
 
-function boothIcon(number: number) {
+function markerIcon(item: MapItem) {
   // divIcon 은 HTML 로 마커를 그린다. Leaflet 이 바깥 요소의 transform 으로 위치를 잡으므로 크기 조절은 안쪽 요소에 건다.
   return divIcon({
-    className: 'booth-marker',
-    html: `<span class="booth-marker__body"><span class="booth-marker__label">${number}</span></span>`,
+    className: `map-marker map-marker--${item.kind}`,
+    html: `<span class="map-marker__body"><span class="map-marker__label">${markerLabel(item)}</span></span>`,
     iconSize: [24, 24],
     iconAnchor: [12, 12],
   })
@@ -34,16 +34,16 @@ function OverviewClass() {
   return null
 }
 
-export function BoothMarkers({ booths, onSelect }: Props) {
+export function MapMarkers({ items, onSelect }: Props) {
   return (
     <>
       <OverviewClass />
-      {booths.map((booth) => (
+      {items.map((item) => (
         <Marker
-          key={booth.id}
-          position={toLatLng(booth)}
-          icon={boothIcon(booth.number)}
-          eventHandlers={{ click: () => onSelect?.(booth) }}
+          key={item.id}
+          position={toLatLng(item)}
+          icon={markerIcon(item)}
+          eventHandlers={{ click: () => onSelect?.(item) }}
         />
       ))}
     </>

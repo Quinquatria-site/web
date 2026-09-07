@@ -13,9 +13,12 @@ import {
   toLatLng,
 } from './campus'
 import { SectionButton } from './SectionButton'
-import { BoothMarkers } from './BoothMarkers'
-import { BOOTHS, type Booth } from './booths'
-import { BoothSheet, peekHeight } from './BoothSheet'
+import { MapMarkers } from './MapMarkers'
+import { BOOTHS } from './booths'
+import { PLACES } from './places'
+import type { MapItem, MarkerKind } from './items'
+import { DetailSheet, peekHeight } from './DetailSheet'
+import { FilterChips } from './FilterChips'
 import { ZoomControl } from './ZoomControl'
 
 function FitToImage() {
@@ -59,16 +62,21 @@ function ZoomWatcher({ onChange }: { onChange: (canIn: boolean, canOut: boolean)
 
 export function CampusMap() {
   const [map, setMap] = useState<Map | null>(null)
-  const [selected, setSelected] = useState<Booth | null>(null)
+  const [selected, setSelected] = useState<MapItem | null>(null)
+  const [filters, setFilters] = useState<Record<MarkerKind, boolean>>({
+    booth: true,
+    pub: true,
+    aid: true,
+  })
   const [zoomable, setZoomable] = useState({ in: true, out: true })
 
-  const selectBooth = (booth: Booth) => {
-    setSelected(booth)
+  const selectItem = (item: MapItem) => {
+    setSelected(item)
     if (!map) return
     const size = map.getSize()
     // 시트에 가리지 않도록, 마커가 피크 시트 위쪽에 오게 지도를 위로 민다.
     const limit = size.y - peekHeight(size.y) - 48
-    const point = map.latLngToContainerPoint(toLatLng(booth))
+    const point = map.latLngToContainerPoint(toLatLng(item))
     if (point.y > limit) map.panBy([0, point.y - limit])
   }
 
@@ -79,8 +87,16 @@ export function CampusMap() {
     map.flyToBounds(section ? toBounds(section.rect) : IMAGE_BOUNDS)
   }
 
+  const visibleItems = [...BOOTHS, ...PLACES].filter((item) => filters[item.kind])
+
   return (
     <div className="relative h-full w-full">
+      <div className="absolute inset-x-0 top-0 z-[1000]">
+        <FilterChips
+          active={filters}
+          onToggle={(kind) => setFilters((prev) => ({ ...prev, [kind]: !prev[kind] }))}
+        />
+      </div>
       <MapContainer
         ref={setMap}
         className="h-full w-full"
@@ -98,7 +114,7 @@ export function CampusMap() {
       >
         <ImageOverlay url={IMAGE_URL} bounds={IMAGE_BOUNDS} />
         <FitToImage />
-        <BoothMarkers booths={BOOTHS} onSelect={selectBooth} />
+        <MapMarkers items={visibleItems} onSelect={selectItem} />
         <MapClick onClick={() => setSelected(null)} />
         <ZoomWatcher
           onChange={(canIn, canOut) =>
@@ -117,7 +133,7 @@ export function CampusMap() {
           canZoomOut={zoomable.out}
         />
       </div>
-      <BoothSheet booth={selected} onClose={() => setSelected(null)} />
+      <DetailSheet item={selected} onClose={() => setSelected(null)} />
     </div>
   )
 }

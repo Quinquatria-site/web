@@ -7,7 +7,7 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from 'react'
-import type { Booth } from './booths'
+import { itemName, itemTitle, type MapItem } from './items'
 
 export type SheetStage = 'closed' | 'peek' | 'expanded'
 
@@ -31,7 +31,7 @@ type Drag = {
 }
 
 type Props = {
-  booth: Booth | null
+  item: MapItem | null
   onClose: () => void
 }
 
@@ -64,19 +64,19 @@ function applyOffset(
   dim.style.opacity = peek > 0 ? String(Math.min(1, Math.max(0, (peek - offset) / peek))) : '0'
 }
 
-export function BoothSheet({ booth, onClose }: Props) {
+export function DetailSheet({ item, onClose }: Props) {
   const sheetRef = useRef<HTMLDivElement>(null)
   const bodyRef = useRef<HTMLDivElement>(null)
   const dimRef = useRef<HTMLDivElement>(null)
   const drag = useRef<Drag | null>(null)
   const [stage, setStage] = useState<SheetStage>('closed')
-  const [shown, setShown] = useState<Booth | null>(booth)
-  const [prevBooth, setPrevBooth] = useState<Booth | null>(booth)
+  const [shown, setShown] = useState<MapItem | null>(item)
+  const [prevItem, setPrevItem] = useState<MapItem | null>(item)
 
-  if (booth !== prevBooth) {
-    setPrevBooth(booth)
-    if (booth) {
-      setShown(booth)
+  if (item !== prevItem) {
+    setPrevItem(item)
+    if (item) {
+      setShown(item)
       if (stage === 'closed') setStage('peek')
     } else {
       setStage('closed')
@@ -200,7 +200,8 @@ export function BoothSheet({ booth, onClose }: Props) {
     apply(snapPoints()[stage], true)
   }
 
-  const title = shown ? `${shown.section}구역 ${shown.number}번 부스` : ''
+  const title = shown ? itemTitle(shown) : ''
+  const name = shown ? itemName(shown) : ''
 
   return (
     <>
@@ -228,7 +229,7 @@ export function BoothSheet({ booth, onClose }: Props) {
         <header className="flex shrink-0 items-start justify-between gap-4 px-5 pt-1 pb-3">
           <div className="min-w-0">
             <p className="text-xs font-medium text-neutral-500">{title}</p>
-            <h2 className="truncate text-lg font-semibold text-foreground">부스 이름 (임시)</h2>
+            <h2 className="truncate text-lg font-semibold text-foreground">{name}</h2>
           </div>
           <button
             type="button"
@@ -248,13 +249,13 @@ export function BoothSheet({ booth, onClose }: Props) {
           }`}
         >
           <p>
-            부스 소개 문구가 들어갑니다. 지금은 임시 문구이며 API 연결 후 실제 내용으로 바뀝니다.
+            소개 문구가 들어갑니다. 지금은 임시 문구이며 API 연결 후 실제 내용으로 바뀝니다.
           </p>
           <dl className="mt-4 grid grid-cols-[4rem_1fr] gap-y-2">
             <dt className="text-neutral-500">운영 시간</dt>
             <dd>11:00 – 20:00 (임시)</dd>
             <dt className="text-neutral-500">위치</dt>
-            <dd>{shown ? `${shown.section}구역 ${shown.number}번` : ''}</dd>
+            <dd>{title}</dd>
             <dt className="text-neutral-500">주최</dt>
             <dd>학과·동아리 이름 (임시)</dd>
           </dl>
