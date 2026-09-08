@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from 'motion/react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
+import { DOCK_BOTTOM } from '@/libs/dock'
 import { useShell } from '@/hooks/use-shell'
 import { ArrowDownIcon, ArrowUpIcon } from './icons'
 import { DOCK_HOME, DOCK_ITEMS } from './routes'
@@ -41,8 +42,8 @@ export function FloatingNavigation() {
   return (
     // 가운데 ↔ 우측 이동은 이 줄의 정렬만 바꾸고, 실제 움직임은 layout 이 그린다
     <div
-      className="pointer-events-none absolute inset-x-0 bottom-[calc(1.25rem+env(safe-area-inset-bottom))] z-[1000] flex px-4"
-      style={{ justifyContent: atLanding ? 'center' : 'flex-end' }}
+      className="pointer-events-none absolute inset-x-0 z-[1000] flex px-4"
+      style={{ bottom: DOCK_BOTTOM, justifyContent: atLanding ? 'center' : 'flex-end' }}
     >
       {/* layout 이 위치와 폭 변화를 transform 으로 이어 그린다 */}
       <motion.nav

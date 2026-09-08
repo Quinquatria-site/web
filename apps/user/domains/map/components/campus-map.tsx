@@ -1,12 +1,20 @@
 'use client'
 
-import { CRS } from 'leaflet'
-import { useEffect } from 'react'
+import { CRS, type Map } from 'leaflet'
+import { useEffect, useState } from 'react'
 import { ImageOverlay, MapContainer, useMap } from 'react-leaflet'
 import { BOOTHS } from '@/mocks/booths'
-import { IMAGE_BOUNDS, IMAGE_HEIGHT, IMAGE_URL, IMAGE_WIDTH } from '../libs/campus'
+import {
+  boundsFromSource,
+  IMAGE_BOUNDS,
+  IMAGE_HEIGHT,
+  IMAGE_URL,
+  IMAGE_WIDTH,
+  ZONES,
+} from '../libs/campus'
 import { BoothMarkers } from './booth-markers'
 import { CoordinatePicker } from './coordinate-picker'
+import { ZoneTier, type ZoneSelection } from './zone-tier'
 import 'leaflet/dist/leaflet.css'
 
 function FitToImage() {
@@ -33,9 +41,20 @@ function FitToImage() {
 }
 
 export function CampusMap() {
+  const [map, setMap] = useState<Map | null>(null)
+  const [zone, setZone] = useState<ZoneSelection>('all')
+
+  function moveTo(next: ZoneSelection) {
+    setZone(next)
+    const found = ZONES.find((candidate) => candidate.id === next)
+    // 범위만 주면 줌은 Leaflet 이 계산한다. flyTo 계열이라 부드럽게 이동한다.
+    map?.flyToBounds(found ? boundsFromSource(found.rect) : IMAGE_BOUNDS, { padding: [24, 24] })
+  }
+
   return (
     <div className="relative h-full w-full">
       <MapContainer
+        ref={setMap}
         className="h-full w-full bg-surface"
         // 위경도 대신 평면 픽셀 좌표계를 쓴다.
         crs={CRS.Simple}
@@ -54,6 +73,7 @@ export function CampusMap() {
         <BoothMarkers booths={BOOTHS} />
         {process.env.NODE_ENV === 'development' && <CoordinatePicker />}
       </MapContainer>
+      <ZoneTier selected={zone} onSelect={moveTo} />
     </div>
   )
 }

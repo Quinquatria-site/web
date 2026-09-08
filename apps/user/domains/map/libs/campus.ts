@@ -12,6 +12,16 @@ export function toLatLng({ x, y }: Point): LatLngTuple {
   return [IMAGE_HEIGHT - y, x]
 }
 
+export type ZoneId = 'A' | 'B' | 'C' | 'D'
+
+/** 구역 사각형도 부스와 같은 배치 도면 좌표계다. */
+export const ZONES: { id: ZoneId; rect: Rect }[] = [
+  { id: 'A', rect: { x: 73, y: 44, width: 92, height: 61 } },
+  { id: 'B', rect: { x: 59, y: 118, width: 67, height: 120 } },
+  { id: 'C', rect: { x: 127, y: 100, width: 136, height: 24 } },
+  { id: 'D', rect: { x: 253, y: 56, width: 64, height: 45 } },
+]
+
 export function toBounds({ x, y, width, height }: Rect): LatLngBoundsExpression {
   return [toLatLng({ x, y: y + height }), toLatLng({ x: x + width, y })]
 }
@@ -34,4 +44,15 @@ export const FIT = {
 
 export function fromSource({ x, y }: Point): Point {
   return { x: x * FIT.scaleX + FIT.offsetX, y: y * FIT.scaleY + FIT.offsetY }
+}
+
+export function boundsFromSource({ x, y, width, height }: Rect): LatLngBoundsExpression {
+  const start = fromSource({ x, y })
+  const end = fromSource({ x: x + width, y: y + height })
+  return toBounds({
+    x: start.x,
+    y: start.y,
+    width: end.x - start.x,
+    height: end.y - start.y,
+  })
 }
