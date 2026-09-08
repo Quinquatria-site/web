@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { ShellContext, type DockPhase } from '@/shared/hooks/use-shell'
+import { ShellContext, type DockPhase } from '@/hooks/use-shell'
 
 export function AppShell({ children, nav }: { children: ReactNode; nav: ReactNode }) {
   const scrollRef = useRef<HTMLDivElement>(null)
