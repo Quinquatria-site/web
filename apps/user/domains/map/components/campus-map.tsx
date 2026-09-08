@@ -21,6 +21,7 @@ import { CoordinatePicker } from './coordinate-picker'
 import { DetailSheet, peekHeight } from './detail-sheet'
 import type { MapItem, MarkerKind } from '../libs/items'
 import { ZoneTier, type ZoneSelection } from './zone-tier'
+import { ZoomControl } from './zoom-control'
 import 'leaflet/dist/leaflet.css'
 
 function FitToImage() {
@@ -46,6 +47,18 @@ function FitToImage() {
   return null
 }
 
+// 줌이 한계에 닿았는지 알려, 버튼을 흐리게 만든다. FitToImage 가 최소 줌을 정할 때도 함께 불린다.
+function ZoomWatcher({ onChange }: { onChange: (state: { in: boolean; out: boolean }) => void }) {
+  const map = useMapEvents({ zoomend: sync, zoomlevelschange: sync })
+  function sync() {
+    onChange({
+      in: map.getZoom() < map.getMaxZoom() - 0.01,
+      out: map.getZoom() > map.getMinZoom() + 0.01,
+    })
+  }
+  return null
+}
+
 // 지도의 빈 곳을 누르면 열려 있던 시트를 닫는다.
 function MapClick({ onClick }: { onClick: () => void }) {
   useMapEvents({ click: onClick })
@@ -56,6 +69,7 @@ export function CampusMap() {
   const [map, setMap] = useState<Map | null>(null)
   const [zone, setZone] = useState<ZoneSelection>('all')
   const [selected, setSelected] = useState<MapItem | null>(null)
+  const [zoomable, setZoomable] = useState({ in: true, out: false })
   const [filters, setFilters] = useState<Record<MarkerKind, boolean>>({
     booth: true,
     pub: true,
@@ -105,11 +119,22 @@ export function CampusMap() {
         <FitToImage />
         <MapMarkers items={items} onSelect={selectItem} />
         <MapClick onClick={() => setSelected(null)} />
+        <ZoomWatcher
+          onChange={(next) =>
+            setZoomable((prev) => (prev.in === next.in && prev.out === next.out ? prev : next))
+          }
+        />
         {process.env.NODE_ENV === 'development' && <CoordinatePicker />}
       </MapContainer>
       <FilterChips
         active={filters}
         onToggle={(kind) => setFilters((prev) => ({ ...prev, [kind]: !prev[kind] }))}
+      />
+      <ZoomControl
+        onZoomIn={() => map?.zoomIn()}
+        onZoomOut={() => map?.zoomOut()}
+        canZoomIn={zoomable.in}
+        canZoomOut={zoomable.out}
       />
       <ZoneTier selected={zone} onSelect={moveTo} />
       <DetailSheet item={selected} onClose={() => setSelected(null)} />
