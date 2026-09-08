@@ -3,7 +3,8 @@
 import { CRS, type Map } from 'leaflet'
 import { useEffect, useState } from 'react'
 import { ImageOverlay, MapContainer, useMap, useMapEvents } from 'react-leaflet'
-import { BOOTHS, type Booth } from '@/mocks/booths'
+import { BOOTHS } from '@/mocks/booths'
+import { PLACES } from '@/mocks/places'
 import {
   boundsFromSource,
   fromSource,
@@ -14,9 +15,11 @@ import {
   toLatLng,
   ZONES,
 } from '../libs/campus'
-import { BoothMarkers } from './booth-markers'
+import { FilterChips } from './filter-chips'
+import { MapMarkers } from './map-markers'
 import { CoordinatePicker } from './coordinate-picker'
 import { DetailSheet, peekHeight } from './detail-sheet'
+import type { MapItem, MarkerKind } from '../libs/items'
 import { ZoneTier, type ZoneSelection } from './zone-tier'
 import 'leaflet/dist/leaflet.css'
 
@@ -52,15 +55,25 @@ function MapClick({ onClick }: { onClick: () => void }) {
 export function CampusMap() {
   const [map, setMap] = useState<Map | null>(null)
   const [zone, setZone] = useState<ZoneSelection>('all')
-  const [selected, setSelected] = useState<Booth | null>(null)
+  const [selected, setSelected] = useState<MapItem | null>(null)
+  const [filters, setFilters] = useState<Record<MarkerKind, boolean>>({
+    booth: true,
+    pub: true,
+    aid: true,
+  })
 
-  function selectBooth(booth: Booth) {
-    setSelected(booth)
+  const items: MapItem[] = [
+    ...BOOTHS.map((booth) => ({ ...booth, kind: 'booth' as const })),
+    ...PLACES,
+  ].filter((item) => filters[item.kind])
+
+  function selectItem(item: MapItem) {
+    setSelected(item)
     if (!map) return
     const size = map.getSize()
     // 시트에 가리지 않도록, 마커가 살짝 올라온 시트 위쪽에 오게 지도를 민다.
     const limit = size.y - peekHeight(size.y) - 48
-    const point = map.latLngToContainerPoint(toLatLng(fromSource(booth)))
+    const point = map.latLngToContainerPoint(toLatLng(fromSource(item)))
     if (point.y > limit) map.panBy([0, point.y - limit])
   }
 
@@ -90,12 +103,16 @@ export function CampusMap() {
       >
         <ImageOverlay url={IMAGE_URL} bounds={IMAGE_BOUNDS} />
         <FitToImage />
-        <BoothMarkers booths={BOOTHS} onSelect={selectBooth} />
+        <MapMarkers items={items} onSelect={selectItem} />
         <MapClick onClick={() => setSelected(null)} />
         {process.env.NODE_ENV === 'development' && <CoordinatePicker />}
       </MapContainer>
+      <FilterChips
+        active={filters}
+        onToggle={(kind) => setFilters((prev) => ({ ...prev, [kind]: !prev[kind] }))}
+      />
       <ZoneTier selected={zone} onSelect={moveTo} />
-      <DetailSheet booth={selected} onClose={() => setSelected(null)} />
+      <DetailSheet item={selected} onClose={() => setSelected(null)} />
     </div>
   )
 }

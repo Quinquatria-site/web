@@ -7,7 +7,7 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from 'react'
-import type { Booth } from '@/mocks/booths'
+import { itemName, itemTitle, type MapItem } from '../libs/items'
 
 export type SheetStage = 'closed' | 'peek' | 'expanded'
 
@@ -63,20 +63,20 @@ function applyOffset(
   dim.style.opacity = peek > 0 ? String(Math.min(1, Math.max(0, (peek - offset) / peek))) : '0'
 }
 
-export function DetailSheet({ booth, onClose }: { booth: Booth | null; onClose: () => void }) {
+export function DetailSheet({ item, onClose }: { item: MapItem | null; onClose: () => void }) {
   const sheetRef = useRef<HTMLDivElement>(null)
   const bodyRef = useRef<HTMLDivElement>(null)
   const dimRef = useRef<HTMLDivElement>(null)
   const drag = useRef<Drag | null>(null)
   const [stage, setStage] = useState<SheetStage>('closed')
-  // 닫히는 동안에도 내용이 남아 있어야 해서 마지막으로 연 부스를 따로 들고 있는다.
-  const [shown, setShown] = useState<Booth | null>(booth)
-  const [prev, setPrev] = useState<Booth | null>(booth)
+  // 닫히는 동안에도 내용이 남아 있어야 해서 마지막으로 연 항목을 따로 들고 있는다.
+  const [shown, setShown] = useState<MapItem | null>(item)
+  const [prev, setPrev] = useState<MapItem | null>(item)
 
-  if (booth !== prev) {
-    setPrev(booth)
-    if (booth) {
-      setShown(booth)
+  if (item !== prev) {
+    setPrev(item)
+    if (item) {
+      setShown(item)
       if (stage === 'closed') setStage('peek')
     } else {
       setStage('closed')
@@ -200,7 +200,8 @@ export function DetailSheet({ booth, onClose }: { booth: Booth | null; onClose: 
     settle(next)
   }
 
-  const title = shown ? `${shown.zone}구역 ${shown.number}번` : ''
+  const title = shown ? itemTitle(shown) : ''
+  const name = shown ? itemName(shown) : ''
 
   return (
     <>
@@ -231,7 +232,7 @@ export function DetailSheet({ booth, onClose }: { booth: Booth | null; onClose: 
         <header className="flex shrink-0 items-start justify-between gap-4 px-5 pt-1 pb-4">
           <div className="min-w-0">
             <p className="text-xs font-medium text-ink-muted">{title}</p>
-            <h2 className="truncate text-lg font-semibold">[부스 이름]</h2>
+            <h2 className="truncate text-lg font-semibold">{name}</h2>
           </div>
           <button
             type="button"
@@ -263,10 +264,14 @@ export function DetailSheet({ booth, onClose }: { booth: Booth | null; onClose: 
           <dl className="grid grid-cols-[4.5rem_1fr] gap-y-2">
             <dt className="text-ink-muted">운영 시간</dt>
             <dd>[운영 시간]</dd>
-            <dt className="text-ink-muted">위치</dt>
-            <dd>{title}</dd>
-            <dt className="text-ink-muted">주최</dt>
-            <dd>[학과 · 동아리]</dd>
+            {shown?.kind === 'booth' && (
+              <>
+                <dt className="text-ink-muted">위치</dt>
+                <dd>{title}</dd>
+                <dt className="text-ink-muted">주최</dt>
+                <dd>[학과 · 동아리]</dd>
+              </>
+            )}
           </dl>
           <div className="mt-5 flex h-[420px] items-center justify-center rounded-2xl border border-line bg-surface-muted text-ink-muted">
             상세 설명 자리
