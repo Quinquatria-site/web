@@ -1,5 +1,9 @@
-import { PageHeader } from '@/components/page-header'
+import { CampusMapLoader } from '@/domains/map/components/campus-map-loader'
 
 export default function Page() {
-  return <PageHeader title="캠퍼스 지도" description="부스 · 화장실 · 쓰레기통 위치" />
+  return (
+    <div className="h-full">
+      <CampusMapLoader />
+    </div>
+  )
 }
