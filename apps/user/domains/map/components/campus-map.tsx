@@ -2,18 +2,21 @@
 
 import { CRS, type Map } from 'leaflet'
 import { useEffect, useState } from 'react'
-import { ImageOverlay, MapContainer, useMap } from 'react-leaflet'
-import { BOOTHS } from '@/mocks/booths'
+import { ImageOverlay, MapContainer, useMap, useMapEvents } from 'react-leaflet'
+import { BOOTHS, type Booth } from '@/mocks/booths'
 import {
   boundsFromSource,
+  fromSource,
   IMAGE_BOUNDS,
   IMAGE_HEIGHT,
   IMAGE_URL,
   IMAGE_WIDTH,
+  toLatLng,
   ZONES,
 } from '../libs/campus'
 import { BoothMarkers } from './booth-markers'
 import { CoordinatePicker } from './coordinate-picker'
+import { DetailSheet, peekHeight } from './detail-sheet'
 import { ZoneTier, type ZoneSelection } from './zone-tier'
 import 'leaflet/dist/leaflet.css'
 
@@ -40,9 +43,26 @@ function FitToImage() {
   return null
 }
 
+// 지도의 빈 곳을 누르면 열려 있던 시트를 닫는다.
+function MapClick({ onClick }: { onClick: () => void }) {
+  useMapEvents({ click: onClick })
+  return null
+}
+
 export function CampusMap() {
   const [map, setMap] = useState<Map | null>(null)
   const [zone, setZone] = useState<ZoneSelection>('all')
+  const [selected, setSelected] = useState<Booth | null>(null)
+
+  function selectBooth(booth: Booth) {
+    setSelected(booth)
+    if (!map) return
+    const size = map.getSize()
+    // 시트에 가리지 않도록, 마커가 살짝 올라온 시트 위쪽에 오게 지도를 민다.
+    const limit = size.y - peekHeight(size.y) - 48
+    const point = map.latLngToContainerPoint(toLatLng(fromSource(booth)))
+    if (point.y > limit) map.panBy([0, point.y - limit])
+  }
 
   function moveTo(next: ZoneSelection) {
     setZone(next)
@@ -70,10 +90,12 @@ export function CampusMap() {
       >
         <ImageOverlay url={IMAGE_URL} bounds={IMAGE_BOUNDS} />
         <FitToImage />
-        <BoothMarkers booths={BOOTHS} />
+        <BoothMarkers booths={BOOTHS} onSelect={selectBooth} />
+        <MapClick onClick={() => setSelected(null)} />
         {process.env.NODE_ENV === 'development' && <CoordinatePicker />}
       </MapContainer>
       <ZoneTier selected={zone} onSelect={moveTo} />
+      <DetailSheet booth={selected} onClose={() => setSelected(null)} />
     </div>
   )
 }
