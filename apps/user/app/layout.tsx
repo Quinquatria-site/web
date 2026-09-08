@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { FloatingNavigation } from '@/components/dock/floating-navigation'
 import { AppShell } from '@/components/app-shell'
 import './globals.css'
 
@@ -18,7 +19,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="ko" className="antialiased">
       <body>
-        <AppShell nav={null}>{children}</AppShell>
+        <AppShell nav={<FloatingNavigation />}>{children}</AppShell>
       </body>
     </html>
   )
