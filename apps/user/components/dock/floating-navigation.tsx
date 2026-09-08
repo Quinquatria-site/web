@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useShell } from '@/hooks/use-shell'
 import { ArrowDownIcon, ArrowUpIcon } from './icons'
-import { HOME_ITEM, PAGE_ITEMS } from './routes'
+import { DOCK_HOME, DOCK_ITEMS } from './routes'
 
 // dock 의 이동·폭 변화와 탭 인디케이터
 const SPRING = { type: 'spring', stiffness: 500, damping: 34 } as const
@@ -27,7 +27,7 @@ export function FloatingNavigation() {
   function handleMain() {
     // 다른 페이지에서는 홈으로 이동한다
     if (!isHome) {
-      router.push(HOME_ITEM.href)
+      router.push(DOCK_HOME.href)
       return
     }
     // 위 화살표는 랜딩 맨 위로, 아래 화살표는 랜딩 다음 섹션으로
@@ -53,7 +53,7 @@ export function FloatingNavigation() {
         {/* 홈을 벗어나면 왼쪽으로 펼쳐지고, 홈으로 돌아오면 오른쪽으로 접힌다 */}
         <AnimatePresence>
           {!isHome &&
-            PAGE_ITEMS.map((item, index) => {
+            DOCK_ITEMS.map((item, index) => {
               const active = pathname === item.href
               return (
                 <motion.div
@@ -65,7 +65,7 @@ export function FloatingNavigation() {
                   exit={{
                     width: 0,
                     opacity: 0,
-                    transition: { duration: 0.16, delay: (PAGE_ITEMS.length - 1 - index) * 0.03 },
+                    transition: { duration: 0.16, delay: (DOCK_ITEMS.length - 1 - index) * 0.03 },
                   }}
                   // 펼칠 때는 오른쪽 탭부터 한 박자씩 늦게 벌어진다
                   transition={{ ...SPRING, delay: index * 0.035 }}
@@ -101,7 +101,7 @@ export function FloatingNavigation() {
           layout
           type="button"
           onClick={handleMain}
-          aria-label={slot === 'up' ? '맨 위로' : slot === 'down' ? '아래로' : HOME_ITEM.label}
+          aria-label={slot === 'up' ? '맨 위로' : slot === 'down' ? '아래로' : DOCK_HOME.label}
           className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
         >
           {/* mode="wait" 라서 먼저 뿅 사라진 뒤에 다음 아이콘이 뿅 나타난다 */}
@@ -115,7 +115,7 @@ export function FloatingNavigation() {
               transition={POP}
               className="flex items-center justify-center"
             >
-              {slot === 'home' && <HOME_ITEM.Icon className="h-5 w-5 text-ink-muted" />}
+              {slot === 'home' && <DOCK_HOME.Icon className="h-5 w-5 text-ink-muted" />}
               {slot === 'up' && <ArrowUpIcon className="h-5 w-5 text-ink" />}
               {slot === 'down' && <ArrowDownIcon className="h-5 w-5 text-ink" />}
             </motion.span>

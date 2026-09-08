@@ -1,14 +1,14 @@
+import { HOME_ITEM, PAGE_ITEMS } from '@/libs/routes'
 import { HomeIcon, LostFoundIcon, MapIcon, NoticeIcon, TimelineIcon } from './icons'
 
-export const PAGE_ITEMS = [
-  { href: '/timeline', label: '타임라인', Icon: TimelineIcon },
-  { href: '/map', label: '캠퍼스 지도', Icon: MapIcon },
-  { href: '/notice', label: '공지사항', Icon: NoticeIcon },
-  { href: '/lost-found', label: '분실물', Icon: LostFoundIcon },
-] as const
-
-export const HOME_ITEM = {
-  href: '/',
-  label: '홈',
-  Icon: HomeIcon,
+// 아이콘은 dock 전용이다. 다른 화면은 같은 목록에 자기 아이콘을 얹는다.
+const ICONS = {
+  '/timeline': TimelineIcon,
+  '/map': MapIcon,
+  '/notice': NoticeIcon,
+  '/lost-found': LostFoundIcon,
 } as const
+
+export const DOCK_ITEMS = PAGE_ITEMS.map((item) => ({ ...item, Icon: ICONS[item.href] }))
+
+export const DOCK_HOME = { ...HOME_ITEM, Icon: HomeIcon }
