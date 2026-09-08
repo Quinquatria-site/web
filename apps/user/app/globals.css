@@ -1,16 +1,24 @@
 @import 'tailwindcss';
+@import './tokens.css';
 
 @theme {
-  --color-canvas: oklch(0.94 0 0);
-  --color-surface: oklch(1 0 0);
-  --color-surface-muted: oklch(0.968 0 0);
-  --color-line: oklch(0.9 0 0);
-  --color-ink: oklch(0.24 0 0);
-  --color-ink-muted: oklch(0.56 0 0);
-  --color-accent: oklch(0.3 0 0);
-  --color-accent-ink: oklch(0.99 0 0);
+  /* 역할 — 화면에서는 아래 이름만 쓴다. 팔레트를 직접 부르지 않는다. */
+
+  --color-canvas: var(--palette-sand-300);
+  --color-surface: var(--palette-sand-100);
+  --color-surface-muted: var(--palette-sand-200);
+  --color-line: var(--palette-sand-400);
+  --color-ink: var(--palette-brown-900);
+  --color-ink-muted: var(--palette-brown-500);
+  --color-accent: var(--palette-gold-500);
+  --color-accent-ink: var(--palette-sand-50);
+
+  --color-hero-ink: var(--palette-glow-100);
+  --color-hero-ink-muted: var(--palette-glow-200);
+  --color-hero-shade: var(--palette-shade-900);
 
   --font-sans: system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --font-display: var(--font-cinzel), 'Times New Roman', serif;
 }
 
 html {

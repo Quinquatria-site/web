@@ -1,0 +1,18 @@
+:root {
+  /* 포스터의 노을에서 뽑은 앰버 계열. 밝은 쪽부터 어두운 쪽으로. */
+
+  --palette-sand-50: #fffaf2;
+  --palette-sand-100: #fdf7ec;
+  --palette-sand-200: #f5e9d6;
+  --palette-sand-300: #e9dac2;
+  --palette-sand-400: #e0cba9;
+
+  --palette-gold-500: #a9682a;
+  --palette-brown-500: #8a6f4e;
+  --palette-brown-900: #46301a;
+
+  /* 히어로 이미지 위에서만 쓰는 색 */
+  --palette-glow-100: #f8eedc;
+  --palette-glow-200: #f0dcbb;
+  --palette-shade-900: #1c0e02;
+}

@@ -1,7 +1,14 @@
 import type { Metadata, Viewport } from 'next'
-import { FloatingNavigation } from '@/components/dock/floating-navigation'
+import { Cinzel } from 'next/font/google'
 import { AppShell } from '@/components/app-shell'
+import { FloatingNavigation } from '@/components/dock/floating-navigation'
 import './globals.css'
+
+const cinzel = Cinzel({
+  variable: '--font-cinzel',
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+})
 
 export const metadata: Metadata = {
   title: 'Quinquatria',
@@ -17,7 +24,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="ko" className="antialiased">
+    <html lang="ko" className={`${cinzel.variable} antialiased`}>
       <body>
         <AppShell nav={<FloatingNavigation />}>{children}</AppShell>
       </body>
