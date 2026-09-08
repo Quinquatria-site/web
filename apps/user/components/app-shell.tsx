@@ -10,7 +10,7 @@ export function AppShell({ children, nav }: { children: ReactNode; nav: ReactNod
   const pathname = usePathname()
   const [dock, setDock] = useState<{ path: string; phase: DockPhase }>({
     path: pathname,
-    phase: 'logo',
+    phase: 'landing',
   })
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export function AppShell({ children, nav }: { children: ReactNode; nav: ReactNod
     () => ({
       scrollRef,
       homeAnchorRef,
-      dockPhase: dock.path === pathname ? dock.phase : 'logo',
+      dockPhase: dock.path === pathname ? dock.phase : 'landing',
       setDockPhase,
     }),
     [dock, pathname, setDockPhase],

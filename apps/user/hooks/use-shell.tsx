@@ -2,7 +2,7 @@
 
 import { createContext, useContext, type RefObject } from 'react'
 
-export type DockPhase = 'logo' | 'top'
+export type DockPhase = 'landing' | 'scrolled'
 
 export type ShellValue = {
   scrollRef: RefObject<HTMLDivElement | null>

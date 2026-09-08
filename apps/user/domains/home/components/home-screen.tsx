@@ -8,22 +8,22 @@ import { LandingSection } from './landing-section'
 export function HomeScreen() {
   const { setDockPhase, homeAnchorRef } = useShell()
 
-  const onArrowSentinel = useCallback(
-    (passed: boolean) => setDockPhase(passed ? 'top' : 'logo'),
+  const onLandingSentinel = useCallback(
+    (passed: boolean) => setDockPhase(passed ? 'scrolled' : 'landing'),
     [setDockPhase],
   )
 
   return (
     <>
-      <section className="h-full border-b border-line">
+      <section className="relative h-full border-b border-line">
         <LandingSection />
+        <ScrollSentinel className="top-8 right-0 left-0" onChange={onLandingSentinel} />
       </section>
 
       <section
         ref={homeAnchorRef}
-        className="relative flex h-full items-center justify-center border-b border-line"
+        className="flex h-full items-center justify-center border-b border-line"
       >
-        <ScrollSentinel className="top-24 right-0 left-0" onChange={onArrowSentinel} />
         <span className="text-sm text-ink-muted">더미 섹션 1</span>
       </section>
 
