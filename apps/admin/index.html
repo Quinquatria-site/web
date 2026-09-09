@@ -3,7 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- interactive-widget: 키보드가 뜰 때 화면을 밀어올리는 대신 레이아웃을 줄인다.
+         100dvh 가 키보드만큼 작아져 아래에 빈 칸이 생기지 않는다.
+         지원하지 않는 브라우저는 무시한다 (사파리는 아직 미지원일 수 있어,
+         LoginRoute 에서 캔버스 배경을 함께 칠해 대비한다) -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content"
+    />
     <title>admin</title>
   </head>
   <body>
