@@ -13,6 +13,13 @@
   --color-accent: var(--palette-gold-500);
   --color-accent-ink: var(--palette-sand-50);
 
+  /* 지도 마커 — 종류마다 색과 모양이 함께 갈린다. 칩과 마커가 같은 값을 쓴다. */
+  --color-marker-booth: var(--palette-gold-500);
+  --color-marker-pub: var(--palette-brown-900);
+  --color-marker-aid: var(--palette-clay-500);
+  --color-marker-bin: var(--palette-moss-600);
+  --color-marker-food: var(--palette-amber-400);
+
   --color-hero-ink: var(--palette-glow-100);
   --color-hero-ink-muted: var(--palette-glow-200);
   --color-hero-shade: var(--palette-shade-900);

@@ -11,6 +11,11 @@
   --palette-brown-500: #8a6f4e;
   --palette-brown-900: #46301a;
 
+  /* 지도 마커에서만 쓰는 색. 노을 계열 안에서 서로 멀리 떨어진 다섯 색조. */
+  --palette-clay-500: #b23a2f;
+  --palette-moss-600: #5b7150;
+  --palette-amber-400: #d4952c;
+
   /* 히어로 이미지 위에서만 쓰는 색 */
   --palette-glow-100: #f8eedc;
   --palette-glow-200: #f0dcbb;

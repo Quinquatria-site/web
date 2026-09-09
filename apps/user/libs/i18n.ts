@@ -34,9 +34,10 @@ export type Copy = {
     close: string
   }
   map: {
-    kind: Record<'booth' | 'pub' | 'aid', string>
-    /** 마커 안에 들어가는 한 글자. */
-    pubMark: string
+    /** MarkerKind 와 짝이다. 여기 없는 종류는 items.ts 에서 타입 오류가 난다. */
+    kind: Record<'booth' | 'pub' | 'aid' | 'bin' | 'food', string>
+    /** 필터 칩 묶음을 읽어 주는 말. 칩은 범례를 겸한다. */
+    filters: string
     zoneAll: string
     loading: string
     boothAt: (zone: string, number: number) => string
@@ -72,7 +73,7 @@ export const COPY: Record<Lang, Copy> = {
     back: '뒤로 가기',
     pages: {
       '/timeline': { label: '타임라인', summary: '공연과 부스 일정을 시간순으로' },
-      '/map': { label: '캠퍼스 지도', summary: '부스 · 화장실 · 쓰레기통 위치' },
+      '/map': { label: '캠퍼스 지도', summary: '부스 · 주점 · 쓰레기통 위치' },
       '/notice': { label: '공지사항', summary: '흩어진 공지를 한 곳에서' },
       '/lost-found': { label: '분실물', summary: '잃어버린 물건 찾아가기' },
     },
@@ -86,8 +87,8 @@ export const COPY: Record<Lang, Copy> = {
       close: '닫기',
     },
     map: {
-      kind: { booth: '부스', pub: '주점', aid: '의무실' },
-      pubMark: '주',
+      kind: { booth: '부스', pub: '주점', aid: '의무실', bin: '쓰레기통', food: '푸드트럭' },
+      filters: '지도에 표시할 종류',
       zoneAll: '전체',
       loading: '지도를 불러오는 중',
       boothAt: (zone, number) => `${zone}구역 ${number}번`,
@@ -120,7 +121,7 @@ export const COPY: Record<Lang, Copy> = {
     back: 'Go back',
     pages: {
       '/timeline': { label: 'Timeline', summary: 'Shows and booths, hour by hour' },
-      '/map': { label: 'Campus Map', summary: 'Booths, restrooms, and bins' },
+      '/map': { label: 'Campus Map', summary: 'Booths, pubs, and bins' },
       '/notice': { label: 'Notices', summary: 'Every announcement in one place' },
       '/lost-found': { label: 'Lost & Found', summary: 'Claim what you lost' },
     },
@@ -134,8 +135,8 @@ export const COPY: Record<Lang, Copy> = {
       close: 'Close',
     },
     map: {
-      kind: { booth: 'Booth', pub: 'Pub', aid: 'First Aid' },
-      pubMark: 'P',
+      kind: { booth: 'Booth', pub: 'Pub', aid: 'First Aid', bin: 'Bin', food: 'Food Truck' },
+      filters: 'Kinds shown on the map',
       zoneAll: 'All',
       loading: 'Loading the map',
       boothAt: (zone, number) => `Zone ${zone} · No. ${number}`,
@@ -168,7 +169,7 @@ export const COPY: Record<Lang, Copy> = {
     back: '返回',
     pages: {
       '/timeline': { label: '日程', summary: '按时间查看演出与摊位' },
-      '/map': { label: '校园地图', summary: '摊位 · 洗手间 · 垃圾桶位置' },
+      '/map': { label: '校园地图', summary: '摊位 · 酒馆 · 垃圾桶位置' },
       '/notice': { label: '公告', summary: '所有公告集中查看' },
       '/lost-found': { label: '失物招领', summary: '领取遗失的物品' },
     },
@@ -182,8 +183,8 @@ export const COPY: Record<Lang, Copy> = {
       close: '关闭',
     },
     map: {
-      kind: { booth: '摊位', pub: '酒馆', aid: '医务室' },
-      pubMark: '酒',
+      kind: { booth: '摊位', pub: '酒馆', aid: '医务室', bin: '垃圾桶', food: '餐车' },
+      filters: '在地图上显示的种类',
       zoneAll: '全部',
       loading: '正在加载地图',
       boothAt: (zone, number) => `${zone}区 ${number}号`,

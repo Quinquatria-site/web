@@ -78,10 +78,13 @@ export function CampusMap() {
   const [zone, setZone] = useState<ZoneSelection>('all')
   const [selected, setSelected] = useState<MapItem | null>(null)
   const [zoomable, setZoomable] = useState({ in: true, out: false })
+  // 종류마다 한 칸. MarkerKind 가 늘면 여기서 타입 오류가 나 빠뜨릴 수 없다.
   const [filters, setFilters] = useState<Record<MarkerKind, boolean>>({
     booth: true,
     pub: true,
     aid: true,
+    bin: true,
+    food: true,
   })
 
   useEffect(() => {
@@ -95,6 +98,12 @@ export function CampusMap() {
     ...BOOTHS.map((booth) => ({ ...booth, kind: 'booth' as const })),
     ...PLACES,
   ].filter((item) => filters[item.kind])
+
+  function toggleKind(kind: MarkerKind) {
+    setFilters((prev) => ({ ...prev, [kind]: !prev[kind] }))
+    // 감춘 종류의 시트가 열린 채 남지 않게 한다. 마커가 사라졌는데 설명만 떠 있으면 안 된다.
+    setSelected((current) => (current?.kind === kind ? null : current))
+  }
 
   function selectItem(item: MapItem) {
     setSelected(item)
@@ -147,10 +156,7 @@ export function CampusMap() {
           />
           {process.env.NODE_ENV === 'development' && <CoordinatePicker />}
         </MapContainer>
-        <FilterChips
-          active={filters}
-          onToggle={(kind) => setFilters((prev) => ({ ...prev, [kind]: !prev[kind] }))}
-        />
+        <FilterChips active={filters} onToggle={toggleKind} />
         <ZoomControl
           onZoomIn={() => map?.zoomIn()}
           onZoomOut={() => map?.zoomOut()}

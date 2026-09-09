@@ -1,22 +1,155 @@
-export type PlaceKind = 'pub' | 'aid'
-
-export type Place = {
-  id: string
-  kind: PlaceKind
-  name: string
-  /** 배치 도면 좌표 (390 × 329), 좌상단 원점 */
-  x: number
-  y: number
-}
+import type { Place } from './types'
 
 // 실제 위치는 아직 정해지지 않았다. 자리만 잡아둔 값이다.
 export const PLACES: Place[] = [
-  { id: 'pub-1', kind: 'pub', name: '[주점 1]', x: 97, y: 185 },
-  { id: 'pub-2', kind: 'pub', name: '[주점 2]', x: 231, y: 144 },
-  { id: 'pub-3', kind: 'pub', name: '[주점 3]', x: 263, y: 182 },
-  { id: 'pub-4', kind: 'pub', name: '[주점 4]', x: 125, y: 255 },
-  { id: 'pub-5', kind: 'pub', name: '[주점 5]', x: 293, y: 160 },
-  { id: 'aid-1', kind: 'aid', name: '[의무실 1]', x: 60, y: 100 },
-  { id: 'aid-2', kind: 'aid', name: '[의무실 2]', x: 200, y: 150 },
-  { id: 'aid-3', kind: 'aid', name: '[의무실 3]', x: 270, y: 235 },
+  {
+    id: 'pub-1',
+    kind: 'pub',
+    name: { ko: '[주점 1]', en: '[Pub 1]', cha: '[酒馆 1]' },
+    x: 97,
+    y: 185,
+  },
+  {
+    id: 'pub-2',
+    kind: 'pub',
+    name: { ko: '[주점 2]', en: '[Pub 2]', cha: '[酒馆 2]' },
+    x: 231,
+    y: 144,
+  },
+  {
+    id: 'pub-3',
+    kind: 'pub',
+    name: { ko: '[주점 3]', en: '[Pub 3]', cha: '[酒馆 3]' },
+    x: 263,
+    y: 182,
+  },
+  {
+    id: 'pub-4',
+    kind: 'pub',
+    name: { ko: '[주점 4]', en: '[Pub 4]', cha: '[酒馆 4]' },
+    x: 125,
+    y: 255,
+  },
+  {
+    id: 'pub-5',
+    kind: 'pub',
+    name: { ko: '[주점 5]', en: '[Pub 5]', cha: '[酒馆 5]' },
+    x: 293,
+    y: 160,
+  },
+
+  {
+    id: 'aid-1',
+    kind: 'aid',
+    name: { ko: '[의무실 1]', en: '[First Aid 1]', cha: '[医务室 1]' },
+    x: 60,
+    y: 100,
+  },
+  {
+    id: 'aid-2',
+    kind: 'aid',
+    name: { ko: '[의무실 2]', en: '[First Aid 2]', cha: '[医务室 2]' },
+    x: 200,
+    y: 150,
+  },
+  {
+    id: 'aid-3',
+    kind: 'aid',
+    name: { ko: '[의무실 3]', en: '[First Aid 3]', cha: '[医务室 3]' },
+    x: 270,
+    y: 235,
+  },
+
+  {
+    id: 'bin-1',
+    kind: 'bin',
+    name: { ko: '[쓰레기통 1]', en: '[Bin 1]', cha: '[垃圾桶 1]' },
+    x: 66,
+    y: 58,
+  },
+  {
+    id: 'bin-2',
+    kind: 'bin',
+    name: { ko: '[쓰레기통 2]', en: '[Bin 2]', cha: '[垃圾桶 2]' },
+    x: 170,
+    y: 66,
+  },
+  {
+    id: 'bin-3',
+    kind: 'bin',
+    name: { ko: '[쓰레기통 3]', en: '[Bin 3]', cha: '[垃圾桶 3]' },
+    x: 52,
+    y: 128,
+  },
+  {
+    id: 'bin-4',
+    kind: 'bin',
+    name: { ko: '[쓰레기통 4]', en: '[Bin 4]', cha: '[垃圾桶 4]' },
+    x: 96,
+    y: 152,
+  },
+  {
+    id: 'bin-5',
+    kind: 'bin',
+    name: { ko: '[쓰레기통 5]', en: '[Bin 5]', cha: '[垃圾桶 5]' },
+    x: 133,
+    y: 190,
+  },
+  {
+    id: 'bin-6',
+    kind: 'bin',
+    name: { ko: '[쓰레기통 6]', en: '[Bin 6]', cha: '[垃圾桶 6]' },
+    x: 206,
+    y: 128,
+  },
+  {
+    id: 'bin-7',
+    kind: 'bin',
+    name: { ko: '[쓰레기통 7]', en: '[Bin 7]', cha: '[垃圾桶 7]' },
+    x: 258,
+    y: 86,
+  },
+  {
+    id: 'bin-8',
+    kind: 'bin',
+    name: { ko: '[쓰레기통 8]', en: '[Bin 8]', cha: '[垃圾桶 8]' },
+    x: 312,
+    y: 112,
+  },
+
+  {
+    id: 'food-1',
+    kind: 'food',
+    name: { ko: '[푸드트럭 1]', en: '[Food Truck 1]', cha: '[餐车 1]' },
+    x: 176,
+    y: 172,
+  },
+  {
+    id: 'food-2',
+    kind: 'food',
+    name: { ko: '[푸드트럭 2]', en: '[Food Truck 2]', cha: '[餐车 2]' },
+    x: 204,
+    y: 178,
+  },
+  {
+    id: 'food-3',
+    kind: 'food',
+    name: { ko: '[푸드트럭 3]', en: '[Food Truck 3]', cha: '[餐车 3]' },
+    x: 232,
+    y: 186,
+  },
+  {
+    id: 'food-4',
+    kind: 'food',
+    name: { ko: '[푸드트럭 4]', en: '[Food Truck 4]', cha: '[餐车 4]' },
+    x: 150,
+    y: 236,
+  },
+  {
+    id: 'food-5',
+    kind: 'food',
+    name: { ko: '[푸드트럭 5]', en: '[Food Truck 5]', cha: '[餐车 5]' },
+    x: 196,
+    y: 246,
+  },
 ]

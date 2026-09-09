@@ -42,3 +42,15 @@ export type Notice = {
   /** 문단 하나가 한 칸. 첫 문단이 목록 카드의 미리보기가 된다. */
   body: Localized[]
 }
+
+/** 부스 말고 지도에 찍히는 자리. 종류 하나가 필터 한 칸과 짝을 이룬다. */
+export type PlaceKind = 'pub' | 'aid' | 'bin' | 'food'
+
+export type Place = {
+  id: string
+  kind: PlaceKind
+  name: Localized
+  /** 배치 도면 좌표 (390 × 329), 좌상단 원점 */
+  x: number
+  y: number
+}

@@ -65,7 +65,7 @@ function applyOffset(
 }
 
 export function DetailSheet({ item, onClose }: { item: MapItem | null; onClose: () => void }) {
-  const { copy } = useLang()
+  const { lang, copy } = useLang()
   const sheetRef = useRef<HTMLDivElement>(null)
   const bodyRef = useRef<HTMLDivElement>(null)
   const dimRef = useRef<HTMLDivElement>(null)
@@ -203,7 +203,7 @@ export function DetailSheet({ item, onClose }: { item: MapItem | null; onClose: 
   }
 
   const title = shown ? itemTitle(shown, copy) : ''
-  const name = shown ? itemName(shown, copy) : ''
+  const name = shown ? itemName(shown, copy, lang) : ''
 
   return (
     <>
@@ -264,8 +264,13 @@ export function DetailSheet({ item, onClose }: { item: MapItem | null; onClose: 
           }`}
         >
           <dl className="grid grid-cols-[4.5rem_1fr] gap-y-2">
-            <dt className="text-ink-muted">{copy.map.hours}</dt>
-            <dd>{copy.map.hoursValue}</dd>
+            {/* 쓰레기통은 여닫는 자리가 아니라 운영 시간 줄을 두지 않는다. */}
+            {shown?.kind !== 'bin' && (
+              <>
+                <dt className="text-ink-muted">{copy.map.hours}</dt>
+                <dd>{copy.map.hoursValue}</dd>
+              </>
+            )}
             {shown?.kind === 'booth' && (
               <>
                 <dt className="text-ink-muted">{copy.map.location}</dt>
