@@ -1,9 +1,7 @@
 import Image from 'next/image'
 import { LanguageSwitcher } from '@/components/language-switcher'
-import type { Lang } from '@/libs/i18n'
-import { NavGrid } from './nav-grid'
 
-export function LandingSection({ lang }: { lang: Lang }) {
+export function LandingSection() {
   return (
     <div className="relative h-full overflow-hidden">
       <Image
@@ -21,7 +19,7 @@ export function LandingSection({ lang }: { lang: Lang }) {
             'linear-gradient(to bottom, color-mix(in srgb, var(--color-hero-shade) 62%, transparent) 0%, color-mix(in srgb, var(--color-hero-shade) 38%, transparent) 26%, transparent 52%)',
         }}
       />
-      {/* 카드가 놓이는 아래쪽을 눌러 글자가 이미지에 묻히지 않게 한다 */}
+      {/* 아래쪽을 눌러 하단 dock 버튼이 사진에 묻히지 않게 한다 */}
       <div
         className="absolute inset-x-0 bottom-0 h-1/2"
         style={{
@@ -51,7 +49,6 @@ export function LandingSection({ lang }: { lang: Lang }) {
             10.05 - 10.06
           </p>
         </div>
-        <NavGrid lang={lang} />
       </div>
     </div>
   )

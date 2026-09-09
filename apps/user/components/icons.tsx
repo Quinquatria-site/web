@@ -56,6 +56,30 @@ export function LostFoundIcon({ className }: IconProps) {
   )
 }
 
+export function ArrowDownIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} aria-hidden>
+      <path d="M12 5v14M6 13l6 6 6-6" />
+    </svg>
+  )
+}
+
+export function ArrowUpIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} aria-hidden>
+      <path d="M12 19V5M6 11l6-6 6 6" />
+    </svg>
+  )
+}
+
+export function ChevronRightIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} aria-hidden>
+      <path d="m9.5 5 7 7-7 7" />
+    </svg>
+  )
+}
+
 // 같은 곳으로 가는 링크는 dock 이든 홈이든 같은 아이콘을 쓴다
 export const PAGE_ICONS = {
   '/timeline': TimelineIcon,

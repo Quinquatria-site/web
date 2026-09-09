@@ -17,6 +17,8 @@ export const LANG_NAME: Record<Lang, string> = { ko: '한국어', en: 'English',
 
 export type Copy = {
   home: string
+  toTop: string
+  toNav: string
   language: string
   pages: Record<PagePath, { label: string; summary: string }>
   map: {
@@ -41,6 +43,8 @@ export type Copy = {
 export const COPY: Record<Lang, Copy> = {
   ko: {
     home: '홈',
+    toTop: '맨 위로',
+    toNav: '아래로',
     language: '언어 선택',
     pages: {
       '/timeline': { label: '타임라인', summary: '공연과 부스 일정을 시간순으로' },
@@ -67,6 +71,8 @@ export const COPY: Record<Lang, Copy> = {
   },
   en: {
     home: 'Home',
+    toTop: 'Back to top',
+    toNav: 'Scroll down',
     language: 'Select language',
     pages: {
       '/timeline': { label: 'Timeline', summary: 'Shows and booths, hour by hour' },
@@ -93,6 +99,8 @@ export const COPY: Record<Lang, Copy> = {
   },
   cha: {
     home: '首页',
+    toTop: '回到顶部',
+    toNav: '向下滚动',
     language: '选择语言',
     pages: {
       '/timeline': { label: '日程', summary: '按时间查看演出与摊位' },
