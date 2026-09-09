@@ -4,6 +4,9 @@
 > §0~§12 는 원문 그대로다. 원문을 고치지 않는다.
 > 읽다가 발견한 불일치는 원문에 섞지 않고 맨 뒤 **부록 A** 에만 적었다.
 >
+> **예외 — §6 ERD 는 2026-09-09 갱신분이다.** v0.2 원문에서 한 줄 달라졌다.
+> `PERFORMANCE.image_uri "S3 key"` 가 추가됐다. 그 외는 v0.2 와 동일하다.
+>
 > **주의 — 스택은 확정이 아니다.** §8 의 프레임워크·API 선택은 팀에서 확정된 바 없다.
 > 지금 이 문서에서 참고 기준으로 삼을 것은 **§6 ERD** 다. 부록 A-4 참조.
 
@@ -184,6 +187,7 @@ erDiagram
   PERFORMANCE {
     int id PK
     string type "ARTIST/STUDENT/SPECIAL"
+    string image_uri "S3 key"
     datetime start_at
     datetime end_at
   }
@@ -395,6 +399,10 @@ erDiagram
 - §7-2 가 맞다 → ERD 에 `ARTIST` + `ARTIST_TRANSLATION` 을 넣고 `PERFORMANCE` 가
   이를 참조하도록 고친다. 다국어 구조상 번역 테이블이 한 쌍 더 늘어난다.
 
+2026-09-09 갱신에서 `PERFORMANCE.image_uri` 가 추가됐다. 공연자 사진을 `PERFORMANCE`
+가 직접 들게 됐으므로 첫 갈래(ERD 가 맞다) 쪽으로 기운 것으로 읽힌다. 다만 §7-2·§10 의
+문구는 그대로라 여전히 정리가 필요하다.
+
 ## A-2. NOTICE 에 "긴급" 이 없다
 
 세 곳이 서로 다르게 말한다.
@@ -440,6 +448,9 @@ DB 접근·인증·비즈니스 규칙을 넣지 않는다. 백엔드는 외부�
 - 절 번호가 §10 다음 §12 로 건너뛴다. §11 이 없다.
 - §9-4 는 내용 없이 §8 을 가리키는데, §8 의 인프라 블로커 중 "예상 동시 접속 규모" 만
   아직 빈칸이다. 비용(20만원/medium)과 도메인(Cloudflare)은 값이 채워져 있다.
+- 이미지 필드 이름이 `_uri` 와 `_url` 로 갈린다. 값은 모두 S3 키인데
+  `CATEGORY.category_icon_uri` · `PLACE.place_image_uri` · `PERFORMANCE.image_uri` 는
+  `_uri`, `MENU.image_url` · `LOST_ITEM.image_url` 은 `_url` 이다. 한쪽으로 통일하는 게 좋다.
 
 ## A-6. 확인된 사항 (참고)
 
