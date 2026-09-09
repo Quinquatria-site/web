@@ -9,18 +9,20 @@
 html,
 body {
   margin: 0;
+}
 
-  /* 문서 자체는 스크롤하지 않는다. 스크롤은 AppLayout 의 .viewport 안에서만 일어난다.
+/* 문서 스크롤을 막지 않는다.
 
-     이걸 걸지 않으면 iOS 사파리에서 화면이 딱 맞아도 아래로 조금씩 끌린다.
-     사파리가 주소창을 접으려고 문서 스크롤을 허용하는데, 그때 100dvh 가 같이
-     늘어나면서 따라 움직인다. 문서에 스크롤할 것이 없으면 그 동작이 사라진다.
+   iOS 에서 아래로 살짝 끌리는 것(바운스)과 당겨서 새로고침은 같은 동작이다.
+   둘 다 문서 스크롤뷰에 얹혀 있어서, overflow: hidden 이나
+   overscroll-behavior: none 으로 끌림을 막으면 새로고침도 같이 죽는다.
+   안드로이드 크롬은 분리돼 있지만 iOS 는 아니다.
 
-     height 는 잡지 않는다. iOS 에서 height: 100% 는 주소창이 접힌 큰 뷰포트로
-     계산돼 오히려 화면보다 커진다. 높이는 AppLayout 의 100dvh 에 맡긴다. */
-  overflow: hidden;
+   그래서 끌림은 막지 않고, 끌렸을 때 드러나는 바닥색을 앱 색으로 맞춘다.
+   html 의 배경색은 캔버스 전체로 퍼지므로 화면 밖 영역까지 이 색이 된다.
+   로그인 화면은 네이비로 따로 덮는다 (LoginRoute.module.css).
 
-  /* overscroll-behavior 는 건드리지 않는다.
-     none 을 걸면 당겨서 새로고침(pull-to-refresh)까지 같이 죽는다. 문서에 스크롤할
-     것이 없으면 끌림은 overflow: hidden 만으로 잡히므로, 새로고침 제스처는 살려둔다. */
+   같은 이유로 키보드가 올라와 화면이 밀릴 때 아래에 드러나는 칸도 흰색이 아니게 된다. */
+html {
+  background: var(--seed-color-bg-layer-basement);
 }
