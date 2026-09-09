@@ -1,6 +1,7 @@
 'use client'
 
 import { CRS, type Map } from 'leaflet'
+import { AnimatePresence } from 'motion/react'
 import { useEffect, useState } from 'react'
 import { ImageOverlay, MapContainer, useMap, useMapEvents } from 'react-leaflet'
 import { BOOTHS } from '@/mocks/booths'
@@ -16,6 +17,7 @@ import {
   ZONES,
 } from '../libs/campus'
 import { FilterChips } from './filter-chips'
+import { MapLoading } from './map-loading'
 import { MapMarkers } from './map-markers'
 import { CoordinatePicker } from './coordinate-picker'
 import { DetailSheet, peekHeight } from './detail-sheet'
@@ -33,8 +35,9 @@ function FitToImage() {
       // 이미지 전체가 들어오는 줌을 직접 계산해 최소 줌으로 잠근다. 줌 1단계 = 2배.
       const zoom = Math.log2(Math.min(size.x / IMAGE_WIDTH, size.y / IMAGE_HEIGHT))
       map.setMinZoom(zoom)
-      map.setView(map.getCenter(), zoom)
-      map.fitBounds(IMAGE_BOUNDS)
+      // animate 를 끄지 않으면 첫 맞춤이 한 번 튀어 보인다.
+      map.setView(map.getCenter(), zoom, { animate: false })
+      map.fitBounds(IMAGE_BOUNDS, { animate: false })
     }
     map.invalidateSize()
     fit()
@@ -65,8 +68,13 @@ function MapClick({ onClick }: { onClick: () => void }) {
   return null
 }
 
+// 로더가 한 프레임만 스쳐 지나가 깜빡이지 않도록 최소 노출 시간을 준다.
+const MIN_LOADING_MS = 320
+
 export function CampusMap() {
   const [map, setMap] = useState<Map | null>(null)
+  const [painted, setPainted] = useState(false)
+  const [held, setHeld] = useState(false)
   const [zone, setZone] = useState<ZoneSelection>('all')
   const [selected, setSelected] = useState<MapItem | null>(null)
   const [zoomable, setZoomable] = useState({ in: true, out: false })
@@ -75,6 +83,13 @@ export function CampusMap() {
     pub: true,
     aid: true,
   })
+
+  useEffect(() => {
+    const timer = setTimeout(() => setHeld(true), MIN_LOADING_MS)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const ready = painted && held
 
   const items: MapItem[] = [
     ...BOOTHS.map((booth) => ({ ...booth, kind: 'booth' as const })),
@@ -100,44 +115,52 @@ export function CampusMap() {
 
   return (
     <div className="relative h-full w-full">
-      <MapContainer
-        ref={setMap}
-        className="h-full w-full bg-surface"
-        // 위경도 대신 평면 픽셀 좌표계를 쓴다.
-        crs={CRS.Simple}
-        bounds={IMAGE_BOUNDS}
-        // 드래그가 이미지 밖으로 못 나가게 막는다. viscosity 1 은 경계에서 딱 멈춤.
-        maxBounds={IMAGE_BOUNDS}
-        maxBoundsViscosity={1}
-        maxZoom={2}
-        // 줌을 정수 단위가 아니라 자유롭게 허용해 fit 결과가 정확히 맞도록 한다.
-        zoomSnap={0}
-        zoomControl={false}
-        attributionControl={false}
-      >
-        <ImageOverlay url={IMAGE_URL} bounds={IMAGE_BOUNDS} />
-        <FitToImage />
-        <MapMarkers items={items} onSelect={selectItem} />
-        <MapClick onClick={() => setSelected(null)} />
-        <ZoomWatcher
-          onChange={(next) =>
-            setZoomable((prev) => (prev.in === next.in && prev.out === next.out ? prev : next))
-          }
+      <div className="relative h-full w-full" inert={!ready}>
+        <MapContainer
+          ref={setMap}
+          className="h-full w-full bg-surface"
+          // 위경도 대신 평면 픽셀 좌표계를 쓴다.
+          crs={CRS.Simple}
+          bounds={IMAGE_BOUNDS}
+          // 드래그가 이미지 밖으로 못 나가게 막는다. viscosity 1 은 경계에서 딱 멈춤.
+          maxBounds={IMAGE_BOUNDS}
+          maxBoundsViscosity={1}
+          maxZoom={2}
+          // 줌을 정수 단위가 아니라 자유롭게 허용해 fit 결과가 정확히 맞도록 한다.
+          zoomSnap={0}
+          zoomControl={false}
+          attributionControl={false}
+        >
+          <ImageOverlay
+            url={IMAGE_URL}
+            bounds={IMAGE_BOUNDS}
+            // 도면이 실제로 그려진 뒤에야 로더를 걷는다. 실패해도 지도는 열어 준다.
+            eventHandlers={{ load: () => setPainted(true), error: () => setPainted(true) }}
+          />
+          <FitToImage />
+          <MapMarkers items={items} onSelect={selectItem} />
+          <MapClick onClick={() => setSelected(null)} />
+          <ZoomWatcher
+            onChange={(next) =>
+              setZoomable((prev) => (prev.in === next.in && prev.out === next.out ? prev : next))
+            }
+          />
+          {process.env.NODE_ENV === 'development' && <CoordinatePicker />}
+        </MapContainer>
+        <FilterChips
+          active={filters}
+          onToggle={(kind) => setFilters((prev) => ({ ...prev, [kind]: !prev[kind] }))}
         />
-        {process.env.NODE_ENV === 'development' && <CoordinatePicker />}
-      </MapContainer>
-      <FilterChips
-        active={filters}
-        onToggle={(kind) => setFilters((prev) => ({ ...prev, [kind]: !prev[kind] }))}
-      />
-      <ZoomControl
-        onZoomIn={() => map?.zoomIn()}
-        onZoomOut={() => map?.zoomOut()}
-        canZoomIn={zoomable.in}
-        canZoomOut={zoomable.out}
-      />
-      <ZoneTier selected={zone} onSelect={moveTo} />
-      <DetailSheet item={selected} onClose={() => setSelected(null)} />
+        <ZoomControl
+          onZoomIn={() => map?.zoomIn()}
+          onZoomOut={() => map?.zoomOut()}
+          canZoomIn={zoomable.in}
+          canZoomOut={zoomable.out}
+        />
+        <ZoneTier selected={zone} onSelect={moveTo} />
+        <DetailSheet item={selected} onClose={() => setSelected(null)} />
+      </div>
+      <AnimatePresence>{!ready && <MapLoading />}</AnimatePresence>
     </div>
   )
 }

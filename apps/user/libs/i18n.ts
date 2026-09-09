@@ -32,6 +32,7 @@ export type Copy = {
     /** 마커 안에 들어가는 한 글자. */
     pubMark: string
     zoneAll: string
+    loading: string
     boothAt: (zone: string, number: number) => string
     boothName: string
     close: string
@@ -68,6 +69,7 @@ export const COPY: Record<Lang, Copy> = {
       kind: { booth: '부스', pub: '주점', aid: '의무실' },
       pubMark: '주',
       zoneAll: '전체',
+      loading: '지도를 불러오는 중',
       boothAt: (zone, number) => `${zone}구역 ${number}번`,
       boothName: '[부스 이름]',
       close: '닫기',
@@ -102,6 +104,7 @@ export const COPY: Record<Lang, Copy> = {
       kind: { booth: 'Booth', pub: 'Pub', aid: 'First Aid' },
       pubMark: 'P',
       zoneAll: 'All',
+      loading: 'Loading the map',
       boothAt: (zone, number) => `Zone ${zone} · No. ${number}`,
       boothName: '[Booth name]',
       close: 'Close',
@@ -136,6 +139,7 @@ export const COPY: Record<Lang, Copy> = {
       kind: { booth: '摊位', pub: '酒馆', aid: '医务室' },
       pubMark: '酒',
       zoneAll: '全部',
+      loading: '正在加载地图',
       boothAt: (zone, number) => `${zone}区 ${number}号`,
       boothName: '[摊位名称]',
       close: '关闭',

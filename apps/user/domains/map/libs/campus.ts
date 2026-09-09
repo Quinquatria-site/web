@@ -1,6 +1,6 @@
 import type { LatLngBoundsExpression, LatLngTuple } from 'leaflet'
 
-export const IMAGE_URL = '/campus-map.png'
+export const IMAGE_URL = '/campus-map.webp'
 export const IMAGE_WIDTH = 1402
 export const IMAGE_HEIGHT = 1122
 
