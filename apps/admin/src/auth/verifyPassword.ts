@@ -1,17 +1,21 @@
 /**
  * 비밀번호 검증. 백엔드가 정해지면 이 함수 안만 바꾼다.
  *
- * 지금은 목이다. admin 은 정적으로 배포되는 SPA 라 여기 있는 값은 번들에 그대로
- * 들어간다. devtools 로 열면 보이므로 이 검증은 실질적인 접근 차단이 아니다.
+ * **지금은 아무 값이나 통과시킨다.** 화면을 돌려보기 위한 임시 조치다.
+ * 비어 있는 값은 버튼이 비활성이라 애초에 들어오지 않는다.
+ *
+ * 원래도 목이었다. admin 은 정적으로 배포되는 SPA 라 여기 있는 값은 번들에 그대로
+ * 들어간다. devtools 로 열면 보이므로 이 검증은 실질적인 접근 차단이 아니었다.
  * 화면 흐름을 만들고 교체 지점을 한 곳에 몰아두려는 것이 목적이다.
  *
+ * 알아둘 것 — 지금은 false 가 나오는 경로가 없어서 로그인 화면의 오류 표시
+ * (invalid 테두리와 "비밀번호가 맞지 않습니다")를 눌러볼 수 없다. 그 화면을
+ * 확인하려면 잠시 아래를 `return false` 로 바꾼다.
+ *
  * 진짜 인증이 필요해지면 이 파일만 fetch 로 바꾼다. async 로 둔 이유가 그것이고,
- * 호출부(AuthContext)는 손대지 않아도 된다.
+ * 호출부(AuthProvider)는 손대지 않아도 된다. 호출부는 이미 false 를 받아
+ * 오류를 띄우도록 돼 있다.
  */
-
-/** 목 검증용. 실제 비밀번호가 아니며 공개돼도 무방한 값이어야 한다. */
-const DEV_PASSWORD = 'quinquatria'
-
 export async function verifyPassword(password: string): Promise<boolean> {
-  return password === DEV_PASSWORD
+  return password.length > 0
 }
