@@ -50,15 +50,21 @@
   margin-bottom: var(--seed-dimension-x8);
 }
 
+/* font 단축 속성을 쓰지 않는다. 패밀리를 함께 적지 않으면 상속받은 글꼴을
+   초기화해버린다. SEED 는 크기·행간·굵기를 따로 주므로 그대로 세 줄로 쓴다. */
 .title {
   margin: 0;
-  font: var(--seed-font-title-t2-bold);
+  font-size: var(--seed-font-size-t10);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t10);
   color: var(--seed-color-fg-neutral);
 }
 
 .subtitle {
   margin: 0;
-  font: var(--seed-font-body-b3-regular);
+  font-size: var(--seed-font-size-t4);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t5);
   color: var(--seed-color-fg-neutral-muted);
 }
 

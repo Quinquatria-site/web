@@ -1,0 +1,19 @@
+/* 서체는 SEED 가 정해주지 않는다. 패키지에 폰트 파일이 없고 font-family 선언도
+   없다(폼 컨트롤의 `font-family: inherit` 뿐). 크기·행간·굵기 토큰만 주므로
+   서체는 여기서 한 번만 정한다.
+
+   Pretendard 가변폰트를 쓴다. 굵기 45~920 을 파일 하나로 덮어서 SEED 가 쓰는
+   400·500·700 이 모두 들어온다. 동적 서브셋이라 화면에 실제로 쓰인 글자 조각만
+   받는다.
+
+   대체 스택에 한글 글꼴을 남겨둔다. 폰트를 못 받아도 한글이 깨지지 않아야 한다. */
+:root {
+  font-family:
+    'Pretendard Variable',
+    Pretendard,
+    system-ui,
+    -apple-system,
+    'Apple SD Gothic Neo',
+    'Malgun Gothic',
+    sans-serif;
+}

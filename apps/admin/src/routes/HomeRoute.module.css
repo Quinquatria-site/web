@@ -6,15 +6,20 @@
   padding: var(--seed-dimension-x6) var(--seed-dimension-x4);
 }
 
+/* font 단축 속성을 쓰지 않는다. 이유는 LoginRoute.module.css 참고 */
 .title {
   margin: 0;
-  font: var(--seed-font-title-t2-bold);
+  font-size: var(--seed-font-size-t10);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t10);
   color: var(--seed-color-fg-neutral);
 }
 
 .description {
   margin: 0;
-  font: var(--seed-font-body-b3-regular);
+  font-size: var(--seed-font-size-t4);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t5);
   color: var(--seed-color-fg-neutral-muted);
 }
 
