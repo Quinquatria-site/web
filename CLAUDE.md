@@ -28,6 +28,35 @@ apps/user/
 **디자인 시스템 확립과 UI/UX 설계에 집중한다.**
 토큰·컴포넌트·레이아웃 일관성이 판단 기준이다.
 
+## 문구와 언어
+
+**화면에 보이는 문구는 `ko` · `en` · `cha` 세 언어를 항상 함께 넣는다.**
+한국어만 넣고 나머지를 나중에 채우지 않는다. 기능 하나가 끝났다는 것은 세 언어가 다 찼다는 뜻이다.
+
+**UI 문구는 `apps/user/libs/i18n.ts` 의 `COPY` 에 둔다.**
+컴포넌트에 문자열을 직접 쓰지 않는다. `aria-label` 과 `alt` 도 문구다.
+
+```tsx
+const { lang, copy } = useLang()
+<button aria-label={copy.timeline.close}>
+```
+
+`Copy` 타입에 키를 더하면 세 언어를 다 채우기 전까지 타입 검사가 통과하지 않는다.
+언어를 늘릴 때도 `LANGS` 에 코드를 넣으면 빠진 문구를 컴파일러가 전부 짚어 준다.
+
+**목 데이터에서 사람이 읽는 값은 `Localized` 로 둔다.**
+`mocks/types.ts` 의 `Localized = Record<Lang, string>`. 이름·장소·설명이 여기 해당한다.
+화면에서는 `artist.name[lang]` 으로 꺼낸다.
+
+```ts
+name: { ko: '외인부대', en: 'Foreign Legion', cha: '外籍军团' }
+```
+
+값이 아직 정해지지 않았으면 세 언어 모두 대괄호로 자리만 잡는다.
+`{ ko: '[초청 가수 A]', en: '[Guest Artist A]', cha: '[特邀歌手 A]' }`
+
+숫자와 날짜(`10.05`), 표기가 언어와 무관한 고유명사(`PULSE`)는 나누지 않아도 된다.
+
 ## 명령어
 
 pnpm 전용. 루트에서 실행.
@@ -46,6 +75,8 @@ pnpm 전용. 루트에서 실행.
 ```bash
 pnpm typecheck && pnpm lint && pnpm build
 ```
+
+문구가 걸린 화면을 고쳤으면 `/ko` · `/en` · `/cha` 를 모두 열어 확인한다.
 
 ## 브랜치
 
