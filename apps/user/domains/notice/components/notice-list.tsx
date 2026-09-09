@@ -1,6 +1,5 @@
 'use client'
 
-import { useLang } from '@/components/lang-provider'
 import { PageHeader } from '@/components/page-header'
 import { DOCK_TIER_BOTTOM } from '@/libs/dock'
 import { NORMAL_NOTICES, PINNED_NOTICES } from '../libs/notices'
@@ -12,12 +11,9 @@ const PEEK = 14
 const STICK_TOP = 12
 
 export function NoticeList() {
-  const { copy } = useLang()
-  const { label, summary } = copy.pages['/notice']
-
   return (
     <div className="flex flex-col" style={{ paddingBottom: DOCK_TIER_BOTTOM }}>
-      <PageHeader title={label} description={summary} />
+      <PageHeader path="/notice" />
 
       <ol className="flex flex-col gap-3 px-5 pt-5">
         {PINNED_NOTICES.map((notice, index) => (

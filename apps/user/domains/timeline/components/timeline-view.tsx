@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useLang } from '@/components/lang-provider'
+import { PageHeader } from '@/components/page-header'
 import { DOCK_TIER_BOTTOM } from '@/libs/dock'
 import type { FestivalEvent, IsoDate } from '@/mocks/types'
 import { eventsOn, festivalPhase, focusEvent, liveEvent } from '../libs/schedule'
@@ -11,7 +11,6 @@ import { NowBanner } from './now-banner'
 import { ScheduleList } from './schedule-list'
 
 export function TimelineView() {
-  const { copy } = useLang()
   const phase = festivalPhase()
   const focus = focusEvent()
   const live = liveEvent()
@@ -48,26 +47,25 @@ export function TimelineView() {
   }
 
   return (
-    <div
-      className="flex flex-col gap-6 pt-[calc(env(safe-area-inset-top)+24px)]"
-      style={{ paddingBottom: DOCK_TIER_BOTTOM }}
-    >
-      <h1 className="sr-only">{copy.pages['/timeline'].label}</h1>
+    <div className="flex flex-col" style={{ paddingBottom: DOCK_TIER_BOTTOM }}>
+      <PageHeader path="/timeline" />
 
-      <div className="px-5">
-        <NowBanner phase={phase} event={focus} onJump={jumpToNow} />
+      <div className="flex flex-col gap-6 pt-6">
+        <div className="px-5">
+          <NowBanner phase={phase} event={focus} onJump={jumpToNow} />
+        </div>
+
+        <div className="px-5">
+          <DayTabs value={date} onChange={setDate} />
+        </div>
+
+        <ScheduleList
+          items={eventsOn(date)}
+          liveId={live?.id ?? null}
+          rowRef={rowRef}
+          onSelect={setOpened}
+        />
       </div>
-
-      <div className="px-5">
-        <DayTabs value={date} onChange={setDate} />
-      </div>
-
-      <ScheduleList
-        items={eventsOn(date)}
-        liveId={live?.id ?? null}
-        rowRef={rowRef}
-        onSelect={setOpened}
-      />
 
       <EventDialog event={opened} onClose={() => setOpened(null)} />
     </div>
