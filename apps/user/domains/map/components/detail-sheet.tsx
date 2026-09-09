@@ -7,6 +7,7 @@ import {
   useState,
   type PointerEvent as ReactPointerEvent,
 } from 'react'
+import { useLang } from '@/components/lang-provider'
 import { itemName, itemTitle, type MapItem } from '../libs/items'
 
 export type SheetStage = 'closed' | 'peek' | 'expanded'
@@ -64,6 +65,7 @@ function applyOffset(
 }
 
 export function DetailSheet({ item, onClose }: { item: MapItem | null; onClose: () => void }) {
+  const { copy } = useLang()
   const sheetRef = useRef<HTMLDivElement>(null)
   const bodyRef = useRef<HTMLDivElement>(null)
   const dimRef = useRef<HTMLDivElement>(null)
@@ -200,8 +202,8 @@ export function DetailSheet({ item, onClose }: { item: MapItem | null; onClose: 
     settle(next)
   }
 
-  const title = shown ? itemTitle(shown) : ''
-  const name = shown ? itemName(shown) : ''
+  const title = shown ? itemTitle(shown, copy) : ''
+  const name = shown ? itemName(shown, copy) : ''
 
   return (
     <>
@@ -236,7 +238,7 @@ export function DetailSheet({ item, onClose }: { item: MapItem | null; onClose: 
           </div>
           <button
             type="button"
-            aria-label="닫기"
+            aria-label={copy.map.close}
             className="flex size-8 shrink-0 items-center justify-center rounded-full bg-surface-muted text-ink-muted"
             onClick={onClose}
           >
@@ -262,19 +264,19 @@ export function DetailSheet({ item, onClose }: { item: MapItem | null; onClose: 
           }`}
         >
           <dl className="grid grid-cols-[4.5rem_1fr] gap-y-2">
-            <dt className="text-ink-muted">운영 시간</dt>
-            <dd>[운영 시간]</dd>
+            <dt className="text-ink-muted">{copy.map.hours}</dt>
+            <dd>{copy.map.hoursValue}</dd>
             {shown?.kind === 'booth' && (
               <>
-                <dt className="text-ink-muted">위치</dt>
+                <dt className="text-ink-muted">{copy.map.location}</dt>
                 <dd>{title}</dd>
-                <dt className="text-ink-muted">주최</dt>
-                <dd>[학과 · 동아리]</dd>
+                <dt className="text-ink-muted">{copy.map.host}</dt>
+                <dd>{copy.map.hostValue}</dd>
               </>
             )}
           </dl>
           <div className="mt-5 flex h-[420px] items-center justify-center rounded-2xl border border-line bg-surface-muted text-ink-muted">
-            상세 설명 자리
+            {copy.map.descriptionSlot}
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 'use client'
 
+import { useLang } from '@/components/lang-provider'
 import { DOCK_BOTTOM } from '@/libs/dock'
 
 const button =
@@ -16,13 +17,15 @@ export function ZoomControl({
   canZoomIn: boolean
   canZoomOut: boolean
 }) {
+  const { copy } = useLang()
+
   return (
     // dock 이 우측 하단을 쓰므로 반대편에 둔다.
     <div className="pointer-events-none absolute left-4 z-[1000]" style={{ bottom: DOCK_BOTTOM }}>
       <div className="pointer-events-auto flex flex-col overflow-hidden rounded-xl border border-line bg-surface/85 backdrop-blur-sm">
         <button
           type="button"
-          aria-label="확대"
+          aria-label={copy.map.zoomIn}
           className={button}
           disabled={!canZoomIn}
           onClick={onZoomIn}
@@ -42,7 +45,7 @@ export function ZoomControl({
         <div className="mx-2.5 h-px bg-line" />
         <button
           type="button"
-          aria-label="축소"
+          aria-label={copy.map.zoomOut}
           className={button}
           disabled={!canZoomOut}
           onClick={onZoomOut}

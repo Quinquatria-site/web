@@ -3,6 +3,8 @@
 import { divIcon } from 'leaflet'
 import { useState } from 'react'
 import { Marker, useMap, useMapEvents } from 'react-leaflet'
+import { useLang } from '@/components/lang-provider'
+import type { Copy } from '@/libs/i18n'
 import { fromSource, toLatLng } from '../libs/campus'
 import { markerLabel, type MapItem } from '../libs/items'
 
@@ -16,11 +18,11 @@ const SHAPE: Record<MapItem['kind'], string> = {
   aid: 'border-radius:9999px;background:var(--color-surface);color:var(--color-accent)',
 }
 
-function icon(item: MapItem, compact: boolean) {
+function icon(item: MapItem, compact: boolean, copy: Copy) {
   const size = compact ? 10 : 24
   const html = compact
     ? `<span style="display:block;width:10px;height:10px;${SHAPE[item.kind]};border:1.5px solid var(--color-accent-ink)"></span>`
-    : `<span style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;${SHAPE[item.kind]};border:1.5px solid var(--color-accent-ink);font-size:11px;font-weight:600;line-height:1">${markerLabel(item)}</span>`
+    : `<span style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;${SHAPE[item.kind]};border:1.5px solid var(--color-accent-ink);font-size:11px;font-weight:600;line-height:1">${markerLabel(item, copy)}</span>`
 
   return divIcon({ className: '', html, iconSize: [size, size], iconAnchor: [size / 2, size / 2] })
 }
@@ -32,6 +34,7 @@ export function MapMarkers({
   items: MapItem[]
   onSelect?: (item: MapItem) => void
 }) {
+  const { copy } = useLang()
   const map = useMap()
   // 줌이 기준선을 넘을 때만 상태가 뒤집혀, 마커가 그때 한 번 다시 그려진다
   const [compact, setCompact] = useState(() => map.getZoom() < LABEL_ZOOM)
@@ -43,7 +46,7 @@ export function MapMarkers({
         <Marker
           key={item.id}
           position={toLatLng(fromSource(item))}
-          icon={icon(item, compact)}
+          icon={icon(item, compact, copy)}
           eventHandlers={{ click: () => onSelect?.(item) }}
         />
       ))}

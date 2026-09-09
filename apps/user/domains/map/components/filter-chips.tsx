@@ -1,6 +1,7 @@
 'use client'
 
-import { KIND_LABEL, type MarkerKind } from '../libs/items'
+import { useLang } from '@/components/lang-provider'
+import type { MarkerKind } from '../libs/items'
 
 const KINDS: MarkerKind[] = ['booth', 'pub', 'aid']
 
@@ -11,6 +12,8 @@ export function FilterChips({
   active: Record<MarkerKind, boolean>
   onToggle: (kind: MarkerKind) => void
 }) {
+  const { copy } = useLang()
+
   return (
     <div className="pointer-events-none absolute inset-x-0 top-0 z-[1000] flex gap-2 px-4 pt-4">
       {KINDS.map((kind) => (
@@ -25,7 +28,7 @@ export function FilterChips({
               : 'border-line bg-surface/85 text-ink-muted backdrop-blur-sm'
           }`}
         >
-          {KIND_LABEL[kind]}
+          {copy.map.kind[kind]}
         </button>
       ))}
     </div>

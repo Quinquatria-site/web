@@ -1,7 +1,9 @@
 import Image from 'next/image'
+import { LanguageSwitcher } from '@/components/language-switcher'
+import type { Lang } from '@/libs/i18n'
 import { NavGrid } from './nav-grid'
 
-export function LandingSection() {
+export function LandingSection({ lang }: { lang: Lang }) {
   return (
     <div className="relative h-full overflow-hidden">
       <Image
@@ -28,6 +30,13 @@ export function LandingSection() {
         }}
       />
       <div className="relative flex h-full flex-col">
+        {/* 히어로 문구 흐름을 밀지 않도록 띄워 둔다 */}
+        <div
+          className="absolute right-5 z-20"
+          style={{ top: 'calc(16px + env(safe-area-inset-top))' }}
+        >
+          <LanguageSwitcher />
+        </div>
         <div className="flex flex-col items-center px-8 pt-20 text-center text-hero-ink">
           <p className="font-display text-[13px] leading-5 font-medium tracking-[0.24em]">
             2026 QUINQUATRIA
@@ -42,7 +51,7 @@ export function LandingSection() {
             10.05 - 10.06
           </p>
         </div>
-        <NavGrid />
+        <NavGrid lang={lang} />
       </div>
     </div>
   )
