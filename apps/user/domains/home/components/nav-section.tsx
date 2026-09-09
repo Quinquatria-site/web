@@ -15,7 +15,9 @@ export function NavSection({ ref }: { ref?: Ref<HTMLElement> }) {
       ref={ref}
       className="flex h-full flex-col gap-3 px-5 pt-6"
       // 마지막 줄이 dock 에 가리지 않게 한 층만큼 더 비운다
-      style={{ paddingBottom: `calc(${DOCK_GAP + DOCK_HEIGHT + 16}px + env(safe-area-inset-bottom))` }}
+      style={{
+        paddingBottom: `calc(${DOCK_GAP + DOCK_HEIGHT + 16}px + env(safe-area-inset-bottom))`,
+      }}
     >
       {PAGE_PATHS.map((path) => {
         const Icon = PAGE_ICONS[path]

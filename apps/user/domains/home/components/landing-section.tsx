@@ -39,7 +39,9 @@ export function LandingSection() {
           <p className="font-display text-[13px] leading-5 font-medium tracking-[0.24em]">
             2026 QUINQUATRIA
           </p>
-          <h1 className="font-display mt-3 text-[52px] leading-[1.1] tracking-[0.08em]">TWILIGHT</h1>
+          <h1 className="font-display mt-3 text-[52px] leading-[1.1] tracking-[0.08em]">
+            TWILIGHT
+          </h1>
           <p className="font-display mt-4 text-[17px] leading-[1.55] tracking-[0.06em]">
             WHERE LIGHT FADES,
             <br />
