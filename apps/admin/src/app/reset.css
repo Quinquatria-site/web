@@ -20,6 +20,7 @@ body {
      계산돼 오히려 화면보다 커진다. 높이는 AppLayout 의 100dvh 에 맡긴다. */
   overflow: hidden;
 
-  /* 끝에서 당겼을 때 고무줄처럼 튕기는 것도 막는다 */
-  overscroll-behavior: none;
+  /* overscroll-behavior 는 건드리지 않는다.
+     none 을 걸면 당겨서 새로고침(pull-to-refresh)까지 같이 죽는다. 문서에 스크롤할
+     것이 없으면 끌림은 overflow: hidden 만으로 잡히므로, 새로고침 제스처는 살려둔다. */
 }
