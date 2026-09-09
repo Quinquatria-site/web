@@ -30,3 +30,15 @@ export type FestivalDay = {
   date: IsoDate
   label: string
 }
+
+/** 상시 공지는 목록 위에 붙어 남고, 일반 공지는 그 아래로 흘러 지나간다. */
+export type NoticeKind = 'pinned' | 'normal'
+
+export type Notice = {
+  id: string
+  kind: NoticeKind
+  date: IsoDate
+  title: Localized
+  /** 문단 하나가 한 칸. 첫 문단이 목록 카드의 미리보기가 된다. */
+  body: Localized[]
+}

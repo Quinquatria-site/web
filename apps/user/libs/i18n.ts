@@ -20,6 +20,7 @@ export type Copy = {
   toTop: string
   toNav: string
   language: string
+  back: string
   pages: Record<PagePath, { label: string; summary: string }>
   timeline: {
     /** 배너 문구. Phase 이름과 키가 같다. */
@@ -50,6 +51,10 @@ export type Copy = {
     hostValue: string
     descriptionSlot: string
   }
+  notice: {
+    /** 스크롤해도 남는 공지에 붙는 말. */
+    pinned: string
+  }
   admin: {
     message: string
     note: string
@@ -64,6 +69,7 @@ export const COPY: Record<Lang, Copy> = {
     toTop: '맨 위로',
     toNav: '아래로',
     language: '언어 선택',
+    back: '뒤로 가기',
     pages: {
       '/timeline': { label: '타임라인', summary: '공연과 부스 일정을 시간순으로' },
       '/map': { label: '캠퍼스 지도', summary: '부스 · 화장실 · 쓰레기통 위치' },
@@ -96,6 +102,9 @@ export const COPY: Record<Lang, Copy> = {
       hostValue: '[학과 · 동아리]',
       descriptionSlot: '상세 설명 자리',
     },
+    notice: {
+      pinned: '상시',
+    },
     admin: {
       message: '축제를 즐겨주세요 ^^',
       note: '이 문 뒤에는 아무것도 없습니다.',
@@ -108,6 +117,7 @@ export const COPY: Record<Lang, Copy> = {
     toTop: 'Back to top',
     toNav: 'Scroll down',
     language: 'Select language',
+    back: 'Go back',
     pages: {
       '/timeline': { label: 'Timeline', summary: 'Shows and booths, hour by hour' },
       '/map': { label: 'Campus Map', summary: 'Booths, restrooms, and bins' },
@@ -140,6 +150,9 @@ export const COPY: Record<Lang, Copy> = {
       hostValue: '[Dept · Club]',
       descriptionSlot: 'Description goes here',
     },
+    notice: {
+      pinned: 'Pinned',
+    },
     admin: {
       message: 'Please enjoy the festival ^^',
       note: 'There is nothing behind this door.',
@@ -152,6 +165,7 @@ export const COPY: Record<Lang, Copy> = {
     toTop: '回到顶部',
     toNav: '向下滚动',
     language: '选择语言',
+    back: '返回',
     pages: {
       '/timeline': { label: '日程', summary: '按时间查看演出与摊位' },
       '/map': { label: '校园地图', summary: '摊位 · 洗手间 · 垃圾桶位置' },
@@ -183,6 +197,9 @@ export const COPY: Record<Lang, Copy> = {
       host: '主办',
       hostValue: '[院系 · 社团]',
       descriptionSlot: '详细说明位置',
+    },
+    notice: {
+      pinned: '置顶',
     },
     admin: {
       message: '请尽情享受庆典 ^^',

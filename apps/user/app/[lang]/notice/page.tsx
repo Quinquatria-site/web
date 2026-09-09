@@ -1,8 +1,5 @@
-import { PageHeader } from '@/components/page-header'
-import { COPY, type Lang } from '@/libs/i18n'
+import { NoticeList } from '@/domains/notice/components/notice-list'
 
-export default async function Page({ params }: PageProps<'/[lang]/notice'>) {
-  const { lang } = (await params) as { lang: Lang }
-  const { label, summary } = COPY[lang].pages['/notice']
-  return <PageHeader title={label} description={summary} />
+export default function Page() {
+  return <NoticeList />
 }

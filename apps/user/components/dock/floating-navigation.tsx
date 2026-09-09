@@ -4,10 +4,10 @@ import { AnimatePresence, motion } from 'motion/react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useLang } from '@/components/lang-provider'
-import { ArrowDownIcon, ArrowUpIcon, HomeIcon, PAGE_ICONS } from '@/components/icons'
+import { ArrowDownIcon, ArrowLeftIcon, ArrowUpIcon, HomeIcon, PAGE_ICONS } from '@/components/icons'
 import { DOCK_BOTTOM } from '@/libs/dock'
 import { useShell } from '@/hooks/use-shell'
-import { langHref, PAGE_PATHS } from '@/libs/routes'
+import { backHref, langHref, PAGE_PATHS } from '@/libs/routes'
 
 // dock 의 이동·폭 변화와 탭 인디케이터
 const SPRING = { type: 'spring', stiffness: 500, damping: 34 } as const
@@ -21,14 +21,22 @@ export function FloatingNavigation() {
   const { dockPhase, homeAnchorRef, scrollRef } = useShell()
 
   const home = langHref(lang)
-  // 홈에서만 dock 이 단일 버튼으로 접힌다
   const isHome = pathname === home
+  // 상세 화면에서 돌아갈 곳. 여기서는 탭을 아예 내주지 않는다
+  const back = backHref(lang, pathname)
+  // 홈과 상세에서 dock 이 단일 버튼으로 접힌다
+  const collapsed = isHome || back !== null
   // 랜딩에 머무는 동안에만 버튼이 하단 가운데에 있다
   const atLanding = isHome && dockPhase === 'landing'
-  // 버튼 안에 무엇이 들어갈지: 아래 화살표 · 위 화살표 · 홈 아이콘
-  const slot = !isHome ? 'home' : dockPhase === 'scrolled' ? 'up' : 'down'
+  // 버튼 안에 무엇이 들어갈지: 뒤로 · 홈 · 위 화살표 · 아래 화살표
+  const slot = back ? 'back' : !isHome ? 'home' : dockPhase === 'scrolled' ? 'up' : 'down'
 
   function handleMain() {
+    // 상세에서는 링크로 바로 들어왔더라도 목록으로 나간다
+    if (back) {
+      router.push(back)
+      return
+    }
     // 다른 페이지에서는 홈으로 이동한다
     if (!isHome) {
       router.push(home)
@@ -54,9 +62,9 @@ export function FloatingNavigation() {
         transition={SPRING}
         className="pointer-events-auto flex items-center rounded-full border border-line/70 bg-surface/70 p-1.5 shadow-lg shadow-black/10 backdrop-blur-md"
       >
-        {/* 홈을 벗어나면 왼쪽으로 펼쳐지고, 홈으로 돌아오면 오른쪽으로 접힌다 */}
+        {/* 목록에서는 왼쪽으로 펼쳐지고, 홈이나 상세로 가면 오른쪽으로 접힌다 */}
         <AnimatePresence>
-          {!isHome &&
+          {!collapsed &&
             PAGE_PATHS.map((path, index) => {
               const href = langHref(lang, path)
               const active = pathname === href
@@ -107,7 +115,15 @@ export function FloatingNavigation() {
           layout
           type="button"
           onClick={handleMain}
-          aria-label={slot === 'up' ? copy.toTop : slot === 'down' ? copy.toNav : copy.home}
+          aria-label={
+            slot === 'back'
+              ? copy.back
+              : slot === 'up'
+                ? copy.toTop
+                : slot === 'down'
+                  ? copy.toNav
+                  : copy.home
+          }
           className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
         >
           {/* mode="wait" 라서 먼저 뿅 사라진 뒤에 다음 아이콘이 뿅 나타난다 */}
@@ -121,6 +137,7 @@ export function FloatingNavigation() {
               transition={POP}
               className="flex items-center justify-center"
             >
+              {slot === 'back' && <ArrowLeftIcon className="h-5 w-5 text-ink" />}
               {slot === 'home' && <HomeIcon className="h-5 w-5 text-ink-muted" />}
               {slot === 'up' && <ArrowUpIcon className="h-5 w-5 text-ink" />}
               {slot === 'down' && <ArrowDownIcon className="h-5 w-5 text-ink" />}

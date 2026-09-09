@@ -72,6 +72,23 @@ export function ArrowUpIcon({ className }: IconProps) {
   )
 }
 
+export function ArrowLeftIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} aria-hidden>
+      <path d="M19 12H5M11 6l-6 6 6 6" />
+    </svg>
+  )
+}
+
+export function PinIcon({ className }: IconProps) {
+  return (
+    <svg {...base} className={className} aria-hidden>
+      <path d="M9.5 3h5M10.5 3v6L7.5 13h9l-3-4V3" />
+      <path d="M12 13v8" />
+    </svg>
+  )
+}
+
 export function ChevronRightIcon({ className }: IconProps) {
   return (
     <svg {...base} className={className} aria-hidden>
