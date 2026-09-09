@@ -45,6 +45,12 @@ export type Copy = {
     hostValue: string
     descriptionSlot: string
   }
+  admin: {
+    message: string
+    note: string
+    portrait: string
+    toHome: string
+  }
 }
 
 export const COPY: Record<Lang, Copy> = {
@@ -82,6 +88,12 @@ export const COPY: Record<Lang, Copy> = {
       hostValue: '[학과 · 동아리]',
       descriptionSlot: '상세 설명 자리',
     },
+    admin: {
+      message: '축제를 즐겨주세요 ^^',
+      note: '이 문 뒤에는 아무것도 없습니다.',
+      portrait: '만든 사람의 사진',
+      toHome: '홈으로 돌아가기',
+    },
   },
   en: {
     home: 'Home',
@@ -117,6 +129,12 @@ export const COPY: Record<Lang, Copy> = {
       hostValue: '[Dept · Club]',
       descriptionSlot: 'Description goes here',
     },
+    admin: {
+      message: 'Please enjoy the festival ^^',
+      note: 'There is nothing behind this door.',
+      portrait: 'A photo of the person who built this',
+      toHome: 'Back to home',
+    },
   },
   cha: {
     home: '首页',
@@ -151,6 +169,12 @@ export const COPY: Record<Lang, Copy> = {
       host: '主办',
       hostValue: '[院系 · 社团]',
       descriptionSlot: '详细说明位置',
+    },
+    admin: {
+      message: '请尽情享受庆典 ^^',
+      note: '这扇门后面什么也没有。',
+      portrait: '制作者的照片',
+      toHome: '返回首页',
     },
   },
 }
