@@ -124,49 +124,53 @@ export function CampusMap() {
 
   return (
     <div className="relative h-full w-full">
-      <div className="relative h-full w-full" inert={!ready}>
-        <MapContainer
-          ref={setMap}
-          className="h-full w-full bg-surface"
-          // 위경도 대신 평면 픽셀 좌표계를 쓴다.
-          crs={CRS.Simple}
-          bounds={IMAGE_BOUNDS}
-          // 드래그가 이미지 밖으로 못 나가게 막는다. viscosity 1 은 경계에서 딱 멈춤.
-          maxBounds={IMAGE_BOUNDS}
-          maxBoundsViscosity={1}
-          maxZoom={2}
-          // 줌을 정수 단위가 아니라 자유롭게 허용해 fit 결과가 정확히 맞도록 한다.
-          zoomSnap={0}
-          zoomControl={false}
-          attributionControl={false}
-        >
-          <ImageOverlay
-            url={IMAGE_URL}
+      {/* isolate 가 없으면 로더의 z 가 상자를 넘어가 dock 까지 덮는다. */}
+      <div className="relative isolate h-full w-full">
+        <div className="relative h-full w-full" inert={!ready}>
+          <MapContainer
+            ref={setMap}
+            className="h-full w-full bg-surface"
+            // 위경도 대신 평면 픽셀 좌표계를 쓴다.
+            crs={CRS.Simple}
             bounds={IMAGE_BOUNDS}
-            // 도면이 실제로 그려진 뒤에야 로더를 걷는다. 실패해도 지도는 열어 준다.
-            eventHandlers={{ load: () => setPainted(true), error: () => setPainted(true) }}
+            // 드래그가 이미지 밖으로 못 나가게 막는다. viscosity 1 은 경계에서 딱 멈춤.
+            maxBounds={IMAGE_BOUNDS}
+            maxBoundsViscosity={1}
+            maxZoom={2}
+            // 줌을 정수 단위가 아니라 자유롭게 허용해 fit 결과가 정확히 맞도록 한다.
+            zoomSnap={0}
+            zoomControl={false}
+            attributionControl={false}
+          >
+            <ImageOverlay
+              url={IMAGE_URL}
+              bounds={IMAGE_BOUNDS}
+              // 도면이 실제로 그려진 뒤에야 로더를 걷는다. 실패해도 지도는 열어 준다.
+              eventHandlers={{ load: () => setPainted(true), error: () => setPainted(true) }}
+            />
+            <FitToImage />
+            <MapMarkers items={items} onSelect={selectItem} />
+            <MapClick onClick={() => setSelected(null)} />
+            <ZoomWatcher
+              onChange={(next) =>
+                setZoomable((prev) => (prev.in === next.in && prev.out === next.out ? prev : next))
+              }
+            />
+            {process.env.NODE_ENV === 'development' && <CoordinatePicker />}
+          </MapContainer>
+          <FilterChips active={filters} onToggle={toggleKind} />
+          <ZoomControl
+            onZoomIn={() => map?.zoomIn()}
+            onZoomOut={() => map?.zoomOut()}
+            canZoomIn={zoomable.in}
+            canZoomOut={zoomable.out}
           />
-          <FitToImage />
-          <MapMarkers items={items} onSelect={selectItem} />
-          <MapClick onClick={() => setSelected(null)} />
-          <ZoomWatcher
-            onChange={(next) =>
-              setZoomable((prev) => (prev.in === next.in && prev.out === next.out ? prev : next))
-            }
-          />
-          {process.env.NODE_ENV === 'development' && <CoordinatePicker />}
-        </MapContainer>
-        <FilterChips active={filters} onToggle={toggleKind} />
-        <ZoomControl
-          onZoomIn={() => map?.zoomIn()}
-          onZoomOut={() => map?.zoomOut()}
-          canZoomIn={zoomable.in}
-          canZoomOut={zoomable.out}
-        />
-        <ZoneTier selected={zone} onSelect={moveTo} />
-        <DetailSheet item={selected} onClose={() => setSelected(null)} />
+          <ZoneTier selected={zone} onSelect={moveTo} />
+        </div>
+        <AnimatePresence>{!ready && <MapLoading />}</AnimatePresence>
       </div>
-      <AnimatePresence>{!ready && <MapLoading />}</AnimatePresence>
+      {/* 시트는 상자 밖에 둔다. 열리면 dock 까지 덮어야 한다. */}
+      <DetailSheet item={selected} onClose={() => setSelected(null)} />
     </div>
   )
 }
