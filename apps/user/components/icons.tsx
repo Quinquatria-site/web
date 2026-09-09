@@ -55,3 +55,11 @@ export function LostFoundIcon({ className }: IconProps) {
     </svg>
   )
 }
+
+// 같은 곳으로 가는 링크는 dock 이든 홈이든 같은 아이콘을 쓴다
+export const PAGE_ICONS = {
+  '/timeline': TimelineIcon,
+  '/map': MapIcon,
+  '/notice': NoticeIcon,
+  '/lost-found': LostFoundIcon,
+} as const
