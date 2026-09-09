@@ -21,6 +21,12 @@ export type Copy = {
   toNav: string
   language: string
   pages: Record<PagePath, { label: string; summary: string }>
+  timeline: {
+    live: string
+    opening: string
+    day: (index: number) => string
+    close: string
+  }
   map: {
     kind: Record<'booth' | 'pub' | 'aid', string>
     /** 마커 안에 들어가는 한 글자. */
@@ -52,6 +58,12 @@ export const COPY: Record<Lang, Copy> = {
       '/notice': { label: '공지사항', summary: '흩어진 공지를 한 곳에서' },
       '/lost-found': { label: '분실물', summary: '잃어버린 물건 찾아가기' },
     },
+    timeline: {
+      live: '지금 무대 위',
+      opening: '첫 무대',
+      day: (index) => `${index}일차`,
+      close: '닫기',
+    },
     map: {
       kind: { booth: '부스', pub: '주점', aid: '의무실' },
       pubMark: '주',
@@ -80,6 +92,12 @@ export const COPY: Record<Lang, Copy> = {
       '/notice': { label: 'Notices', summary: 'Every announcement in one place' },
       '/lost-found': { label: 'Lost & Found', summary: 'Claim what you lost' },
     },
+    timeline: {
+      live: 'On stage now',
+      opening: 'Opening act',
+      day: (index) => `Day ${index}`,
+      close: 'Close',
+    },
     map: {
       kind: { booth: 'Booth', pub: 'Pub', aid: 'First Aid' },
       pubMark: 'P',
@@ -107,6 +125,12 @@ export const COPY: Record<Lang, Copy> = {
       '/map': { label: '校园地图', summary: '摊位 · 洗手间 · 垃圾桶位置' },
       '/notice': { label: '公告', summary: '所有公告集中查看' },
       '/lost-found': { label: '失物招领', summary: '领取遗失的物品' },
+    },
+    timeline: {
+      live: '正在演出',
+      opening: '开场演出',
+      day: (index) => `第${index}天`,
+      close: '关闭',
     },
     map: {
       kind: { booth: '摊位', pub: '酒馆', aid: '医务室' },
