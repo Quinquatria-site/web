@@ -1,5 +1,5 @@
-import { HomeScreen } from '@/domains/home/components/home-screen'
+import { LandingSection } from '@/domains/home/components/landing-section'
 
 export default function Page() {
-  return <HomeScreen />
+  return <LandingSection />
 }
