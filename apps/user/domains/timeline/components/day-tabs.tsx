@@ -1,8 +1,11 @@
 'use client'
 
+import { motion } from 'motion/react'
 import { useLang } from '@/components/lang-provider'
 import { FESTIVAL_DAYS } from '@/mocks/timeline'
 import type { IsoDate } from '@/mocks/types'
+
+const SPRING = { type: 'spring', stiffness: 500, damping: 34 } as const
 
 export function DayTabs({
   value,
@@ -14,7 +17,7 @@ export function DayTabs({
   const { copy } = useLang()
 
   return (
-    <div className="flex shrink-0 gap-2 px-5 pt-4 pb-3">
+    <div className="flex gap-2">
       {FESTIVAL_DAYS.map((day, index) => {
         const active = day.date === value
         return (
@@ -22,15 +25,31 @@ export function DayTabs({
             key={day.date}
             type="button"
             aria-pressed={active}
-            aria-label={copy.timeline.day(index + 1)}
             onClick={() => onChange(day.date)}
-            className={`flex h-10 shrink-0 items-center rounded-full border px-4 text-[13px] font-medium tabular-nums transition-colors ${
-              active
-                ? 'border-accent bg-accent text-accent-ink'
-                : 'border-line bg-surface text-ink-muted'
-            }`}
+            className="relative flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl border border-line bg-surface"
           >
-            {day.label}
+            {/* layoutId 가 같아 탭을 옮기면 알약이 스르륵 따라온다 */}
+            {active && (
+              <motion.span
+                layoutId="day-pill"
+                transition={SPRING}
+                className="absolute inset-0 rounded-2xl bg-accent"
+              />
+            )}
+            <span
+              className={`relative text-[15px] leading-5 font-semibold tracking-wide ${
+                active ? 'text-accent-ink' : 'text-ink-muted'
+              }`}
+            >
+              {copy.timeline.day(index + 1)}
+            </span>
+            <span
+              className={`relative text-[12px] leading-4 tabular-nums ${
+                active ? 'text-accent-ink/75' : 'text-ink-muted/70'
+              }`}
+            >
+              {day.label}
+            </span>
           </button>
         )
       })}

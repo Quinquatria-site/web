@@ -22,8 +22,13 @@ export type Copy = {
   language: string
   pages: Record<PagePath, { label: string; summary: string }>
   timeline: {
+    /** 배너 문구. Phase 이름과 키가 같다. */
     live: string
-    opening: string
+    open: string
+    before: string
+    closed: string
+    /** 배너를 눌렀을 때 무슨 일이 일어나는지 읽어 주는 말. */
+    banner: string
     day: (index: number) => string
     close: string
   }
@@ -66,9 +71,12 @@ export const COPY: Record<Lang, Copy> = {
       '/lost-found': { label: '분실물', summary: '잃어버린 물건 찾아가기' },
     },
     timeline: {
-      live: '지금 무대 위',
-      opening: '첫 무대',
-      day: (index) => `${index}일차`,
+      live: '지금 공연 중!',
+      open: '부스가 운영 중이에요',
+      before: '곧 축제가 시작해요',
+      closed: '축제가 끝났습니다!',
+      banner: '지금 일정으로 이동',
+      day: (index) => `DAY ${index}`,
       close: '닫기',
     },
     map: {
@@ -107,9 +115,12 @@ export const COPY: Record<Lang, Copy> = {
       '/lost-found': { label: 'Lost & Found', summary: 'Claim what you lost' },
     },
     timeline: {
-      live: 'On stage now',
-      opening: 'Opening act',
-      day: (index) => `Day ${index}`,
+      live: 'On stage now!',
+      open: 'Booths are open',
+      before: 'The festival starts soon',
+      closed: 'The festival has ended!',
+      banner: 'Jump to what is on now',
+      day: (index) => `DAY ${index}`,
       close: 'Close',
     },
     map: {
@@ -148,9 +159,12 @@ export const COPY: Record<Lang, Copy> = {
       '/lost-found': { label: '失物招领', summary: '领取遗失的物品' },
     },
     timeline: {
-      live: '正在演出',
-      opening: '开场演出',
-      day: (index) => `第${index}天`,
+      live: '正在演出！',
+      open: '摊位正在营业',
+      before: '庆典即将开始',
+      closed: '庆典已结束！',
+      banner: '跳转到当前日程',
+      day: (index) => `第 ${index} 天`,
       close: '关闭',
     },
     map: {

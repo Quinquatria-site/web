@@ -4,29 +4,35 @@ import { AnimatePresence, motion } from 'motion/react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useLang } from '@/components/lang-provider'
-import type { Artist } from '@/mocks/types'
+import type { FestivalEvent } from '@/mocks/types'
 import { timeRange } from '../libs/schedule'
 
 const POP = { type: 'spring', stiffness: 520, damping: 34, mass: 0.7 } as const
 
-export function ArtistDialog({ artist, onClose }: { artist: Artist | null; onClose: () => void }) {
+export function EventDialog({
+  event,
+  onClose,
+}: {
+  event: FestivalEvent | null
+  onClose: () => void
+}) {
   const { lang, copy } = useLang()
   // 닫히는 동안에도 내용이 남아 있어야 해서 마지막으로 연 항목을 들고 있는다
-  const [shown, setShown] = useState<Artist | null>(artist)
-  if (artist && artist !== shown) setShown(artist)
+  const [shown, setShown] = useState<FestivalEvent | null>(event)
+  if (event && event !== shown) setShown(event)
 
   useEffect(() => {
-    if (!artist) return
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose()
+    if (!event) return
+    const onKey = (key: KeyboardEvent) => {
+      if (key.key === 'Escape') onClose()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [artist, onClose])
+  }, [event, onClose])
 
   return (
     <AnimatePresence>
-      {artist && shown && (
+      {event && shown && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -42,21 +48,26 @@ export function ArtistDialog({ artist, onClose }: { artist: Artist | null; onClo
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.96, y: 8 }}
             transition={POP}
-            onClick={(event) => event.stopPropagation()}
+            onClick={(click) => click.stopPropagation()}
             className="relative flex max-h-[80%] w-full gap-4 overflow-y-auto overscroll-contain rounded-3xl border border-line bg-surface p-5 shadow-[0_12px_40px_rgba(28,14,2,0.24)]"
           >
-            <div className="relative aspect-3/4 w-[42%] shrink-0 self-start overflow-hidden rounded-2xl bg-surface-muted">
-              <Image src={shown.image} alt="" fill sizes="200px" className="object-cover" />
-            </div>
+            {shown.image && (
+              <div className="relative aspect-3/4 w-[42%] shrink-0 self-start overflow-hidden rounded-2xl bg-surface-muted">
+                <Image src={shown.image} alt="" fill sizes="200px" className="object-cover" />
+              </div>
+            )}
 
             <div className="min-w-0 flex-1">
               <h2 className="pr-9 text-xl leading-7 font-semibold tracking-tight">
                 {shown.name[lang]}
               </h2>
               <p className="mt-1 text-[13px] leading-5 text-ink-muted tabular-nums">
-                {timeRange(shown)} · {shown.place[lang]}
+                {timeRange(shown)}
+                {shown.place && ` · ${shown.place[lang]}`}
               </p>
-              <p className="mt-3 text-[13px] leading-6 text-ink-muted">{shown.intro[lang]}</p>
+              {shown.intro && (
+                <p className="mt-3 text-[13px] leading-6 text-ink-muted">{shown.intro[lang]}</p>
+              )}
             </div>
 
             <button

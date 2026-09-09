@@ -1,29 +1,75 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLang } from '@/components/lang-provider'
-import { NOW } from '@/mocks/timeline'
-import type { Artist, IsoDate } from '@/mocks/types'
-import { artistsOn, featuredArtist, liveArtist } from '../libs/schedule'
-import { ArtistDialog } from './artist-dialog'
+import { DOCK_TIER_BOTTOM } from '@/libs/dock'
+import type { FestivalEvent, IsoDate } from '@/mocks/types'
+import { eventsOn, festivalPhase, focusEvent, liveEvent } from '../libs/schedule'
 import { DayTabs } from './day-tabs'
-import { NowPlaying } from './now-playing'
+import { EventDialog } from './event-dialog'
+import { NowBanner } from './now-banner'
 import { ScheduleList } from './schedule-list'
 
 export function TimelineView() {
   const { copy } = useLang()
-  const [date, setDate] = useState<IsoDate>(NOW.date)
-  const [opened, setOpened] = useState<Artist | null>(null)
+  const phase = festivalPhase()
+  const focus = focusEvent()
+  const live = liveEvent()
+  // 축제가 끝난 뒤에 열어도 빈 날이 잡히지 않도록 지금 가리키는 일정의 날로 연다
+  const [date, setDate] = useState<IsoDate>(focus.date)
+  const [opened, setOpened] = useState<FestivalEvent | null>(null)
+  const rows = useRef(new Map<string, HTMLLIElement>())
+  // 다른 날로 건너뛸 때는 그 날의 줄이 그려진 뒤에야 움직일 수 있다
+  const pending = useRef<string | null>(null)
 
-  const featured = featuredArtist(date)
+  const rowRef = useCallback((id: string, node: HTMLLIElement | null) => {
+    if (node) rows.current.set(id, node)
+    else rows.current.delete(id)
+  }, [])
+
+  const scrollToRow = useCallback((id: string) => {
+    rows.current.get(id)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }, [])
+
+  useEffect(() => {
+    const id = pending.current
+    if (!id) return
+    pending.current = null
+    scrollToRow(id)
+  }, [date, scrollToRow])
+
+  function jumpToNow() {
+    if (focus.date === date) {
+      scrollToRow(focus.id)
+      return
+    }
+    pending.current = focus.id
+    setDate(focus.date)
+  }
 
   return (
-    <div className="flex h-full flex-col">
+    <div
+      className="flex flex-col gap-6 pt-[calc(env(safe-area-inset-top)+24px)]"
+      style={{ paddingBottom: DOCK_TIER_BOTTOM }}
+    >
       <h1 className="sr-only">{copy.pages['/timeline'].label}</h1>
-      <DayTabs value={date} onChange={setDate} />
-      <NowPlaying artist={featured} live={liveArtist(date) !== null} />
-      <ScheduleList items={artistsOn(date)} activeId={featured?.id ?? null} onSelect={setOpened} />
-      <ArtistDialog artist={opened} onClose={() => setOpened(null)} />
+
+      <div className="px-5">
+        <NowBanner phase={phase} event={focus} onJump={jumpToNow} />
+      </div>
+
+      <div className="px-5">
+        <DayTabs value={date} onChange={setDate} />
+      </div>
+
+      <ScheduleList
+        items={eventsOn(date)}
+        liveId={live?.id ?? null}
+        rowRef={rowRef}
+        onSelect={setOpened}
+      />
+
+      <EventDialog event={opened} onClose={() => setOpened(null)} />
     </div>
   )
 }

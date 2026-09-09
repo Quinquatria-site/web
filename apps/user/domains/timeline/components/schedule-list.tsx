@@ -1,63 +1,108 @@
 'use client'
 
+import { motion } from 'motion/react'
 import { useLang } from '@/components/lang-provider'
-import { DOCK_TIER_BOTTOM } from '@/libs/dock'
-import type { Artist } from '@/mocks/types'
+import type { FestivalEvent } from '@/mocks/types'
+import { isAct, timeRange } from '../libs/schedule'
+
+/** 카드 채움으로 학생 무대와 초청 무대를 가른다. */
+const FILL: Record<'student' | 'celeb', string> = {
+  student: 'border-line bg-surface',
+  celeb: 'border-line bg-surface-muted',
+}
 
 export function ScheduleList({
   items,
-  activeId,
+  liveId,
+  rowRef,
   onSelect,
 }: {
-  items: Artist[]
-  activeId: string | null
-  onSelect: (artist: Artist) => void
+  items: FestivalEvent[]
+  liveId: string | null
+  rowRef: (id: string, node: HTMLLIElement | null) => void
+  onSelect: (event: FestivalEvent) => void
 }) {
   const { lang } = useLang()
 
   return (
-    <ol
-      className="min-h-0 flex-1 overflow-y-auto overscroll-contain pt-5 pr-5 pl-7"
-      style={{ paddingBottom: DOCK_TIER_BOTTOM }}
-    >
-      {items.map((artist) => {
-        const active = artist.id === activeId
+    <ol className="px-5">
+      {items.map((event, index) => {
+        const live = event.id === liveId
+        const last = index === items.length - 1
         return (
-          <li key={artist.id} className="relative pb-3 pl-7">
-            {/* 레일과 가지. 항목마다 한 토막씩 이어 붙어 하나의 선으로 보인다 */}
-            <span aria-hidden className="absolute top-0 left-0 h-full w-px bg-line" />
+          <li
+            key={event.id}
+            ref={(node) => {
+              rowRef(event.id, node)
+            }}
+            className="relative scroll-mt-24 pb-3 pl-9"
+          >
+            {/* 레일. 항목마다 한 토막씩 이어 붙어 하나의 선으로 보인다 */}
             <span
               aria-hidden
-              className={`absolute top-8 left-0 h-px w-7 ${active ? 'bg-accent' : 'bg-line'}`}
+              className={`absolute top-0 left-[5px] w-px bg-line ${last ? 'h-1/2' : 'h-full'}`}
             />
-            <button
-              type="button"
-              onClick={() => onSelect(artist)}
-              aria-current={active ? 'true' : undefined}
-              className={`flex w-full items-center justify-between gap-3 rounded-xl px-4 py-3 text-left transition-colors ${
-                active ? 'bg-accent text-accent-ink' : 'bg-surface-muted text-ink'
-              }`}
-            >
-              <span className="min-w-0">
-                <span className="block truncate text-[15px] leading-5 font-medium">
-                  {artist.name[lang]}
-                </span>
-                <span
-                  className={`mt-0.5 block truncate text-[12px] leading-4 ${
-                    active ? 'text-accent-ink/75' : 'text-ink-muted'
-                  }`}
-                >
-                  {artist.place[lang]}
-                </span>
-              </span>
+
+            <div className="relative">
               <span
-                className={`shrink-0 text-[13px] leading-5 tabular-nums ${
-                  active ? 'text-accent-ink' : 'text-ink-muted'
+                aria-hidden
+                className={`absolute top-1/2 -left-9 size-[11px] -translate-y-1/2 rounded-full ${
+                  live ? 'bg-accent' : 'bg-ink-muted/45'
                 }`}
               >
-                {artist.start}
+                {/* 진행 중인 무대에서만 점이 물결처럼 번진다 */}
+                {live && (
+                  <motion.span
+                    className="absolute inset-0 rounded-full bg-accent"
+                    animate={{ scale: [1, 2.4], opacity: [0.5, 0] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
+                  />
+                )}
               </span>
-            </button>
+
+              {isAct(event) ? (
+                <motion.button
+                  type="button"
+                  whileTap={{ scale: 0.985 }}
+                  onClick={() => onSelect(event)}
+                  aria-current={live ? 'true' : undefined}
+                  className={`relative flex w-full items-center justify-center gap-3 rounded-2xl border px-4 py-3.5 ${
+                    live
+                      ? 'border-accent bg-accent text-accent-ink'
+                      : FILL[event.kind === 'celeb' ? 'celeb' : 'student']
+                  }`}
+                >
+                  <span
+                    className={`shrink-0 text-[13px] leading-5 tabular-nums ${
+                      live ? 'text-accent-ink/80' : 'text-ink-muted'
+                    }`}
+                  >
+                    {timeRange(event)}
+                  </span>
+                  <span className="min-w-0 truncate text-[15px] leading-5 font-medium">
+                    {event.name[lang]}
+                  </span>
+
+                  {/* 테두리가 천천히 밝아졌다 잦아든다 */}
+                  {live && (
+                    <motion.span
+                      aria-hidden
+                      className="pointer-events-none absolute -inset-px rounded-2xl ring-2 ring-accent"
+                      animate={{ opacity: [0.2, 0.9, 0.2] }}
+                      transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+                  )}
+                </motion.button>
+              ) : (
+                // 공연이 아닌 일정은 눌러도 열 것이 없어 글로만 놓는다
+                <p className="flex items-center justify-center gap-3 py-2.5 text-ink-muted">
+                  <span className="shrink-0 text-[13px] leading-5 tabular-nums">
+                    {timeRange(event)}
+                  </span>
+                  <span className="min-w-0 truncate text-[14px] leading-5">{event.name[lang]}</span>
+                </p>
+              )}
+            </div>
           </li>
         )
       })}
