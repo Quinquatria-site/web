@@ -31,6 +31,16 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   background: var(--seed-color-bg-layer-default);
+
+  /* 막대만 감춘다. 스크롤 자체는 살려둔다 — 내용이 길어지면 이 안쪽이 스크롤돼야 한다.
+     폰 앱처럼 보이는 셸이라 상시 노출되는 막대가 화면 폭을 잡아먹고, 배경색이
+     다른 화면에서는 오른쪽에 밝은 줄로 드러난다. */
+  scrollbar-width: none;
+}
+
+/* scrollbar-width 를 모르는 옛 웹킷(구형 iOS 사파리)용 */
+.viewport::-webkit-scrollbar {
+  display: none;
 }
 
 /* 미디어 쿼리는 커스텀 속성을 못 읽는다. 값이 바뀌면 위 --app-viewport-breakpoint
