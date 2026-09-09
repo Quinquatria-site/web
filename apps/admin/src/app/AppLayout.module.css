@@ -11,31 +11,15 @@
   background: var(--seed-color-bg-layer-basement);
 }
 
-/* 창이 아니라 이 안쪽만 스크롤한다. 폰 화면처럼 높이가 고정된다. */
+/* 창이 아니라 이 안쪽만 스크롤한다. 폰 화면처럼 높이가 고정된다.
+   가운데 정렬은 하지 않는다. 화면마다 필요한 배치가 달라 각자 잡는다. */
 .viewport {
   display: flex;
   flex-direction: column;
-  gap: var(--seed-dimension-x3);
-  align-items: center;
-  justify-content: center;
   width: 100%;
   max-width: var(--app-viewport-width);
   height: 100%;
-  padding: var(--seed-dimension-x8) var(--seed-dimension-x4);
   overflow-y: auto;
   overscroll-behavior: contain;
   background: var(--seed-color-bg-layer-default);
-}
-
-.heading {
-  margin: 0;
-  font: var(--seed-font-title-t2-bold);
-  color: var(--seed-color-fg-neutral);
-}
-
-.description {
-  margin: 0;
-  font: var(--seed-font-body-b3-regular);
-  color: var(--seed-color-fg-neutral-muted);
-  text-align: center;
 }
