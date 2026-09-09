@@ -21,7 +21,8 @@ export type Copy = {
   toNav: string
   language: string
   back: string
-  pages: Record<PagePath, { label: string; summary: string }>
+  /** short 는 dock 탭에 찍히는 이름. 화면이 좁아 label 이 넘칠 때만 줄인다. */
+  pages: Record<PagePath, { label: string; short: string; summary: string }>
   timeline: {
     /** 배너 문구. Phase 이름과 키가 같다. */
     live: string
@@ -72,10 +73,10 @@ export const COPY: Record<Lang, Copy> = {
     language: '언어 선택',
     back: '뒤로 가기',
     pages: {
-      '/timeline': { label: '타임라인', summary: '공연과 부스 일정을 시간순으로' },
-      '/map': { label: '캠퍼스 지도', summary: '부스 · 주점 · 쓰레기통 위치' },
-      '/notice': { label: '공지사항', summary: '흩어진 공지를 한 곳에서' },
-      '/lost-found': { label: '분실물', summary: '잃어버린 물건 찾아가기' },
+      '/timeline': { label: '타임라인', short: '타임라인', summary: '공연과 부스 일정을 시간순으로' },
+      '/map': { label: '캠퍼스 지도', short: '캠퍼스 지도', summary: '부스 · 주점 · 쓰레기통 위치' },
+      '/notice': { label: '공지사항', short: '공지사항', summary: '흩어진 공지를 한 곳에서' },
+      '/lost-found': { label: '분실물', short: '분실물', summary: '잃어버린 물건 찾아가기' },
     },
     timeline: {
       live: '지금 공연 중!',
@@ -120,10 +121,10 @@ export const COPY: Record<Lang, Copy> = {
     language: 'Select language',
     back: 'Go back',
     pages: {
-      '/timeline': { label: 'Timeline', summary: 'Shows and booths, hour by hour' },
-      '/map': { label: 'Campus Map', summary: 'Booths, pubs, and bins' },
-      '/notice': { label: 'Notices', summary: 'Every announcement in one place' },
-      '/lost-found': { label: 'Lost & Found', summary: 'Claim what you lost' },
+      '/timeline': { label: 'Timeline', short: 'Timeline', summary: 'Shows and booths, hour by hour' },
+      '/map': { label: 'Campus Map', short: 'Map', summary: 'Booths, pubs, and bins' },
+      '/notice': { label: 'Notices', short: 'Notices', summary: 'Every announcement in one place' },
+      '/lost-found': { label: 'Lost & Found', short: 'Lost', summary: 'Claim what you lost' },
     },
     timeline: {
       live: 'On stage now!',
@@ -168,10 +169,10 @@ export const COPY: Record<Lang, Copy> = {
     language: '选择语言',
     back: '返回',
     pages: {
-      '/timeline': { label: '日程', summary: '按时间查看演出与摊位' },
-      '/map': { label: '校园地图', summary: '摊位 · 酒馆 · 垃圾桶位置' },
-      '/notice': { label: '公告', summary: '所有公告集中查看' },
-      '/lost-found': { label: '失物招领', summary: '领取遗失的物品' },
+      '/timeline': { label: '日程', short: '日程', summary: '按时间查看演出与摊位' },
+      '/map': { label: '校园地图', short: '校园地图', summary: '摊位 · 酒馆 · 垃圾桶位置' },
+      '/notice': { label: '公告', short: '公告', summary: '所有公告集中查看' },
+      '/lost-found': { label: '失物招领', short: '失物招领', summary: '领取遗失的物品' },
     },
     timeline: {
       live: '正在演出！',

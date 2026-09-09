@@ -1,7 +1,7 @@
 /** dock 을 화면 아래에서 띄운 높이. 위에 층을 쌓을 때 기준이 된다. */
 export const DOCK_GAP = 20
-/** dock 한 줄의 높이. 버튼 44 + 위아래 여백 6씩. */
-export const DOCK_HEIGHT = 56
+/** 펼친 dock 한 줄의 높이. 탭 52 + 위아래 여백 6씩. 접히면 44 + 6씩 이라 56 이 된다. */
+export const DOCK_HEIGHT = 64
 /** dock 과 그 위 층 사이 간격. */
 export const DOCK_TIER_GAP = 10
 

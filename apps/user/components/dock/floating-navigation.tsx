@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from 'motion/react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useLang } from '@/components/lang-provider'
 import { ArrowDownIcon, ArrowLeftIcon, ArrowUpIcon, HomeIcon, PAGE_ICONS } from '@/components/icons'
 import { DOCK_BOTTOM } from '@/libs/dock'
@@ -14,11 +15,38 @@ const SPRING = { type: 'spring', stiffness: 500, damping: 34 } as const
 // 아이콘이 "뿅" 하고 나타나고 사라지는 감각
 const POP = { type: 'spring', stiffness: 700, damping: 26, mass: 0.6 } as const
 
+/** 탭이 나눠 가지지 못하는 폭. 안쪽 여백 6 씩 + 동작 버튼 44 + 그 옆 간격 8. */
+const RAIL_INSET = 6 * 2 + 44 + 8
+/** 360 화면 기준값. 마운트 직후 실제 폭으로 덮인다. */
+const TAB_WIDTH_FALLBACK = 66
+
+/**
+ * 탭 폭을 px 로 확정한다. flex 로 나눠 가지게 두면 접힐 때 폭 0 까지 이어 그릴 수 없다.
+ * 재는 대상은 dock 을 감싼 줄이고, 그 폭이 곧 펼친 dock 의 폭이다.
+ */
+function useTabWidth() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [width, setWidth] = useState(TAB_WIDTH_FALLBACK)
+
+  useLayoutEffect(() => {
+    const rail = ref.current
+    if (!rail) return
+    const measure = () => setWidth((rail.clientWidth - RAIL_INSET) / PAGE_PATHS.length)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(rail)
+    return () => observer.disconnect()
+  }, [])
+
+  return [ref, width] as const
+}
+
 export function FloatingNavigation() {
   const pathname = usePathname()
   const router = useRouter()
   const { lang, copy } = useLang()
   const { dockPhase, homeAnchorRef, scrollRef } = useShell()
+  const [railRef, tabWidth] = useTabWidth()
 
   const home = langHref(lang)
   const isHome = pathname === home
@@ -51,100 +79,120 @@ export function FloatingNavigation() {
   }
 
   return (
-    // 가운데 ↔ 우측 이동은 이 줄의 정렬만 바꾸고, 실제 움직임은 layout 이 그린다
     <div
-      className="pointer-events-none absolute inset-x-0 z-[1000] flex px-4"
-      style={{ bottom: DOCK_BOTTOM, justifyContent: atLanding ? 'center' : 'flex-end' }}
+      className="pointer-events-none absolute inset-x-0 z-[1000] px-4"
+      style={{ bottom: DOCK_BOTTOM }}
     >
-      {/* layout 이 위치와 폭 변화를 transform 으로 이어 그린다 */}
-      <motion.nav
-        layout
-        transition={SPRING}
-        className="pointer-events-auto flex items-center rounded-full border border-line/70 bg-surface/70 p-1.5 shadow-lg shadow-black/10 backdrop-blur-md"
+      {/* 이 줄의 폭이 곧 펼친 dock 의 폭이다. 가운데 ↔ 우측 이동은 정렬만 바꾸고 움직임은 layout 이 그린다 */}
+      <div
+        ref={railRef}
+        className="flex"
+        style={{ justifyContent: atLanding ? 'center' : 'flex-end' }}
       >
-        {/* 목록에서는 왼쪽으로 펼쳐지고, 홈이나 상세로 가면 오른쪽으로 접힌다 */}
-        <AnimatePresence>
-          {!collapsed &&
-            PAGE_PATHS.map((path, index) => {
-              const href = langHref(lang, path)
-              const active = pathname === href
-              const Icon = PAGE_ICONS[path]
-              return (
-                <motion.div
-                  key={path}
-                  // 폭 0 에서 44 로 벌어지는 것이 곧 펼침 애니메이션이다
-                  initial={{ width: 0, opacity: 0 }}
-                  animate={{ width: 44, opacity: 1 }}
-                  // 접힐 때는 왼쪽 탭부터 순서대로 사라져 오른쪽으로 합쳐진다
-                  exit={{
-                    width: 0,
-                    opacity: 0,
-                    transition: { duration: 0.16, delay: (PAGE_PATHS.length - 1 - index) * 0.03 },
-                  }}
-                  // 펼칠 때는 오른쪽 탭부터 한 박자씩 늦게 벌어진다
-                  transition={{ ...SPRING, delay: index * 0.035 }}
-                  className="relative h-11 shrink-0 overflow-hidden"
-                >
-                  <Link
-                    href={href}
-                    // 아이콘만 있는 탭이라 이름은 여기서 읽힌다
-                    aria-label={copy.pages[path].label}
-                    aria-current={active ? 'page' : undefined}
-                    className="relative flex h-11 w-11 items-center justify-center rounded-full"
-                  >
-                    {/* layoutId 가 같아서 탭을 옮길 때 알약이 스르륵 따라온다 */}
-                    {active && (
-                      <motion.span
-                        layoutId="dock-indicator"
-                        transition={SPRING}
-                        className="absolute inset-0.5 rounded-full bg-accent"
-                      />
-                    )}
-                    {/* 아이콘 색은 currentColor 라 클래스만으로 반전된다 */}
-                    <Icon
-                      className={`relative h-5 w-5 ${active ? 'text-accent-ink' : 'text-ink-muted'}`}
-                    />
-                  </Link>
-                </motion.div>
-              )
-            })}
-        </AnimatePresence>
-
-        {/* 경로가 바뀌어도 이 버튼만은 사라지지 않고 자리만 옮긴다 */}
-        <motion.button
+        {/* layout 이 위치와 폭 변화를 transform 으로 이어 그린다 */}
+        <motion.nav
           layout
-          type="button"
-          onClick={handleMain}
-          aria-label={
-            slot === 'back'
-              ? copy.back
-              : slot === 'up'
-                ? copy.toTop
-                : slot === 'down'
-                  ? copy.toNav
-                  : copy.home
-          }
-          className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
+          transition={SPRING}
+          className="pointer-events-auto flex items-center rounded-[32px] border border-line/70 bg-surface/70 p-1.5 shadow-lg shadow-black/10 backdrop-blur-md"
         >
-          {/* mode="wait" 라서 먼저 뿅 사라진 뒤에 다음 아이콘이 뿅 나타난다 */}
-          <AnimatePresence mode="wait" initial={false}>
-            {/* key 가 바뀌는 것이 곧 아이콘 교체 신호다 */}
-            <motion.span
-              key={slot}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              transition={POP}
-              className="flex items-center justify-center"
-            >
-              {slot === 'back' && <ArrowLeftIcon className="h-5 w-5 text-ink" />}
-              {slot === 'home' && <HomeIcon className="h-5 w-5 text-ink-muted" />}
-              {slot === 'up' && <ArrowUpIcon className="h-5 w-5 text-ink" />}
-              {slot === 'down' && <ArrowDownIcon className="h-5 w-5 text-ink" />}
-            </motion.span>
+          {/* 경로가 바뀌어도 이 버튼만은 사라지지 않고 자리만 옮긴다. 목적지 넷과 달리 이름을 달지 않는다 */}
+          <motion.button
+            layout
+            type="button"
+            onClick={handleMain}
+            // 접히면 원 하나로 남아야 하므로 여기서 높이도 같이 줄인다
+            style={{ height: collapsed ? 44 : 52 }}
+            aria-label={
+              slot === 'back'
+                ? copy.back
+                : slot === 'up'
+                  ? copy.toTop
+                  : slot === 'down'
+                    ? copy.toNav
+                    : copy.home
+            }
+            className="relative flex w-11 shrink-0 items-center justify-center rounded-full"
+          >
+            {/* mode="wait" 라서 먼저 뿅 사라진 뒤에 다음 아이콘이 뿅 나타난다 */}
+            <AnimatePresence mode="wait" initial={false}>
+              {/* key 가 바뀌는 것이 곧 아이콘 교체 신호다 */}
+              <motion.span
+                key={slot}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0 }}
+                transition={POP}
+                className="flex items-center justify-center"
+              >
+                {slot === 'back' && <ArrowLeftIcon className="h-5 w-5 text-ink" />}
+                {slot === 'home' && <HomeIcon className="h-5 w-5 text-ink" />}
+                {slot === 'up' && <ArrowUpIcon className="h-5 w-5 text-ink" />}
+                {slot === 'down' && <ArrowDownIcon className="h-5 w-5 text-ink" />}
+              </motion.span>
+            </AnimatePresence>
+          </motion.button>
+
+          {/* 목록에서는 오른쪽으로 펼쳐지고, 홈이나 상세로 가면 동작 버튼 쪽으로 접힌다 */}
+          <AnimatePresence>
+            {!collapsed &&
+              PAGE_PATHS.map((path, index) => {
+                const href = langHref(lang, path)
+                const active = pathname === href
+                const Icon = PAGE_ICONS[path]
+                return (
+                  <motion.div
+                    key={path}
+                    // 폭 0 에서 탭 한 칸으로 벌어지는 것이 곧 펼침 애니메이션이다.
+                    // 첫 탭의 왼쪽 여백이 동작 버튼과의 간격이라, 접히면 그것도 같이 걷힌다
+                    initial={{ width: 0, marginLeft: 0, opacity: 0 }}
+                    animate={{ width: tabWidth, marginLeft: index === 0 ? 8 : 0, opacity: 1 }}
+                    // 접힐 때는 바깥 탭부터 순서대로 사라져 동작 버튼 쪽으로 합쳐진다
+                    exit={{
+                      width: 0,
+                      marginLeft: 0,
+                      opacity: 0,
+                      transition: { duration: 0.16, delay: (PAGE_PATHS.length - 1 - index) * 0.03 },
+                    }}
+                    // 펼칠 때는 안쪽 탭부터 한 박자씩 늦게 벌어진다
+                    transition={{ ...SPRING, delay: index * 0.035 }}
+                    className="relative h-[52px] shrink-0 overflow-hidden"
+                  >
+                    <Link
+                      href={href}
+                      // 보이는 것은 줄인 이름이라, 읽어 줄 때는 온전한 이름을 준다
+                      aria-label={copy.pages[path].label}
+                      aria-current={active ? 'page' : undefined}
+                      style={{ width: tabWidth }}
+                      className={`relative flex h-[52px] flex-col items-center justify-center gap-0.5 ${
+                        active ? 'text-accent-ink' : 'text-ink-muted'
+                      }`}
+                    >
+                      {/* layoutId 가 같아서 탭을 옮길 때 알약이 스르륵 따라온다 */}
+                      {active && (
+                        <motion.span
+                          layoutId="dock-indicator"
+                          transition={SPRING}
+                          className="absolute inset-0 rounded-[26px] bg-accent"
+                        />
+                      )}
+                      {/* 아이콘 색은 currentColor 라 알약 안팎이 클래스 하나로 뒤집힌다 */}
+                      <span className="relative flex size-[30px] items-center justify-center">
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <span
+                        className={`relative text-[11px] leading-[13px] tracking-tight ${
+                          active ? 'font-semibold' : 'font-medium'
+                        }`}
+                      >
+                        {copy.pages[path].short}
+                      </span>
+                    </Link>
+                  </motion.div>
+                )
+              })}
           </AnimatePresence>
-        </motion.button>
-      </motion.nav>
+        </motion.nav>
+      </div>
     </div>
   )
 }
