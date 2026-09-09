@@ -1,7 +1,17 @@
-/* 데스크톱에서도 모바일 폭으로 고정한다.
-   SEED 가 모바일 앱용 디자인 시스템이라 터치 기준 크기를 그대로 살린다. */
+/* 데스크톱에서는 폰 화면처럼 좁은 기둥으로 고정한다.
+   SEED 가 모바일 앱용 디자인 시스템이라 터치 기준 크기를 그대로 살린다.
+
+   폰에서는 고정하지 않는다. 폭 상한을 모든 크기에 걸면 상한보다 넓은 기기에서
+   좌우에 여백이 남는다. 실제로 430px 상한일 때 iPhone 16 Pro Max(440px)에서
+   10px 이 떴다. 기기 폭은 계속 커지므로 상한값을 올려 쫓아가는 대신,
+   폰 구간에서는 상한 자체를 걸지 않는다. */
 .page {
-  --app-viewport-width: 430px;
+  /* 데스크톱 기둥 폭. 이 값만 바꾸면 된다 */
+  --app-viewport-width: 480px;
+
+  /* 이 폭 아래로는 기둥을 만들지 않고 꽉 채운다.
+     지금 가장 넓은 폰이 440px 근처라 여유를 두고 잡았다 */
+  --app-viewport-breakpoint: 600px;
 
   display: flex;
   justify-content: center;
@@ -17,9 +27,16 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: var(--app-viewport-width);
   height: 100%;
   overflow-y: auto;
   overscroll-behavior: contain;
   background: var(--seed-color-bg-layer-default);
+}
+
+/* 미디어 쿼리는 커스텀 속성을 못 읽는다. 값이 바뀌면 위 --app-viewport-breakpoint
+   주석과 여기를 같이 고쳐야 한다 */
+@media (min-width: 600px) {
+  .viewport {
+    max-width: var(--app-viewport-width);
+  }
 }
