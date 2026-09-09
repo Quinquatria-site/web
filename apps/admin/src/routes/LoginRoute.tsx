@@ -62,7 +62,14 @@ export function LoginRoute() {
           <TextFieldInput type="password" autoComplete="current-password" placeholder="비밀번호" />
         </TextField>
 
-        <ActionButton type="submit" size="large" loading={pending} disabled={password.length === 0}>
+        <ActionButton
+          className={styles.submit}
+          type="submit"
+          variant="neutralWeak"
+          size="large"
+          loading={pending}
+          disabled={password.length === 0}
+        >
           들어가기
         </ActionButton>
       </form>
