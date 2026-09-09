@@ -7,6 +7,9 @@ out/
 dist/
 build/
 
+# next 가 매번 다시 만든다. dev 와 build 가 서로 다른 경로를 써서 계속 뒤바뀐다.
+next-env.d.ts
+
 # 환경변수 (.env.example 만 커밋)
 .env
 .env.*
