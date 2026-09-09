@@ -61,6 +61,14 @@
 
 /* font 단축 속성을 쓰지 않는다. 패밀리를 함께 적지 않으면 상속받은 글꼴을
    초기화해버린다. SEED 는 크기·행간·굵기를 따로 주므로 그대로 세 줄로 쓴다. */
+/* width 만 주고 높이는 비율로 따라오게 한다. img 의 width/height 속성이 있어
+   내려받기 전에도 자리를 잡아 글자가 밀리지 않는다 */
+.emblem {
+  width: 96px;
+  height: auto;
+  margin-bottom: var(--seed-dimension-x4);
+}
+
 .title {
   margin: 0;
   font-size: var(--seed-font-size-t10);

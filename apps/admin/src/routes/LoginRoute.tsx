@@ -43,6 +43,14 @@ export function LoginRoute() {
   return (
     <div className={styles.screen}>
       <div className={styles.header}>
+        {/* 원본이 네이비 단색이라 흰색 투명 PNG 로 바꿔 넣었다. 바탕색과 같아 그냥 두면 안 보인다 */}
+        <img
+          className={styles.emblem}
+          src="/hufs-emblem.png"
+          alt="한국외국어대학교"
+          width={384}
+          height={336}
+        />
         <h1 className={styles.title}>Quinquatria 관리자</h1>
         <p className={styles.subtitle}>비밀번호를 입력하면 운영 화면으로 들어갑니다.</p>
       </div>
