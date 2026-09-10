@@ -31,6 +31,17 @@
   --font-display: var(--font-cinzel), 'Times New Roman', serif;
 }
 
+/* 컴포넌트에서는 원값 대신 rounded-card 등 역할 이름을 사용한다. */
+@theme inline {
+  --radius-control: var(--shape-control);
+  --radius-card: var(--shape-card);
+  --radius-panel: var(--shape-panel);
+  --radius-banner: var(--shape-banner);
+  --radius-pill: var(--shape-pill);
+  --radius-dock: var(--shape-dock);
+  --radius-dock-item: var(--shape-dock-item);
+}
+
 html {
   color-scheme: dark;
   height: 100%;
