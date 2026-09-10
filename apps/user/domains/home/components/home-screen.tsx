@@ -1,24 +1,36 @@
 'use client'
 
-import { useCallback } from 'react'
-import { ScrollSentinel } from '@/components/dock/scroll-sentinel'
-import { useShell } from '@/hooks/use-shell'
+import { useEffect, useRef } from 'react'
+import { useShell, type DockPhase } from '@/hooks/use-shell'
 import { LandingSection } from './landing-section'
 import { NavSection } from './nav-section'
 
 export function HomeScreen() {
-  const { setDockPhase, homeAnchorRef } = useShell()
+  const { setDockPhase, homeAnchorRef, scrollRef } = useShell()
+  const previousPhaseRef = useRef<DockPhase | null>(null)
 
-  const onLandingSentinel = useCallback(
-    (passed: boolean) => setDockPhase(passed ? 'scrolled' : 'landing'),
-    [setDockPhase],
-  )
+  useEffect(() => {
+    const root = scrollRef.current
+    if (!root) return
+
+    // 구독이 바뀌면 현재 위치를 한 번 동기화하고, 이후에는 경계를 넘을 때만 갱신한다.
+    previousPhaseRef.current = null
+    const updatePhase = () => {
+      const phase = root.scrollTop > 0 ? 'scrolled' : 'landing'
+      if (previousPhaseRef.current === phase) return
+
+      previousPhaseRef.current = phase
+      setDockPhase(phase)
+    }
+    updatePhase()
+    root.addEventListener('scroll', updatePhase, { passive: true })
+    return () => root.removeEventListener('scroll', updatePhase)
+  }, [scrollRef, setDockPhase])
 
   return (
     <>
       <section className="relative h-full border-b border-line">
         <LandingSection />
-        <ScrollSentinel className="top-8 right-0 left-0" onChange={onLandingSentinel} />
       </section>
 
       <NavSection ref={homeAnchorRef} />

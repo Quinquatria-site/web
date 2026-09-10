@@ -18,7 +18,10 @@ export function AppShell({ children, nav }: { children: ReactNode; nav: ReactNod
   }, [pathname])
 
   const setDockPhase = useCallback(
-    (phase: DockPhase) => setDock({ path: pathname, phase }),
+    (phase: DockPhase) =>
+      setDock((current) =>
+        current.path === pathname && current.phase === phase ? current : { path: pathname, phase },
+      ),
     [pathname],
   )
 

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { useLang } from '@/components/lang-provider'
-import { ArrowDownIcon, ArrowLeftIcon, ArrowUpIcon, HomeIcon, PAGE_ICONS } from '@/components/icons'
+import { ArrowLeftIcon, ArrowUpIcon, HomeIcon, PAGE_ICONS } from '@/components/icons'
 import { DOCK_BOTTOM } from '@/libs/dock'
 import { useShell } from '@/hooks/use-shell'
 import { backHref, langHref, PAGE_PATHS } from '@/libs/routes'
@@ -45,21 +45,23 @@ export function FloatingNavigation() {
   const pathname = usePathname()
   const router = useRouter()
   const { lang, copy } = useLang()
-  const { dockPhase, homeAnchorRef, scrollRef } = useShell()
+  const { dockPhase, scrollRef } = useShell()
   const [railRef, tabWidth] = useTabWidth()
+  const [returningHome, setReturningHome] = useState(false)
 
   const home = langHref(lang)
   const isHome = pathname === home
   // 상세 화면에서 돌아갈 곳. 여기서는 탭을 아예 내주지 않는다
   const back = backHref(lang, pathname)
   // 홈과 상세에서 dock 이 단일 버튼으로 접힌다
-  const collapsed = isHome || back !== null
-  // 랜딩에 머무는 동안에만 버튼이 하단 가운데에 있다
+  const collapsed = returningHome || isHome || back !== null
+  // 랜딩 맨 위에서는 dock 을 숨긴다
   const atLanding = isHome && dockPhase === 'landing'
-  // 버튼 안에 무엇이 들어갈지: 뒤로 · 홈 · 위 화살표 · 아래 화살표
-  const slot = back ? 'back' : !isHome ? 'home' : dockPhase === 'scrolled' ? 'up' : 'down'
+  // 홈 복귀 애니메이션이 끝날 때까지 홈 아이콘을 유지한다
+  const slot = returningHome ? 'home' : back ? 'back' : !isHome ? 'home' : 'up'
 
   function handleMain() {
+    if (returningHome) return
     // 상세에서는 링크로 바로 들어왔더라도 목록으로 나간다
     if (back) {
       router.push(back)
@@ -67,15 +69,11 @@ export function FloatingNavigation() {
     }
     // 다른 페이지에서는 홈으로 이동한다
     if (!isHome) {
+      setReturningHome(true)
       router.push(home)
       return
     }
-    // 위 화살표는 랜딩 맨 위로, 아래 화살표는 랜딩 다음 섹션으로
-    if (dockPhase === 'scrolled') {
-      scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-    } else {
-      homeAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
+    scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   return (
@@ -83,34 +81,40 @@ export function FloatingNavigation() {
       className="pointer-events-none absolute inset-x-0 z-[1000] px-4"
       style={{ bottom: DOCK_BOTTOM }}
     >
-      {/* 이 줄의 폭이 곧 펼친 dock 의 폭이다. 가운데 ↔ 우측 이동은 정렬만 바꾸고 움직임은 layout 이 그린다 */}
+      {/* 홈 복귀 때는 왼쪽 홈 버튼 자리를 고정하고, 스크롤 버튼은 오른쪽에 둔다 */}
       <div
         ref={railRef}
         className="flex"
-        style={{ justifyContent: atLanding ? 'center' : 'flex-end' }}
+        style={{ justifyContent: returningHome ? 'flex-start' : 'flex-end' }}
       >
         {/* layout 이 위치와 폭 변화를 transform 으로 이어 그린다 */}
         <motion.nav
           layout
-          transition={SPRING}
+          initial={false}
+          animate={{
+            scale: atLanding || returningHome ? 0 : 1,
+            opacity: atLanding || returningHome ? 0 : 1,
+          }}
+          transition={{
+            layout: SPRING,
+            scale: { ...POP, delay: returningHome ? 0.3 : 0 },
+            opacity: { duration: 0.15, delay: returningHome ? 0.3 : 0 },
+          }}
+          onAnimationComplete={() => {
+            if (returningHome) setReturningHome(false)
+          }}
+          inert={atLanding || returningHome}
+          style={{ transformOrigin: returningHome ? '28px center' : 'center' }}
           className="pointer-events-auto flex items-center rounded-[32px] border border-line/70 bg-surface p-1.5 shadow-lg shadow-black/10"
         >
-          {/* 경로가 바뀌어도 이 버튼만은 사라지지 않고 자리만 옮긴다. 목적지 넷과 달리 이름을 달지 않는다 */}
+          {/* 탭들은 이 동작 버튼 쪽으로 접힌다. 목적지 넷과 달리 이름을 달지 않는다 */}
           <motion.button
             layout
             type="button"
             onClick={handleMain}
             // 접히면 원 하나로 남아야 하므로 여기서 높이도 같이 줄인다
             style={{ height: collapsed ? 44 : 52 }}
-            aria-label={
-              slot === 'back'
-                ? copy.back
-                : slot === 'up'
-                  ? copy.toTop
-                  : slot === 'down'
-                    ? copy.toNav
-                    : copy.home
-            }
+            aria-label={slot === 'back' ? copy.back : slot === 'up' ? copy.toTop : copy.home}
             className="relative flex w-11 shrink-0 items-center justify-center rounded-full"
           >
             {/* mode="wait" 라서 먼저 뿅 사라진 뒤에 다음 아이콘이 뿅 나타난다 */}
@@ -127,7 +131,6 @@ export function FloatingNavigation() {
                 {slot === 'back' && <ArrowLeftIcon className="h-5 w-5 text-ink" />}
                 {slot === 'home' && <HomeIcon className="h-5 w-5 text-ink" />}
                 {slot === 'up' && <ArrowUpIcon className="h-5 w-5 text-ink" />}
-                {slot === 'down' && <ArrowDownIcon className="h-5 w-5 text-ink" />}
               </motion.span>
             </AnimatePresence>
           </motion.button>
