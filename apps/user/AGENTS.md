@@ -11,8 +11,8 @@
 
 ## 리퀴드 글래스 디자인 패턴
 
-- 카드·버튼·내비게이션·팝업은 `liquid-glass`를 사용한다. 작은 컨트롤은 `--control`, 겹치는 패널·긴 본문은 `--panel`, 선택 상태는 `--selected` 변형을 함께 사용한다.
-- 반투명 황혼색 바탕과 `2px` 블러, 가장자리 굴절을 배경층에 적용하고 글자·아이콘은 선명하게 유지한다. 라운드는 카드 `24px`을 기준으로 컴포넌트 크기에 맞춘다.
-- 내부 빛은 `1·2·4·8·16px`, 불투명도 `70·35·20·12·6%`의 다섯 단계로 감쇠하며, 작은 컨트롤은 번짐을 줄인다.
-- 재질은 [app/materials.css](./app/materials.css), 굴절과 포인터 반응은 [components/liquid-glass-environment.tsx](./components/liquid-glass-environment.tsx)에서 공통 관리한다. 사진·지도 원본과 의미를 가진 마커 색은 가독성을 유지한다.
-- 굴절 미지원 환경은 블러로 표현하고, 투명도 줄이기는 불투명 배경으로, 동작 줄이기는 고정 반사로 대응한다. 클래스 적용 시 본문의 스크롤·클릭·포커스를 방해하지 않는다.
+- 리퀴드 글래스는 **dock 바탕에만** 사용한다. dock 내부 선택 표시를 포함한 카드·버튼·헤더·팝업에는 불투명 배경과 일반 테두리를 사용한다.
+- dock 바탕은 `liquid-glass liquid-glass--panel`, 내부 선택 표시는 `bg-accent`를 사용한다.
+- 황혼색 반투명 배경·2px 블러·가장자리 굴절·왼쪽 상단 하이라이트를 사용하고, 글자와 아이콘은 선명하게 유지한다. 라운드는 `rounded-dock`·`rounded-dock-item` 토큰을 따른다.
+- 재질은 [app/materials.css](./app/materials.css), 굴절과 포인터 반응은 [components/liquid-glass-environment.tsx](./components/liquid-glass-environment.tsx)에서 관리한다. 공통 광원은 모든 페이지에 그대로 적용한다.
+- 굴절 미지원 환경은 블러로 표현하고, 투명도 줄이기는 불투명 배경으로, 동작 줄이기는 고정 반사로 대응한다. 스크롤·클릭·포커스를 방해하지 않는다.
