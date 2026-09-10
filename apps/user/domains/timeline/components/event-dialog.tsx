@@ -38,7 +38,7 @@ export function EventDialog({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="absolute inset-0 z-[1200] flex items-center justify-center bg-ink/45 px-5 backdrop-blur-[2px]"
+          className="absolute inset-0 z-[1200] flex items-center justify-center bg-scrim/65 px-5 backdrop-blur-[2px]"
         >
           <motion.div
             role="dialog"

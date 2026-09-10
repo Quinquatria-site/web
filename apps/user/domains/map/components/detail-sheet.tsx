@@ -209,7 +209,7 @@ export function DetailSheet({ item, onClose }: { item: MapItem | null; onClose: 
     <>
       <div
         ref={dimRef}
-        className="absolute inset-0 z-[1090] bg-ink/40 opacity-0 transition-opacity duration-300 motion-reduce:transition-none"
+        className="absolute inset-0 z-[1090] bg-scrim/60 opacity-0 transition-opacity duration-300 motion-reduce:transition-none"
         style={{ pointerEvents: stage === 'expanded' ? 'auto' : 'none' }}
         onClick={() => setStage('peek')}
       />

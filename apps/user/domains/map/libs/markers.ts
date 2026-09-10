@@ -70,8 +70,8 @@ export function markerHtml(kind: MarkerKind, compact: boolean, label?: string) {
   // 의무실만 속을 비운다. 어두운 도면 위에서도 혼자 밝아 눈에 먼저 든다.
   const paint =
     form === 'ring'
-      ? `background:var(--color-surface);color:${color};border:${compact ? 3.5 : 2.5}px solid ${color};box-shadow:0 0 0 1.5px var(--color-accent-ink)`
-      : `background:${color};color:var(--color-accent-ink);border:1.5px solid var(--color-accent-ink)`
+      ? `background:var(--color-surface);color:${color};border:${compact ? 3.5 : 2.5}px solid ${color};box-shadow:0 0 0 1.5px var(--color-marker-ink)`
+      : `background:${color};color:var(--color-marker-ink);border:1.5px solid var(--color-marker-ink)`
 
   let inner = ''
   if (!compact) {

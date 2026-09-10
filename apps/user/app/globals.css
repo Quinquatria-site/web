@@ -4,14 +4,16 @@
 @theme {
   /* 역할 — 화면에서는 아래 이름만 쓴다. 팔레트를 직접 부르지 않는다. */
 
-  --color-canvas: #ffffff;
-  --color-surface: #ffffff;
-  --color-surface-muted: #ffffff;
-  --color-line: var(--palette-gray-200);
-  --color-ink: var(--palette-gray-900);
-  --color-ink-muted: var(--palette-gray-500);
-  --color-accent: var(--palette-gray-900);
-  --color-accent-ink: var(--palette-white);
+  --color-canvas: var(--palette-gray-950);
+  --color-surface: var(--palette-gray-900);
+  --color-surface-muted: var(--palette-gray-800);
+  --color-line: var(--palette-gray-700);
+  --color-ink: var(--palette-gray-100);
+  --color-ink-muted: var(--palette-gray-400);
+  --color-accent: var(--palette-gray-100);
+  --color-accent-ink: var(--palette-gray-950);
+  --color-scrim: var(--palette-black);
+  --color-marker-ink: var(--palette-white);
 
   /* 지도 마커 — 종류마다 색과 모양이 함께 갈린다. 칩과 마커가 같은 값을 쓴다. */
   --color-marker-booth: var(--palette-gold-500);
@@ -29,6 +31,7 @@
 }
 
 html {
+  color-scheme: dark;
   height: 100%;
 }
 

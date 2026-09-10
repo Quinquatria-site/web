@@ -1,0 +1,44 @@
+.landing {
+  /* 홈의 광원 위치와 세기. 음수 좌표는 광원을 화면 바깥으로 옮긴다. */
+  --sun-x: -24px;
+  --sun-y: -32px;
+  /* 황혼: 살구색 직사광과 자주색 잔광. */
+  --twilight-sun: 255 183 143;
+  --twilight-afterglow: 157 112 157;
+  --sun-strength: 0.48;
+  --sun-reach: 440px;
+  --sun-height: 400px;
+  /* 화면 높이에 대한 비율. end를 줄이면 광선 꼬리가 짧아진다. */
+  --sun-tail-start: 12%;
+  --sun-tail-end: 60%;
+
+  position: relative;
+  isolation: isolate;
+  height: 100%;
+  overflow: hidden;
+}
+
+.sunlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse var(--sun-reach) var(--sun-height) at var(--sun-x) var(--sun-y),
+      rgb(var(--twilight-sun) / var(--sun-strength)) 0%,
+      rgb(var(--twilight-sun) / 18%) 16%,
+      rgb(var(--twilight-afterglow) / 7%) 38%,
+      transparent 72%
+    ),
+    conic-gradient(
+      from 90deg at var(--sun-x) var(--sun-y),
+      transparent 8deg,
+      rgb(var(--twilight-sun) / 5%) 22deg,
+      transparent 30deg,
+      rgb(var(--twilight-sun) / 8%) 38deg,
+      transparent 47deg,
+      rgb(var(--twilight-sun) / 4%) 58deg,
+      transparent 70deg
+    );
+  mask-image: linear-gradient(#000 0%, #000 var(--sun-tail-start), transparent var(--sun-tail-end));
+}

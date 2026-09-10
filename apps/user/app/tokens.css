@@ -1,9 +1,15 @@
 :root {
   /* 화면의 기본 색은 무채색으로 통일한다. */
   --palette-white: #ffffff;
+  --palette-gray-100: #f5f5f5;
   --palette-gray-200: #e5e5e5;
+  --palette-gray-400: #a3a3a3;
   --palette-gray-500: #737373;
+  --palette-gray-700: #333333;
+  --palette-gray-800: #222222;
   --palette-gray-900: #171717;
+  --palette-gray-950: #0a0a0a;
+  --palette-black: #000000;
 
   /* 포스터의 노을에서 뽑은 앰버 계열. 밝은 쪽부터 어두운 쪽으로. */
 

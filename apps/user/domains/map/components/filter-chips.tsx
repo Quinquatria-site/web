@@ -16,7 +16,7 @@ const MARK: Record<MarkerForm, string> = {
 function KindMark({ kind, active }: { kind: MarkerKind; active: boolean }) {
   const form = MARKER_FORM[kind]
   // 켜진 칩은 바탕이 그 종류의 색이라, 표식만 밝은 색으로 뒤집는다.
-  const color = active ? 'var(--color-accent-ink)' : MARKER_COLOR[kind]
+  const color = active ? 'var(--color-marker-ink)' : MARKER_COLOR[kind]
 
   return (
     <span
@@ -59,7 +59,7 @@ export function FilterChips({
                 : undefined
             }
             className={`pointer-events-auto flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-[12px] font-medium transition-colors ${
-              on ? 'text-accent-ink' : 'border-line bg-surface text-ink-muted'
+              on ? 'text-marker-ink' : 'border-line bg-surface text-ink-muted'
             }`}
           >
             <KindMark kind={kind} active={on} />

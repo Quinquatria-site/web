@@ -1,8 +1,10 @@
 import { LanguageSwitcher } from '@/components/language-switcher'
+import styles from './landing-section.module.css'
 
 export function LandingSection() {
   return (
-    <div className="relative h-full overflow-hidden">
+    <div className={styles.landing}>
+      <div aria-hidden className={styles.sunlight} />
       <div className="relative flex h-full flex-col">
         {/* 히어로 문구 흐름을 밀지 않도록 띄워 둔다 */}
         <div
