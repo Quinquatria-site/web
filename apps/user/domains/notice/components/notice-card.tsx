@@ -12,19 +12,19 @@ const MotionLink = motion.create(Link)
 
 export function NoticeCard({ notice }: { notice: Notice }) {
   const { lang, copy } = useLang()
-  // 겹쳐지는 상시 공지는 농도 높은 패널 재질로 본문을 읽기 쉽게 한다.
+  // 겹쳐지는 상시 공지는 불투명 배경으로 본문을 읽기 쉽게 한다.
   const pinned = notice.kind === 'pinned'
 
   return (
     <MotionLink
       href={noticeHref(lang, notice.id)}
       whileTap={{ scale: 0.985 }}
-      className={`flex items-center gap-3.5 rounded-2xl border px-4 py-4 ${
-        pinned ? 'border-accent/45 liquid-glass liquid-glass--panel' : 'border-line liquid-glass'
+      className={`flex items-center gap-3.5 rounded-card border px-4 py-4 ${
+        pinned ? 'border-accent/45 bg-surface' : 'border-line bg-surface'
       }`}
     >
       {pinned && (
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl liquid-glass liquid-glass--control text-accent">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-control bg-surface-muted text-accent">
           <PinIcon className="size-[18px]" />
         </span>
       )}

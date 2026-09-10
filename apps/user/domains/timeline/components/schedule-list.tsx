@@ -7,8 +7,8 @@ import { isAct, timeRange } from '../libs/schedule'
 
 /** 카드 채움으로 학생 무대와 초청 무대를 가른다. */
 const FILL: Record<'student' | 'celeb', string> = {
-  student: 'border-line liquid-glass',
-  celeb: 'border-line liquid-glass liquid-glass--muted',
+  student: 'border-line bg-surface',
+  celeb: 'border-line bg-surface-muted',
 }
 
 export function ScheduleList({
@@ -46,14 +46,14 @@ export function ScheduleList({
             <div className="relative">
               <span
                 aria-hidden
-                className={`absolute top-1/2 -left-9 size-[11px] -translate-y-1/2 rounded-full ${
+                className={`absolute top-1/2 -left-9 size-[11px] -translate-y-1/2 rounded-pill ${
                   live ? 'bg-accent' : 'bg-ink-muted/45'
                 }`}
               >
                 {/* 진행 중인 무대에서만 점이 물결처럼 번진다 */}
                 {live && (
                   <motion.span
-                    className="absolute inset-0 rounded-full bg-accent"
+                    className="absolute inset-0 rounded-pill bg-accent"
                     animate={{ scale: [1, 2.4], opacity: [0.5, 0] }}
                     transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
                   />
@@ -66,9 +66,9 @@ export function ScheduleList({
                   whileTap={{ scale: 0.985 }}
                   onClick={() => onSelect(event)}
                   aria-current={live ? 'true' : undefined}
-                  className={`relative flex w-full items-center justify-center gap-3 rounded-2xl border px-4 py-3.5 ${
+                  className={`relative flex w-full items-center justify-center gap-3 rounded-control border px-4 py-3.5 ${
                     live
-                      ? 'border-accent liquid-glass liquid-glass--control liquid-glass--selected text-accent-ink'
+                      ? 'border-accent bg-accent text-accent-ink'
                       : FILL[event.kind === 'celeb' ? 'celeb' : 'student']
                   }`}
                 >
@@ -87,7 +87,7 @@ export function ScheduleList({
                   {live && (
                     <motion.span
                       aria-hidden
-                      className="pointer-events-none absolute -inset-px rounded-2xl ring-2 ring-accent"
+                      className="pointer-events-none absolute -inset-px rounded-control ring-2 ring-accent"
                       animate={{ opacity: [0.2, 0.9, 0.2] }}
                       transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
                     />

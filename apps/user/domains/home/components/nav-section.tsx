@@ -26,9 +26,9 @@ export function NavSection({ ref }: { ref?: Ref<HTMLElement> }) {
           <Link
             key={path}
             href={langHref(lang, path)}
-            className="flex flex-1 items-center gap-4 rounded-2xl border liquid-glass px-5"
+            className="flex flex-1 items-center gap-4 rounded-banner border border-line bg-surface px-7"
           >
-            <span className="flex size-11 shrink-0 items-center justify-center rounded-xl liquid-glass liquid-glass--control">
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-control bg-surface-muted">
               <Icon className="h-5 w-5 text-accent" />
             </span>
             <span className="min-w-0 flex-1">

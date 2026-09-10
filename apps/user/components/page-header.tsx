@@ -14,8 +14,8 @@ export function PageHeader({ path }: { path: PagePath }) {
   const Icon = PAGE_ICONS[path]
 
   return (
-    <header className="flex shrink-0 items-center gap-3.5 border-b liquid-glass liquid-glass--panel px-5 pt-[calc(env(safe-area-inset-top)+22px)] pb-5">
-      <span className="flex size-11 shrink-0 items-center justify-center rounded-xl liquid-glass liquid-glass--control">
+    <header className="flex shrink-0 items-center gap-3.5 border-b border-line bg-surface px-5 pt-[calc(env(safe-area-inset-top)+22px)] pb-5">
+      <span className="flex size-11 shrink-0 items-center justify-center rounded-control bg-surface-muted">
         <Icon className="h-5 w-5 text-accent" />
       </span>
       <div className="min-w-0">

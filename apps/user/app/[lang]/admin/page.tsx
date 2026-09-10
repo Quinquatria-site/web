@@ -19,7 +19,7 @@ export default async function Page({ params }: PageProps<'/[lang]/admin'>) {
     >
       <p className="font-display text-[12px] leading-4 tracking-[0.32em] text-ink-muted">ADMIN</p>
 
-      <div className="relative mt-6 size-40 overflow-hidden rounded-full border liquid-glass">
+      <div className="relative mt-6 size-40 overflow-hidden rounded-pill border border-line bg-surface">
         <Image
           src="/me.png"
           alt={admin.portrait}
@@ -34,7 +34,7 @@ export default async function Page({ params }: PageProps<'/[lang]/admin'>) {
 
       <Link
         href={langHref(lang)}
-        className="mt-8 flex h-12 items-center gap-2 rounded-full liquid-glass liquid-glass--control liquid-glass--selected px-6 text-[15px] font-semibold text-accent-ink"
+        className="mt-8 flex h-12 items-center gap-2 rounded-pill bg-accent px-6 text-[15px] font-semibold text-accent-ink"
       >
         <HomeIcon className="h-5 w-5" />
         {admin.toHome}

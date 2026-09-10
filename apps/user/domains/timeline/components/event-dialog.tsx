@@ -38,7 +38,7 @@ export function EventDialog({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="absolute inset-0 z-[1200] flex items-center justify-center bg-scrim/65 px-5 backdrop-blur-[2px]"
+          className="absolute inset-0 z-[1200] flex items-center justify-center bg-scrim/65 px-5"
         >
           <motion.div
             role="dialog"
@@ -49,10 +49,10 @@ export function EventDialog({
             exit={{ scale: 0.96, y: 8 }}
             transition={POP}
             onClick={(click) => click.stopPropagation()}
-            className="relative flex max-h-[80%] w-full gap-4 overflow-y-auto overscroll-contain rounded-3xl border liquid-glass liquid-glass--panel p-5"
+            className="relative flex max-h-[80%] w-full gap-4 overflow-y-auto overscroll-contain rounded-panel border border-line bg-surface p-5"
           >
             {shown.image && (
-              <div className="relative aspect-3/4 w-[42%] shrink-0 self-start overflow-hidden rounded-2xl liquid-glass">
+              <div className="relative aspect-3/4 w-[42%] shrink-0 self-start overflow-hidden rounded-control bg-surface">
                 <Image src={shown.image} alt="" fill sizes="200px" className="object-cover" />
               </div>
             )}
@@ -74,7 +74,7 @@ export function EventDialog({
               type="button"
               aria-label={copy.timeline.close}
               onClick={onClose}
-              className="absolute top-4 right-4 flex size-8 shrink-0 items-center justify-center rounded-full liquid-glass liquid-glass--control text-ink-muted"
+              className="absolute top-4 right-4 flex size-8 shrink-0 items-center justify-center rounded-pill bg-surface-muted text-ink-muted"
             >
               <svg
                 viewBox="0 0 24 24"

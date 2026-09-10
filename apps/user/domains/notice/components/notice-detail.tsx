@@ -15,7 +15,7 @@ export function NoticeDetail({ notice }: { notice: Notice }) {
       className="mx-5 pt-[calc(env(safe-area-inset-top)+32px)]"
       style={{ paddingBottom: DOCK_TIER_BOTTOM }}
     >
-      <div className="liquid-glass liquid-glass--panel rounded-3xl border p-5">
+      <div className="bg-surface rounded-panel border border-line p-5">
         <header className="border-b border-line pb-5">
           {/* 상세로 바로 들어와도 어느 화면 안인지 먼저 읽힌다 */}
           <p className="flex items-center gap-1.5 text-[12px] leading-4 font-medium text-ink-muted">

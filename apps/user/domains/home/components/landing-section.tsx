@@ -1,5 +1,4 @@
 import { LanguageSwitcher } from '@/components/language-switcher'
-import { GlassSample } from './glass-sample'
 
 export function LandingSection() {
   return (
@@ -27,9 +26,6 @@ export function LandingSection() {
           <p className="font-display mt-4 text-[15px] leading-5 tracking-[0.1em] text-ink-muted">
             10.05 - 10.06
           </p>
-        </div>
-        <div className="flex min-h-0 flex-1 items-center justify-center px-5 pb-16">
-          <GlassSample />
         </div>
       </div>
     </div>

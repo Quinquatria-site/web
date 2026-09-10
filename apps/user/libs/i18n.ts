@@ -16,7 +16,6 @@ export const LANG_MARK: Record<Lang, string> = { ko: '한', en: '영', cha: '중
 export const LANG_NAME: Record<Lang, string> = { ko: '한국어', en: 'English', cha: '中文' }
 
 export type Copy = {
-  glassSample: { title: string; description: string }
   home: string
   toTop: string
   toNav: string
@@ -68,10 +67,6 @@ export type Copy = {
 
 export const COPY: Record<Lang, Copy> = {
   ko: {
-    glassSample: {
-      title: '리퀴드 글래스 샘플',
-      description: '황혼빛을 담은 투명한 유리 표면입니다.',
-    },
     home: '홈',
     toTop: '맨 위로',
     toNav: '아래로',
@@ -128,10 +123,6 @@ export const COPY: Record<Lang, Copy> = {
     },
   },
   en: {
-    glassSample: {
-      title: 'Liquid glass sample',
-      description: 'A clear glass surface catching the twilight.',
-    },
     home: 'Home',
     toTop: 'Back to top',
     toNav: 'Scroll down',
@@ -184,10 +175,6 @@ export const COPY: Record<Lang, Copy> = {
     },
   },
   cha: {
-    glassSample: {
-      title: '液态玻璃示例',
-      description: '映着暮光的通透玻璃表面。',
-    },
     home: '首页',
     toTop: '回到顶部',
     toNav: '向下滚动',

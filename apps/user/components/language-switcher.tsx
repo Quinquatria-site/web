@@ -34,7 +34,7 @@ export function LanguageSwitcher() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`${copy.language} — ${LANG_NAME[lang]}`}
-        className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border liquid-glass liquid-glass--control text-[15px] font-medium text-ink"
+        className="relative z-10 flex h-11 w-11 items-center justify-center rounded-pill border border-line bg-surface-muted text-[15px] font-medium text-ink"
       >
         {LANG_MARK[lang]}
       </button>
@@ -53,7 +53,7 @@ export function LanguageSwitcher() {
               transition={POP}
               // 위쪽 오른끝을 축으로 아래로 펼쳐진다
               style={{ transformOrigin: 'top right' }}
-              className="absolute top-full right-0 z-10 mt-2 flex flex-col overflow-hidden rounded-2xl border liquid-glass liquid-glass--control"
+              className="absolute top-full right-0 z-10 mt-2 flex flex-col overflow-hidden rounded-card border border-line bg-surface-muted"
             >
               {LANGS.map((option) => {
                 const active = option === lang
@@ -67,7 +67,7 @@ export function LanguageSwitcher() {
                     onClick={() => setOpen(false)}
                     className={`flex h-11 w-11 items-center justify-center text-[15px] font-medium ${
                       active
-                        ? 'liquid-glass liquid-glass--control text-accent underline underline-offset-4'
+                        ? 'bg-surface-muted text-accent underline underline-offset-4'
                         : 'text-ink-muted'
                     }`}
                   >

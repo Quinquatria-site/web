@@ -84,5 +84,5 @@ export function markerHtml(kind: MarkerKind, compact: boolean, label?: string) {
       inner = `<span style="display:flex;transform:rotate(-45deg)">${inner}</span>`
   }
 
-  return `<span style="box-shadow:inset 1px 2px 2px rgb(var(--twilight-highlight) / .65),2px 3px 5px rgb(0 0 0 / .3);box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:${width}px;height:${height}px;${FORM_SHAPE[form]};${paint}">${inner}</span>`
+  return `<span style="box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:${width}px;height:${height}px;${FORM_SHAPE[form]};${paint}">${inner}</span>`
 }

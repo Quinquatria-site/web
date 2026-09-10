@@ -105,7 +105,7 @@ export function FloatingNavigation() {
           }}
           inert={atLanding || returningHome}
           style={{ transformOrigin: returningHome ? '28px center' : 'center' }}
-          className="pointer-events-auto flex items-center rounded-[32px] border liquid-glass liquid-glass--panel p-1.5"
+          className="pointer-events-auto flex items-center rounded-dock border liquid-glass liquid-glass--panel p-1.5"
         >
           {/* 탭들은 이 동작 버튼 쪽으로 접힌다. 목적지 넷과 달리 이름을 달지 않는다 */}
           <motion.button
@@ -115,7 +115,7 @@ export function FloatingNavigation() {
             // 접히면 원 하나로 남아야 하므로 여기서 높이도 같이 줄인다
             style={{ height: collapsed ? 44 : 52 }}
             aria-label={slot === 'back' ? copy.back : slot === 'up' ? copy.toTop : copy.home}
-            className="relative flex w-11 shrink-0 items-center justify-center rounded-full"
+            className="relative flex w-11 shrink-0 items-center justify-center rounded-pill"
           >
             {/* mode="wait" 라서 먼저 뿅 사라진 뒤에 다음 아이콘이 뿅 나타난다 */}
             <AnimatePresence mode="wait" initial={false}>
@@ -166,7 +166,7 @@ export function FloatingNavigation() {
                       aria-label={copy.pages[path].label}
                       aria-current={active ? 'page' : undefined}
                       style={{ width: tabWidth }}
-                      className={`relative flex h-[52px] flex-col items-center justify-center gap-0.5 ${
+                      className={`relative flex h-[52px] rounded-dock-item flex-col items-center justify-center gap-0.5 ${
                         active ? 'text-accent-ink' : 'text-ink-muted'
                       }`}
                     >
@@ -175,7 +175,7 @@ export function FloatingNavigation() {
                         <motion.span
                           layoutId="dock-indicator"
                           transition={SPRING}
-                          className="absolute inset-0 rounded-[26px] liquid-glass liquid-glass--control liquid-glass--selected"
+                          className="absolute inset-0 rounded-dock-item bg-accent"
                         />
                       )}
                       {/* 아이콘 색은 currentColor 라 알약 안팎이 클래스 하나로 뒤집힌다 */}

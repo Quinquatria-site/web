@@ -61,7 +61,7 @@
   mask-image: linear-gradient(#000 0%, #000 var(--sun-tail-start), transparent var(--sun-tail-end));
 }
 
-/* 위치·크기·라운드는 컴포넌트가 정한다. 레이어는 글자와 이벤트를 가리지 않는다. */
+/* 리퀴드 글래스는 dock 바탕에만 적용한다. 내부 선택 표시는 단색이다. */
 @layer components {
   .liquid-glass {
     --liquid-fill: rgb(var(--twilight-glass));
@@ -117,11 +117,6 @@
     box-shadow: 4px 6px 12px rgb(0 0 0 / 18%);
   }
 
-  .liquid-glass--muted {
-    --liquid-opacity: 0.64;
-    --liquid-opacity-bottom: 0.8;
-  }
-
   .liquid-glass--panel {
     --liquid-opacity: 0.84;
     --liquid-opacity-bottom: 0.94;
@@ -132,11 +127,6 @@
     --liquid-opacity: 0.82;
     --liquid-opacity-bottom: 0.94;
     color: var(--color-accent-ink);
-  }
-
-  .liquid-glass--sample {
-    --liquid-opacity: 0.28;
-    --liquid-opacity-bottom: 0.52;
   }
 
   .liquid-glass:focus-visible {

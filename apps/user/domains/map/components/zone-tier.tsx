@@ -32,10 +32,10 @@ export function ZoneTier({
             type="button"
             onClick={() => onSelect(id)}
             aria-pressed={active}
-            className={`pointer-events-auto flex h-10 items-center rounded-lg border px-3.5 text-[13px] font-medium transition-colors ${
+            className={`pointer-events-auto flex h-10 items-center rounded-control border px-3.5 text-[13px] font-medium transition-colors ${
               active
-                ? 'border-accent liquid-glass liquid-glass--control liquid-glass--selected text-accent-ink'
-                : 'border-line liquid-glass liquid-glass--control text-ink-muted'
+                ? 'border-accent bg-accent text-accent-ink'
+                : 'border-line bg-surface-muted text-ink-muted'
             }`}
           >
             {id === 'all' ? copy.map.zoneAll : id}
