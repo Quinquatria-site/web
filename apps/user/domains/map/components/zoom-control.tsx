@@ -25,7 +25,7 @@ export function ZoomControl({
       className="pointer-events-none absolute left-4 z-[1000]"
       style={{ bottom: DOCK_TIER_BOTTOM }}
     >
-      <div className="pointer-events-auto flex h-10 items-center overflow-hidden rounded-xl border border-line bg-surface/85 backdrop-blur-sm">
+      <div className="pointer-events-auto flex h-10 items-center overflow-hidden rounded-xl border border-line bg-surface">
         <button
           type="button"
           aria-label={copy.map.zoomOut}

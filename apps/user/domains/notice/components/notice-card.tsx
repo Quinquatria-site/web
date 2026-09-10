@@ -21,12 +21,12 @@ export function NoticeCard({ notice }: { notice: Notice }) {
       whileTap={{ scale: 0.985 }}
       className={`flex items-center gap-3.5 rounded-2xl border px-4 py-4 ${
         pinned
-          ? 'border-accent/45 bg-surface shadow-[0_8px_24px_rgba(28,14,2,0.12)]'
+          ? 'border-accent/45 bg-surface shadow-[0_8px_24px_rgba(0,0,0,0.12)]'
           : 'border-line bg-surface-muted'
       }`}
     >
       {pinned && (
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-accent">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-surface text-accent">
           <PinIcon className="size-[18px]" />
         </span>
       )}

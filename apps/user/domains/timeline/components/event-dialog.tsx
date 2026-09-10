@@ -49,7 +49,7 @@ export function EventDialog({
             exit={{ scale: 0.96, y: 8 }}
             transition={POP}
             onClick={(click) => click.stopPropagation()}
-            className="relative flex max-h-[80%] w-full gap-4 overflow-y-auto overscroll-contain rounded-3xl border border-line bg-surface p-5 shadow-[0_12px_40px_rgba(28,14,2,0.24)]"
+            className="relative flex max-h-[80%] w-full gap-4 overflow-y-auto overscroll-contain rounded-3xl border border-line bg-surface p-5 shadow-[0_12px_40px_rgba(0,0,0,0.24)]"
           >
             {shown.image && (
               <div className="relative aspect-3/4 w-[42%] shrink-0 self-start overflow-hidden rounded-2xl bg-surface-muted">

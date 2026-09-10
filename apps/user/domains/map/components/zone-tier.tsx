@@ -35,7 +35,7 @@ export function ZoneTier({
             className={`pointer-events-auto flex h-10 items-center rounded-lg border px-3.5 text-[13px] font-medium transition-colors ${
               active
                 ? 'border-accent bg-accent text-accent-ink'
-                : 'border-line bg-surface/85 text-ink-muted backdrop-blur-sm'
+                : 'border-line bg-surface text-ink-muted'
             }`}
           >
             {id === 'all' ? copy.map.zoneAll : id}

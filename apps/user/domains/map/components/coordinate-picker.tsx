@@ -22,7 +22,7 @@ export function CoordinatePicker() {
   if (!point) return null
 
   return (
-    <div className="pointer-events-none absolute top-4 left-4 z-[1000] rounded-full border border-line bg-surface/90 px-3 py-1.5 font-mono text-xs text-ink">
+    <div className="pointer-events-none absolute top-4 left-4 z-[1000] rounded-full border border-line bg-surface px-3 py-1.5 font-mono text-xs text-ink">
       x: {point.x}, y: {point.y}
     </div>
   )

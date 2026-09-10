@@ -34,8 +34,7 @@ export function LanguageSwitcher() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={`${copy.language} — ${LANG_NAME[lang]}`}
-        // 카드와 같은 유리 재질. 히어로 위에 얹히는 것끼리 결을 맞춘다
-        className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-hero-ink/20 bg-hero-shade/35 text-[15px] font-medium text-hero-ink backdrop-blur-md"
+        className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-line bg-surface text-[15px] font-medium text-ink"
       >
         {LANG_MARK[lang]}
       </button>
@@ -54,7 +53,7 @@ export function LanguageSwitcher() {
               transition={POP}
               // 위쪽 오른끝을 축으로 아래로 펼쳐진다
               style={{ transformOrigin: 'top right' }}
-              className="absolute top-full right-0 z-10 mt-2 flex flex-col overflow-hidden rounded-2xl border border-hero-ink/20 bg-hero-shade/55 backdrop-blur-md"
+              className="absolute top-full right-0 z-10 mt-2 flex flex-col overflow-hidden rounded-2xl border border-line bg-surface"
             >
               {LANGS.map((option) => {
                 const active = option === lang
@@ -67,7 +66,7 @@ export function LanguageSwitcher() {
                     aria-label={LANG_NAME[option]}
                     onClick={() => setOpen(false)}
                     className={`flex h-11 w-11 items-center justify-center text-[15px] font-medium ${
-                      active ? 'bg-hero-ink/15 text-hero-ink' : 'text-hero-ink-muted'
+                      active ? 'bg-surface text-accent underline underline-offset-4' : 'text-ink-muted'
                     }`}
                   >
                     {LANG_MARK[option]}

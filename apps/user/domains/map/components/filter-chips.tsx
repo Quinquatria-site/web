@@ -59,7 +59,7 @@ export function FilterChips({
                 : undefined
             }
             className={`pointer-events-auto flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-[12px] font-medium transition-colors ${
-              on ? 'text-accent-ink' : 'border-line bg-surface/85 text-ink-muted backdrop-blur-sm'
+              on ? 'text-accent-ink' : 'border-line bg-surface text-ink-muted'
             }`}
           >
             <KindMark kind={kind} active={on} />

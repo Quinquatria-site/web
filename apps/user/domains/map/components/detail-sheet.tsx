@@ -218,7 +218,7 @@ export function DetailSheet({ item, onClose }: { item: MapItem | null; onClose: 
         role="dialog"
         aria-label={title}
         aria-hidden={stage === 'closed'}
-        className="absolute inset-x-0 bottom-0 z-[1100] flex h-[90%] touch-none flex-col rounded-t-3xl border-t border-line bg-surface shadow-[0_-4px_24px_rgba(28,14,2,0.18)] transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] will-change-transform motion-reduce:transition-none"
+        className="absolute inset-x-0 bottom-0 z-[1100] flex h-[90%] touch-none flex-col rounded-t-3xl border-t border-line bg-surface shadow-[0_-4px_24px_rgba(0,0,0,0.18)] transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] will-change-transform motion-reduce:transition-none"
         style={{ transform: 'translateY(100%)' }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}

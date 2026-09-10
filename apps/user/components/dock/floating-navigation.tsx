@@ -93,7 +93,7 @@ export function FloatingNavigation() {
         <motion.nav
           layout
           transition={SPRING}
-          className="pointer-events-auto flex items-center rounded-[32px] border border-line/70 bg-surface/70 p-1.5 shadow-lg shadow-black/10 backdrop-blur-md"
+          className="pointer-events-auto flex items-center rounded-[32px] border border-line/70 bg-surface p-1.5 shadow-lg shadow-black/10"
         >
           {/* 경로가 바뀌어도 이 버튼만은 사라지지 않고 자리만 옮긴다. 목적지 넷과 달리 이름을 달지 않는다 */}
           <motion.button
