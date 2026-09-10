@@ -1,10 +1,9 @@
 import { LanguageSwitcher } from '@/components/language-switcher'
-import styles from './landing-section.module.css'
+import { GlassSample } from './glass-sample'
 
 export function LandingSection() {
   return (
-    <div className={styles.landing}>
-      <div aria-hidden className={styles.sunlight} />
+    <div className="relative h-full overflow-hidden">
       <div className="relative flex h-full flex-col">
         {/* 히어로 문구 흐름을 밀지 않도록 띄워 둔다 */}
         <div
@@ -28,6 +27,9 @@ export function LandingSection() {
           <p className="font-display mt-4 text-[15px] leading-5 tracking-[0.1em] text-ink-muted">
             10.05 - 10.06
           </p>
+        </div>
+        <div className="flex min-h-0 flex-1 items-center justify-center px-5 pb-16">
+          <GlassSample />
         </div>
       </div>
     </div>

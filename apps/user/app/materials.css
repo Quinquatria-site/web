@@ -1,0 +1,176 @@
+:root {
+  /* 모든 페이지의 광원 위치와 세기. 음수 좌표는 광원을 화면 바깥으로 옮긴다. */
+  --sun-x: -24px;
+  --sun-y: -32px;
+  /* 황혼: 살구색 직사광, 자주색 잔광, 옅은 복숭아색 유리 반사. */
+  --twilight-sun: 255 183 143;
+  --twilight-afterglow: 157 112 157;
+  --twilight-highlight: 255 227 210;
+  --twilight-reflection: 239 151 137;
+  --twilight-glass: 30 24 31;
+  --sun-strength: 0.48;
+  --sun-reach: 440px;
+  --sun-height: 400px;
+  /* 화면 높이에 대한 비율. end를 줄이면 광선 꼬리가 짧아진다. */
+  --sun-tail-start: 12%;
+  --sun-tail-end: 60%;
+
+  /* 재질 공통값. 색은 RGB 채널 토큰, 농도는 0~1로 관리한다. */
+  --glass-blur: 2px;
+  --glass-light-1: inset 0.5px 1px 1px rgb(var(--twilight-highlight) / 70%);
+  --glass-light-2: inset 1px 2px 2px rgb(var(--twilight-highlight) / 35%);
+  --glass-light-3: inset 2px 4px 4px rgb(var(--twilight-highlight) / 20%);
+  --glass-light-4: inset 4px 8px 8px rgb(var(--twilight-highlight) / 12%);
+  --glass-light-5: inset 8px 16px 16px rgb(var(--twilight-highlight) / 6%);
+}
+
+.lighting-shell {
+  isolation: isolate;
+}
+
+.liquid-filter-definitions {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.app-light {
+  z-index: -1;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse var(--sun-reach) var(--sun-height) at var(--sun-x) var(--sun-y),
+      rgb(var(--twilight-sun) / var(--sun-strength)) 0%,
+      rgb(var(--twilight-sun) / 18%) 16%,
+      rgb(var(--twilight-afterglow) / 7%) 38%,
+      transparent 72%
+    ),
+    conic-gradient(
+      from 90deg at var(--sun-x) var(--sun-y),
+      transparent 8deg,
+      rgb(var(--twilight-sun) / 5%) 22deg,
+      transparent 30deg,
+      rgb(var(--twilight-sun) / 8%) 38deg,
+      transparent 47deg,
+      rgb(var(--twilight-sun) / 4%) 58deg,
+      transparent 70deg
+    );
+  mask-image: linear-gradient(#000 0%, #000 var(--sun-tail-start), transparent var(--sun-tail-end));
+}
+
+/* 위치·크기·라운드는 컴포넌트가 정한다. 레이어는 글자와 이벤트를 가리지 않는다. */
+@layer components {
+  .liquid-glass {
+    --liquid-fill: rgb(var(--twilight-glass));
+    --liquid-opacity: 0.46;
+    --liquid-opacity-bottom: 0.68;
+    --liquid-filter: var(--liquid-filter-panel);
+    --liquid-highlight-x: 22%;
+    --liquid-highlight-y: 10%;
+    position: relative;
+    isolation: isolate;
+    background: transparent;
+    border-color: rgb(var(--twilight-highlight) / 18%);
+    box-shadow:
+      -3px -6px 12px rgb(var(--twilight-reflection) / 10%),
+      8px 12px 24px rgb(0 0 0 / 24%);
+  }
+
+  .liquid-glass::before,
+  .liquid-glass::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .liquid-glass::before {
+    z-index: -2;
+    background: var(--liquid-fill);
+  }
+
+  .liquid-glass::after {
+    z-index: -1;
+    background: radial-gradient(
+      ellipse at var(--liquid-highlight-x) var(--liquid-highlight-y),
+      rgb(var(--twilight-highlight) / 12%),
+      transparent 60%
+    );
+    box-shadow:
+      var(--glass-light-1),
+      var(--glass-light-2),
+      var(--glass-light-3),
+      var(--glass-light-4),
+      var(--glass-light-5),
+      inset -1px -1px 1px rgb(var(--twilight-afterglow) / 30%);
+  }
+
+  .liquid-glass--control {
+    --liquid-filter: var(--liquid-filter-control);
+    --glass-light-3: inset 1px 3px 3px rgb(var(--twilight-highlight) / 12%);
+    --glass-light-4: inset 2px 5px 5px rgb(var(--twilight-highlight) / 6%);
+    --glass-light-5: inset 3px 8px 8px rgb(var(--twilight-highlight) / 3%);
+    box-shadow: 4px 6px 12px rgb(0 0 0 / 18%);
+  }
+
+  .liquid-glass--muted {
+    --liquid-opacity: 0.64;
+    --liquid-opacity-bottom: 0.8;
+  }
+
+  .liquid-glass--panel {
+    --liquid-opacity: 0.84;
+    --liquid-opacity-bottom: 0.94;
+  }
+
+  .liquid-glass--selected {
+    --liquid-fill: rgb(var(--twilight-highlight));
+    --liquid-opacity: 0.82;
+    --liquid-opacity-bottom: 0.94;
+    color: var(--color-accent-ink);
+  }
+
+  .liquid-glass--sample {
+    --liquid-opacity: 0.28;
+    --liquid-opacity-bottom: 0.52;
+  }
+
+  .liquid-glass:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+  }
+
+  @supports ((backdrop-filter: blur(2px)) or (-webkit-backdrop-filter: blur(2px))) {
+    .liquid-glass::before {
+      background: linear-gradient(
+        150deg,
+        color-mix(in srgb, var(--liquid-fill) calc(var(--liquid-opacity) * 100%), transparent),
+        color-mix(
+          in srgb,
+          var(--liquid-fill) calc(var(--liquid-opacity-bottom) * 100%),
+          transparent
+        )
+      );
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(125%);
+      backdrop-filter: blur(var(--glass-blur)) saturate(125%);
+    }
+  }
+
+  @supports (backdrop-filter: url('#liquid')) {
+    .liquid-glass::before {
+      backdrop-filter: var(--liquid-filter) blur(var(--glass-blur)) saturate(125%);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .liquid-glass::before {
+      background: var(--liquid-fill);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+}

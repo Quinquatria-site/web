@@ -16,6 +16,7 @@ export const LANG_MARK: Record<Lang, string> = { ko: '한', en: '영', cha: '중
 export const LANG_NAME: Record<Lang, string> = { ko: '한국어', en: 'English', cha: '中文' }
 
 export type Copy = {
+  glassSample: { title: string; description: string }
   home: string
   toTop: string
   toNav: string
@@ -67,14 +68,26 @@ export type Copy = {
 
 export const COPY: Record<Lang, Copy> = {
   ko: {
+    glassSample: {
+      title: '리퀴드 글래스 샘플',
+      description: '황혼빛을 담은 투명한 유리 표면입니다.',
+    },
     home: '홈',
     toTop: '맨 위로',
     toNav: '아래로',
     language: '언어 선택',
     back: '뒤로 가기',
     pages: {
-      '/timeline': { label: '타임라인', short: '타임라인', summary: '공연과 부스 일정을 시간순으로' },
-      '/map': { label: '캠퍼스 지도', short: '캠퍼스 지도', summary: '부스 · 주점 · 쓰레기통 위치' },
+      '/timeline': {
+        label: '타임라인',
+        short: '타임라인',
+        summary: '공연과 부스 일정을 시간순으로',
+      },
+      '/map': {
+        label: '캠퍼스 지도',
+        short: '캠퍼스 지도',
+        summary: '부스 · 주점 · 쓰레기통 위치',
+      },
       '/notice': { label: '공지사항', short: '공지사항', summary: '흩어진 공지를 한 곳에서' },
       '/lost-found': { label: '분실물', short: '분실물', summary: '잃어버린 물건 찾아가기' },
     },
@@ -115,13 +128,21 @@ export const COPY: Record<Lang, Copy> = {
     },
   },
   en: {
+    glassSample: {
+      title: 'Liquid glass sample',
+      description: 'A clear glass surface catching the twilight.',
+    },
     home: 'Home',
     toTop: 'Back to top',
     toNav: 'Scroll down',
     language: 'Select language',
     back: 'Go back',
     pages: {
-      '/timeline': { label: 'Timeline', short: 'Timeline', summary: 'Shows and booths, hour by hour' },
+      '/timeline': {
+        label: 'Timeline',
+        short: 'Timeline',
+        summary: 'Shows and booths, hour by hour',
+      },
       '/map': { label: 'Campus Map', short: 'Map', summary: 'Booths, pubs, and bins' },
       '/notice': { label: 'Notices', short: 'Notices', summary: 'Every announcement in one place' },
       '/lost-found': { label: 'Lost & Found', short: 'Lost', summary: 'Claim what you lost' },
@@ -163,6 +184,10 @@ export const COPY: Record<Lang, Copy> = {
     },
   },
   cha: {
+    glassSample: {
+      title: '液态玻璃示例',
+      description: '映着暮光的通透玻璃表面。',
+    },
     home: '首页',
     toTop: '回到顶部',
     toNav: '向下滚动',

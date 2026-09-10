@@ -1,0 +1,39 @@
+.scene {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  width: min(100%, 340px);
+  height: 240px;
+}
+
+.glass {
+  width: calc(100% - 32px);
+  padding: 24px;
+  border: 1px solid rgb(var(--twilight-highlight) / 18%);
+  border-radius: 24px;
+}
+
+.content {
+  text-shadow: 0 1px 4px rgb(0 0 0 / 70%);
+}
+
+.symbol {
+  display: block;
+  margin-bottom: 20px;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.description {
+  margin-top: 6px;
+  color: var(--color-ink);
+  font-size: 13px;
+  line-height: 1.6;
+}

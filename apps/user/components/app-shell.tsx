@@ -1,5 +1,6 @@
 'use client'
 
+import { LiquidGlassEnvironment } from './liquid-glass-environment'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { ShellContext, type DockPhase } from '@/hooks/use-shell'
@@ -37,12 +38,12 @@ export function AppShell({ children, nav }: { children: ReactNode; nav: ReactNod
 
   return (
     <ShellContext value={value}>
-      <div className="relative mx-auto flex h-dvh w-full max-w-[430px] flex-col overflow-hidden bg-surface">
+      <LiquidGlassEnvironment>
         <div ref={scrollRef} className="h-full overflow-y-auto overscroll-contain">
           {children}
         </div>
         {nav}
-      </div>
+      </LiquidGlassEnvironment>
     </ShellContext>
   )
 }

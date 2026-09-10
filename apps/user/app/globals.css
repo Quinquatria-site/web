@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import './tokens.css';
+@import './materials.css';
 
 @theme {
   /* 역할 — 화면에서는 아래 이름만 쓴다. 팔레트를 직접 부르지 않는다. */
