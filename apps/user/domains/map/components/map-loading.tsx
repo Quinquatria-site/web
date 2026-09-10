@@ -12,10 +12,10 @@ export function MapLoading() {
       aria-live="polite"
       exit={{ opacity: 0 }}
       transition={{ duration: 0.45, ease: 'easeOut' }}
-      className="absolute inset-0 z-[1200] overflow-hidden bg-surface-muted"
+      className="absolute inset-0 z-[1200] overflow-hidden"
     >
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="flex items-center gap-2.5 rounded-full border border-line bg-surface px-4 py-2.5">
+        <div className="flex items-center gap-2.5 rounded-full border liquid-glass liquid-glass--control px-4 py-2.5">
           <span className="size-4 animate-spin rounded-full border-2 border-line border-t-accent motion-reduce:animate-none" />
           <span className="text-[13px] font-medium text-ink-muted">{copy.map.loading}</span>
         </div>

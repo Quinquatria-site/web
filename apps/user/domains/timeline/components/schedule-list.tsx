@@ -7,8 +7,8 @@ import { isAct, timeRange } from '../libs/schedule'
 
 /** 카드 채움으로 학생 무대와 초청 무대를 가른다. */
 const FILL: Record<'student' | 'celeb', string> = {
-  student: 'border-line bg-surface',
-  celeb: 'border-line bg-surface-muted',
+  student: 'border-line liquid-glass',
+  celeb: 'border-line liquid-glass liquid-glass--muted',
 }
 
 export function ScheduleList({
@@ -68,7 +68,7 @@ export function ScheduleList({
                   aria-current={live ? 'true' : undefined}
                   className={`relative flex w-full items-center justify-center gap-3 rounded-2xl border px-4 py-3.5 ${
                     live
-                      ? 'border-accent bg-accent text-accent-ink'
+                      ? 'border-accent liquid-glass liquid-glass--control liquid-glass--selected text-accent-ink'
                       : FILL[event.kind === 'celeb' ? 'celeb' : 'student']
                   }`}
                 >

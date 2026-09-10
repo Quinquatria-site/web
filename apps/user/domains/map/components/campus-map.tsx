@@ -129,8 +129,8 @@ export function CampusMap() {
         <div className="relative h-full w-full" inert={!ready}>
           <MapContainer
             ref={setMap}
-            className="h-full w-full bg-surface"
-            style={{ backgroundColor: 'var(--color-surface)' }}
+            className="h-full w-full"
+            style={{ backgroundColor: 'transparent' }}
             // 위경도 대신 평면 픽셀 좌표계를 쓴다.
             crs={CRS.Simple}
             bounds={IMAGE_BOUNDS}

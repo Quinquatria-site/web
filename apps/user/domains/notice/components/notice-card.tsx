@@ -12,7 +12,7 @@ const MotionLink = motion.create(Link)
 
 export function NoticeCard({ notice }: { notice: Notice }) {
   const { lang, copy } = useLang()
-  // 상시는 아래 카드가 지나가는 자리라 바탕이 비쳐서는 안 된다
+  // 겹쳐지는 상시 공지는 농도 높은 패널 재질로 본문을 읽기 쉽게 한다.
   const pinned = notice.kind === 'pinned'
 
   return (
@@ -20,13 +20,11 @@ export function NoticeCard({ notice }: { notice: Notice }) {
       href={noticeHref(lang, notice.id)}
       whileTap={{ scale: 0.985 }}
       className={`flex items-center gap-3.5 rounded-2xl border px-4 py-4 ${
-        pinned
-          ? 'border-accent/45 bg-surface shadow-[0_8px_24px_rgba(0,0,0,0.12)]'
-          : 'border-line bg-surface-muted'
+        pinned ? 'border-accent/45 liquid-glass liquid-glass--panel' : 'border-line liquid-glass'
       }`}
     >
       {pinned && (
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-surface text-accent">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl liquid-glass liquid-glass--control text-accent">
           <PinIcon className="size-[18px]" />
         </span>
       )}

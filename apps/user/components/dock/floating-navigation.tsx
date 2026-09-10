@@ -105,7 +105,7 @@ export function FloatingNavigation() {
           }}
           inert={atLanding || returningHome}
           style={{ transformOrigin: returningHome ? '28px center' : 'center' }}
-          className="pointer-events-auto flex items-center rounded-[32px] border border-line/70 bg-surface p-1.5 shadow-lg shadow-black/10"
+          className="pointer-events-auto flex items-center rounded-[32px] border liquid-glass liquid-glass--panel p-1.5"
         >
           {/* 탭들은 이 동작 버튼 쪽으로 접힌다. 목적지 넷과 달리 이름을 달지 않는다 */}
           <motion.button
@@ -175,7 +175,7 @@ export function FloatingNavigation() {
                         <motion.span
                           layoutId="dock-indicator"
                           transition={SPRING}
-                          className="absolute inset-0 rounded-[26px] bg-accent"
+                          className="absolute inset-0 rounded-[26px] liquid-glass liquid-glass--control liquid-glass--selected"
                         />
                       )}
                       {/* 아이콘 색은 currentColor 라 알약 안팎이 클래스 하나로 뒤집힌다 */}

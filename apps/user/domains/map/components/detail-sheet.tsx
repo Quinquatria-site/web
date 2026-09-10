@@ -218,7 +218,7 @@ export function DetailSheet({ item, onClose }: { item: MapItem | null; onClose: 
         role="dialog"
         aria-label={title}
         aria-hidden={stage === 'closed'}
-        className="absolute inset-x-0 bottom-0 z-[1100] flex h-[90%] touch-none flex-col rounded-t-3xl border-t border-line bg-surface shadow-[0_-4px_24px_rgba(0,0,0,0.18)] transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] will-change-transform motion-reduce:transition-none"
+        className="absolute inset-x-0 bottom-0 z-[1100] flex h-[90%] touch-none flex-col rounded-t-3xl border-t liquid-glass liquid-glass--panel transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] will-change-transform motion-reduce:transition-none"
         style={{ transform: 'translateY(100%)' }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -239,7 +239,7 @@ export function DetailSheet({ item, onClose }: { item: MapItem | null; onClose: 
           <button
             type="button"
             aria-label={copy.map.close}
-            className="flex size-8 shrink-0 items-center justify-center rounded-full bg-surface-muted text-ink-muted"
+            className="flex size-8 shrink-0 items-center justify-center rounded-full liquid-glass liquid-glass--control text-ink-muted"
             onClick={onClose}
           >
             <svg
@@ -280,7 +280,7 @@ export function DetailSheet({ item, onClose }: { item: MapItem | null; onClose: 
               </>
             )}
           </dl>
-          <div className="mt-5 flex h-[420px] items-center justify-center rounded-2xl border border-line bg-surface-muted text-ink-muted">
+          <div className="mt-5 flex h-[420px] items-center justify-center rounded-2xl border liquid-glass text-ink-muted">
             {copy.map.descriptionSlot}
           </div>
         </div>

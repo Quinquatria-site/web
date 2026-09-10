@@ -26,14 +26,14 @@ export function DayTabs({
             type="button"
             aria-pressed={active}
             onClick={() => onChange(day.date)}
-            className="relative flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl border border-line bg-surface"
+            className="relative flex h-12 flex-1 items-center justify-center gap-2 rounded-2xl border liquid-glass liquid-glass--control"
           >
             {/* layoutId 가 같아 탭을 옮기면 알약이 스르륵 따라온다 */}
             {active && (
               <motion.span
                 layoutId="day-pill"
                 transition={SPRING}
-                className="absolute inset-0 rounded-2xl bg-accent"
+                className="absolute inset-0 rounded-2xl liquid-glass liquid-glass--control liquid-glass--selected"
               />
             )}
             <span

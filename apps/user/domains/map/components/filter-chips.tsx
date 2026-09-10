@@ -1,5 +1,6 @@
 'use client'
 
+import type { CSSProperties } from 'react'
 import { useLang } from '@/components/lang-provider'
 import { MARKER_KINDS, type MarkerKind } from '../libs/items'
 import { MARKER_COLOR, MARKER_FORM, type MarkerForm } from '../libs/markers'
@@ -55,11 +56,15 @@ export function FilterChips({
             onClick={() => onToggle(kind)}
             style={
               on
-                ? { backgroundColor: MARKER_COLOR[kind], borderColor: MARKER_COLOR[kind] }
+                ? ({
+                    '--liquid-fill': MARKER_COLOR[kind],
+                    '--liquid-opacity': 0.88,
+                    '--liquid-opacity-bottom': 0.96,
+                  } as CSSProperties)
                 : undefined
             }
-            className={`pointer-events-auto flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-[12px] font-medium transition-colors ${
-              on ? 'text-marker-ink' : 'border-line bg-surface text-ink-muted'
+            className={`liquid-glass liquid-glass--control pointer-events-auto flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3 text-[12px] font-medium transition-colors ${
+              on ? 'text-marker-ink' : 'text-ink-muted'
             }`}
           >
             <KindMark kind={kind} active={on} />

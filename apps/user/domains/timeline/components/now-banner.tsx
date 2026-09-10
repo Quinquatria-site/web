@@ -23,7 +23,7 @@ export function NowBanner({
       onClick={onJump}
       whileTap={{ scale: 0.98 }}
       className={`relative block h-28 w-full overflow-hidden rounded-3xl border text-left ${
-        live ? 'border-accent bg-surface' : 'border-line bg-surface-muted'
+        live ? 'border-accent liquid-glass' : 'border-line liquid-glass'
       }`}
     >
       {live ? (
