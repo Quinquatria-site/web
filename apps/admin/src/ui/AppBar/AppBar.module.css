@@ -1,0 +1,49 @@
+.bar {
+  display: grid;
+  flex-shrink: 0;
+  grid-template-columns: var(--seed-dimension-x10) 1fr var(--seed-dimension-x10);
+  gap: var(--seed-dimension-x2);
+  align-items: center;
+  min-height: 56px;
+  padding: 0 var(--seed-dimension-x2);
+  background: var(--seed-color-bg-layer-default);
+  border-bottom: 1px solid var(--seed-color-stroke-neutral-weak);
+}
+
+/* font 단축 속성을 쓰지 않는다. 패밀리를 함께 적지 않으면 상속받은 글꼴을
+   초기화해버린다. SEED 는 크기·행간·굵기를 따로 준다. */
+.title {
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--seed-font-size-t5);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t5);
+  color: var(--seed-color-fg-neutral);
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--seed-dimension-x10);
+  height: var(--seed-dimension-x10);
+  padding: 0;
+  color: var(--seed-color-fg-neutral);
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: var(--seed-radius-r3);
+}
+
+.iconButton:hover {
+  background: var(--seed-color-bg-neutral-weak);
+}
