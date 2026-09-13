@@ -68,10 +68,10 @@ export const MENUS: Menu[] = [
       },
     ],
   },
-  // 타로 점집 (place 20) — 유료 체험
+  // 부스 A-1 (place 1001) — 유료 체험 예시
   {
     id: 201,
-    place_id: 20,
+    place_id: 1001,
     image_url: 'images/menu/mock-tarot.webp',
     price: 3000,
     translations: [
