@@ -9,8 +9,8 @@ export const DEFAULT_LANG: Lang = 'ko'
 /** 라우트 이름과 별개로 <html lang> 에는 표준 코드가 들어가야 한다. cha 는 표준이 아니다. */
 export const HTML_LANG: Record<Lang, string> = { ko: 'ko', en: 'en', cha: 'zh' }
 
-/** 선택기에 찍히는 글자. 나중에 이미지로 바뀐다. */
-export const LANG_MARK: Record<Lang, string> = { ko: '한', en: '영', cha: '중' }
+/** 선택기에 찍히는 글자. 읽는 사람의 글자로 적는다. 나중에 이미지로 바뀐다. */
+export const LANG_MARK: Record<Lang, string> = { ko: '한', en: 'EN', cha: '中' }
 
 /** 글자만으로는 무엇인지 알 수 없어 읽어 줄 이름을 따로 둔다. */
 export const LANG_NAME: Record<Lang, string> = { ko: '한국어', en: 'English', cha: '中文' }
