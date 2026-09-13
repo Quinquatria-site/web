@@ -1,0 +1,63 @@
+.screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--seed-dimension-x5);
+  padding: var(--seed-dimension-x4);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x3);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--seed-dimension-x3);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--seed-font-size-t4);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t5);
+  color: var(--seed-color-fg-neutral);
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--seed-font-size-t2);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+/* 좌표 픽커. Leaflet 은 명시적 높이가 필요하다 */
+.picker {
+  height: 260px;
+  overflow: hidden;
+  border: 1px solid var(--seed-color-stroke-neutral-weak);
+  border-radius: var(--seed-radius-r3);
+}
+
+.coord {
+  font-family: ui-monospace, monospace;
+  font-size: var(--seed-font-size-t3);
+  color: var(--seed-color-fg-neutral);
+}
+
+.langMissing {
+  color: var(--seed-color-fg-critical);
+}
+
+.footer {
+  display: flex;
+  gap: var(--seed-dimension-x2);
+  margin-top: var(--seed-dimension-x2);
+}
+
+.footer > :last-child {
+  margin-left: auto;
+}
