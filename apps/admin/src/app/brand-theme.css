@@ -1,0 +1,36 @@
+/* SEED 의 brand 역할 토큰을 외대 네이비로 덮는다.
+
+   컴포넌트 CSS 는 건드리지 않는다. 역할 토큰만 바꾸면 brandSolid 버튼처럼
+   brand 를 쓰는 것들이 한 번에 따라온다. SEED 버전이 올라가도 깨지지 않는다.
+
+   값은 HUFS NAVY #002D56 (constants/brand-colors.ts) 에서 색상·채도를 고정하고
+   명도만 옮겨 뽑았다. 라이트 고정이라(vite.config.ts colorMode: 'light-only')
+   한 벌만 정의한다. 다크를 켜게 되면 여기에 다크 값을 따로 잡아야 한다.
+
+   흰 배경 기준 대비:
+     solid #002D56          13.9:1  (버튼 위 흰 글자도 같은 값)
+     solid-pressed #00203D  16.5:1
+
+   셀렉터에 속성까지 붙인 이유 — base.css 가 같은 토큰을
+   `:root[data-seed-color-mode="light-only"]` 로 정의한다. 맨 `:root` 로는
+   명시도가 낮아 순서와 무관하게 진다. 명시도를 맞추고 뒤에 두어야 이긴다.
+   colorMode 를 'system' 으로 되돌리면 이 규칙이 다크에서 안 먹어 주황이
+   돌아온다. 그때는 다크 값을 따로 잡아야 한다. */
+:root,
+:root[data-seed-color-mode='light-only'] {
+  /* 채워진 브랜드 면. brandSolid 버튼 배경이 이걸 쓴다 */
+  --seed-color-bg-brand-solid: #002d56;
+  --seed-color-bg-brand-solid-pressed: #00203d;
+
+  /* 옅은 브랜드 면 */
+  --seed-color-bg-brand-weak: #e5f3ff;
+  --seed-color-bg-brand-weak-pressed: #cce6ff;
+
+  /* 브랜드 색 글자. ghost·outline 변형이 쓴다 */
+  --seed-color-fg-brand: #002d56;
+  --seed-color-fg-brand-contrast: #00203d;
+
+  /* 테두리 */
+  --seed-color-stroke-brand-solid: #00203d;
+  --seed-color-stroke-brand-weak: #a3d3ff;
+}

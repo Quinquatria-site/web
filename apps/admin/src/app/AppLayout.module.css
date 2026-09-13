@@ -1,0 +1,78 @@
+/* 데스크톱에서는 폰 화면처럼 좁은 기둥으로 고정한다.
+   SEED 가 모바일 앱용 디자인 시스템이라 터치 기준 크기를 그대로 살린다.
+
+   폰에서는 고정하지 않는다. 폭 상한을 모든 크기에 걸면 상한보다 넓은 기기에서
+   좌우에 여백이 남는다. 실제로 430px 상한일 때 iPhone 16 Pro Max(440px)에서
+   10px 이 떴다. 기기 폭은 계속 커지므로 상한값을 올려 쫓아가는 대신,
+   폰 구간에서는 상한 자체를 걸지 않는다. */
+.page {
+  /* 데스크톱 기둥 폭. 이 값만 바꾸면 된다 */
+  --app-viewport-width: 480px;
+
+  /* 이 폭 아래로는 기둥을 만들지 않고 꽉 채운다.
+     지금 가장 넓은 폰이 440px 근처라 여유를 두고 잡았다 */
+  --app-viewport-breakpoint: 600px;
+
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--seed-color-bg-layer-basement);
+}
+
+/* 폰 화면처럼 높이가 고정된다. 여기는 스크롤하지 않는다 —
+   상단바와 탭바를 제자리에 두고 가운데 .body 만 스크롤한다. */
+.viewport {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--seed-color-bg-layer-default);
+}
+
+/* 상단바와 탭바 사이. 실제로 스크롤되는 곳은 여기뿐이다. */
+.body {
+  /* 안쪽 화면이 flex: 1 로 높이를 채울 수 있게 여기도 flex 컨테이너로 둔다.
+     로그인 화면의 세로 가운데 정렬이 이것에 기댄다 */
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  /* 막대만 감춘다. 스크롤 자체는 살려둔다.
+     폰 앱처럼 보이는 셸이라 상시 노출되는 막대가 화면 폭을 잡아먹고,
+     배경색이 다른 화면에서는 오른쪽에 밝은 줄로 드러난다. */
+  scrollbar-width: none;
+}
+
+/* scrollbar-width 를 모르는 옛 웹킷(구형 iOS 사파리)용 */
+.body::-webkit-scrollbar {
+  display: none;
+}
+
+/* 상단바 우측 설정 버튼 */
+.action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--seed-dimension-x10);
+  height: var(--seed-dimension-x10);
+  color: var(--seed-color-fg-neutral);
+  border-radius: var(--seed-radius-r3);
+}
+
+.action:hover {
+  background: var(--seed-color-bg-neutral-weak);
+}
+
+/* 미디어 쿼리는 커스텀 속성을 못 읽는다. 값이 바뀌면 위 --app-viewport-breakpoint
+   주석과 여기를 같이 고쳐야 한다 */
+@media (min-width: 600px) {
+  .viewport {
+    max-width: var(--app-viewport-width);
+  }
+}

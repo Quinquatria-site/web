@@ -1,0 +1,36 @@
+/* 탭 화면 공통 뼈대. 각 도메인 화면이 같은 여백과 간격을 쓴다. */
+.screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--seed-dimension-x4);
+  padding: var(--seed-dimension-x4);
+}
+
+/* 아직 내용이 없는 화면의 안내. 화면이 채워지면 지운다. */
+.placeholder {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--seed-dimension-x2);
+  align-items: center;
+  justify-content: center;
+  padding: var(--seed-dimension-x8) var(--seed-dimension-x4);
+  text-align: center;
+}
+
+.placeholderTitle {
+  margin: 0;
+  font-size: var(--seed-font-size-t5);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t5);
+  color: var(--seed-color-fg-neutral);
+}
+
+.placeholderBody {
+  margin: 0;
+  font-size: var(--seed-font-size-t4);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t5);
+  color: var(--seed-color-fg-neutral-muted);
+}
