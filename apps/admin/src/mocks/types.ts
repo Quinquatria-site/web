@@ -214,3 +214,49 @@ export function hasMissingTranslations(
 ): boolean {
   return missingLanguages(translations).length > 0
 }
+
+/**
+ * 분실물 (§5.8). 네 도메인 중 유일하게 **현장에서 즉시 만들어지는** 리소스다.
+ * 장소·공연은 운영 본부에서 미리 채워 넣지만 분실물은 물건을 주운 사람이
+ * 그 자리에서 폰으로 등록한다 — 화면 설계가 이 사실 하나에서 갈린다.
+ *
+ * 운영자가 정하는 것은 사진과 번역뿐이다. created_at 은 서버가 찍고
+ * is_returned 는 목록의 스위치로만 바뀐다.
+ *
+ * 공지와 마찬가지로 순서를 손댈 수단이 없다. 정렬 키가 created_at 하나뿐이라
+ * (§5.1 created_at DESC, id DESC) 재정렬 엔드포인트 자체가 없다.
+ */
+export interface LostItemTranslation {
+  id: number
+  lost_item_id: number
+  language_code: LanguageCode
+  title: string
+  /** 분실물 설명. 공연의 description 과 같이 선택이다 (§5.8) */
+  description: string
+  /**
+   * 습득 장소. 좌표나 장소 ID 가 아니라 자유 입력 문자열이라 번역 대상이다 —
+   * "정문 앞 벤치" 를 영어 사용자도 읽어야 물건을 찾아간다.
+   */
+  found_location: string
+}
+
+export interface LostItem {
+  id: number
+  /**
+   * 이미지 S3 key. 타입은 Menu.image_url 과 같이 nullable 이지만 이 도메인에서는
+   * 화면이 필수로 막는다 — 사진 없는 분실물은 주인이 자기 물건인지 알아볼 수
+   * 없어서 목록에 있으나 마나다. 업로드 플로우(#14) 전까지는 목 문자열이다.
+   */
+  image_url: string | null
+  /**
+   * 반환 완료 여부. 편집 화면이 아니라 **목록의 스위치**로만 바뀐다 —
+   * 주인이 물건을 찾아가는 순간은 한 손이 물건에 가 있어서, 화면을 옮겨
+   * 저장까지 누르게 할 여유가 없다.
+   *
+   * 공연의 is_live 와 달리 배타적이지 않다. 반환된 물건은 여럿일 수 있다.
+   */
+  is_returned: boolean
+  /** 서버 생성, 수정 불가. 목록 정렬의 1차 키다 (§5.8) */
+  created_at: string
+  translations: LostItemTranslation[]
+}
