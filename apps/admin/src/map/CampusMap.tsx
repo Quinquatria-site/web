@@ -1,7 +1,16 @@
 import { CRS } from 'leaflet'
 import { useEffect, type ReactNode } from 'react'
 import { ImageOverlay, MapContainer, Rectangle, Tooltip, useMap, useMapEvents } from 'react-leaflet'
-import { boundsFromSource, IMAGE_BOUNDS, IMAGE_URL, toSource, ZONES, type Point } from './campus'
+import {
+  boundsFromSource,
+  IMAGE_BOUNDS,
+  IMAGE_URL,
+  SOURCE_HEIGHT,
+  SOURCE_WIDTH,
+  toSource,
+  ZONES,
+  type Point,
+} from './campus'
 import 'leaflet/dist/leaflet.css'
 
 /** 이미지 지도라 위경도가 아니라 픽셀 좌표(CRS.Simple)를 쓴다 */
@@ -13,12 +22,16 @@ function FitToImage() {
   return null
 }
 
+/** 소수 첫째 자리까지, 도면 범위 안으로 */
+const snap = (value: number, max: number) => Math.round(Math.min(Math.max(value, 0), max) * 10) / 10
+
 function PickLayer({ onPick }: { onPick: (point: Point) => void }) {
   useMapEvents({
     click: (event) => {
       const { x, y } = toSource(event.latlng)
-      // 배치 도면 좌표로 저장한다. user 앱이 같은 좌표계를 읽는다
-      onPick({ x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 })
+      // 배치 도면 좌표로 저장한다. user 앱이 같은 좌표계를 읽는다.
+      // 이미지 여백을 눌러도 도면 밖 좌표가 나가지 않게 가둔다
+      onPick({ x: snap(x, SOURCE_WIDTH), y: snap(y, SOURCE_HEIGHT) })
     },
   })
   return null

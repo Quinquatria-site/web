@@ -77,7 +77,7 @@ function build(
     y,
     start_hour: start,
     end_hour: end,
-    place_image_uri: [],
+    place_image_uri: null,
     translations: toTranslations(id, layoutId, name, host, description),
   }
 }

@@ -4,6 +4,7 @@ import { fromSource, toLatLng } from '../map/campus'
 import { CATEGORY_COLORS } from '../map/category-colors'
 import { categoryById } from '../mocks/categories'
 import { PLACES } from '../mocks/places'
+import { useStoreVersion } from '../mocks/store'
 import { findTranslation } from '../mocks/types'
 import styles from './PlacesMapRoute.module.css'
 
@@ -13,6 +14,7 @@ import styles from './PlacesMapRoute.module.css'
  * 번들 경로 문제를 피하고, 색만으로 카테고리를 구분하기에 충분하다.
  */
 export function PlacesMapRoute() {
+  useStoreVersion()
   return (
     <div className={styles.screen}>
       <CampusMap className={styles.map}>
