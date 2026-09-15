@@ -8,11 +8,17 @@
   min-height: 0;
 }
 
+/* ChipTabs 레시피는 좌우 여백만 준다. 상단바에 붙어 답답해 보여 위아래를 띄운다 */
+.filters {
+  flex-shrink: 0;
+  padding-block: var(--seed-dimension-x3);
+}
+
 .actions {
   display: flex;
   flex-shrink: 0;
   gap: var(--seed-dimension-x2);
-  padding: var(--seed-dimension-x1) var(--seed-dimension-x4) var(--seed-dimension-x3);
+  padding: 0 var(--seed-dimension-x4) var(--seed-dimension-x3);
 }
 
 .list {

@@ -99,7 +99,7 @@ export function PlacesRoute() {
     <div className={styles.screen}>
       {/* 단순 선택이 아니라 목록을 갈아끼우는 필터라 Chip 이 아니라 ChipTabs 다.
           가로 스크롤과 선택 칩 자동 노출을 ChipTabsList 가 맡는다 */}
-      <ChipTabsRoot value={filter} onValueChange={setFilter}>
+      <ChipTabsRoot className={styles.filters} value={filter} onValueChange={setFilter}>
         <ChipTabsList>
           <ChipTabsTrigger value="all">전체</ChipTabsTrigger>
           {CATEGORIES.map((category) => (
