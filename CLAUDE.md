@@ -65,7 +65,7 @@ Vercel 프로젝트 2개. 앱마다 하나씩, Root Directory 로 구분한다.
 ## 금지
 
 **Next.js에 백엔드 로직을 넣지 않는다.**
-DB 접근·인증·비즈니스 규칙은 전부 외부 Django. Route Handler에서 직접 조회하거나
+DB 접근·인증·비즈니스 규칙은 전부 외부 FastAPI. Route Handler에서 직접 조회하거나
 Server Action으로 쓰기를 처리하는 것 모두 금지.
 백엔드 변경이 필요하면 코드 대신 외부 팀에 넘길 요청 사항을 정리한다.
 
