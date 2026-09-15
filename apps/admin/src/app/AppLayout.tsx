@@ -1,9 +1,14 @@
 import {
+  IconBoxFlapFill,
   IconBoxFlapLine,
+  IconCalendarFill,
   IconCalendarLine,
   IconGearLine,
+  IconHouseFill,
   IconHouseLine,
+  IconMapFill,
   IconMapLine,
+  IconMegaphoneFill,
   IconMegaphoneLine,
 } from '@karrotmarket/react-monochrome-icon'
 import { Link, Outlet, useMatches } from 'react-router'
@@ -13,11 +18,11 @@ import styles from './AppLayout.module.css'
 
 /** 관리 대상 네 도메인에 현황판을 더한 다섯. 폰 탭바는 이 이상 늘리지 않는다. */
 const TABS: BottomTab[] = [
-  { to: '/', label: '홈', icon: IconHouseLine },
-  { to: '/places', label: '장소', icon: IconMapLine },
-  { to: '/performances', label: '공연', icon: IconCalendarLine },
-  { to: '/notices', label: '공지', icon: IconMegaphoneLine },
-  { to: '/lost-items', label: '분실물', icon: IconBoxFlapLine },
+  { to: '/', label: '홈', icon: IconHouseLine, activeIcon: IconHouseFill },
+  { to: '/places', label: '장소', icon: IconMapLine, activeIcon: IconMapFill },
+  { to: '/performances', label: '공연', icon: IconCalendarLine, activeIcon: IconCalendarFill },
+  { to: '/notices', label: '공지', icon: IconMegaphoneLine, activeIcon: IconMegaphoneFill },
+  { to: '/lost-items', label: '분실물', icon: IconBoxFlapLine, activeIcon: IconBoxFlapFill },
 ]
 
 export interface RouteHandle {
