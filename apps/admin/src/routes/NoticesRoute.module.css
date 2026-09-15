@@ -39,9 +39,19 @@
   display: none;
 }
 
-/* 두 종류를 한 화면에 세우므로 섹션 사이가 목록 행 간격보다 넓어야 갈린다 */
+/* 행 사이에 구분선이 생겨 목록이 촘촘해 보이므로, 섹션 간격은 그보다 확실히
+   커야 계층이 선다. 이 값이 행 간격 이하로 내려가면 두 섹션이 다시 붙어 보인다 */
 .section + .section {
-  margin-top: var(--seed-dimension-x5);
+  margin-top: var(--seed-dimension-x8);
+}
+
+/* 섹션 헤더 오른쪽 건수. 헤더가 boldSolid 라 진해졌으므로 숫자는 톤을 낮춰
+   제목이 먼저 읽히게 한다 */
+.count {
+  font-size: var(--seed-font-size-t4);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-subtle);
 }
 
 /* 섹션 하나만 비었을 때. 전체가 빈 것과 달리 나갈 문을 따로 주지 않는다 —
@@ -52,13 +62,6 @@
   font-size: var(--seed-font-size-t3);
   line-height: var(--seed-line-height-t3);
   color: var(--seed-color-fg-neutral-muted);
-}
-
-/* 등록 시각과 번역 배지가 한 줄에 선다. 배지는 인라인 블록이라 가운데 정렬이 필요하다 */
-.detail {
-  display: flex;
-  gap: var(--seed-dimension-x1_5);
-  align-items: center;
 }
 
 /* 한 손 엄지 구역. 탭바 위에 뜬다 */

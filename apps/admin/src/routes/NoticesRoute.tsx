@@ -1,12 +1,12 @@
 import { IconPlusLine } from '@karrotmarket/react-monochrome-icon'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Badge } from '@seed-design/react'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { Callout } from 'seed-design/ui/callout'
 import { Chip } from 'seed-design/ui/chip'
 import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
-import { List, ListButtonItem } from 'seed-design/ui/list'
+import { List, ListButtonItem, ListDivider } from 'seed-design/ui/list'
 import { ListHeader } from 'seed-design/ui/list-header'
 import { noticesByType, useStoreVersion } from '../mocks/store'
 import {
@@ -73,23 +73,32 @@ function Section({
 }) {
   return (
     <section className={styles.section}>
-      <ListHeader as="h2">{title}</ListHeader>
+      {/* boldSolid — 기본 mediumWeak 는 행 제목보다 연해서 헤더가 또 하나의
+          흐린 줄로 읽힌다. 레시피가 space-between 이라 자식 둘이 좌우로 벌어져
+          건수를 넣을 자리가 이미 있다. 건수는 걸러진 뒤의 수다 — 헤더 숫자와
+          그 아래 행 수가 늘 일치하는 쪽이 헷갈리지 않는다 */}
+      <ListHeader as="h2" variant="boldSolid">
+        <span>{title}</span>
+        <span className={styles.count}>{notices.length}</span>
+      </ListHeader>
       {notices.length === 0 ? (
         <p className={styles.sectionEmpty}>{emptyText}</p>
       ) : (
         <List>
-          {notices.map((notice) => (
-            <ListButtonItem
-              key={notice.id}
-              title={titleOf(notice)}
-              detail={
-                <span className={styles.detail}>
-                  {dateTimeLabel(notice.created_at)}
-                  <LangBadge notice={notice} />
-                </span>
-              }
-              onClick={() => onSelect(notice)}
-            />
+          {notices.map((notice, index) => (
+            <Fragment key={notice.id}>
+              {/* ListDivider 는 li 로 렌더돼서 ul 안에 넣어도 된다.
+                  inset 의 좌우 16px 는 행의 padding-inline(global-gutter = x4)과
+                  같은 값이라 선이 제목 시작선에 맞는다.
+                  행 사이에만 넣는다 — 마지막 행 뒤의 선은 목록이 끊긴 것처럼 보인다 */}
+              {index > 0 && <ListDivider inset />}
+              <ListButtonItem
+                title={titleOf(notice)}
+                detail={dateTimeLabel(notice.created_at)}
+                suffix={<LangBadge notice={notice} />}
+                onClick={() => onSelect(notice)}
+              />
+            </Fragment>
           ))}
         </List>
       )}
