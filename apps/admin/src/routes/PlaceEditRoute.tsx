@@ -10,7 +10,7 @@ import { SelectContent, SelectItem, SelectRoot, SelectTrigger } from 'seed-desig
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/text-field'
 import { useFormFields } from '../lib/useFormFields'
-import { HourField, type Hour } from '../ui'
+import { ConfirmDialog, HourField, PhotoPicker, type Hour } from '../ui'
 import { CampusMap } from '../map/CampusMap'
 import { fromSource, toLatLng, type Point } from '../map/campus'
 import { CATEGORIES, categoryById } from '../mocks/categories'
@@ -52,6 +52,9 @@ const toIso = (date: string, { hour, minute }: Hour) =>
 /** 같은 일차 안에서 비교한다. 종료가 시작보다 이르면 422 (§5.4) */
 const minutesOf = ({ hour, minute }: Hour) => hour * 60 + minute
 
+/** 장소 사진 최대 장수. 백엔드 계약 전의 잠정값이다 (#14) */
+const PHOTO_MAX = 10
+
 type TranslationField = 'name' | 'host' | 'desc'
 const fieldKey = (field: TranslationField, lang: LanguageCode) => `${field}_${lang}` as const
 
@@ -79,6 +82,8 @@ function PlaceEditForm() {
   const [categoryId, setCategoryId] = useState<number>(editing?.category_id ?? 2)
   const [point, setPoint] = useState<Point | null>(editing ? { x: editing.x, y: editing.y } : null)
   const [error, setError] = useState<string | null>(null)
+  const [confirming, setConfirming] = useState(false)
+  const [photos, setPhotos] = useState<string[]>(editing?.place_image_uri ?? [])
 
   const [date, setDate] = useState<string>(editing ? dateOf(editing.start_hour) : FESTIVAL_DATES[0])
   const [start, setStart] = useState<Hour>(
@@ -139,7 +144,8 @@ function PlaceEditForm() {
       y: point.y,
       start_hour: toIso(date, start),
       end_hour: toIso(date, end),
-      place_image_uri: editing?.place_image_uri ?? null,
+      // 빈 배열은 422 다 (§5.4). 다 지웠으면 null 로 보낸다
+      place_image_uri: photos.length > 0 ? photos : null,
       translations,
     }
     // 지우기 전에 원본을 붙잡는다. upsertPlace 가 PLACES 의 항목을 새 객체로
@@ -187,7 +193,7 @@ function PlaceEditForm() {
     const removed = deletePlace(editing.id)
     if (!removed) return
     navigate('/places')
-    // 확인 다이얼로그 대신 실행취소 — 현장 한 손 조작에서는 이쪽이 안전하다
+    // 확인을 받고 지웠더라도 실행취소는 남긴다. 확인은 실수를, 이쪽은 변심을 받는다
     snackbar.create({
       timeout: 6000,
       render: () => (
@@ -291,6 +297,16 @@ function PlaceEditForm() {
       </div>
 
       <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>사진</h2>
+        <PhotoPicker
+          value={photos}
+          onChange={setPhotos}
+          max={PHOTO_MAX}
+          label={values.name_KO.trim() || '장소'}
+        />
+      </div>
+
+      <div className={styles.section}>
         <h2 className={styles.sectionTitle}>소개</h2>
         <SegmentedControl
           aria-label="언어"
@@ -357,10 +373,27 @@ function PlaceEditForm() {
       {/* 되돌릴 수 없는 액션이라 저장 옆에 두지 않는다. 일부러 내려와야 닿는 자리다 */}
       {editing && (
         <div className={styles.dangerZone}>
-          <ActionButton size="medium" variant="criticalSolid" onClick={remove}>
+          <ActionButton size="medium" variant="criticalSolid" onClick={() => setConfirming(true)}>
             이 장소 삭제
           </ActionButton>
         </div>
+      )}
+
+      {editing && (
+        <ConfirmDialog
+          open={confirming}
+          onOpenChange={setConfirming}
+          title="이 장소를 삭제할까요?"
+          // 편집 중인 입력값이 아니라 저장된 이름을 보여준다. 지금 지워질 것이 무엇인지가 중요하다
+          description={[
+            findTranslation(editing.translations, 'KO')?.name ?? `장소 ${editing.id}`,
+            menus.length > 0 ? `딸린 메뉴 ${menus.length}개가 함께 지워집니다` : '',
+          ]
+            .filter(Boolean)
+            .join(' · ')}
+          confirmLabel="삭제"
+          onConfirm={remove}
+        />
       )}
 
       {/* 스크롤 위치와 무관하게 닿는 하단 고정 바. 오류도 여기 붙어야 보인다 */}
