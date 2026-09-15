@@ -3,6 +3,7 @@ import { HomeRoute } from '../routes/HomeRoute'
 import { LoginRoute } from '../routes/LoginRoute'
 import { LostItemsRoute } from '../routes/LostItemsRoute'
 import { MenuEditRoute } from '../routes/MenuEditRoute'
+import { NoticeEditRoute } from '../routes/NoticeEditRoute'
 import { NoticesRoute } from '../routes/NoticesRoute'
 import { PerformanceEditRoute } from '../routes/PerformanceEditRoute'
 import { PerformancesRoute } from '../routes/PerformancesRoute'
@@ -68,6 +69,16 @@ export const router = createBrowserRouter([
             handle: { title: '공연 편집', back: true, hideTabs: true },
           },
           { path: 'notices', element: <NoticesRoute />, handle: { title: '공지' } },
+          {
+            path: 'notices/new',
+            element: <NoticeEditRoute />,
+            handle: { title: '공지 작성', back: true, hideTabs: true },
+          },
+          {
+            path: 'notices/:id',
+            element: <NoticeEditRoute />,
+            handle: { title: '공지 편집', back: true, hideTabs: true },
+          },
           { path: 'lost-items', element: <LostItemsRoute />, handle: { title: '분실물' } },
           {
             path: 'settings',
