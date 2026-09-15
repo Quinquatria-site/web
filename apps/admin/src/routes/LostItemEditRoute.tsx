@@ -21,7 +21,7 @@ import {
   type LanguageCode,
   type LostItemTranslation,
 } from '../mocks/types'
-import { PhotoPicker } from '../ui'
+import { ConfirmDialog, PhotoPicker } from '../ui'
 // 공연 편집과 같은 뼈대라 스타일시트를 같이 쓴다. 공지도 이 파일을 쓰고
 // 메뉴는 장소 것을 쓴다 — 편집 화면이 서로의 스타일시트를 가져다 쓰는 관례다
 import styles from './PerformanceEditRoute.module.css'
@@ -55,6 +55,7 @@ function LostItemEditForm() {
   const editing = params.id ? lostItemById(Number(params.id)) : undefined
 
   const [lang, setLang] = useState<LanguageCode>('KO')
+  const [confirming, setConfirming] = useState(false)
   // 사진만 useFormFields 밖이다. 그쪽은 문자열 전용이고 이건 key 배열이다
   const [photos, setPhotos] = useState<string[]>(editing?.image_url ? [editing.image_url] : [])
   const [error, setError] = useState<string | null>(null)
@@ -169,7 +170,7 @@ function LostItemEditForm() {
     const removed = deleteLostItem(editing.id)
     if (!removed) return
     backToList(removed.is_returned)
-    // 확인 다이얼로그 대신 실행취소 — 현장 한 손 조작에서는 이쪽이 안전하다
+    // 확인을 받고 지웠더라도 실행취소는 남긴다. 확인은 실수를, 이쪽은 변심을 받는다
     snackbar.create({
       timeout: 6000,
       render: () => (
@@ -270,10 +271,29 @@ function LostItemEditForm() {
       {/* 되돌릴 수 없는 액션이라 저장 옆에 두지 않는다. 일부러 내려와야 닿는 자리다 */}
       {editing && (
         <div className={styles.dangerZone}>
-          <ActionButton size="medium" variant="criticalSolid" onClick={remove}>
+          <ActionButton size="medium" variant="criticalSolid" onClick={() => setConfirming(true)}>
             이 분실물 삭제
           </ActionButton>
         </div>
+      )}
+
+      {editing && (
+        <ConfirmDialog
+          open={confirming}
+          onOpenChange={setConfirming}
+          title="이 분실물을 삭제할까요?"
+          // 편집 중인 입력값이 아니라 저장된 제목을 보여준다. 지금 지워질 것이
+          // 무엇인지가 중요하다. 사진을 따로 말하는 이유는 이 도메인에서 사진이
+          // 1차 식별 수단이라 지워지는 것 중 다시 만들기 가장 어려워서다
+          description={[
+            findTranslation(editing.translations, 'KO')?.title ?? `분실물 ${editing.id}`,
+            editing.image_url ? '사진도 함께 지워집니다' : '',
+          ]
+            .filter(Boolean)
+            .join(' · ')}
+          confirmLabel="삭제"
+          onConfirm={remove}
+        />
       )}
 
       {/* 스크롤 위치와 무관하게 닿는 하단 고정 바. 오류도 여기 붙어야 보인다 */}

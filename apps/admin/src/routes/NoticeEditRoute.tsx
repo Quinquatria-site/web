@@ -6,6 +6,7 @@ import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/text-field'
 import { useFormFields } from '../lib/useFormFields'
+import { ConfirmDialog } from '../ui'
 import {
   deleteNotice,
   deleteNoticeTranslation,
@@ -70,8 +71,8 @@ function NoticeNotFound() {
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>없는 공지입니다</h2>
         <p className={styles.hint}>
-          지워졌거나 주소가 잘못됐습니다. 목 데이터는 새로고침하면 처음 상태로 돌아가므로,
-          방금 만든 공지는 새로고침 뒤 사라집니다.
+          지워졌거나 주소가 잘못됐습니다. 목 데이터는 새로고침하면 처음 상태로 돌아가므로, 방금 만든
+          공지는 새로고침 뒤 사라집니다.
         </p>
         <div>
           <ActionButton size="medium" variant="neutralWeak" onClick={() => navigate('/notices')}>
@@ -92,6 +93,7 @@ function NoticeEditForm() {
   // 축제 중 올라오는 공지는 대부분 일반이다. 상시는 축제 전에 몇 건 걸어두고 끝난다
   const [type, setType] = useState<NoticeType>(editing?.type ?? 'GENERAL')
   const [lang, setLang] = useState<LanguageCode>('KO')
+  const [confirming, setConfirming] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const initialFields: Record<string, string> = {}
@@ -167,7 +169,9 @@ function NoticeEditForm() {
               <Snackbar
                 message={`${values.title_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
                 actionLabel="실행취소"
-                onAction={() => upsertNotice({ id: saved.id, type: saved.type, translations: undo })}
+                onAction={() =>
+                  upsertNotice({ id: saved.id, type: saved.type, translations: undo })
+                }
               />
             ),
           }
@@ -190,7 +194,7 @@ function NoticeEditForm() {
     const removed = deleteNotice(editing.id)
     if (!removed) return
     navigate('/notices')
-    // 확인 다이얼로그 대신 실행취소 — 현장 한 손 조작에서는 이쪽이 안전하다
+    // 확인을 받고 지웠더라도 실행취소는 남긴다. 확인은 실수를, 이쪽은 변심을 받는다
     snackbar.create({
       timeout: 6000,
       render: () => (
@@ -327,10 +331,28 @@ function NoticeEditForm() {
       {/* 되돌릴 수 없는 액션이라 저장 옆에 두지 않는다. 일부러 내려와야 닿는 자리다 */}
       {editing && (
         <div className={styles.dangerZone}>
-          <ActionButton size="medium" variant="criticalSolid" onClick={remove}>
+          <ActionButton size="medium" variant="criticalSolid" onClick={() => setConfirming(true)}>
             이 공지 삭제
           </ActionButton>
         </div>
+      )}
+
+      {editing && (
+        <ConfirmDialog
+          open={confirming}
+          onOpenChange={setConfirming}
+          title="이 공지를 삭제할까요?"
+          // 편집 중인 입력값이 아니라 저장된 제목을 보여준다. 종류를 같이 말하는
+          // 이유는 상시 공지가 축제 내내 걸려 있는 안내라 일반과 대가가 달라서다
+          description={[
+            findTranslation(editing.translations, 'KO')?.title ?? `공지 ${editing.id}`,
+            editing.type === 'PERMANENT' ? '축제 내내 걸려 있던 상시 공지입니다' : '',
+          ]
+            .filter(Boolean)
+            .join(' · ')}
+          confirmLabel="삭제"
+          onConfirm={remove}
+        />
       )}
 
       {/* 스크롤 위치와 무관하게 닿는 하단 고정 바. 오류도 여기 붙어야 보인다 */}
