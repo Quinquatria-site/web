@@ -24,6 +24,9 @@ import {
   type NoticeTranslation,
   type NoticeType,
 } from '../mocks/types'
+// 폼 뼈대는 공연 편집 화면과 같은 값을 쓴다 (MenuEditRoute 전례).
+// own 은 공지에만 있는 것 — 종류 설명 블록뿐이다
+import own from './NoticeEditRoute.module.css'
 import styles from './PerformanceEditRoute.module.css'
 
 const TYPE_LABELS: Record<NoticeType, string> = {
@@ -241,14 +244,25 @@ function NoticeEditForm() {
         </div>
 
         {/* 잘못 고르면 학생 앱에서 노출 위치 자체가 바뀐다. admin 은 한 경로에
-            type 쿼리지만 Customer API 는 경로가 갈린다 (§3.5) — 입력칸 옆에 적어둔다 */}
+            type 쿼리지만 Customer API 는 경로가 갈린다 (§3.5) — 입력칸 옆에 적어둔다.
+            한 문단에 몰아 쓰면 안 읽히므로 둘을 나란히 세워 비교하게 한다 */}
+        <dl className={own.types}>
+          <dt className={own.typeLabel}>상시</dt>
+          <dd className={own.typeText}>축제 내내 공지 목록 맨 위에 고정됩니다.</dd>
+          <dt className={own.typeLabel}>일반</dt>
+          <dd className={own.typeText}>최신순으로 내려갑니다.</dd>
+        </dl>
         <p className={styles.hint}>
-          <strong>상시</strong> 는 학생 앱 공지 목록 맨 위에 축제 내내 붙어 있습니다.{' '}
-          <strong>일반</strong> 은 최신순으로 내려갑니다. 두 종류는 서로 다른 목록으로 나가므로
-          종류를 바꾸면 학생이 보는 자리가 달라집니다.
-          {editing &&
-            ` 이 공지는 ${dateTimeLabel(editing.created_at)} 에 등록됐습니다. 등록 시각은 바꿀 수 없습니다.`}
+          두 종류는 학생 앱에서 서로 다른 목록으로 나갑니다. 종류를 바꾸면 학생이 보는 자리가
+          달라집니다.
         </p>
+
+        {/* 종류 설명과 다른 이야기라 문단을 갈라놓는다 */}
+        {editing && (
+          <p className={own.meta}>
+            등록 {dateTimeLabel(editing.created_at)} · 등록 시각은 바꿀 수 없습니다.
+          </p>
+        )}
 
         {/* 이미 나가 있는 공지의 자리를 옮기는 것이라 새로 쓰는 것과 무게가 다르다.
             위 설명은 항상 떠 있어 눈에 익지만, 이건 실제로 건드렸을 때만 나온다.
