@@ -1,9 +1,10 @@
 import { IconChevronDownLine, IconChevronUpLine } from '@karrotmarket/react-monochrome-icon'
 import clsx from 'clsx'
-import { useState } from 'react'
+import { useReducer, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { Chip } from 'seed-design/ui/chip'
+import { List, ListButtonItem, ListItem } from 'seed-design/ui/list'
 import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented-control'
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { Switch } from 'seed-design/ui/switch'
@@ -30,6 +31,13 @@ function titleOf(performance: Performance): string {
   return findTranslation(performance.translations, 'KO')?.title ?? `공연 ${performance.id}`
 }
 
+/** 번역 상태. 장소 목록과 같은 표시를 쓴다 — 빠진 언어가 있으면 그 언어 사용자에게 안 보인다 (§2.4) */
+function LangBadge({ performance }: { performance: Performance }) {
+  const missing = missingLanguages(performance.translations)
+  if (missing.length === 0) return <span className={styles.langOk}>3개 언어</span>
+  return <span className={styles.langWarn}>{missing.join('·')} 없음</span>
+}
+
 /**
  * 공연 목록. 축제가 이틀이라 일차가 목록의 1차 축이다 (§5.1 date ASC, seq ASC, id ASC).
  *
@@ -51,14 +59,21 @@ export function PerformancesRoute() {
     : FESTIVAL_DATES[0]
 
   const [typeFilter, setTypeFilter] = useState<string>('all')
-  const [rows, setRows] = useState<Performance[]>(() => performancesByDate(date))
   /** null 이 아니면 순서 편집 중. 확정 전까지는 이 배열만 움직인다 */
   const [order, setOrder] = useState<number[] | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   // 목을 직접 고치는 구조라 저장 뒤에는 다시 읽어야 화면이 따라온다.
-  // 실제 API(#10)가 붙으면 이 자리가 재조회다.
-  const reload = (target: string = date) => setRows(performancesByDate(target))
+  // 실제 API(#10)가 붙으면 reload 가 재조회가 된다.
+  //
+  // 목록을 state 에 복사해 두지 않고 렌더마다 다시 만든다. date 가 URL 에서
+  // 오기 때문에 뒤로가기나 링크로 ?date= 만 바뀌는 경우가 있는데, 복사본을
+  // 두면 그때 갱신할 기회가 없어 다른 일차의 목록이 그대로 남는다.
+  // 목 배열을 직접 고치므로 React 가 바뀐 걸 알 방법이 없다. reload 는 다시
+  // 그리라는 신호일 뿐이고, 목록 자체는 렌더마다 새로 만든다. 한 일차가 많아야
+  // 수십 건이라 memo 로 아낄 것이 없다.
+  const [, reload] = useReducer((n: number) => n + 1, 0)
+  const rows = performancesByDate(date)
 
   const reordering = order !== null
   const listed = reordering
@@ -113,7 +128,6 @@ export function PerformancesRoute() {
           onValueChange={(value) => {
             const next = String(value)
             setSearchParams({ date: next }, { replace: true })
-            reload(next)
             setOrder(null)
             setError(null)
           }}
@@ -190,75 +204,80 @@ export function PerformancesRoute() {
         {listed.length === 0 ? (
           <p className={styles.empty}>이 일차에는 아직 공연이 없습니다.</p>
         ) : (
-          <ul className={styles.rows}>
+          <List>
             {listed.map((performance, index) => {
-              const missing = missingLanguages(performance.translations)
-              return (
-                <li
-                  key={performance.id}
-                  className={clsx(
-                    styles.row,
-                    performance.type === 'SPECIAL' && styles.special,
-                    performance.is_live && styles.liveRow,
-                  )}
-                >
-                  <button
-                    type="button"
-                    className={styles.rowMain}
-                    disabled={reordering}
-                    onClick={() => navigate(`/performances/${performance.id}`)}
-                  >
-                    <span className={styles.seq}>{reordering ? index + 1 : performance.seq}</span>
-                    <span className={styles.rowText}>
-                      <span className={styles.title}>
-                        {titleOf(performance)}
-                        {performance.is_live && <span className={styles.liveTag}>공연 중</span>}
-                      </span>
-                      <span className={styles.detail}>
-                        {/* enum 에 네 번째 값이 생길 수 있다 (PRD §12 열린 질문 3).
-                            모르는 값이면 빈칸 대신 원래 값을 보여준다 */}
-                        {TYPE_LABELS[performance.type] ?? performance.type}
-                        {missing.length > 0 && (
-                          <span className={styles.langWarn}>{missing.join('·')} 없음</span>
-                        )}
-                      </span>
-                    </span>
-                  </button>
+              const seq = <span className={styles.seq}>{reordering ? index + 1 : performance.seq}</span>
+              const title = (
+                <>
+                  {titleOf(performance)}
+                  {performance.is_live && <span className={styles.liveTag}>공연 중</span>}
+                </>
+              )
+              const detail = (
+                <>
+                  {/* enum 에 네 번째 값이 생길 수 있다 (PRD §12 열린 질문 3).
+                      모르는 값이면 빈칸 대신 원래 값을 보여준다 */}
+                  {TYPE_LABELS[performance.type] ?? performance.type} · <LangBadge performance={performance} />
+                </>
+              )
+              // ListItem 은 props 를 li 에 그대로 펼치고, ListButtonItem 은 버튼과
+              // li 를 나눠 받는다. 그래서 같은 클래스를 주는 방법이 서로 다르다
+              const rowClass = clsx(
+                performance.type === 'SPECIAL' && styles.special,
+                performance.is_live && styles.liveRow,
+              )
 
-                  <div className={styles.rowAction}>
-                    {reordering ? (
-                      <>
-                        <button
-                          type="button"
-                          className={styles.moveButton}
-                          aria-label={`${titleOf(performance)} 위로`}
-                          disabled={index === 0}
-                          onClick={() => move(index, -1)}
-                        >
-                          <IconChevronUpLine width={20} height={20} />
-                        </button>
-                        <button
-                          type="button"
-                          className={styles.moveButton}
-                          aria-label={`${titleOf(performance)} 아래로`}
-                          disabled={index === listed.length - 1}
-                          onClick={() => move(index, 1)}
-                        >
-                          <IconChevronDownLine width={20} height={20} />
-                        </button>
-                      </>
-                    ) : (
-                      <Switch
-                        checked={performance.is_live}
-                        onCheckedChange={(next) => toggleLive(performance, next)}
-                        inputProps={{ 'aria-label': `${titleOf(performance)} 공연 중` }}
-                      />
-                    )}
-                  </div>
-                </li>
+              // 순서 편집 중에는 행을 누를 수 없게 ListItem 으로 바꾼다.
+              // 편집을 확정하지 않은 채 다른 화면으로 나가면 옮긴 순서가 사라진다.
+              return reordering ? (
+                <ListItem
+                  key={performance.id}
+                  className={rowClass}
+                  prefix={seq}
+                  title={title}
+                  detail={detail}
+                  suffix={
+                    <div className={styles.moves}>
+                      <button
+                        type="button"
+                        className={styles.moveButton}
+                        aria-label={`${titleOf(performance)} 위로`}
+                        disabled={index === 0}
+                        onClick={() => move(index, -1)}
+                      >
+                        <IconChevronUpLine width={20} height={20} />
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.moveButton}
+                        aria-label={`${titleOf(performance)} 아래로`}
+                        disabled={index === listed.length - 1}
+                        onClick={() => move(index, 1)}
+                      >
+                        <IconChevronDownLine width={20} height={20} />
+                      </button>
+                    </div>
+                  }
+                />
+              ) : (
+                <ListButtonItem
+                  key={performance.id}
+                  rootProps={{ className: rowClass }}
+                  prefix={seq}
+                  title={title}
+                  detail={detail}
+                  suffix={
+                    <Switch
+                      checked={performance.is_live}
+                      onCheckedChange={(next) => toggleLive(performance, next)}
+                      inputProps={{ 'aria-label': `${titleOf(performance)} 공연 중` }}
+                    />
+                  }
+                  onClick={() => navigate(`/performances/${performance.id}`)}
+                />
               )
             })}
-          </ul>
+          </List>
         )}
       </div>
     </div>

@@ -1,7 +1,5 @@
 /* 장소 목록과 같은 뼈대다 — screen → 필터 → actions → list.
-   행 구조만 다르다. 한 행 안에 편집으로 가는 탭 영역과 live 스위치(또는 순서
-   이동 버튼)가 함께 있어야 해서, 버튼 안에 버튼이 들어가는 SEED 의
-   ListButtonItem 을 쓰지 못한다. 그래서 행만 직접 짠다. */
+   행도 같은 SEED List 를 쓴다. 두 탭이 한 셸 안에서 다른 앱처럼 보이지 않게. */
 .screen {
   display: flex;
   flex: 1;
@@ -54,6 +52,7 @@
   display: none;
 }
 
+/* 장소 목록에는 없던 것. 한 일차가 통째로 비어 있을 수 있어서 둔다 */
 .empty {
   margin: 0;
   padding: var(--seed-dimension-x8) var(--seed-dimension-x4);
@@ -63,59 +62,22 @@
   text-align: center;
 }
 
-.rows {
-  display: flex;
-  flex-direction: column;
-  gap: var(--seed-dimension-x1);
-  margin: 0;
-  padding: 0 var(--seed-dimension-x4) var(--seed-dimension-x6);
-  list-style: none;
-}
-
-.row {
-  display: flex;
-  gap: var(--seed-dimension-x2);
-  align-items: center;
-  padding-right: var(--seed-dimension-x3);
-  background: var(--seed-color-bg-layer-default);
-  border: 1px solid var(--seed-color-stroke-neutral-weak);
-  border-radius: var(--seed-radius-r3);
-}
-
 /* PRD §5-2 는 응원제·가요제를 일반 공연과 디자인적으로 구분하라고 한다.
    PERFORMANCE.type 에 그 값이 없어 SPECIAL 로 대신 받는다 — 전용 enum 이
-   생기면 고칠 곳은 여기 한 곳과 TSX 의 type 비교 한 줄뿐이다 */
+   생기면 고칠 곳은 여기 한 곳과 TSX 의 type 비교 한 줄뿐이다.
+   평평한 목록이라 테두리 대신 면으로 구분한다 */
 .special {
   background: var(--seed-color-bg-brand-weak);
-  border-color: var(--seed-color-stroke-brand-weak);
 }
 
+/* 공연 중인 한 건. 왼쪽 띠로 표시한다 — 배경은 SPECIAL 과 겹칠 수 있다 */
 .liveRow {
-  border-color: var(--seed-color-bg-critical-solid);
-}
-
-/* 편집으로 가는 탭 영역. 행의 대부분을 차지해 폰에서 누르기 쉽다 */
-.rowMain {
-  display: flex;
-  flex: 1;
-  gap: var(--seed-dimension-x3);
-  align-items: center;
-  min-width: 0;
-  padding: var(--seed-dimension-x3);
-  font: inherit;
-  text-align: start;
-  background: none;
-  border: 0;
-  cursor: pointer;
-}
-
-.rowMain:disabled {
-  cursor: default;
+  box-shadow: inset 3px 0 0 var(--seed-color-bg-critical-solid);
 }
 
 .seq {
-  flex-shrink: 0;
-  min-width: var(--seed-dimension-x6);
+  display: block;
+  min-width: var(--seed-dimension-x5);
   font-size: var(--seed-font-size-t3);
   font-weight: var(--seed-font-weight-bold);
   line-height: var(--seed-line-height-t3);
@@ -123,55 +85,32 @@
   text-align: center;
 }
 
-.rowText {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--seed-dimension-x1);
-  min-width: 0;
-}
-
-.title {
-  display: flex;
-  gap: var(--seed-dimension-x2);
-  align-items: center;
-  font-size: var(--seed-font-size-t4);
-  font-weight: var(--seed-font-weight-medium);
-  line-height: var(--seed-line-height-t4);
-  color: var(--seed-color-fg-neutral);
-}
-
 .liveTag {
-  flex-shrink: 0;
+  margin-left: var(--seed-dimension-x2);
   padding: 0 var(--seed-dimension-x2);
   font-size: var(--seed-font-size-t1);
   font-weight: var(--seed-font-weight-bold);
   line-height: var(--seed-line-height-t2);
-  color: var(--seed-color-palette-static-white);
+  color: var(--seed-color-fg-critical-contrast);
   white-space: nowrap;
   background: var(--seed-color-bg-critical-solid);
   border-radius: var(--seed-radius-r1);
 }
 
-.detail {
-  display: flex;
-  gap: var(--seed-dimension-x2);
-  align-items: center;
-  font-size: var(--seed-font-size-t2);
-  line-height: var(--seed-line-height-t2);
-  color: var(--seed-color-fg-neutral-muted);
-}
-
-/* 번역 누락 배지. §2.4 — 없는 언어 사용자에게는 이 공연이 목록에서 사라진다 */
+/* 번역 상태. 장소 목록과 같은 표시다 (§2.4) */
 .langWarn {
   font-weight: var(--seed-font-weight-medium);
   color: var(--seed-color-fg-critical);
   white-space: nowrap;
 }
 
-.rowAction {
+.langOk {
+  color: var(--seed-color-fg-neutral-subtle);
+  white-space: nowrap;
+}
+
+.moves {
   display: flex;
-  flex-shrink: 0;
   gap: var(--seed-dimension-x1);
   align-items: center;
 }
