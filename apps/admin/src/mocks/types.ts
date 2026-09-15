@@ -84,6 +84,15 @@ export type PerformanceType = (typeof PERFORMANCE_TYPES)[number]
  * 축제 일차. PERFORMANCE.date 는 자유 입력이 아니라 이 중 하나를 고르는 것이다.
  * 명세는 YYYY-MM-DD 형식만 규정하지만(§5.6), 이틀짜리 축제라 화면에서는
  * 날짜 입력칸 대신 일차 선택으로 받는다.
+ *
+ * 축제는 **10/6(화)~10/7(수)** 로 확정됐다. 장소 목의 운영 시간도 10/6 기준이다.
+ *
+ * 문서는 아직 안 따라왔다 — PRD §0 은 "10/6~8 중 이틀 (화·수·목)" 이고 부록 A-6 은
+ * "어느 이틀인지 미정", v0.4 §9 블로커의 "공연 라인업의 축제 일차 배정" 도 비어
+ * 있다. 문서를 고칠 때 이 값이 기준이다.
+ *
+ * 일정이 또 바뀌면 여기만 고치면 된다. API 는 임의의 YYYY-MM-DD 를 받으므로
+ * 계약은 그대로고, 화면은 이 배열의 길이와 순서만 본다.
  */
 export const FESTIVAL_DATES = ['2026-10-06', '2026-10-07'] as const
 export type FestivalDate = (typeof FESTIVAL_DATES)[number]

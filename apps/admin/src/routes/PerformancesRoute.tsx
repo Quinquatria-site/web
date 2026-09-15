@@ -77,7 +77,14 @@ export function PerformancesRoute() {
   const saveOrder = () => {
     if (!order) return
     const rejected = reorderPerformances(date, order)
-    if (rejected) return setError(rejected)
+    if (rejected) {
+      // 이 422 는 동시 수정 감지다 (§5.6). 내가 든 배열이 이미 틀렸으므로
+      // 붙들고 있어봐야 계속 거부된다 — 최신 상태를 다시 읽고 편집을 닫는다.
+      setError(rejected)
+      setOrder(null)
+      reload()
+      return
+    }
     setOrder(null)
     setError(null)
     reload()
@@ -208,7 +215,9 @@ export function PerformancesRoute() {
                         {performance.is_live && <span className={styles.liveTag}>공연 중</span>}
                       </span>
                       <span className={styles.detail}>
-                        {TYPE_LABELS[performance.type]}
+                        {/* enum 에 네 번째 값이 생길 수 있다 (PRD §12 열린 질문 3).
+                            모르는 값이면 빈칸 대신 원래 값을 보여준다 */}
+                        {TYPE_LABELS[performance.type] ?? performance.type}
                         {missing.length > 0 && (
                           <span className={styles.langWarn}>{missing.join('·')} 없음</span>
                         )}

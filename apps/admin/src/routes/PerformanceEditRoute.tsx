@@ -90,6 +90,10 @@ export function PerformanceEditRoute() {
         description: values[fieldKey('desc', code)].trim(),
       })
     }
+    // 목이 곧 서버 응답이라 정렬까지 맞춘다. Backoffice 응답의 translations 는
+    // language_code ASC — 즉 CHN → EN → KO 다 (§5.2). 화면 탭 순서(KO 먼저)와
+    // 반대라서, 입력 순서 그대로 두면 목만 다른 모양이 된다.
+    translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
 
     const draft: PerformanceDraft = {
       id,
