@@ -15,6 +15,15 @@
   position: relative;
 }
 
+/* 눌러서 크게 보는 버튼. 보이는 모습은 이미지 그대로여야 한다 */
+.open {
+  display: block;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
 .photo {
   display: block;
   width: 96px;
@@ -27,6 +36,9 @@
 /* 사진 위에 얹히므로 배경을 깔아야 밝은 사진에서도 보인다 */
 .remove {
   position: absolute;
+
+  /* 사진 버튼 위에 얹힌다. 삭제를 누를 때 뷰어가 열리면 안 된다 */
+  z-index: 1;
   top: var(--seed-dimension-x1);
   right: var(--seed-dimension-x1);
   display: flex;

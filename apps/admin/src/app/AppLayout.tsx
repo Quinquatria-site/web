@@ -16,6 +16,9 @@ import { SnackbarProvider } from 'seed-design/ui/snackbar'
 import { AppBar, BottomTabBar, type BottomTab } from '../ui'
 import styles from './AppLayout.module.css'
 
+/** 전체 화면 오버레이가 포털로 붙는 곳. PhotoViewer 가 쓴다 */
+export const PORTAL_HOST_ID = 'app-page'
+
 /** 관리 대상 네 도메인에 현황판을 더한 다섯. 폰 탭바는 이 이상 늘리지 않는다. */
 const TABS: BottomTab[] = [
   { to: '/', label: '홈', icon: IconHouseLine, activeIcon: IconHouseFill },
@@ -57,7 +60,9 @@ export function AppLayout() {
 
   return (
     <SnackbarProvider>
-      <div className={styles.page}>
+      {/* PhotoViewer 가 여기로 포털된다. 시트처럼 transform 을 쓰는 조상 안에서는
+          position: fixed 의 기준이 그 조상이 되어 화면 전체를 덮지 못한다 */}
+      <div id={PORTAL_HOST_ID} className={styles.page}>
         <div className={styles.viewport}>
           {!bare && (
             <AppBar
