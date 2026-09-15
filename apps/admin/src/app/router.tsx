@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router'
 import { HomeRoute } from '../routes/HomeRoute'
 import { LoginRoute } from '../routes/LoginRoute'
+import { LostItemEditRoute } from '../routes/LostItemEditRoute'
 import { LostItemsRoute } from '../routes/LostItemsRoute'
 import { MenuEditRoute } from '../routes/MenuEditRoute'
 import { NoticeEditRoute } from '../routes/NoticeEditRoute'
@@ -82,6 +83,16 @@ export const router = createBrowserRouter([
             handle: { title: '공지', back: true, hideTabs: true },
           },
           { path: 'lost-items', element: <LostItemsRoute />, handle: { title: '분실물' } },
+          {
+            path: 'lost-items/new',
+            element: <LostItemEditRoute />,
+            handle: { title: '분실물 등록', back: true, hideTabs: true },
+          },
+          {
+            path: 'lost-items/:id',
+            element: <LostItemEditRoute />,
+            handle: { title: '분실물 편집', back: true, hideTabs: true },
+          },
           {
             path: 'settings',
             element: <SettingsRoute />,

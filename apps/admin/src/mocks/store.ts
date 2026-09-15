@@ -1,9 +1,10 @@
 import { useSyncExternalStore } from 'react'
+import { LOST_ITEMS } from './lostItems'
 import { MENUS } from './menus'
 import { NOTICES } from './notices'
 import { PERFORMANCES } from './performances'
 import { PLACES } from './places'
-import type { LanguageCode, Menu, Notice, NoticeType, Performance, Place } from './types'
+import type { LanguageCode, LostItem, Menu, Notice, NoticeType, Performance, Place } from './types'
 
 /**
  * 목 데이터의 쓰기 흉내. 실제 API(#10)가 붙으면 이 파일이 POST·PATCH·DELETE
@@ -428,4 +429,127 @@ export function deleteNotice(id: number): Notice | undefined {
 export function restoreNotice(notice: Notice): void {
   NOTICES.push(notice)
   emit()
+}
+
+/**
+ * 분실물 (§5.8). 공지와 마찬가지로 순서를 손댈 수단이 없다 — 정렬 키가 서버
+ * 생성 created_at 하나뿐이라 재정렬 엔드포인트 자체가 없다 (§5.1).
+ *
+ * 서버 몫으로 남겨야 할 값이 둘이다. created_at 은 생성 시각이고,
+ * is_returned 는 목록의 반환 버튼이 전용 엔드포인트로 바꾼다. 둘 다 draft 에서
+ * 빼 두면 편집 화면이 그 값을 정하는 코드를 애초에 못 갖는다.
+ */
+
+/** 저장 화면이 보낼 수 있는 것. created_at 과 is_returned 가 빠진 게 핵심이다 */
+export type LostItemDraft = Omit<LostItem, 'created_at' | 'is_returned'>
+
+/**
+ * 정렬은 명세 그대로 created_at DESC, id DESC (§5.1).
+ *
+ * 문자열 비교가 아니라 Date.parse 다. 지금은 목도 새로 만든 것도 +09:00 이라
+ * 사전순이 시각순과 같지만, offset 이 하나라도 섞이면 조용히 어긋난다.
+ */
+export function lostItemsByReturned(isReturned: boolean): LostItem[] {
+  return LOST_ITEMS.filter((item) => item.is_returned === isReturned).sort(
+    (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at) || b.id - a.id,
+  )
+}
+
+export function lostItemById(id: number): LostItem | undefined {
+  return LOST_ITEMS.find((item) => item.id === id)
+}
+
+/**
+ * 생성이면 지금 시각을 서버가 찍고 미반환으로 시작한다. 수정이면 created_at 과
+ * is_returned 를 모두 그대로 둔다 — 전자는 수정 불가 필드고, 후자는 목록의
+ * 반환 버튼만 바꾼다. 편집 화면에서 저장했다고 반환 상태가 되돌아가면 안 된다.
+ */
+export function upsertLostItem(draft: LostItemDraft): LostItem {
+  const index = LOST_ITEMS.findIndex((item) => item.id === draft.id)
+
+  if (index < 0) {
+    const created: LostItem = { ...draft, created_at: nowKst(), is_returned: false }
+    LOST_ITEMS.push(created)
+    emit()
+    return created
+  }
+
+  const previous = LOST_ITEMS[index]
+
+  // §5.2 — PATCH 는 전달한 언어만 upsert 하고 **전달하지 않은 언어는 그대로 둔다.**
+  // 배열을 통째로 갈아끼우면 화면이 "비우고 저장하면 지워진다" 고 믿게 되는데
+  // 실제 API 는 그렇게 동작하지 않는다. 번역 삭제는 전용 경로만이다
+  // (deleteLostItemTranslation). 목에서부터 같은 규칙을 지켜야 그 차이가 드러난다.
+  const translations = [...previous.translations]
+  for (const next of draft.translations) {
+    const at = translations.findIndex((t) => t.language_code === next.language_code)
+    if (at >= 0) translations[at] = next
+    else translations.push(next)
+  }
+  // 응답의 translations 는 language_code ASC = CHN → EN → KO (§5.2)
+  translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
+
+  const updated: LostItem = {
+    ...draft,
+    created_at: previous.created_at,
+    is_returned: previous.is_returned,
+    translations,
+  }
+  LOST_ITEMS[index] = updated
+  emit()
+  return updated
+}
+
+/**
+ * DELETE /lost-items/{lost_item_id}/translations/{language_code} 흉내 (§5.2).
+ *
+ * 번역을 지우는 유일한 수단이다. PATCH 로는 못 지운다 — 안 보낸 언어는
+ * 유지되기 때문이다. 거부 사유를 문자열로 돌려 화면이 그대로 띄운다
+ * (공연 reorder 부터 이어온 관례).
+ */
+export function deleteLostItemTranslation(lostItemId: number, code: LanguageCode): string | null {
+  // KO 는 모든 기본 리소스에 필요한 번역이라 409 DELETE_CONFLICT 다.
+  // 화면은 KO 필수 검증으로 저장 자체를 먼저 막으므로 여기까지 오지 않지만,
+  // 계약을 코드에 남겨 둔다
+  if (code === 'KO') return '한국어 번역은 지울 수 없습니다.'
+
+  const item = lostItemById(lostItemId)
+  if (!item) return '없는 분실물입니다.'
+
+  // 기본 리소스나 그 언어 번역이 없으면 404 RESOURCE_NOT_FOUND
+  const at = item.translations.findIndex((t) => t.language_code === code)
+  if (at < 0) return '없는 번역입니다.'
+
+  item.translations.splice(at, 1)
+  emit()
+  return null
+}
+
+/** 지운 것을 돌려줘 실행취소에 쓴다 (§6) */
+export function deleteLostItem(id: number): LostItem | undefined {
+  const index = LOST_ITEMS.findIndex((item) => item.id === id)
+  if (index < 0) return undefined
+  const [removed] = LOST_ITEMS.splice(index, 1)
+  emit()
+  return removed
+}
+
+/** 실행취소. 정렬이 created_at 이라 자리를 따로 맞출 것이 없다 */
+export function restoreLostItem(item: LostItem): void {
+  LOST_ITEMS.push(item)
+  emit()
+}
+
+/**
+ * PATCH /lost-items/{id} 의 is_returned 흉내.
+ *
+ * 공연의 setLive 와 모양은 같지만 **배타성이 없다.** 현재 공연은 전체에서 최대
+ * 1건이라 하나를 켜면 나머지가 내려가지만, 반환된 분실물은 여럿이 정상이다.
+ */
+export function setReturned(id: number, isReturned: boolean): LostItem | undefined {
+  const target = lostItemById(id)
+  if (!target) return undefined
+  target.is_returned = isReturned
+  emit()
+  return target
 }
