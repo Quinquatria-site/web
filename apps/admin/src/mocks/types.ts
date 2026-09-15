@@ -147,6 +147,41 @@ export interface Performance {
   translations: PerformanceTranslation[]
 }
 
+export const NOTICE_TYPES = ['PERMANENT', 'GENERAL'] as const
+export type NoticeType = (typeof NOTICE_TYPES)[number]
+
+export interface NoticeTranslation {
+  id: number
+  notice_id: number
+  language_code: LanguageCode
+  title: string
+  /**
+   * 공지 본문. 공연의 description 과 달리 **필수**다 (§5.7).
+   *
+   * 그래서 한 언어의 제목만 채우고 본문을 비우는 것은 저장할 수 없는 상태다 —
+   * 편집 화면이 그 조합을 막는다. 여기 배열에 들어온 번역은 이미 둘 다 찬 것이다.
+   */
+  content: string
+}
+
+/**
+ * 공지 (§5.7). 운영자가 정하는 것은 type 과 번역뿐이고 나머지는 서버 몫이다.
+ *
+ * 공연과 달리 순서를 손댈 수단이 없다. 정렬 키가 created_at 하나뿐이라
+ * (§5.1 created_at DESC, id DESC) 재정렬 엔드포인트 자체가 없다.
+ *
+ * type 을 잘못 고르면 학생 앱에서 **노출 위치가 바뀐다.** admin 은
+ * /notices 하나에 type 쿼리를 걸지만 Customer API 는 /notices(GENERAL) 과
+ * /notices/permanent 로 경로가 갈린다 (§3.5).
+ */
+export interface Notice {
+  id: number
+  type: NoticeType
+  /** 서버 생성, 수정 불가. 목록 정렬의 1차 키다 (§5.7) */
+  created_at: string
+  translations: NoticeTranslation[]
+}
+
 /** 번역 배열에서 특정 언어를 찾는다. Backoffice 응답은 language_code ASC 정렬(§5.1) */
 export function findTranslation<T extends { language_code: LanguageCode }>(
   translations: T[],
