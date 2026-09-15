@@ -336,7 +336,6 @@ export function restoreNotice(notice: Notice): void {
 /** 저장 화면이 보낼 수 있는 것. created_at 과 is_returned 가 빠진 게 핵심이다 */
 export type LostItemDraft = Omit<LostItem, 'created_at' | 'is_returned'>
 
-
 /**
  * 정렬은 명세 그대로 created_at DESC, id DESC (§5.1).
  *
@@ -369,14 +368,54 @@ export function upsertLostItem(draft: LostItemDraft): LostItem {
   }
 
   const previous = LOST_ITEMS[index]
+
+  // §5.2 — PATCH 는 전달한 언어만 upsert 하고 **전달하지 않은 언어는 그대로 둔다.**
+  // 배열을 통째로 갈아끼우면 화면이 "비우고 저장하면 지워진다" 고 믿게 되는데
+  // 실제 API 는 그렇게 동작하지 않는다. 번역 삭제는 전용 경로만이다
+  // (deleteLostItemTranslation). 목에서부터 같은 규칙을 지켜야 그 차이가 드러난다.
+  const translations = [...previous.translations]
+  for (const next of draft.translations) {
+    const at = translations.findIndex((t) => t.language_code === next.language_code)
+    if (at >= 0) translations[at] = next
+    else translations.push(next)
+  }
+  // 응답의 translations 는 language_code ASC = CHN → EN → KO (§5.2)
+  translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
+
   const updated: LostItem = {
     ...draft,
     created_at: previous.created_at,
     is_returned: previous.is_returned,
+    translations,
   }
   LOST_ITEMS[index] = updated
   emit()
   return updated
+}
+
+/**
+ * DELETE /lost-items/{lost_item_id}/translations/{language_code} 흉내 (§5.2).
+ *
+ * 번역을 지우는 유일한 수단이다. PATCH 로는 못 지운다 — 안 보낸 언어는
+ * 유지되기 때문이다. 거부 사유를 문자열로 돌려 화면이 그대로 띄운다
+ * (공연 reorder 부터 이어온 관례).
+ */
+export function deleteLostItemTranslation(lostItemId: number, code: LanguageCode): string | null {
+  // KO 는 모든 기본 리소스에 필요한 번역이라 409 DELETE_CONFLICT 다.
+  // 화면은 KO 필수 검증으로 저장 자체를 먼저 막으므로 여기까지 오지 않지만,
+  // 계약을 코드에 남겨 둔다
+  if (code === 'KO') return '한국어 번역은 지울 수 없습니다.'
+
+  const item = lostItemById(lostItemId)
+  if (!item) return '없는 분실물입니다.'
+
+  // 기본 리소스나 그 언어 번역이 없으면 404 RESOURCE_NOT_FOUND
+  const at = item.translations.findIndex((t) => t.language_code === code)
+  if (at < 0) return '없는 번역입니다.'
+
+  item.translations.splice(at, 1)
+  emit()
+  return null
 }
 
 /** 지운 것을 돌려줘 실행취소에 쓴다 (§6) */

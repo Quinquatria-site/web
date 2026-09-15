@@ -8,6 +8,7 @@ import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/tex
 import { useFormFields } from '../lib/useFormFields'
 import {
   deleteLostItem,
+  deleteLostItemTranslation,
   draftId,
   lostItemById,
   restoreLostItem,
@@ -76,11 +77,28 @@ function LostItemEditForm() {
     if (!values.loc_KO.trim()) return setError('한국어 습득 장소는 필수입니다.')
     if (!values.title_KO.trim()) return setError('한국어 제목은 필수입니다.')
 
+    // EN·CHN 은 언어 단위로만 선택이다. 제목과 습득 장소는 짝이라 한쪽만 채운
+    // 상태는 보낼 수 없다 — 제목만 있고 어디서 주웠는지 없는 번역은 외국인이
+    // 물건을 찾아가는 데 쓸모가 없다. 반쪽짜리를 조용히 버리면 운영자는 번역을
+    // 넣었다고 믿는데 학생에게는 안 보인다.
+    // (이건 화면이 거는 규칙이다. §5.8 이 언어별로 found_location 을 필수로
+    //  두는지는 아직 모른다 — #10 에서 확인할 것)
+    const half = LANGUAGE_CODES.filter((code) => {
+      const title = values[fieldKey('title', code)].trim()
+      const loc = values[fieldKey('loc', code)].trim()
+      return Boolean(title) !== Boolean(loc)
+    })
+    if (half.length > 0)
+      return setError(`${half.join('·')} 은 제목과 습득 장소를 둘 다 채우거나 둘 다 비워주세요.`)
+
     const id = editing?.id ?? draftId()
     const translations: LostItemTranslation[] = []
     for (const code of LANGUAGE_CODES) {
       const title = values[fieldKey('title', code)].trim()
-      if (!title) continue // EN·CHN 은 선택 (§5.2)
+      // 위 검사를 통과했으므로 장소도 비어 있다. PATCH 본문에서 뺀다 — 다만
+      // 빼는 것만으로는 안 지워진다. 원래 있던 언어라면 아래에서 전용 삭제를
+      // 부른다 (§5.2)
+      if (!title) continue
       const existing = editing ? findTranslation(editing.translations, code) : undefined
       translations.push({
         id: existing?.id ?? draftId(), // 기존 번역의 id 는 유지 (§5.2)
@@ -88,8 +106,6 @@ function LostItemEditForm() {
         language_code: code,
         title,
         description: values[fieldKey('desc', code)].trim(),
-        // 제목만 채우고 장소를 비운 번역이 나올 수 있다. 명세에 그 조합이
-        // 422 인지 적혀 있지 않아 일단 빈 문자열로 보낸다 — #10 에서 확인할 것
         found_location: values[fieldKey('loc', code)].trim(),
       })
     }
@@ -103,11 +119,44 @@ function LostItemEditForm() {
       image_url: photos[0] ?? null,
       translations,
     }
+    // 지우기 전에 원본을 붙잡는다. upsertLostItem 이 LOST_ITEMS 의 항목을 새
+    // 객체로 갈아끼우므로 editing 은 이전 상태를 그대로 들고 있다
+    const undo = removing
+      .map((code) => editing && findTranslation(editing.translations, code))
+      .filter((t): t is LostItemTranslation => Boolean(t))
+
     const saved = upsertLostItem(draft)
-    snackbar.create({
-      timeout: 3000,
-      render: () => <Snackbar message={`${values.title_KO} 저장했습니다`} />,
-    })
+
+    // 실제 클라이언트가 보낼 두 호출과 같은 순서다 — PATCH 로 남길 언어를
+    // 올리고, 지울 언어는 전용 DELETE 로 따로 부른다 (§5.2)
+    for (const code of removing) {
+      const rejected = deleteLostItemTranslation(saved.id, code)
+      if (rejected) return setError(rejected)
+    }
+
+    // 번역을 지웠으면 무엇을 지웠는지 밝히고 되돌릴 틈을 준다. 지워진 번역문은
+    // 다시 타이핑해야 해서 실수의 대가가 크다. 되돌리기는 upsertLostItem 한
+    // 번이면 된다 — 언어별 병합이라(§5.2) 지운 언어만 다시 넣고 나머지는
+    // 건드리지 않는다
+    snackbar.create(
+      undo.length > 0
+        ? {
+            timeout: 6000,
+            render: () => (
+              <Snackbar
+                message={`${values.title_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
+                actionLabel="실행취소"
+                onAction={() =>
+                  upsertLostItem({ id: saved.id, image_url: saved.image_url, translations: undo })
+                }
+              />
+            ),
+          }
+        : {
+            timeout: 3000,
+            render: () => <Snackbar message={`${values.title_KO} 저장했습니다`} />,
+          },
+    )
     // navigate(-1) 이 아니다 — 이 화면을 새로고침하거나 링크로 바로 열면
     // 뒤로 갈 곳이 admin 밖이다
     backToList(saved.is_returned)
@@ -132,6 +181,18 @@ function LostItemEditForm() {
   }
 
   const missing = LANGUAGE_CODES.filter((code) => !values[fieldKey('title', code)].trim())
+  // 이미 나가 있던 번역을 내리는 것. 아직 안 채운 언어와 대가가 달라 갈라 둔다
+  const removing = editing
+    ? LANGUAGE_CODES.filter(
+        (code) =>
+          code !== 'KO' &&
+          findTranslation(editing.translations, code) &&
+          !values[fieldKey('title', code)].trim() &&
+          !values[fieldKey('loc', code)].trim(),
+      )
+    : []
+  // 원래부터 없던 언어. 이쪽은 "아직 안 채웠다" 라 톤이 다르다
+  const blank = missing.filter((code) => !removing.includes(code))
 
   return (
     <div className={styles.screen}>
@@ -163,10 +224,16 @@ function LostItemEditForm() {
             </SegmentedControlItem>
           ))}
         </SegmentedControl>
-        {missing.length > 0 && (
+        {removing.length > 0 && (
+          <Callout
+            tone="critical"
+            description={`${removing.join('·')} 번역을 삭제합니다. 저장하면 그 언어로 보는 학생에게 이 분실물이 사라집니다.`}
+          />
+        )}
+        {blank.length > 0 && (
           <Callout
             tone="warning"
-            description={`${missing.join('·')} 이 비어 있습니다. 그 언어 사용자에게는 이 분실물이 보이지 않습니다.`}
+            description={`${blank.join('·')} 이 비어 있습니다. 그 언어 사용자에게는 이 분실물이 보이지 않습니다.`}
           />
         )}
 
