@@ -1,0 +1,40 @@
+.strip {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--seed-dimension-x2);
+
+  /* 장수가 많으면 옆으로 민다. 목록과 같은 이유로 스크롤바는 숨긴다 */
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.strip::-webkit-scrollbar {
+  display: none;
+}
+
+/* 눌러서 크게 보는 버튼. 보이는 모습은 이미지 그대로여야 한다 */
+.thumb {
+  flex-shrink: 0;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
+.photo {
+  display: block;
+  object-fit: cover;
+  border-radius: var(--seed-radius-r2);
+  background: var(--seed-color-bg-neutral-weak);
+}
+
+/* 지도 시트는 지도를 덜 가려야 해서 작게 */
+.small .photo {
+  width: 96px;
+  height: 72px;
+}
+
+.medium .photo {
+  width: 128px;
+  height: 96px;
+}

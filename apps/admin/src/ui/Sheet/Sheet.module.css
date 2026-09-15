@@ -1,0 +1,86 @@
+/* 부모가 position: relative 여야 한다. 뷰포트가 아니라 그 상자 바닥에 눕는다 */
+.sheet {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  /* Leaflet 은 컨트롤 페인까지 800 을 쓴다. 그 위로 올린다 */
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+  max-height: 60%;
+  background: var(--seed-color-bg-layer-default);
+  border-top: 1px solid var(--seed-color-stroke-neutral-weak);
+  border-radius: var(--seed-radius-r4) var(--seed-radius-r4) 0 0;
+  box-shadow: var(--seed-shadow-s3);
+
+  /* 닫힘. visibility 를 같이 끄지 않으면 화면 밖 버튼에 탭 포커스가 들어간다 */
+  visibility: hidden;
+  transform: translateY(100%);
+  transition:
+    transform 200ms ease,
+    visibility 200ms;
+}
+
+.open {
+  visibility: visible;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet {
+    transition: none;
+  }
+}
+
+.header {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--seed-dimension-x2);
+
+  /* 제목이 길어 두 줄이 되어도 닫기 버튼은 첫 줄 옆에 붙어 있게 한다 */
+  align-items: flex-start;
+  padding: var(--seed-dimension-x4) var(--seed-dimension-x4) var(--seed-dimension-x2);
+}
+
+.title {
+  flex: 1;
+  margin: 0;
+  font-size: var(--seed-font-size-t5);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t5);
+  color: var(--seed-color-fg-neutral);
+}
+
+.close {
+  display: flex;
+
+  /* 한 손 엄지로 누르는 자리라 아이콘보다 넉넉히 잡는다 */
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--seed-color-fg-neutral-muted);
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: var(--seed-radius-full);
+}
+
+.close:hover {
+  background: var(--seed-color-bg-neutral-weak);
+}
+
+.close:active {
+  background: var(--seed-color-bg-neutral-weak-pressed);
+}
+
+.body {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 var(--seed-dimension-x4) var(--seed-dimension-x4);
+}
