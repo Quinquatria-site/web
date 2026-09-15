@@ -2,8 +2,11 @@ import { createBrowserRouter } from 'react-router'
 import { HomeRoute } from '../routes/HomeRoute'
 import { LoginRoute } from '../routes/LoginRoute'
 import { LostItemsRoute } from '../routes/LostItemsRoute'
+import { MenuEditRoute } from '../routes/MenuEditRoute'
 import { NoticesRoute } from '../routes/NoticesRoute'
 import { PerformancesRoute } from '../routes/PerformancesRoute'
+import { PlaceEditRoute } from '../routes/PlaceEditRoute'
+import { PlacesMapRoute } from '../routes/PlacesMapRoute'
 import { PlacesRoute } from '../routes/PlacesRoute'
 import { SettingsRoute } from '../routes/SettingsRoute'
 import { AppLayout } from './AppLayout'
@@ -32,6 +35,26 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <HomeRoute />, handle: { title: '오늘의 운영' } },
           { path: 'places', element: <PlacesRoute />, handle: { title: '장소' } },
+          {
+            path: 'places/map',
+            element: <PlacesMapRoute />,
+            handle: { title: '지도', back: true },
+          },
+          {
+            path: 'places/new',
+            element: <PlaceEditRoute />,
+            handle: { title: '장소 추가', back: true, hideTabs: true },
+          },
+          {
+            path: 'places/:id',
+            element: <PlaceEditRoute />,
+            handle: { title: '장소 편집', back: true, hideTabs: true },
+          },
+          {
+            path: 'places/:id/menus/:menuId',
+            element: <MenuEditRoute />,
+            handle: { title: '메뉴', back: true, hideTabs: true },
+          },
           { path: 'performances', element: <PerformancesRoute />, handle: { title: '공연' } },
           { path: 'notices', element: <NoticesRoute />, handle: { title: '공지' } },
           { path: 'lost-items', element: <LostItemsRoute />, handle: { title: '분실물' } },

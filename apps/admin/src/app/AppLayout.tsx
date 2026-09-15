@@ -7,6 +7,7 @@ import {
   IconMegaphoneLine,
 } from '@karrotmarket/react-monochrome-icon'
 import { Link, Outlet, useMatches } from 'react-router'
+import { SnackbarProvider } from 'seed-design/ui/snackbar'
 import { AppBar, BottomTabBar, type BottomTab } from '../ui'
 import styles from './AppLayout.module.css'
 
@@ -50,22 +51,24 @@ export function AppLayout() {
   const bare = handle?.bare ?? false
 
   return (
-    <div className={styles.page}>
-      <div className={styles.viewport}>
-        {!bare && (
-          <AppBar
-            title={handle?.title ?? ''}
-            back={handle?.back}
-            action={handle?.hideTabs ? undefined : settingsAction}
-          />
-        )}
-        {/* bare 여부와 무관하게 같은 스크롤 컨테이너를 쓴다.
+    <SnackbarProvider>
+      <div className={styles.page}>
+        <div className={styles.viewport}>
+          {!bare && (
+            <AppBar
+              title={handle?.title ?? ''}
+              back={handle?.back}
+              action={handle?.hideTabs ? undefined : settingsAction}
+            />
+          )}
+          {/* bare 여부와 무관하게 같은 스크롤 컨테이너를 쓴다.
             로그인 화면도 작은 기기에서는 스크롤이 필요하다 */}
-        <main className={styles.body}>
-          <Outlet />
-        </main>
-        {!bare && !handle?.hideTabs && <BottomTabBar tabs={TABS} />}
+          <main className={styles.body}>
+            <Outlet />
+          </main>
+          {!bare && !handle?.hideTabs && <BottomTabBar tabs={TABS} />}
+        </div>
       </div>
-    </div>
+    </SnackbarProvider>
   )
 }
