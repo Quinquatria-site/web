@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { CircleMarker } from 'react-leaflet'
 import { ActionButton } from 'seed-design/ui/action-button'
+import { Callout } from 'seed-design/ui/callout'
 import { List, ListButtonItem } from 'seed-design/ui/list'
 import { ListHeader } from 'seed-design/ui/list-header'
 import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented-control'
@@ -9,6 +10,7 @@ import { SelectContent, SelectItem, SelectRoot, SelectTrigger } from 'seed-desig
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/text-field'
 import { useFormFields } from '../lib/useFormFields'
+import { HourField, type Hour } from '../ui'
 import { CampusMap } from '../map/CampusMap'
 import { fromSource, toLatLng, type Point } from '../map/campus'
 import { CATEGORIES, categoryById } from '../mocks/categories'
@@ -31,13 +33,30 @@ import {
 import styles from './PlaceEditRoute.module.css'
 
 /**
- * ISO(+offset) → datetime-local 입력값(YYYY-MM-DDTHH:mm).
- * offset 을 보지 않고 자르므로 값이 KST(+09:00)라고 가정한다. 목은 전부 KST 지만
- * 실제 API(#10)가 다른 offset 을 주면 시각이 어긋난다.
+ * 축제 일차 후보. PRD 는 "10/6~8 중 이틀"까지만 정했다 — 어느 이틀인지 확정되면
+ * 여기만 고치면 된다.
  */
-const toLocal = (iso: string) => iso.slice(0, 16)
-/** datetime-local → 명세의 ISO 8601(+09:00) (§2.2) */
-const toIso = (local: string) => `${local}:00+09:00`
+const FESTIVAL_DATES = ['2026-10-06', '2026-10-07', '2026-10-08'] as const
+
+/** 10/6 처럼 짧게. 세그먼트 세 칸에 들어가야 한다 */
+const dateLabel = (date: string) => `${Number(date.slice(5, 7))}/${Number(date.slice(8, 10))}`
+
+/*
+ * start_hour·end_hour 는 명세상 datetime 이지만 화면은 일차와 시각을 따로 다룬다.
+ * 아래 두 함수가 그 사이를 오간다. offset 을 보지 않고 자르므로 값이 KST(+09:00)
+ * 라고 가정한다 — 목은 전부 KST 지만 실제 API(#10)가 다른 offset 을 주면 어긋난다.
+ */
+const dateOf = (iso: string) => iso.slice(0, 10)
+const hourOf = (iso: string): Hour => ({
+  hour: Number(iso.slice(11, 13)),
+  minute: Number(iso.slice(14, 16)),
+})
+/** 일차 + 시각 → 명세의 ISO 8601(+09:00) (§2.2) */
+const toIso = (date: string, { hour, minute }: Hour) =>
+  `${date}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00+09:00`
+
+/** 같은 일차 안에서 비교한다. 종료가 시작보다 이르면 422 (§5.4) */
+const minutesOf = ({ hour, minute }: Hour) => hour * 60 + minute
 
 type TranslationField = 'name' | 'host' | 'desc'
 const fieldKey = (field: TranslationField, lang: LanguageCode) => `${field}_${lang}` as const
@@ -67,10 +86,14 @@ function PlaceEditForm() {
   const [point, setPoint] = useState<Point | null>(editing ? { x: editing.x, y: editing.y } : null)
   const [error, setError] = useState<string | null>(null)
 
+  const [date, setDate] = useState<string>(editing ? dateOf(editing.start_hour) : FESTIVAL_DATES[0])
+  const [start, setStart] = useState<Hour>(
+    editing ? hourOf(editing.start_hour) : { hour: 10, minute: 0 },
+  )
+  const [end, setEnd] = useState<Hour>(editing ? hourOf(editing.end_hour) : { hour: 17, minute: 0 })
+
   const initialFields: Record<string, string> = {
     sequence: editing ? String(editing.category_sequence) : '',
-    start: editing ? toLocal(editing.start_hour) : '2026-10-06T10:00',
-    end: editing ? toLocal(editing.end_hour) : '2026-10-06T17:00',
   }
   for (const code of LANGUAGE_CODES) {
     const t = editing ? findTranslation(editing.translations, code) : undefined
@@ -91,7 +114,7 @@ function PlaceEditForm() {
       return setError('표시 순서는 1 이상의 정수여야 합니다.')
     if (!point) return setError('지도에서 위치를 찍어주세요.')
     // 같은 값은 명세가 허용한다 (§5.4)
-    if (values.end < values.start) return setError('종료가 시작보다 빨라요.')
+    if (minutesOf(end) < minutesOf(start)) return setError('종료가 시작보다 빨라요.')
     // 설명은 선택이다 (§5.4 PlaceTranslation)
     if (!values.name_KO.trim() || !values.host_KO.trim())
       return setError('한국어 이름·주최는 필수입니다.')
@@ -118,8 +141,8 @@ function PlaceEditForm() {
       category_sequence: sequence,
       x: point.x,
       y: point.y,
-      start_hour: toIso(values.start),
-      end_hour: toIso(values.end),
+      start_hour: toIso(date, start),
+      end_hour: toIso(date, end),
       place_image_uri: editing?.place_image_uri ?? null,
       translations,
     }
@@ -181,14 +204,26 @@ function PlaceEditForm() {
           <TextFieldInput inputMode="numeric" placeholder="1" />
         </TextField>
 
-        <div className={styles.row}>
-          <TextField label="운영 시작" {...bind('start')}>
-            <TextFieldInput type="datetime-local" />
-          </TextField>
-          <TextField label="운영 종료" invalid={values.end < values.start} {...bind('end')}>
-            <TextFieldInput type="datetime-local" />
-          </TextField>
+        {/* 날짜는 사흘 중 하나라 피커를 띄울 것도 없다. 한 번에 보이는 편이 빠르다 */}
+        <div className={styles.field}>
+          <span className={styles.fieldLabel}>운영 일자</span>
+          <SegmentedControl aria-label="운영 일자" value={date} onValueChange={setDate}>
+            {FESTIVAL_DATES.map((value) => (
+              <SegmentedControlItem key={value} value={value}>
+                {dateLabel(value)}
+              </SegmentedControlItem>
+            ))}
+          </SegmentedControl>
         </div>
+
+        <HourField label="운영 시작" value={start} onValueChange={setStart} />
+        <HourField
+          label="운영 종료"
+          value={end}
+          onValueChange={setEnd}
+          invalid={minutesOf(end) < minutesOf(start)}
+          errorMessage="시작보다 이릅니다"
+        />
       </div>
 
       <div className={styles.section}>
@@ -230,9 +265,10 @@ function PlaceEditForm() {
           ))}
         </SegmentedControl>
         {missing.length > 0 && (
-          <p className={`${styles.hint} ${styles.langMissing}`}>
-            {missing.join('·')} 이 비어 있습니다 — 그 언어 사용자에게는 이 장소가 보이지 않습니다.
-          </p>
+          <Callout
+            tone="warning"
+            description={`${missing.join('·')} 이 비어 있습니다. 그 언어 사용자에게는 이 장소가 보이지 않습니다.`}
+          />
         )}
 
         <TextField
@@ -273,17 +309,21 @@ function PlaceEditForm() {
         </div>
       )}
 
-      {error && <p className={`${styles.hint} ${styles.langMissing}`}>{error}</p>}
+      {/* 되돌릴 수 없는 액션이라 저장 옆에 두지 않는다. 일부러 내려와야 닿는 자리다 */}
+      {editing && (
+        <div className={styles.dangerZone}>
+          <ActionButton size="medium" variant="criticalSolid" onClick={remove}>
+            이 장소 삭제
+          </ActionButton>
+        </div>
+      )}
 
+      {/* 스크롤 위치와 무관하게 닿는 하단 고정 바. 오류도 여기 붙어야 보인다 */}
       <div className={styles.footer}>
+        {error && <Callout tone="critical" description={error} />}
         <ActionButton size="large" onClick={save}>
           저장
         </ActionButton>
-        {editing && (
-          <ActionButton size="large" variant="criticalSolid" onClick={remove}>
-            삭제
-          </ActionButton>
-        )}
       </div>
     </div>
   )

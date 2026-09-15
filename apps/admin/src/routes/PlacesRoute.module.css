@@ -1,29 +1,18 @@
 .screen {
   display: flex;
   flex: 1;
+
+  /* FAB 의 기준 상자 */
+  position: relative;
   flex-direction: column;
   min-height: 0;
-}
-
-/* 칩 필터. 다섯 종이라 세그먼트 대신 가로 스크롤 칩을 쓴다 */
-.chips {
-  display: flex;
-  flex-shrink: 0;
-  gap: var(--seed-dimension-x2);
-  padding: var(--seed-dimension-x3) var(--seed-dimension-x4);
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.chips::-webkit-scrollbar {
-  display: none;
 }
 
 .actions {
   display: flex;
   flex-shrink: 0;
   gap: var(--seed-dimension-x2);
-  padding: 0 var(--seed-dimension-x4) var(--seed-dimension-x3);
+  padding: var(--seed-dimension-x1) var(--seed-dimension-x4) var(--seed-dimension-x3);
 }
 
 .list {
@@ -31,33 +20,42 @@
   min-height: 0;
   overflow-y: auto;
   scrollbar-width: none;
+
+  /* FAB 에 마지막 항목이 가리지 않게 바닥을 비운다 */
+  padding-bottom: var(--seed-dimension-x20);
 }
 
 .list::-webkit-scrollbar {
   display: none;
 }
 
+/* 한 손 엄지 구역. 탭바 위에 뜬다 */
+.fab {
+  position: absolute;
+  right: var(--seed-dimension-x4);
+  bottom: var(--seed-dimension-x4);
+}
+
 .empty {
-  padding: var(--seed-dimension-x10) var(--seed-dimension-x4);
-  font-size: var(--seed-font-size-t5);
-  line-height: var(--seed-line-height-t5);
-  color: var(--seed-color-fg-neutral-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x2);
+  align-items: center;
+  padding: var(--seed-dimension-x16) var(--seed-dimension-x4) 0;
   text-align: center;
 }
 
-/* 번역 누락 배지. §2.4 — 없는 언어 사용자에게는 이 항목이 안 보인다 */
-.langWarn {
-  font-size: var(--seed-font-size-t2);
-  font-weight: var(--seed-font-weight-medium);
-  line-height: var(--seed-line-height-t2);
-  color: var(--seed-color-fg-critical);
-  white-space: nowrap;
+.emptyTitle {
+  margin: 0;
+  font-size: var(--seed-font-size-t5);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t5);
+  color: var(--seed-color-fg-neutral);
 }
 
-.langOk {
-  font-size: var(--seed-font-size-t2);
-  font-weight: var(--seed-font-weight-regular);
-  line-height: var(--seed-line-height-t2);
-  color: var(--seed-color-fg-neutral-subtle);
-  white-space: nowrap;
+.emptyDescription {
+  margin: 0 0 var(--seed-dimension-x2);
+  font-size: var(--seed-font-size-t3);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
 }

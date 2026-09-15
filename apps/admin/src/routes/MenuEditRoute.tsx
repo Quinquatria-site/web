@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { ActionButton } from 'seed-design/ui/action-button'
+import { Callout } from 'seed-design/ui/callout'
 import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented-control'
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { TextField, TextFieldInput } from 'seed-design/ui/text-field'
@@ -134,17 +135,19 @@ function MenuEditForm() {
         </TextField>
       </div>
 
-      {error && <p className={`${styles.hint} ${styles.langMissing}`}>{error}</p>}
+      {editing && (
+        <div className={styles.dangerZone}>
+          <ActionButton size="medium" variant="criticalSolid" onClick={remove}>
+            이 메뉴 삭제
+          </ActionButton>
+        </div>
+      )}
 
       <div className={styles.footer}>
+        {error && <Callout tone="critical" description={error} />}
         <ActionButton size="large" onClick={save}>
           저장
         </ActionButton>
-        {editing && (
-          <ActionButton size="large" variant="criticalSolid" onClick={remove}>
-            삭제
-          </ActionButton>
-        )}
       </div>
     </div>
   )
