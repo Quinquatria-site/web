@@ -116,6 +116,15 @@ export function festivalDayLabel(date: string): string {
   return index < 0 ? date : `${index + 1}일차 (${festivalDateLabel(date)})`
 }
 
+/**
+ * ISO 8601 datetime → "9/14 18:30". 공지의 등록 시각처럼 날짜와 시각이 함께
+ * 필요한 자리에 쓴다. offset 을 보지 않고 자르므로 값이 KST(+09:00)라고
+ * 가정한다 — 장소 목록의 운영 시각과 같은 관례다 (#10 에서 확인할 것).
+ */
+export function dateTimeLabel(iso: string): string {
+  return `${festivalDateLabel(iso)} ${iso.slice(11, 16)}`
+}
+
 export interface PerformanceTranslation {
   id: number
   performance_id: number

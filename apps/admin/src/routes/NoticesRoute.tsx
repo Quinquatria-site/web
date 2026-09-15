@@ -10,7 +10,7 @@ import { List, ListButtonItem } from 'seed-design/ui/list'
 import { ListHeader } from 'seed-design/ui/list-header'
 import { noticesByType, useStoreVersion } from '../mocks/store'
 import {
-  festivalDateLabel,
+  dateTimeLabel,
   findTranslation,
   hasMissingTranslations,
   missingLanguages,
@@ -20,14 +20,6 @@ import styles from './NoticesRoute.module.css'
 
 function titleOf(notice: Notice): string {
   return findTranslation(notice.translations, 'KO')?.title ?? `공지 ${notice.id}`
-}
-
-/**
- * "2026-10-06T14:30:00+09:00" → "10/6 14:30".
- * offset 을 보지 않고 자르므로 값이 KST(+09:00)라고 가정한다 (#10 에서 확인할 것).
- */
-function createdAtLabel(iso: string): string {
-  return `${festivalDateLabel(iso)} ${iso.slice(11, 16)}`
 }
 
 /** 번역 상태. 빠진 언어가 있으면 그 언어 사용자에게 이 공지가 안 보인다 (§2.4) */
@@ -92,7 +84,7 @@ function Section({
               title={titleOf(notice)}
               detail={
                 <span className={styles.detail}>
-                  {createdAtLabel(notice.created_at)}
+                  {dateTimeLabel(notice.created_at)}
                   <LangBadge notice={notice} />
                 </span>
               }

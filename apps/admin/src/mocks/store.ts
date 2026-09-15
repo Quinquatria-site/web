@@ -230,10 +230,16 @@ function nowKst(): string {
   return `${new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 19)}+09:00`
 }
 
-/** 정렬은 명세 그대로 created_at DESC, id DESC (§5.1) */
+/**
+ * 정렬은 명세 그대로 created_at DESC, id DESC (§5.1).
+ *
+ * 문자열 비교가 아니라 Date.parse 다. 지금은 목도 새로 만든 것도 +09:00 이라
+ * 사전순이 시각순과 같지만, offset 이 하나라도 섞이면 (Z 로 오는 응답, 서머타임
+ * 없는 다른 지역) 사전순이 조용히 어긋난다. 정렬이 틀리는 버그는 눈에 안 띈다.
+ */
 export function noticesByType(type: NoticeType): Notice[] {
   return NOTICES.filter((n) => n.type === type).sort(
-    (a, b) => b.created_at.localeCompare(a.created_at) || b.id - a.id,
+    (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at) || b.id - a.id,
   )
 }
 

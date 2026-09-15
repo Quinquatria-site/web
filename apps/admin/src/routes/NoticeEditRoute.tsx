@@ -15,7 +15,7 @@ import {
   type NoticeDraft,
 } from '../mocks/store'
 import {
-  festivalDateLabel,
+  dateTimeLabel,
   findTranslation,
   LANGUAGE_CODES,
   NOTICE_TYPES,
@@ -32,11 +32,6 @@ const TYPE_LABELS: Record<NoticeType, string> = {
 
 type TranslationField = 'title' | 'content'
 const fieldKey = (field: TranslationField, lang: LanguageCode) => `${field}_${lang}` as const
-
-/** 목록과 같은 표기. "2026-10-06T14:30:00+09:00" → "10/6 14:30" */
-function createdAtLabel(iso: string): string {
-  return `${festivalDateLabel(iso)} ${iso.slice(11, 16)}`
-}
 
 /**
  * 공지 편집 (§5.7). /notices/new 와 /notices/:id 를 겸한다.
@@ -170,8 +165,20 @@ function NoticeEditForm() {
           <strong>일반</strong> 은 최신순으로 내려갑니다. 두 종류는 서로 다른 목록으로 나가므로
           종류를 바꾸면 학생이 보는 자리가 달라집니다.
           {editing &&
-            ` 이 공지는 ${createdAtLabel(editing.created_at)} 에 등록됐습니다. 등록 시각은 바꿀 수 없습니다.`}
+            ` 이 공지는 ${dateTimeLabel(editing.created_at)} 에 등록됐습니다. 등록 시각은 바꿀 수 없습니다.`}
         </p>
+
+        {/* 이미 나가 있는 공지의 자리를 옮기는 것이라 새로 쓰는 것과 무게가 다르다.
+            위 설명은 항상 떠 있어 눈에 익지만, 이건 실제로 건드렸을 때만 나온다.
+
+            라벨 뒤에 "공지" 를 붙여 쓴다. 라벨만 끼우면 받침에 따라 조사가
+            갈리는데("상시로" / "일반으로"), "공지" 는 받침이 없어 늘 "로" 다 */}
+        {editing && editing.type !== type && (
+          <Callout
+            tone="warning"
+            description={`저장하면 ${TYPE_LABELS[editing.type]} 공지에서 ${TYPE_LABELS[type]} 공지로 옮겨갑니다. 학생이 보던 자리가 바뀝니다.`}
+          />
+        )}
       </div>
 
       <div className={styles.section}>
