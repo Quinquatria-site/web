@@ -3,7 +3,7 @@ import { MENUS } from './menus'
 import { NOTICES } from './notices'
 import { PERFORMANCES } from './performances'
 import { PLACES } from './places'
-import type { Menu, Notice, NoticeType, Performance, Place } from './types'
+import type { LanguageCode, Menu, Notice, NoticeType, Performance, Place } from './types'
 
 /**
  * 목 데이터의 쓰기 흉내. 실제 API(#10)가 붙으면 이 파일이 POST·PATCH·DELETE
@@ -262,10 +262,50 @@ export function upsertNotice(draft: NoticeDraft): Notice {
     return created
   }
 
-  const updated: Notice = { ...draft, created_at: NOTICES[index].created_at }
+  const previous = NOTICES[index]
+
+  // §5.2 — PATCH 는 전달한 언어만 upsert 하고 **전달하지 않은 언어는 그대로 둔다.**
+  // 배열을 통째로 갈아끼우면 화면이 "비우고 저장하면 지워진다" 고 믿게 되는데
+  // 실제 API 는 그렇게 동작하지 않는다. 번역 삭제는 전용 경로만이다
+  // (deleteNoticeTranslation). 목에서부터 같은 규칙을 지켜야 그 차이가 드러난다.
+  const translations = [...previous.translations]
+  for (const next of draft.translations) {
+    const at = translations.findIndex((t) => t.language_code === next.language_code)
+    if (at >= 0) translations[at] = next
+    else translations.push(next)
+  }
+  // 응답의 translations 는 language_code ASC = CHN → EN → KO (§5.2)
+  translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
+
+  const updated: Notice = { ...draft, created_at: previous.created_at, translations }
   NOTICES[index] = updated
   emit()
   return updated
+}
+
+/**
+ * DELETE /notices/{notice_id}/translations/{language_code} 흉내 (§5.2).
+ *
+ * 번역을 지우는 유일한 수단이다. PATCH 로는 못 지운다 — 안 보낸 언어는
+ * 유지되기 때문이다. 거부 사유를 문자열로 돌려 화면이 그대로 띄운다
+ * (공연 reorder 와 같은 관례).
+ */
+export function deleteNoticeTranslation(noticeId: number, code: LanguageCode): string | null {
+  // KO 는 모든 기본 리소스에 필요한 번역이라 409 DELETE_CONFLICT 다.
+  // 화면은 KO 필수 검증으로 저장 자체를 먼저 막으므로 여기까지 오지 않지만,
+  // 계약을 코드에 남겨 둔다
+  if (code === 'KO') return '한국어 번역은 지울 수 없습니다.'
+
+  const notice = noticeById(noticeId)
+  if (!notice) return '없는 공지입니다.'
+
+  // 기본 리소스나 그 언어 번역이 없으면 404 RESOURCE_NOT_FOUND
+  const at = notice.translations.findIndex((t) => t.language_code === code)
+  if (at < 0) return '없는 번역입니다.'
+
+  notice.translations.splice(at, 1)
+  emit()
+  return null
 }
 
 /** 지운 것을 돌려줘 실행취소에 쓴다 (§6) */
