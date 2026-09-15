@@ -22,7 +22,9 @@ import {
   type LostItemTranslation,
 } from '../mocks/types'
 import { PhotoPicker } from '../ui'
-import styles from './LostItemEditRoute.module.css'
+// 공연 편집과 같은 뼈대라 스타일시트를 같이 쓴다. 공지도 이 파일을 쓰고
+// 메뉴는 장소 것을 쓴다 — 편집 화면이 서로의 스타일시트를 가져다 쓰는 관례다
+import styles from './PerformanceEditRoute.module.css'
 
 type TranslationField = 'loc' | 'title' | 'desc'
 const fieldKey = (field: TranslationField, lang: LanguageCode) => `${field}_${lang}` as const
