@@ -107,9 +107,16 @@
   background: var(--seed-color-bg-brand-weak);
 }
 
-/* 공연 중인 한 건. 왼쪽 띠로 표시한다 — 배경은 SPECIAL 과 겹칠 수 있다 */
+/*
+ * 공연 중인 한 건. 왼쪽 띠로 표시한다 — 배경은 SPECIAL 과 겹칠 수 있다.
+ *
+ * 브랜드 색이다. 이 행에는 같은 것을 가리키는 신호가 셋 있다 — 띠, "공연 중"
+ * 배지, 켜진 스위치. 스위치가 이미 브랜드 색이라 셋을 한 색으로 묶는다.
+ * critical(빨강)은 SEED 가 "검수 거절·제재·유효성 실패" 로 정의한 톤이라
+ * 활성 상태를 가리키는 데 쓰지 않는다.
+ */
 .liveRow {
-  box-shadow: inset 3px 0 0 var(--seed-color-bg-critical-solid);
+  box-shadow: inset 3px 0 0 var(--seed-color-bg-brand-solid);
 }
 
 .seq {
@@ -122,16 +129,13 @@
   text-align: center;
 }
 
-.liveTag {
-  margin-left: var(--seed-dimension-x2);
-  padding: 0 var(--seed-dimension-x2);
-  font-size: var(--seed-font-size-t1);
-  font-weight: var(--seed-font-weight-bold);
-  line-height: var(--seed-line-height-t2);
-  color: var(--seed-color-fg-critical-contrast);
-  white-space: nowrap;
-  background: var(--seed-color-bg-critical-solid);
-  border-radius: var(--seed-radius-r1);
+/* 제목과 "공연 중" 배지가 한 줄에 선다. 간격은 여기서 준다 —
+   배지가 자기 바깥 여백을 들고 다니지 않게 */
+.title {
+  display: flex;
+  gap: var(--seed-dimension-x2);
+  align-items: center;
+  min-width: 0;
 }
 
 /* 유형과 번역 배지가 한 줄에 선다. 배지는 인라인 블록이라 가운데 정렬이 필요하다 */

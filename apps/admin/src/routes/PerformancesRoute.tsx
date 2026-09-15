@@ -217,10 +217,14 @@ export function PerformancesRoute() {
                 <span className={styles.seq}>{reordering ? index + 1 : performance.seq}</span>
               )
               const title = (
-                <>
+                <span className={styles.title}>
                   {titleOf(performance)}
-                  {performance.is_live && <span className={styles.liveTag}>공연 중</span>}
-                </>
+                  {performance.is_live && (
+                    <Badge tone="brand" variant="solid">
+                      공연 중
+                    </Badge>
+                  )}
+                </span>
               )
               const detail = (
                 <span className={styles.detail}>
