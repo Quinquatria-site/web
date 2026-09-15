@@ -221,7 +221,7 @@ export function hasMissingTranslations(
  * 그 자리에서 폰으로 등록한다 — 화면 설계가 이 사실 하나에서 갈린다.
  *
  * 운영자가 정하는 것은 사진과 번역뿐이다. created_at 은 서버가 찍고
- * is_returned 는 목록의 스위치로만 바뀐다.
+ * is_returned 는 목록의 반환 버튼으로만 바뀐다.
  *
  * 공지와 마찬가지로 순서를 손댈 수단이 없다. 정렬 키가 created_at 하나뿐이라
  * (§5.1 created_at DESC, id DESC) 재정렬 엔드포인트 자체가 없다.
@@ -249,7 +249,7 @@ export interface LostItem {
    */
   image_url: string | null
   /**
-   * 반환 완료 여부. 편집 화면이 아니라 **목록의 스위치**로만 바뀐다 —
+   * 반환 완료 여부. 편집 화면이 아니라 **목록의 반환 버튼**으로만 바뀐다 —
    * 주인이 물건을 찾아가는 순간은 한 손이 물건에 가 있어서, 화면을 옮겨
    * 저장까지 누르게 할 여유가 없다.
    *

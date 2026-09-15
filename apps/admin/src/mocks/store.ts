@@ -329,7 +329,7 @@ export function restoreNotice(notice: Notice): void {
  * 생성 created_at 하나뿐이라 재정렬 엔드포인트 자체가 없다 (§5.1).
  *
  * 서버 몫으로 남겨야 할 값이 둘이다. created_at 은 생성 시각이고,
- * is_returned 는 목록의 스위치가 전용 엔드포인트로 바꾼다. 둘 다 draft 에서
+ * is_returned 는 목록의 반환 버튼이 전용 엔드포인트로 바꾼다. 둘 다 draft 에서
  * 빼 두면 편집 화면이 그 값을 정하는 코드를 애초에 못 갖는다.
  */
 
@@ -356,7 +356,7 @@ export function lostItemById(id: number): LostItem | undefined {
 /**
  * 생성이면 지금 시각을 서버가 찍고 미반환으로 시작한다. 수정이면 created_at 과
  * is_returned 를 모두 그대로 둔다 — 전자는 수정 불가 필드고, 후자는 목록의
- * 스위치만 바꾼다. 편집 화면에서 저장했다고 반환 상태가 되돌아가면 안 된다.
+ * 반환 버튼만 바꾼다. 편집 화면에서 저장했다고 반환 상태가 되돌아가면 안 된다.
  */
 export function upsertLostItem(draft: LostItemDraft): LostItem {
   const index = LOST_ITEMS.findIndex((item) => item.id === draft.id)
