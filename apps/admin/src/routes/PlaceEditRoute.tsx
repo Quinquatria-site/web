@@ -17,6 +17,7 @@ import { CATEGORIES, categoryById } from '../mocks/categories'
 import { menusByPlace } from '../mocks/menus'
 import {
   deletePlace,
+  deletePlaceTranslation,
   draftId,
   placeById,
   restorePlace,
@@ -116,6 +117,8 @@ function PlaceEditForm() {
     const translations: PlaceTranslation[] = []
     for (const code of LANGUAGE_CODES) {
       const name = values[fieldKey('name', code)].trim()
+      // PATCH 본문에서 뺀다 — 다만 빼는 것만으로는 안 지워진다. 원래 있던
+      // 언어라면 아래에서 전용 삭제를 부른다 (§5.2)
       if (!name) continue // EN·CHN 은 선택 (§5.2)
       const existing = editing ? findTranslation(editing.translations, code) : undefined
       translations.push({
@@ -139,11 +142,41 @@ function PlaceEditForm() {
       place_image_uri: editing?.place_image_uri ?? null,
       translations,
     }
-    upsertPlace(place)
-    snackbar.create({
-      timeout: 3000,
-      render: () => <Snackbar message={`${values.name_KO} 저장했습니다`} />,
-    })
+    // 지우기 전에 원본을 붙잡는다. upsertPlace 가 PLACES 의 항목을 새 객체로
+    // 갈아끼우므로 editing 은 이전 상태를 그대로 들고 있다
+    const undo = removing
+      .map((code) => editing && findTranslation(editing.translations, code))
+      .filter((t): t is PlaceTranslation => Boolean(t))
+
+    const saved = upsertPlace(place)
+
+    // 실제 클라이언트가 보낼 두 호출과 같은 순서다 — PATCH 로 남길 언어를
+    // 올리고, 지울 언어는 전용 DELETE 로 따로 부른다 (§5.2)
+    for (const code of removing) {
+      const rejected = deletePlaceTranslation(saved.id, code)
+      if (rejected) return setError(rejected)
+    }
+
+    // 지워진 번역문은 다시 타이핑해야 해서 실수의 대가가 크다. 되돌리기는
+    // upsertPlace 한 번이면 된다 — 언어별 병합이라(§5.2) 지운 언어만 다시 넣고
+    // 나머지는 건드리지 않는다
+    snackbar.create(
+      undo.length > 0
+        ? {
+            timeout: 6000,
+            render: () => (
+              <Snackbar
+                message={`${values.name_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
+                actionLabel="실행취소"
+                onAction={() => upsertPlace({ ...place, translations: undo })}
+              />
+            ),
+          }
+        : {
+            timeout: 3000,
+            render: () => <Snackbar message={`${values.name_KO} 저장했습니다`} />,
+          },
+    )
     // navigate(-1) 이 아니다 — 이 화면을 새로고침하거나 링크로 바로 열면
     // 뒤로 갈 곳이 admin 밖이다
     navigate('/places')
@@ -168,6 +201,19 @@ function PlaceEditForm() {
   }
 
   const missing = LANGUAGE_CODES.filter((code) => !values[fieldKey('name', code)].trim())
+  // 이미 나가 있던 번역을 내리는 것. 아직 안 채운 언어와 대가가 달라 갈라 둔다.
+  // 판정은 이름만 본다 — host_college 는 EN·CHN 에서 선택이라(위 KO 검증 참고)
+  // 짝으로 묶으면 "영문 이름만 넣고 주최는 비움" 이라는 정상 상태가 삭제로 읽힌다
+  const removing = editing
+    ? LANGUAGE_CODES.filter(
+        (code) =>
+          code !== 'KO' &&
+          findTranslation(editing.translations, code) &&
+          !values[fieldKey('name', code)].trim(),
+      )
+    : []
+  // 원래부터 없던 언어. 이쪽은 "아직 안 채웠다" 라 톤이 다르다
+  const blank = missing.filter((code) => !removing.includes(code))
 
   return (
     <div className={styles.screen}>
@@ -257,10 +303,16 @@ function PlaceEditForm() {
             </SegmentedControlItem>
           ))}
         </SegmentedControl>
-        {missing.length > 0 && (
+        {removing.length > 0 && (
+          <Callout
+            tone="critical"
+            description={`${removing.join('·')} 번역을 삭제합니다. 저장하면 그 언어로 보는 학생에게 이 장소가 사라집니다.`}
+          />
+        )}
+        {blank.length > 0 && (
           <Callout
             tone="warning"
-            description={`${missing.join('·')} 이 비어 있습니다. 그 언어 사용자에게는 이 장소가 보이지 않습니다.`}
+            description={`${blank.join('·')} 이 비어 있습니다. 그 언어 사용자에게는 이 장소가 보이지 않습니다.`}
           />
         )}
 
