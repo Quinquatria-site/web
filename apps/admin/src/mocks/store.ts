@@ -126,10 +126,42 @@ export function menuById(id: number): Menu | undefined {
 
 export function upsertMenu(menu: Menu): Menu {
   const index = MENUS.findIndex((m) => m.id === menu.id)
-  if (index >= 0) MENUS[index] = menu
-  else MENUS.push(menu)
+
+  if (index < 0) {
+    MENUS.push(menu)
+    emit()
+    return menu
+  }
+
+  // §5.2 — 전달하지 않은 언어는 그대로 둔다. 장소와 같은 규칙이다
+  // (deleteMenuTranslation 만이 지우는 수단)
+  const translations = [...MENUS[index].translations]
+  for (const next of menu.translations) {
+    const at = translations.findIndex((t) => t.language_code === next.language_code)
+    if (at >= 0) translations[at] = next
+    else translations.push(next)
+  }
+  translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
+
+  const updated: Menu = { ...menu, translations }
+  MENUS[index] = updated
   emit()
-  return menu
+  return updated
+}
+
+/** DELETE /menus/{menu_id}/translations/{language_code} 흉내 (§5.2) */
+export function deleteMenuTranslation(menuId: number, code: LanguageCode): string | null {
+  if (code === 'KO') return '한국어 번역은 지울 수 없습니다.'
+
+  const menu = menuById(menuId)
+  if (!menu) return '없는 메뉴입니다.'
+
+  const at = menu.translations.findIndex((t) => t.language_code === code)
+  if (at < 0) return '없는 번역입니다.'
+
+  menu.translations.splice(at, 1)
+  emit()
+  return null
 }
 
 export function deleteMenu(id: number): Menu | undefined {
