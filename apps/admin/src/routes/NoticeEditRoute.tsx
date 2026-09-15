@@ -8,6 +8,7 @@ import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/tex
 import { useFormFields } from '../lib/useFormFields'
 import {
   deleteNotice,
+  deleteNoticeTranslation,
   draftId,
   noticeById,
   restoreNotice,
@@ -45,9 +46,38 @@ const fieldKey = (field: TranslationField, lang: LanguageCode) => `${field}_${la
  */
 export function NoticeEditRoute() {
   const params = useParams()
+
+  // 없는 공지를 편집으로 열면 빈 작성 폼이 떠서, 새로 쓰는 것인지 고치는 것인지
+  // 알 수 없다. 실제 API 에서는 404 RESOURCE_NOT_FOUND 다 (§6). 목 스토어는
+  // 세션 한정이라 새로고침만 해도 같은 상태가 되므로 둘을 같게 다룬다.
+  // 폼보다 바깥에서 거르는 이유는 폼이 훅을 여럿 쓰기 때문이다 — 안에서
+  // 조기 반환하면 렌더마다 훅 수가 달라진다.
+  if (params.id && !noticeById(Number(params.id))) return <NoticeNotFound />
+
   // 폼 초기값은 첫 렌더에서만 읽힌다. 다른 공지로 이동해도 같은 컴포넌트가
   // 재사용되므로, key 로 갈아끼워 이전 입력이 남지 않게 한다
   return <NoticeEditForm key={params.id ?? 'new'} />
+}
+
+/** 편집 화면의 뼈대를 그대로 쓴다. 상단바에 뒤로가기가 이미 있어 문은 하나면 된다 */
+function NoticeNotFound() {
+  const navigate = useNavigate()
+  return (
+    <div className={styles.screen}>
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>없는 공지입니다</h2>
+        <p className={styles.hint}>
+          지워졌거나 주소가 잘못됐습니다. 목 데이터는 새로고침하면 처음 상태로 돌아가므로,
+          방금 만든 공지는 새로고침 뒤 사라집니다.
+        </p>
+        <div>
+          <ActionButton size="medium" variant="neutralWeak" onClick={() => navigate('/notices')}>
+            공지 목록으로
+          </ActionButton>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 function NoticeEditForm() {
@@ -88,7 +118,10 @@ function NoticeEditForm() {
     const translations: NoticeTranslation[] = []
     for (const code of LANGUAGE_CODES) {
       const title = values[fieldKey('title', code)].trim()
-      if (!title) continue // 위 검사를 통과했으므로 본문도 비어 있다. 안 보낸 언어다 (§5.2)
+      // 위 검사를 통과했으므로 본문도 비어 있다. PATCH 본문에서 뺀다 — 다만
+      // 빼는 것만으로는 안 지워진다. 원래 있던 언어라면 아래에서 전용 삭제를
+      // 부른다 (§5.2)
+      if (!title) continue
       const existing = editing ? findTranslation(editing.translations, code) : undefined
       translations.push({
         id: existing?.id ?? draftId(), // 기존 번역의 id 는 유지 (§5.2)
@@ -105,6 +138,14 @@ function NoticeEditForm() {
 
     const draft: NoticeDraft = { id, type, translations }
     const saved = upsertNotice(draft)
+
+    // 실제 클라이언트가 보낼 두 호출과 같은 순서다 — PATCH 로 남길 언어를
+    // 올리고, 지울 언어는 전용 DELETE 로 따로 부른다 (§5.2)
+    for (const code of removing) {
+      const rejected = deleteNoticeTranslation(saved.id, code)
+      if (rejected) return setError(rejected)
+    }
+
     snackbar.create({
       timeout: 3000,
       render: () => (
@@ -138,6 +179,22 @@ function NoticeEditForm() {
   const missing = LANGUAGE_CODES.filter(
     (code) => !values[fieldKey('title', code)].trim() || !values[fieldKey('content', code)].trim(),
   )
+
+  // 원래 있었는데 지금 둘 다 비운 언어 = 지우려는 것. 원래 없던 언어와는 결과가
+  // 다르다 — 이미 학생에게 나가 있던 번역이 내려간다.
+  // KO 는 뺀다. 명세상 KO 삭제는 409 지만(§5.2) 화면은 필수 검증으로 저장을
+  // 먼저 막으므로, 지우는 중이라고 말하면 잘못된 안내가 된다
+  const removing = editing
+    ? LANGUAGE_CODES.filter(
+        (code) =>
+          code !== 'KO' &&
+          findTranslation(editing.translations, code) &&
+          !values[fieldKey('title', code)].trim() &&
+          !values[fieldKey('content', code)].trim(),
+      )
+    : []
+  // 원래부터 없던 언어. 이쪽은 "아직 안 채웠다" 라 톤이 다르다
+  const blank = missing.filter((code) => !removing.includes(code))
 
   return (
     <div className={styles.screen}>
@@ -194,10 +251,18 @@ function NoticeEditForm() {
             </SegmentedControlItem>
           ))}
         </SegmentedControl>
-        {missing.length > 0 && (
+        {/* 이미 나가 있던 번역을 내리는 것이라 아직 안 채운 것과 무게가 다르다.
+            비운 순간 말해줘야 저장 버튼을 누르기 전에 되돌릴 수 있다 */}
+        {removing.length > 0 && (
+          <Callout
+            tone="critical"
+            description={`${removing.join('·')} 번역을 삭제합니다. 저장하면 그 언어로 보는 학생에게 이 공지가 사라집니다.`}
+          />
+        )}
+        {blank.length > 0 && (
           <Callout
             tone="warning"
-            description={`${missing.join('·')} 번역이 비어 있습니다. 그 언어로 보는 학생에게 이 공지는 존재하지 않습니다.`}
+            description={`${blank.join('·')} 번역이 비어 있습니다. 그 언어로 보는 학생에게 이 공지는 존재하지 않습니다.`}
           />
         )}
 
