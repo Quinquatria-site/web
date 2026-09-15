@@ -222,10 +222,22 @@ export function upsertPerformance(draft: PerformanceDraft): Performance {
 
   const previous = PERFORMANCES[index]
   const moved = previous.date !== draft.date
+
+  // §5.2 — 전달하지 않은 언어는 그대로 둔다. 장소·메뉴와 같은 규칙이다
+  // (deletePerformanceTranslation 만이 지우는 수단)
+  const translations = [...previous.translations]
+  for (const next of draft.translations) {
+    const at = translations.findIndex((t) => t.language_code === next.language_code)
+    if (at >= 0) translations[at] = next
+    else translations.push(next)
+  }
+  translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
+
   const updated: Performance = {
     ...draft,
     seq: moved ? tail : previous.seq,
     is_live: previous.is_live,
+    translations,
   }
   PERFORMANCES[index] = updated
   if (moved) renumber(previous.date)
@@ -252,6 +264,24 @@ export function restorePerformance(performance: Performance): void {
   PERFORMANCES.push(performance)
   renumber(performance.date)
   emit()
+}
+
+/** DELETE /performances/{performance_id}/translations/{language_code} 흉내 (§5.2) */
+export function deletePerformanceTranslation(
+  performanceId: number,
+  code: LanguageCode,
+): string | null {
+  if (code === 'KO') return '한국어 번역은 지울 수 없습니다.'
+
+  const performance = performanceById(performanceId)
+  if (!performance) return '없는 공연입니다.'
+
+  const at = performance.translations.findIndex((t) => t.language_code === code)
+  if (at < 0) return '없는 번역입니다.'
+
+  performance.translations.splice(at, 1)
+  emit()
+  return null
 }
 
 /**
