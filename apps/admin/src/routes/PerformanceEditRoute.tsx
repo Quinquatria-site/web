@@ -9,6 +9,7 @@ import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/tex
 import { useFormFields } from '../lib/useFormFields'
 import {
   deletePerformance,
+  deletePerformanceTranslation,
   draftId,
   performanceById,
   restorePerformance,
@@ -44,9 +45,9 @@ const fieldKey = (field: TranslationField, lang: LanguageCode) => `${field}_${la
  *   순서를 바꾸는 수단은 목록 화면의 재정렬뿐이다.
  * - is_live: 전용 엔드포인트로만 바뀐다. 목록 화면의 토글이 그것이다.
  *
- * 번역은 §5.2 대로 KO 만 필수다. EN·CHN 은 제목이 비어 있으면 아예 안 보낸 것으로
- * 친다. 번역 항목은 전체 교체라서 기존 설명을 유지하려면 다시 보내야 한다 —
- * 그래서 초기값을 기존 번역으로 채워 둔다.
+ * 번역은 §5.2 대로 KO 만 필수다. EN·CHN 은 제목이 비어 있으면 PATCH 본문에서
+ * 빼는데, 빼는 것은 "변경하지 않음" 이지 삭제가 아니다 — 원래 있던 언어를
+ * 비웠다면 저장 루틴이 전용 DELETE 를 따로 부른다.
  */
 export function PerformanceEditRoute() {
   const params = useParams()
@@ -91,6 +92,8 @@ function PerformanceEditForm() {
     const translations: PerformanceTranslation[] = []
     for (const code of LANGUAGE_CODES) {
       const title = values[fieldKey('title', code)].trim()
+      // PATCH 본문에서 뺀다 — 다만 빼는 것만으로는 안 지워진다. 원래 있던
+      // 언어라면 아래에서 전용 삭제를 부른다 (§5.2)
       if (!title) continue // EN·CHN 은 선택 (§5.2)
       const existing = editing ? findTranslation(editing.translations, code) : undefined
       translations.push({
@@ -113,15 +116,40 @@ function PerformanceEditForm() {
       date,
       translations,
     }
+    // 지우기 전에 원본을 붙잡는다. upsertPerformance 가 PERFORMANCES 의 항목을
+    // 새 객체로 갈아끼우므로 editing 은 이전 상태를 그대로 들고 있다
+    const undo = removing
+      .map((code) => editing && findTranslation(editing.translations, code))
+      .filter((t): t is PerformanceTranslation => Boolean(t))
+
     const saved = upsertPerformance(draft)
-    snackbar.create({
-      timeout: 3000,
-      render: () => (
-        <Snackbar
-          message={`${values.title_KO} 저장했습니다 (${festivalDayLabel(saved.date)} ${saved.seq}번째)`}
-        />
-      ),
-    })
+
+    // PATCH 로 남길 언어를 올리고, 지울 언어는 전용 DELETE 로 따로 부른다 (§5.2)
+    for (const code of removing) {
+      const rejected = deletePerformanceTranslation(saved.id, code)
+      if (rejected) return setError(rejected)
+    }
+
+    const message = `${values.title_KO} 저장했습니다 (${festivalDayLabel(saved.date)} ${saved.seq}번째)`
+    snackbar.create(
+      undo.length > 0
+        ? {
+            timeout: 6000,
+            render: () => (
+              <Snackbar
+                message={`${message} · ${removing.join('·')} 번역 삭제`}
+                actionLabel="실행취소"
+                // draft 를 쓴다. saved 를 퍼뜨리면 seq·is_live 가 딸려와
+                // PerformanceDraft 타입에 안 맞는다 — 둘 다 서버 몫이다
+                onAction={() => upsertPerformance({ ...draft, translations: undo })}
+              />
+            ),
+          }
+        : {
+            timeout: 3000,
+            render: () => <Snackbar message={message} />,
+          },
+    )
     // navigate(-1) 이 아니다 — 이 화면을 새로고침하거나 링크로 바로 열면
     // 뒤로 갈 곳이 admin 밖이다
     backToList(saved.date)
@@ -146,6 +174,18 @@ function PerformanceEditForm() {
   }
 
   const missing = LANGUAGE_CODES.filter((code) => !values[fieldKey('title', code)].trim())
+  // 이미 나가 있던 번역을 내리는 것. 아직 안 채운 언어와 대가가 달라 갈라 둔다.
+  // 판정은 제목만 본다 — description 은 명세상 선택이라 짝이 아니다 (§5.2)
+  const removing = editing
+    ? LANGUAGE_CODES.filter(
+        (code) =>
+          code !== 'KO' &&
+          findTranslation(editing.translations, code) &&
+          !values[fieldKey('title', code)].trim(),
+      )
+    : []
+  // 원래부터 없던 언어. 이쪽은 "아직 안 채웠다" 라 톤이 다르다
+  const blank = missing.filter((code) => !removing.includes(code))
 
   return (
     <div className={styles.screen}>
@@ -196,10 +236,16 @@ function PerformanceEditForm() {
             </SegmentedControlItem>
           ))}
         </SegmentedControl>
-        {missing.length > 0 && (
+        {removing.length > 0 && (
+          <Callout
+            tone="critical"
+            description={`${removing.join('·')} 번역을 삭제합니다. 저장하면 그 언어로 보는 학생에게 이 공연이 사라집니다.`}
+          />
+        )}
+        {blank.length > 0 && (
           <Callout
             tone="warning"
-            description={`${missing.join('·')} 이 비어 있습니다. 그 언어 사용자에게는 이 공연이 보이지 않습니다.`}
+            description={`${blank.join('·')} 이 비어 있습니다. 그 언어 사용자에게는 이 공연이 보이지 않습니다.`}
           />
         )}
 

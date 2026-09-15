@@ -50,10 +50,55 @@ export function placeById(id: number): Place | undefined {
 /** §5.2 — 기본 필드 수정과 번역 upsert 를 한 번에. 반환값은 저장된 장소 */
 export function upsertPlace(place: Place): Place {
   const index = PLACES.findIndex((p) => p.id === place.id)
-  if (index >= 0) PLACES[index] = place
-  else PLACES.push(place)
+
+  if (index < 0) {
+    PLACES.push(place)
+    emit()
+    return place
+  }
+
+  // §5.2 — PATCH 는 전달한 언어만 upsert 하고 **전달하지 않은 언어는 그대로 둔다.**
+  // 배열을 통째로 갈아끼우면 화면이 "비우고 저장하면 지워진다" 고 믿게 되는데
+  // 실제 API 는 그렇게 동작하지 않는다. 번역 삭제는 전용 경로만이다
+  // (deletePlaceTranslation). 목에서부터 같은 규칙을 지켜야 그 차이가 드러난다.
+  const translations = [...PLACES[index].translations]
+  for (const next of place.translations) {
+    const at = translations.findIndex((t) => t.language_code === next.language_code)
+    if (at >= 0) translations[at] = next
+    else translations.push(next)
+  }
+  // 응답의 translations 는 language_code ASC = CHN → EN → KO (§5.2)
+  translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
+
+  const updated: Place = { ...place, translations }
+  PLACES[index] = updated
   emit()
-  return place
+  return updated
+}
+
+/**
+ * DELETE /places/{place_id}/translations/{language_code} 흉내 (§5.2).
+ *
+ * 번역을 지우는 유일한 수단이다. PATCH 로는 못 지운다 — 안 보낸 언어는
+ * 유지되기 때문이다. 거부 사유를 문자열로 돌려 화면이 그대로 띄운다
+ * (공연 reorder 부터 이어온 관례).
+ */
+export function deletePlaceTranslation(placeId: number, code: LanguageCode): string | null {
+  // KO 는 모든 기본 리소스에 필요한 번역이라 409 DELETE_CONFLICT 다.
+  // 화면은 KO 필수 검증으로 저장 자체를 먼저 막으므로 여기까지 오지 않지만,
+  // 계약을 코드에 남겨 둔다
+  if (code === 'KO') return '한국어 번역은 지울 수 없습니다.'
+
+  const place = placeById(placeId)
+  if (!place) return '없는 장소입니다.'
+
+  // 기본 리소스나 그 언어 번역이 없으면 404 RESOURCE_NOT_FOUND
+  const at = place.translations.findIndex((t) => t.language_code === code)
+  if (at < 0) return '없는 번역입니다.'
+
+  place.translations.splice(at, 1)
+  emit()
+  return null
 }
 
 /** §6 — 장소 삭제는 하위 메뉴와 번역을 연쇄 삭제한다. 지운 것들을 돌려줘 실행취소에 쓴다 */
@@ -81,10 +126,42 @@ export function menuById(id: number): Menu | undefined {
 
 export function upsertMenu(menu: Menu): Menu {
   const index = MENUS.findIndex((m) => m.id === menu.id)
-  if (index >= 0) MENUS[index] = menu
-  else MENUS.push(menu)
+
+  if (index < 0) {
+    MENUS.push(menu)
+    emit()
+    return menu
+  }
+
+  // §5.2 — 전달하지 않은 언어는 그대로 둔다. 장소와 같은 규칙이다
+  // (deleteMenuTranslation 만이 지우는 수단)
+  const translations = [...MENUS[index].translations]
+  for (const next of menu.translations) {
+    const at = translations.findIndex((t) => t.language_code === next.language_code)
+    if (at >= 0) translations[at] = next
+    else translations.push(next)
+  }
+  translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
+
+  const updated: Menu = { ...menu, translations }
+  MENUS[index] = updated
   emit()
-  return menu
+  return updated
+}
+
+/** DELETE /menus/{menu_id}/translations/{language_code} 흉내 (§5.2) */
+export function deleteMenuTranslation(menuId: number, code: LanguageCode): string | null {
+  if (code === 'KO') return '한국어 번역은 지울 수 없습니다.'
+
+  const menu = menuById(menuId)
+  if (!menu) return '없는 메뉴입니다.'
+
+  const at = menu.translations.findIndex((t) => t.language_code === code)
+  if (at < 0) return '없는 번역입니다.'
+
+  menu.translations.splice(at, 1)
+  emit()
+  return null
 }
 
 export function deleteMenu(id: number): Menu | undefined {
@@ -145,10 +222,22 @@ export function upsertPerformance(draft: PerformanceDraft): Performance {
 
   const previous = PERFORMANCES[index]
   const moved = previous.date !== draft.date
+
+  // §5.2 — 전달하지 않은 언어는 그대로 둔다. 장소·메뉴와 같은 규칙이다
+  // (deletePerformanceTranslation 만이 지우는 수단)
+  const translations = [...previous.translations]
+  for (const next of draft.translations) {
+    const at = translations.findIndex((t) => t.language_code === next.language_code)
+    if (at >= 0) translations[at] = next
+    else translations.push(next)
+  }
+  translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
+
   const updated: Performance = {
     ...draft,
     seq: moved ? tail : previous.seq,
     is_live: previous.is_live,
+    translations,
   }
   PERFORMANCES[index] = updated
   if (moved) renumber(previous.date)
@@ -175,6 +264,24 @@ export function restorePerformance(performance: Performance): void {
   PERFORMANCES.push(performance)
   renumber(performance.date)
   emit()
+}
+
+/** DELETE /performances/{performance_id}/translations/{language_code} 흉내 (§5.2) */
+export function deletePerformanceTranslation(
+  performanceId: number,
+  code: LanguageCode,
+): string | null {
+  if (code === 'KO') return '한국어 번역은 지울 수 없습니다.'
+
+  const performance = performanceById(performanceId)
+  if (!performance) return '없는 공연입니다.'
+
+  const at = performance.translations.findIndex((t) => t.language_code === code)
+  if (at < 0) return '없는 번역입니다.'
+
+  performance.translations.splice(at, 1)
+  emit()
+  return null
 }
 
 /**

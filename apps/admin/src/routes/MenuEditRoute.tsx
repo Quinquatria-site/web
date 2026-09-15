@@ -6,7 +6,14 @@ import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { TextField, TextFieldInput } from 'seed-design/ui/text-field'
 import { useFormFields } from '../lib/useFormFields'
-import { deleteMenu, draftId, menuById, restoreMenu, upsertMenu } from '../mocks/store'
+import {
+  deleteMenu,
+  deleteMenuTranslation,
+  draftId,
+  menuById,
+  restoreMenu,
+  upsertMenu,
+} from '../mocks/store'
 import {
   findTranslation,
   LANGUAGE_CODES,
@@ -59,6 +66,8 @@ function MenuEditForm() {
     const translations: MenuTranslation[] = []
     for (const code of LANGUAGE_CODES) {
       const name = values[fieldKey('name', code)].trim()
+      // PATCH 본문에서 뺀다 — 다만 빼는 것만으로는 안 지워진다. 원래 있던
+      // 언어라면 아래에서 전용 삭제를 부른다 (§5.2)
       if (!name) continue
       const existing = editing ? findTranslation(editing.translations, code) : undefined
       translations.push({
@@ -77,11 +86,37 @@ function MenuEditForm() {
       price,
       translations,
     }
-    upsertMenu(menu)
-    snackbar.create({
-      timeout: 3000,
-      render: () => <Snackbar message={`${values.name_KO} 저장했습니다`} />,
-    })
+    // 지우기 전에 원본을 붙잡는다. upsertMenu 가 MENUS 의 항목을 새 객체로
+    // 갈아끼우므로 editing 은 이전 상태를 그대로 들고 있다
+    const undo = removing
+      .map((code) => editing && findTranslation(editing.translations, code))
+      .filter((t): t is MenuTranslation => Boolean(t))
+
+    const saved = upsertMenu(menu)
+
+    // PATCH 로 남길 언어를 올리고, 지울 언어는 전용 DELETE 로 따로 부른다 (§5.2)
+    for (const code of removing) {
+      const rejected = deleteMenuTranslation(saved.id, code)
+      if (rejected) return setError(rejected)
+    }
+
+    snackbar.create(
+      undo.length > 0
+        ? {
+            timeout: 6000,
+            render: () => (
+              <Snackbar
+                message={`${values.name_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
+                actionLabel="실행취소"
+                onAction={() => upsertMenu({ ...menu, translations: undo })}
+              />
+            ),
+          }
+        : {
+            timeout: 3000,
+            render: () => <Snackbar message={`${values.name_KO} 저장했습니다`} />,
+          },
+    )
     navigate(`/places/${placeId}`)
   }
 
@@ -101,6 +136,18 @@ function MenuEditForm() {
       ),
     })
   }
+
+  // 이미 나가 있던 번역을 내리는 것. 이 화면에는 누락 경고가 없지만(메뉴는 장소
+  // 편집 안에서 다룬다) 삭제만은 저장 전에 알려야 한다 — 되돌리려면 번역문을
+  // 다시 타이핑해야 하기 때문이다
+  const removing = editing
+    ? LANGUAGE_CODES.filter(
+        (code) =>
+          code !== 'KO' &&
+          findTranslation(editing.translations, code) &&
+          !values[fieldKey('name', code)].trim(),
+      )
+    : []
 
   return (
     <div className={styles.screen}>
@@ -122,6 +169,12 @@ function MenuEditForm() {
             </SegmentedControlItem>
           ))}
         </SegmentedControl>
+        {removing.length > 0 && (
+          <Callout
+            tone="critical"
+            description={`${removing.join('·')} 번역을 삭제합니다. 저장하면 그 언어로 보는 학생에게 이 메뉴가 사라집니다.`}
+          />
+        )}
 
         <TextField
           label="이름"
