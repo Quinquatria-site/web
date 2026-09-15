@@ -136,6 +136,12 @@ function NoticeEditForm() {
     // 반대라서, 입력 순서 그대로 두면 목만 다른 모양이 된다.
     translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
 
+    // 지우기 전에 원본을 붙잡는다. upsertNotice 가 NOTICES 의 항목을 새 객체로
+    // 갈아끼우므로 editing 은 이전 상태를 그대로 들고 있다
+    const undo = removing
+      .map((code) => editing && findTranslation(editing.translations, code))
+      .filter((t): t is NoticeTranslation => Boolean(t))
+
     const draft: NoticeDraft = { id, type, translations }
     const saved = upsertNotice(draft)
 
@@ -146,12 +152,31 @@ function NoticeEditForm() {
       if (rejected) return setError(rejected)
     }
 
-    snackbar.create({
-      timeout: 3000,
-      render: () => (
-        <Snackbar message={`${values.title_KO} 저장했습니다 (${TYPE_LABELS[saved.type]} 공지)`} />
-      ),
-    })
+    // 번역을 지웠으면 무엇을 지웠는지 밝히고 되돌릴 틈을 준다. 공지 삭제와 같은
+    // 정책이다 — 지워진 번역문은 다시 타이핑해야 해서 실수의 대가가 크다.
+    // 되돌리기는 upsertNotice 로 충분하다. 언어별 병합이라(§5.2) 지운 언어만
+    // 다시 넣고 나머지는 건드리지 않는다
+    snackbar.create(
+      undo.length > 0
+        ? {
+            timeout: 6000,
+            render: () => (
+              <Snackbar
+                message={`${values.title_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
+                actionLabel="실행취소"
+                onAction={() => upsertNotice({ id: saved.id, type: saved.type, translations: undo })}
+              />
+            ),
+          }
+        : {
+            timeout: 3000,
+            render: () => (
+              <Snackbar
+                message={`${values.title_KO} 저장했습니다 (${TYPE_LABELS[saved.type]} 공지)`}
+              />
+            ),
+          },
+    )
     // navigate(-1) 이 아니다 — 이 화면을 새로고침하거나 링크로 바로 열면
     // 뒤로 갈 곳이 admin 밖이다
     navigate('/notices')
@@ -275,7 +300,7 @@ function NoticeEditForm() {
         </TextField>
         <TextField
           label="본문"
-          description="제목만 채우고 본문을 비우면 그 언어는 저장되지 않습니다"
+          description="제목과 본문은 짝입니다. 둘 다 채우거나 둘 다 비워주세요"
           showRequiredIndicator={lang === 'KO'}
           {...bind(fieldKey('content', lang))}
         >
