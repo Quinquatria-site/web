@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from 'react'
 import { MENUS } from './menus'
 import { PLACES } from './places'
 import type { Menu, Place } from './types'
@@ -10,11 +11,34 @@ import type { Menu, Place } from './types'
  * 동작이고, 화면 상단에 따로 알리지 않는다.
  */
 
-let nextId = 900
+let nextId = 100000
 
 export function draftId(): number {
   nextId += 1
   return nextId
+}
+
+/**
+ * 목 배열은 모듈 전역이라 바꿔도 React 가 모른다. 쓰기마다 버전을 올려
+ * useStoreVersion 을 구독한 화면만 다시 그린다. 실제 API 에서는 이 자리가
+ * 쿼리 캐시 무효화가 된다.
+ */
+let version = 0
+const listeners = new Set<() => void>()
+
+function emit(): void {
+  version += 1
+  for (const listener of listeners) listener()
+}
+
+function subscribe(listener: () => void): () => void {
+  listeners.add(listener)
+  return () => listeners.delete(listener)
+}
+
+/** 목 데이터가 바뀔 때마다 값이 달라진다. 목록·지도가 이걸 읽어 다시 그린다 */
+export function useStoreVersion(): number {
+  return useSyncExternalStore(subscribe, () => version)
 }
 
 export function placeById(id: number): Place | undefined {
@@ -26,6 +50,7 @@ export function upsertPlace(place: Place): Place {
   const index = PLACES.findIndex((p) => p.id === place.id)
   if (index >= 0) PLACES[index] = place
   else PLACES.push(place)
+  emit()
   return place
 }
 
@@ -38,12 +63,14 @@ export function deletePlace(id: number): { place: Place; menus: Menu[] } | undef
   for (let i = MENUS.length - 1; i >= 0; i -= 1) {
     if (MENUS[i].place_id === id) menus.unshift(...MENUS.splice(i, 1))
   }
+  emit()
   return { place, menus }
 }
 
 export function restorePlace(place: Place, menus: Menu[]): void {
   PLACES.push(place)
   MENUS.push(...menus)
+  emit()
 }
 
 export function menuById(id: number): Menu | undefined {
@@ -54,15 +81,19 @@ export function upsertMenu(menu: Menu): Menu {
   const index = MENUS.findIndex((m) => m.id === menu.id)
   if (index >= 0) MENUS[index] = menu
   else MENUS.push(menu)
+  emit()
   return menu
 }
 
 export function deleteMenu(id: number): Menu | undefined {
   const index = MENUS.findIndex((m) => m.id === id)
   if (index < 0) return undefined
-  return MENUS.splice(index, 1)[0]
+  const [menu] = MENUS.splice(index, 1)
+  emit()
+  return menu
 }
 
 export function restoreMenu(menu: Menu): void {
   MENUS.push(menu)
+  emit()
 }

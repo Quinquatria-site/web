@@ -19,6 +19,12 @@ const fieldKey = (field: 'name' | 'desc', lang: LanguageCode) => `${field}_${lan
 
 /** 메뉴 편집 (§5.5). 번역 규칙은 장소와 같다 — KO 필수, EN·CHN 선택 */
 export function MenuEditRoute() {
+  const params = useParams()
+  // 장소 편집과 같은 이유로 key 를 준다 — 폼 초기값은 첫 렌더에서만 읽힌다
+  return <MenuEditForm key={params.menuId ?? 'new'} />
+}
+
+function MenuEditForm() {
   const navigate = useNavigate()
   const snackbar = useSnackbarAdapter()
   const params = useParams()
@@ -40,6 +46,8 @@ export function MenuEditRoute() {
   const { values, bind } = useFormFields(initialFields)
 
   const save = () => {
+    // Number('') 은 0 이라 빈 칸이 0원으로 새어 들어간다. 먼저 거른다
+    if (!values.price.trim()) return setError('가격을 입력해주세요.')
     const price = Number(values.price)
     // §2.2 — price 는 원 단위 0 이상 정수
     if (!Number.isInteger(price) || price < 0)
@@ -64,7 +72,7 @@ export function MenuEditRoute() {
     const menu: Menu = {
       id,
       place_id: placeId,
-      image_url: editing?.image_url ?? '',
+      image_url: editing?.image_url ?? null,
       price,
       translations,
     }
@@ -73,14 +81,14 @@ export function MenuEditRoute() {
       timeout: 3000,
       render: () => <Snackbar message={`${values.name_KO} 저장했습니다`} />,
     })
-    navigate(-1)
+    navigate(`/places/${placeId}`)
   }
 
   const remove = () => {
     if (!editing) return
     const removed = deleteMenu(editing.id)
     if (!removed) return
-    navigate(-1)
+    navigate(`/places/${placeId}`)
     snackbar.create({
       timeout: 6000,
       render: () => (

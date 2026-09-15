@@ -33,7 +33,8 @@ export interface CategoryTranslation {
 export interface Category {
   id: number
   code: CategoryCode
-  category_icon_uri: string
+  /** 아이콘 S3 key. 없으면 null (§5.3) */
+  category_icon_uri: string | null
   translations: CategoryTranslation[]
 }
 
@@ -56,7 +57,8 @@ export interface Place {
   y: number
   start_hour: string
   end_hour: string
-  place_image_uri: string[]
+  /** 순서가 보존되는 이미지 목록. 없으면 null — 빈 배열은 422 다 (§5.4) */
+  place_image_uri: string[] | null
   translations: PlaceTranslation[]
 }
 
@@ -71,7 +73,8 @@ export interface MenuTranslation {
 export interface Menu {
   id: number
   place_id: number
-  image_url: string
+  /** 메뉴 이미지 S3 key. 없으면 null (§5.5) */
+  image_url: string | null
   /** 원 단위 0 이상 정수 (§2.2) */
   price: number
   translations: MenuTranslation[]

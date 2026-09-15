@@ -37,6 +37,14 @@
   display: none;
 }
 
+.empty {
+  padding: var(--seed-dimension-x10) var(--seed-dimension-x4);
+  font-size: var(--seed-font-size-t5);
+  line-height: var(--seed-line-height-t5);
+  color: var(--seed-color-fg-neutral-subtle);
+  text-align: center;
+}
+
 /* 번역 누락 배지. §2.4 — 없는 언어 사용자에게는 이 항목이 안 보인다 */
 .langWarn {
   font-size: var(--seed-font-size-t2);

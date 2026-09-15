@@ -1,14 +1,18 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { Chip } from 'seed-design/ui/chip'
 import { List, ListButtonItem } from 'seed-design/ui/list'
 import { CATEGORIES, categoryById } from '../mocks/categories'
 import { PLACES } from '../mocks/places'
+import { useStoreVersion } from '../mocks/store'
 import { findTranslation, missingLanguages, type Place } from '../mocks/types'
 import styles from './PlacesRoute.module.css'
 
-/** ISO datetime 에서 HH:mm 만 뽑는다. 운영 시간 표시용 */
+/**
+ * ISO datetime 에서 HH:mm 만 뽑는다. 운영 시간 표시용.
+ * offset 을 보지 않으므로 값이 KST(+09:00)라고 가정한다 (#10 에서 확인할 것).
+ */
 function hhmm(iso: string): string {
   return iso.slice(11, 16)
 }
@@ -41,15 +45,16 @@ function LangBadge({ place }: { place: Place }) {
 export function PlacesRoute() {
   const navigate = useNavigate()
   const [filter, setFilter] = useState<string>('all')
+  // 삭제·실행취소가 이 목록에 바로 반영되게 한다
+  useStoreVersion()
 
-  const places = useMemo(() => {
-    const sorted = [...PLACES].sort(
-      (a, b) =>
-        a.category_id - b.category_id || a.category_sequence - b.category_sequence || a.id - b.id,
-    )
-    if (filter === 'all') return sorted
-    return sorted.filter((p) => p.category_id === Number(filter))
-  }, [filter])
+  // 메모하지 않는다. PLACES 는 목 스토어가 제자리에서 바꾸는 배열이라
+  // 의존성으로 적을 것이 없고, 수십 건 정렬은 렌더마다 해도 싸다
+  const sorted = [...PLACES].sort(
+    (a, b) =>
+      a.category_id - b.category_id || a.category_sequence - b.category_sequence || a.id - b.id,
+  )
+  const places = filter === 'all' ? sorted : sorted.filter((p) => p.category_id === Number(filter))
 
   return (
     <div className={styles.screen}>
@@ -76,6 +81,13 @@ export function PlacesRoute() {
       </div>
 
       <div className={styles.list}>
+        {places.length === 0 && (
+          <p className={styles.empty}>
+            {filter === 'all'
+              ? '아직 등록된 장소가 없습니다.'
+              : '이 종류에는 아직 장소가 없습니다.'}
+          </p>
+        )}
         <List>
           {places.map((place) => (
             <ListButtonItem
