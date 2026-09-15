@@ -1,0 +1,58 @@
+/* 장소 편집 화면과 같은 여백·간격을 쓴다. 두 편집 화면이 따로 놀지 않게 */
+.screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--seed-dimension-x5);
+  padding: var(--seed-dimension-x4);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x3);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--seed-font-size-t4);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t5);
+  color: var(--seed-color-fg-neutral);
+}
+
+/* SEED 의 SegmentedControl 은 label 을 받지 않아 직접 붙인다 */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x2);
+}
+
+.label {
+  font-size: var(--seed-font-size-t3);
+  font-weight: var(--seed-font-weight-medium);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral);
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--seed-font-size-t2);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+.langMissing {
+  color: var(--seed-color-fg-critical);
+}
+
+.footer {
+  display: flex;
+  gap: var(--seed-dimension-x2);
+  margin-top: var(--seed-dimension-x2);
+}
+
+.footer > :last-child {
+  margin-left: auto;
+}

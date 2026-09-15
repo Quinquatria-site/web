@@ -5,7 +5,8 @@ import styles from './HomeRoute.module.css'
  * 편집은 각 탭으로 보낸다.
  *
  * 여기 올릴 것은 현재 API 로 계산할 수 있는 것만이다.
- * - 지금·다음 공연 (start_at·end_at 을 클라이언트에서 비교)
+ * - 지금 공연 (is_live 를 그대로 읽는다. 공연에 시각이 없어 클라이언트가
+ *   계산하지 않는다 — api.md §5.6)
  * - 운영 중인 장소 수 (start_hour~end_hour 안에 있는 것)
  * - 미반환 분실물 수 (is_returned=false)
  * - 최근 공지 몇 건
