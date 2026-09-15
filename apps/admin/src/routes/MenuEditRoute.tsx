@@ -6,6 +6,7 @@ import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { TextField, TextFieldInput } from 'seed-design/ui/text-field'
 import { useFormFields } from '../lib/useFormFields'
+import { ConfirmDialog, PhotoPicker } from '../ui'
 import {
   deleteMenu,
   deleteMenuTranslation,
@@ -42,6 +43,9 @@ function MenuEditForm() {
 
   const [lang, setLang] = useState<LanguageCode>('KO')
   const [error, setError] = useState<string | null>(null)
+  const [confirming, setConfirming] = useState(false)
+  // image_url 은 단수지만 picker 는 배열로 다룬다. 저장할 때만 접는다
+  const [photos, setPhotos] = useState<string[]>(editing?.image_url ? [editing.image_url] : [])
 
   const initialFields: Record<string, string> = {
     price: editing ? String(editing.price) : '',
@@ -82,7 +86,7 @@ function MenuEditForm() {
     const menu: Menu = {
       id,
       place_id: placeId,
-      image_url: editing?.image_url ?? null,
+      image_url: photos[0] ?? null,
       price,
       translations,
     }
@@ -125,6 +129,7 @@ function MenuEditForm() {
     const removed = deleteMenu(editing.id)
     if (!removed) return
     navigate(`/places/${placeId}`)
+    // 확인을 받고 지웠더라도 실행취소는 남긴다. 확인은 실수를, 이쪽은 변심을 받는다
     snackbar.create({
       timeout: 6000,
       render: () => (
@@ -151,6 +156,16 @@ function MenuEditForm() {
 
   return (
     <div className={styles.screen}>
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>사진</h2>
+        <PhotoPicker
+          value={photos}
+          onChange={setPhotos}
+          max={1}
+          label={values.name_KO.trim() || '메뉴'}
+        />
+      </div>
+
       <div className={styles.section}>
         <TextField label="가격 (원)" {...bind('price')}>
           <TextFieldInput inputMode="numeric" placeholder="5000" />
@@ -190,10 +205,22 @@ function MenuEditForm() {
 
       {editing && (
         <div className={styles.dangerZone}>
-          <ActionButton size="medium" variant="criticalSolid" onClick={remove}>
+          <ActionButton size="medium" variant="criticalSolid" onClick={() => setConfirming(true)}>
             이 메뉴 삭제
           </ActionButton>
         </div>
+      )}
+
+      {editing && (
+        <ConfirmDialog
+          open={confirming}
+          onOpenChange={setConfirming}
+          title="이 메뉴를 삭제할까요?"
+          // 편집 중인 입력값이 아니라 저장된 이름을 보여준다
+          description={findTranslation(editing.translations, 'KO')?.name ?? `메뉴 ${editing.id}`}
+          confirmLabel="삭제"
+          onConfirm={remove}
+        />
       )}
 
       <div className={styles.footer}>

@@ -1,6 +1,7 @@
 import { IconCameraLine, IconXmarkLine } from '@karrotmarket/react-monochrome-icon'
 import { useRef, useState } from 'react'
 import { imageSrc } from '../../lib/imageSrc'
+import { PhotoViewer } from '../PhotoViewer'
 import { uploadImage } from '../../mocks/upload'
 import styles from './PhotoPicker.module.css'
 
@@ -33,6 +34,7 @@ export interface PhotoPickerProps {
 export function PhotoPicker({ value, onChange, max = 10, label }: PhotoPickerProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<string | null>(null)
+  const [opened, setOpened] = useState<string | null>(null)
 
   const room = max - value.length
 
@@ -61,7 +63,19 @@ export function PhotoPicker({ value, onChange, max = 10, label }: PhotoPickerPro
       <div className={styles.grid}>
         {value.map((key, index) => (
           <div key={key} className={styles.thumb}>
-            <img className={styles.photo} src={imageSrc(key)} alt={`${label} 사진 ${index + 1}`} />
+            {/* 삭제 버튼과 형제다 — 버튼 안에 버튼을 넣을 수 없다 */}
+            <button
+              type="button"
+              className={styles.open}
+              aria-label={`${label} 사진 ${index + 1} 크게 보기`}
+              onClick={() => setOpened(key)}
+            >
+              <img
+                className={styles.photo}
+                src={imageSrc(key)}
+                alt={`${label} 사진 ${index + 1}`}
+              />
+            </button>
             <button
               type="button"
               className={styles.remove}
@@ -89,6 +103,13 @@ export function PhotoPicker({ value, onChange, max = 10, label }: PhotoPickerPro
       </div>
 
       {error && <p className={styles.error}>{error}</p>}
+
+      <PhotoViewer
+        key={opened ?? 'closed'}
+        uri={opened}
+        onClose={() => setOpened(null)}
+        label={label}
+      />
 
       <input
         ref={inputRef}

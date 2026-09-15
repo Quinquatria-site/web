@@ -1,60 +1,19 @@
 import { IconMapLine, IconPlusLine } from '@karrotmarket/react-monochrome-icon'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import { Badge, Icon } from '@seed-design/react'
+import { ContextualFloatingButton, Icon } from '@seed-design/react'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { Chip } from 'seed-design/ui/chip'
 import { ChipTabsList, ChipTabsRoot, ChipTabsTrigger } from 'seed-design/ui/chip-tabs'
 import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
 import { List, ListButtonItem } from 'seed-design/ui/list'
-import { CATEGORIES, categoryById } from '../mocks/categories'
+import { detailOf } from '../lib/placeText'
+import { CATEGORIES } from '../mocks/categories'
 import { PLACES } from '../mocks/places'
 import { useStoreVersion } from '../mocks/store'
-import {
-  findTranslation,
-  hasMissingTranslations,
-  missingLanguages,
-  type Place,
-} from '../mocks/types'
+import { findTranslation, hasMissingTranslations } from '../mocks/types'
+import { LangBadge } from '../ui'
 import styles from './PlacesRoute.module.css'
-
-/**
- * ISO datetime 에서 HH:mm 만 뽑는다. 운영 시간 표시용.
- * offset 을 보지 않으므로 값이 KST(+09:00)라고 가정한다 (#10 에서 확인할 것).
- */
-function hhmm(iso: string): string {
-  return iso.slice(11, 16)
-}
-
-function detailOf(place: Place): string {
-  const category = categoryById(place.category_id)
-  const label = category ? findTranslation(category.translations, 'KO')?.name : ''
-  const college = findTranslation(place.translations, 'KO')?.host_college
-  return [
-    `${label} ${place.category_sequence}번`,
-    `${hhmm(place.start_hour)}~${hhmm(place.end_hour)}`,
-    college,
-  ]
-    .filter(Boolean)
-    .join(' · ')
-}
-
-/** 번역 상태. 빠진 언어가 있으면 그 언어 사용자에게 이 장소가 안 보인다 (§2.4) */
-function LangBadge({ place }: { place: Place }) {
-  const missing = missingLanguages(place.translations)
-  // weak — 목록처럼 같은 배지가 줄줄이 반복되는 자리에 solid 는 너무 시끄럽다
-  if (missing.length === 0)
-    return (
-      <Badge tone="neutral" variant="weak">
-        3개 언어
-      </Badge>
-    )
-  return (
-    <Badge tone="critical" variant="weak">
-      {missing.join('·')} 없음
-    </Badge>
-  )
-}
 
 /**
  * 빈 목록. 막다른 길을 만들지 않으려고 나갈 문을 같이 둔다.
@@ -151,12 +110,6 @@ export function PlacesRoute() {
         >
           <Chip.Label>번역 누락 {missingCount}</Chip.Label>
         </Chip.Toggle>
-
-        {/* 칩과 같은 알약 모양이라 그냥 두면 또 하나의 필터처럼 읽힌다. 외곽선으로 갈라놓는다 */}
-        <ActionButton size="small" variant="neutralOutline" onClick={() => navigate('/places/map')}>
-          <Icon svg={<IconMapLine />} />
-          지도에서 보기
-        </ActionButton>
       </div>
 
       <div className={styles.list}>
@@ -176,7 +129,7 @@ export function PlacesRoute() {
                 key={place.id}
                 title={findTranslation(place.translations, 'KO')?.name ?? `장소 ${place.id}`}
                 detail={detailOf(place)}
-                suffix={<LangBadge place={place} />}
+                suffix={<LangBadge translations={place.translations} />}
                 onClick={() => navigate(`/places/${place.id}`)}
               />
             ))}
@@ -184,13 +137,21 @@ export function PlacesRoute() {
         )}
       </div>
 
-      {/* 한 손 엄지가 닿는 우하단. 목록을 끝까지 내려도 자리를 지킨다 */}
-      <FloatingActionButton
-        className={styles.fab}
-        icon={<IconPlusLine />}
-        label="장소 추가"
-        onClick={() => navigate('/places/new')}
-      />
+      {/* 한 손 엄지가 닿는 바닥. 목록을 끝까지 내려도 자리를 지킨다.
+          지도는 보조라 왼쪽, 장소 추가는 주 액션이라 엄지가 가장 편한 오른쪽이다 */}
+      <div className={styles.floatRow}>
+        {/* layer — 브랜드 solid 인 장소 추가와 같은 무게로 경쟁하면 안 된다 */}
+        <ContextualFloatingButton variant="layer" onClick={() => navigate('/places/map')}>
+          <Icon svg={<IconMapLine />} />
+          지도
+        </ContextualFloatingButton>
+
+        <FloatingActionButton
+          icon={<IconPlusLine />}
+          label="장소 추가"
+          onClick={() => navigate('/places/new')}
+        />
+      </div>
     </div>
   )
 }

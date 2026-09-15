@@ -57,6 +57,21 @@ const HOURS: Record<number, [string, string]> = {
 
 const TBD: Localized = { ko: '[미정]', en: '[TBD]', cha: '[待定]' }
 
+/** 사진이 없는 게 정상인 시설. 의무실·팔찌 수령소는 null 로 남긴다 */
+const PHOTOLESS_CATEGORIES = new Set([4, 5])
+
+/**
+ * 목 사진 key. 업로드 플로우(#14) 전까지 화면 모양을 보려고 채운다.
+ *
+ * 값은 명세대로 S3 key 꼴이다 — 경로가 아니다. 주소로 바꾸는 일은 lib/imageSrc 가
+ * 맡는다. 장수를 섞어 배열이 여러 장을 담는다는 것이 화면에서 보이게 한다.
+ */
+function mockImages(id: number, categoryId: number): string[] | null {
+  if (PHOTOLESS_CATEGORIES.has(categoryId)) return null
+  const count = (id % 3) + 1
+  return Array.from({ length: count }, (_, i) => `images/place/mock-${id}-${i + 1}.webp`)
+}
+
 function build(
   id: number,
   categoryId: number,
@@ -77,7 +92,7 @@ function build(
     y,
     start_hour: start,
     end_hour: end,
-    place_image_uri: null,
+    place_image_uri: mockImages(id, categoryId),
     translations: toTranslations(id, layoutId, name, host, description),
   }
 }

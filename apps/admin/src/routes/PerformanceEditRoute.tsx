@@ -7,6 +7,7 @@ import { SelectContent, SelectItem, SelectRoot, SelectTrigger } from 'seed-desig
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/text-field'
 import { useFormFields } from '../lib/useFormFields'
+import { ConfirmDialog } from '../ui'
 import {
   deletePerformance,
   deletePerformanceTranslation,
@@ -73,6 +74,7 @@ function PerformanceEditForm() {
   const [type, setType] = useState<PerformanceType>(editing?.type ?? 'STUDENT')
   const [date, setDate] = useState<string>(editing?.date ?? initialDate)
   const [error, setError] = useState<string | null>(null)
+  const [confirming, setConfirming] = useState(false)
 
   const initialFields: Record<string, string> = {}
   for (const code of LANGUAGE_CODES) {
@@ -160,7 +162,7 @@ function PerformanceEditForm() {
     const removed = deletePerformance(editing.id)
     if (!removed) return
     backToList(removed.date)
-    // 확인 다이얼로그 대신 실행취소 — 현장 한 손 조작에서는 이쪽이 안전하다
+    // 확인을 받고 지웠더라도 실행취소는 남긴다. 확인은 실수를, 이쪽은 변심을 받는다
     snackbar.create({
       timeout: 6000,
       render: () => (
@@ -267,10 +269,26 @@ function PerformanceEditForm() {
       {/* 되돌릴 수 없는 액션이라 저장 옆에 두지 않는다. 일부러 내려와야 닿는 자리다 */}
       {editing && (
         <div className={styles.dangerZone}>
-          <ActionButton size="medium" variant="criticalSolid" onClick={remove}>
+          <ActionButton size="medium" variant="criticalSolid" onClick={() => setConfirming(true)}>
             이 공연 삭제
           </ActionButton>
         </div>
+      )}
+
+      {editing && (
+        <ConfirmDialog
+          open={confirming}
+          onOpenChange={setConfirming}
+          title="이 공연을 삭제할까요?"
+          // 편집 중인 입력값이 아니라 저장된 제목을 보여준다.
+          // 삭제하면 그 일차의 seq 가 다시 매겨지므로(§5.6) 그것도 같이 알린다
+          description={[
+            findTranslation(editing.translations, 'KO')?.title ?? `공연 ${editing.id}`,
+            `${festivalDayLabel(editing.date)} 순서가 다시 매겨집니다`,
+          ].join(' · ')}
+          confirmLabel="삭제"
+          onConfirm={remove}
+        />
       )}
 
       {/* 스크롤 위치와 무관하게 닿는 하단 고정 바. 오류도 여기 붙어야 보인다 */}

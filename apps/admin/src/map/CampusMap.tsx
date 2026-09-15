@@ -1,4 +1,4 @@
-import { CRS } from 'leaflet'
+import { CRS, type Map as LeafletMap } from 'leaflet'
 import { useEffect, type ReactNode } from 'react'
 import { ImageOverlay, MapContainer, Rectangle, Tooltip, useMap, useMapEvents } from 'react-leaflet'
 import {
@@ -37,11 +37,27 @@ function PickLayer({ onPick }: { onPick: (point: Point) => void }) {
   return null
 }
 
+/**
+ * 마커가 아닌 빈 곳을 눌렀을 때.
+ *
+ * 마커(CircleMarker)는 Path 라 기본값이 bubblingMouseEvents: true 다. 그대로
+ * 두면 마커 클릭이 여기까지 올라와, 마커를 눌러 연 시트가 같은 클릭으로 바로
+ * 닫힌다. 마커 쪽에서 bubblingMouseEvents: false 로 끊어야 한다.
+ */
+function BackgroundClick({ onClick }: { onClick: () => void }) {
+  useMapEvents({ click: onClick })
+  return null
+}
+
 export interface CampusMapProps {
   /** 지도를 누르면 배치 도면 좌표를 돌려준다. 좌표 픽커 모드 */
   onPick?: (point: Point) => void
   /** 구역 A~D 사각형 표시 */
   showZones?: boolean
+  /** 마커가 아닌 빈 곳 클릭. 시트 닫기에 쓴다 */
+  onBackgroundClick?: () => void
+  /** 지도 인스턴스를 밖으로 넘긴다. 시트가 덮는 만큼 영역을 줄일 때 쓴다 */
+  onMapReady?: (map: LeafletMap | null) => void
   children?: ReactNode
   className?: string
 }
@@ -50,10 +66,18 @@ export interface CampusMapProps {
  * user 앱(mock/design-system)의 campus-map 을 admin 용으로 단순화한 것.
  * 바텀시트·필터 없이 이미지 오버레이 + 마커(children) + 클릭 픽커만 남겼다.
  */
-export function CampusMap({ onPick, showZones = true, children, className }: CampusMapProps) {
+export function CampusMap({
+  onPick,
+  showZones = true,
+  onBackgroundClick,
+  onMapReady,
+  children,
+  className,
+}: CampusMapProps) {
   return (
     <MapContainer
       className={className}
+      ref={onMapReady}
       crs={CRS.Simple}
       bounds={IMAGE_BOUNDS}
       maxBounds={IMAGE_BOUNDS}
@@ -80,6 +104,7 @@ export function CampusMap({ onPick, showZones = true, children, className }: Cam
         ))}
       {children}
       {onPick && <PickLayer onPick={onPick} />}
+      {onBackgroundClick && <BackgroundClick onClick={onBackgroundClick} />}
     </MapContainer>
   )
 }

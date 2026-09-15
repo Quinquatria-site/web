@@ -1,12 +1,66 @@
 .screen {
   display: flex;
   flex: 1;
+
+  /* 시트의 기준 상자. 뷰포트가 아니라 여기 바닥에 눕는다 */
+  position: relative;
   flex-direction: column;
   min-height: 0;
+
+  /* 시트가 덮는 만큼 지도 영역에서 뺀다. Leaflet 이 실제로 보이는 넓이를 알아야
+     maxBounds 계산과 가운데 정렬이 맞고, 마커가 시트 뒤로 숨지 않는다.
+     .map 의 margin 이 아니라 여기 padding 인 이유는 CampusMap 이 MapContainer 에
+     인라인으로 height: 100% 를 박기 때문이다 — content box 를 줄이면 인라인이
+     이기든 flex 가 이기든 같은 높이가 나온다.
+     transition 은 걸지 않는다 — invalidateSize 가 전환 중간 크기를 읽는다 */
+  padding-bottom: var(--sheet-inset, 0px);
 }
 
 /* Leaflet 은 컨테이너에 명시적 높이가 있어야 그린다 */
 .map {
   flex: 1;
   min-height: 0;
+}
+
+/* 사진이 있을 때만 그려지므로 여백도 여기 붙는다 */
+.photos {
+  margin-bottom: var(--seed-dimension-x3);
+}
+
+.detail {
+  margin: 0;
+  font-size: var(--seed-font-size-t3);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+.badges {
+  display: flex;
+  gap: var(--seed-dimension-x1);
+  margin-top: var(--seed-dimension-x2);
+}
+
+.description {
+  /* 시트는 지도를 덮지 않는 선에서만 쓴다. 길면 두 줄로 자른다 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: var(--seed-dimension-x3) 0 0;
+  font-size: var(--seed-font-size-t3);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral);
+}
+
+.meta {
+  margin: var(--seed-dimension-x2) 0 0;
+  font-size: var(--seed-font-size-t2);
+  line-height: var(--seed-line-height-t2);
+  color: var(--seed-color-fg-neutral-subtle);
+}
+
+/* 시트 폭을 채운다 — 한 손 엄지로 겨냥하기 쉽게 */
+.edit {
+  width: 100%;
+  margin-top: var(--seed-dimension-x4);
 }
