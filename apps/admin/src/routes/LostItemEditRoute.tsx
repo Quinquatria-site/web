@@ -20,6 +20,7 @@ import {
   type LanguageCode,
   type LostItemTranslation,
 } from '../mocks/types'
+import { PhotoPicker } from '../ui'
 import styles from './LostItemEditRoute.module.css'
 
 type TranslationField = 'loc' | 'title' | 'desc'
@@ -51,6 +52,8 @@ function LostItemEditForm() {
   const editing = params.id ? lostItemById(Number(params.id)) : undefined
 
   const [lang, setLang] = useState<LanguageCode>('KO')
+  // 사진만 useFormFields 밖이다. 그쪽은 문자열 전용이고 이건 key 배열이다
+  const [photos, setPhotos] = useState<string[]>(editing?.image_url ? [editing.image_url] : [])
   const [error, setError] = useState<string | null>(null)
 
   const initialFields: Record<string, string> = {}
@@ -67,7 +70,9 @@ function LostItemEditForm() {
     navigate(returned ? '/lost-items?returned=1' : '/lost-items')
 
   const save = () => {
-    // 습득 장소를 제목보다 먼저 검사한다. 화면에서도 위에 있는 칸이다
+    // 화면에 놓인 순서대로 검사한다. 사진이 없으면 나머지를 채워도 주인이
+    // 자기 물건인지 알아볼 수 없어 목록에 있으나 마나다
+    if (photos.length === 0) return setError('사진은 필수입니다. 물건을 찍어 올려주세요.')
     if (!values.loc_KO.trim()) return setError('한국어 습득 장소는 필수입니다.')
     if (!values.title_KO.trim()) return setError('한국어 제목은 필수입니다.')
 
@@ -94,9 +99,8 @@ function LostItemEditForm() {
 
     const draft: LostItemDraft = {
       id,
-      // 사진은 업로드 플로우(#14)가 붙기 전까지 기존 값을 그대로 들고 다닌다.
-      // 저장이 사진을 지우면 안 된다
-      image_url: editing?.image_url ?? null,
+      // 명세는 한 장이고 PhotoPicker 는 목록을 다룬다. 접는 것은 여기 한 곳뿐이다
+      image_url: photos[0] ?? null,
       translations,
     }
     const saved = upsertLostItem(draft)
@@ -134,14 +138,11 @@ function LostItemEditForm() {
       {/*
         사진이 맨 위다. 이슈가 정한 순서(사진 → 습득 장소 → 제목)가 손이 움직이는
         순서이기 때문이다 — 물건을 든 채로는 찍는 것이 가장 먼저고, 타이핑은 뒤로
-        미룰수록 좋다. 업로드 플로우(#14)가 붙으면 여기에 PhotoPicker 가 들어온다.
+        미룰수록 좋다.
       */}
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>사진</h2>
-        <Callout
-          tone="informative"
-          description="사진 등록은 업로드 플로우(#14)가 붙은 뒤에 열립니다. 지금은 글로만 등록됩니다."
-        />
+        <PhotoPicker value={photos} onChange={setPhotos} max={1} label="분실물" />
       </div>
 
       {/*

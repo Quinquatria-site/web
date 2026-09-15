@@ -1,13 +1,14 @@
 import { IconPlusLine } from '@karrotmarket/react-monochrome-icon'
 import { useNavigate, useSearchParams } from 'react-router'
-import { Badge } from '@seed-design/react'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
 import { List, ListButtonItem } from 'seed-design/ui/list'
 import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented-control'
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { lostItemsByReturned, setReturned, useStoreVersion } from '../mocks/store'
-import { dateTimeLabel, findTranslation, missingLanguages, type LostItem } from '../mocks/types'
+import { dateTimeLabel, findTranslation, type LostItem } from '../mocks/types'
+import { imageSrc } from '../lib/imageSrc'
+import { LangBadge } from '../ui'
 import styles from './LostItemsRoute.module.css'
 
 function titleOf(item: LostItem): string {
@@ -18,21 +19,20 @@ function locationOf(item: LostItem): string {
   return findTranslation(item.translations, 'KO')?.found_location ?? ''
 }
 
-/** 번역 상태. 빠진 언어가 있으면 그 언어 사용자에게 이 분실물이 안 보인다 (§2.4) */
-function LangBadge({ item }: { item: LostItem }) {
-  const missing = missingLanguages(item.translations)
-  // weak — 목록처럼 같은 배지가 줄줄이 반복되는 자리에 solid 는 너무 시끄럽다
-  if (missing.length === 0)
-    return (
-      <Badge tone="neutral" variant="weak">
-        3개 언어
-      </Badge>
-    )
-  return (
-    <Badge tone="critical" variant="weak">
-      {missing.join('·')} 없음
-    </Badge>
-  )
+/**
+ * 행 썸네일. 주인은 "검정 장우산" 이라는 글자가 아니라 자기 우산을 알아본다 —
+ * 이 화면에서 사진이 1차 식별 수단이라 제목보다 앞에 둔다.
+ *
+ * alt 를 비우는 이유는 바로 옆 title 이 같은 것을 말하기 때문이다. 채우면
+ * 스크린리더가 한 행에서 물건 이름을 두 번 읽는다.
+ *
+ * image_url 은 화면이 필수로 막지만 타입은 nullable 이다 (§5.8 · 목 데이터).
+ * null 이면 imageSrc 를 부르지 않는다 — 빈 key 를 해시해 엉뚱한 사진을 보여주면
+ * 사진이 있는 것처럼 읽힌다.
+ */
+function Thumb({ item }: { item: LostItem }) {
+  if (!item.image_url) return <div className={styles.thumbEmpty} />
+  return <img className={styles.thumb} src={imageSrc(item.image_url)} alt="" />
 }
 
 /**
@@ -150,6 +150,7 @@ export function LostItemsRoute() {
             {rows.map((item) => (
               <ListButtonItem
                 key={item.id}
+                prefix={<Thumb item={item} />}
                 title={<span className={styles.title}>{titleOf(item)}</span>}
                 detail={
                   <span className={styles.detail}>
@@ -157,7 +158,7 @@ export function LostItemsRoute() {
                     {/* 등록 시각이 곧 습득 시각이다. 주인이 "언제 잃어버렸는지" 로
                         찾아오므로 장소와 나란히 보여야 한다 */}
                     <span className={styles.time}>{dateTimeLabel(item.created_at)}</span>
-                    <LangBadge item={item} />
+                    <LangBadge translations={item.translations} />
                   </span>
                 }
                 suffix={

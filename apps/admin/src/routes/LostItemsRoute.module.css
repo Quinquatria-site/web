@@ -37,9 +37,20 @@
   bottom: var(--seed-dimension-x4);
 }
 
-/* 제목이 길면 반환 버튼을 밀어낸다. 버튼이 스위치보다 넓어 밀리는 정도가 크다.
-   두 줄까지만 보이고 나머지는 자른다 — 무엇을 주웠는지는 사진이 먼저 말하므로
-   제목이 다 안 보여도 덜 치명적이다 */
+/* 편집 화면 피커의 96px 절반. 행 높이를 키우지 않으면서 무엇인지는 알아볼 크기다 */
+.thumb,
+.thumbEmpty {
+  display: block;
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: var(--seed-radius-r2);
+  background: var(--seed-color-bg-neutral-weak);
+}
+
+/* 한 행이 썸네일·제목·버튼 셋이라 제목에 남는 폭이 좁다. 두 줄까지만 보이고
+   나머지는 자른다 — 무엇을 주웠는지는 사진이 먼저 말하므로 제목이 다 안 보여도
+   덜 치명적이다 */
 .title {
   display: block;
   min-width: 0;
