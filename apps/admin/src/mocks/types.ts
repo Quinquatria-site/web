@@ -100,10 +100,20 @@ export type PerformanceType = (typeof PERFORMANCE_TYPES)[number]
 export const FESTIVAL_DATES = ['2026-10-06', '2026-10-07'] as const
 export type FestivalDate = (typeof FESTIVAL_DATES)[number]
 
-/** "2026-10-06" → "1일차". 목록·편집 화면이 함께 쓴다 */
+/** "2026-10-06" → "10/6". 장소의 운영 일자처럼 날짜만 필요한 자리 */
+export function festivalDateLabel(date: string): string {
+  return `${Number(date.slice(5, 7))}/${Number(date.slice(8, 10))}`
+}
+
+/**
+ * "2026-10-06" → "1일차 (10/6)".
+ *
+ * PRD §5-2 는 공연 타임라인을 일차로 묶는다고 하고 운영자는 날짜로 생각한다.
+ * 둘 다 보여준다. 장소의 "운영 일자" 는 날짜만 쓰므로 festivalDateLabel 이다.
+ */
 export function festivalDayLabel(date: string): string {
   const index = FESTIVAL_DATES.indexOf(date as FestivalDate)
-  return index < 0 ? date : `${index + 1}일차`
+  return index < 0 ? date : `${index + 1}일차 (${festivalDateLabel(date)})`
 }
 
 export interface PerformanceTranslation {
@@ -148,4 +158,15 @@ export function findTranslation<T extends { language_code: LanguageCode }>(
 /** 빠진 번역 언어 목록. Customer API 는 없는 언어의 항목을 목록에서 빼므로(§2.4) 경고에 쓴다 */
 export function missingLanguages(translations: { language_code: LanguageCode }[]): LanguageCode[] {
   return LANGUAGE_CODES.filter((code) => !translations.some((t) => t.language_code === code))
+}
+
+/**
+ * 번역이 빠진 언어가 하나라도 있는지. 목록의 "번역 누락만 보기" 필터가 쓴다.
+ * 빠진 언어 사용자에게는 이 항목이 목록에서 아예 사라지므로(§2.4), 이 판정에
+ * 걸린 것들이 곧 "지금 외국인에게 안 보이는 것" 목록이다.
+ */
+export function hasMissingTranslations(
+  translations: { language_code: LanguageCode }[],
+): boolean {
+  return missingLanguages(translations).length > 0
 }

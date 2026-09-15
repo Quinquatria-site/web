@@ -1,18 +1,28 @@
-import { IconChevronDownLine, IconChevronUpLine } from '@karrotmarket/react-monochrome-icon'
+import {
+  IconArrowUpArrowDownLine,
+  IconChevronDownLine,
+  IconChevronUpLine,
+  IconPlusLine,
+} from '@karrotmarket/react-monochrome-icon'
 import clsx from 'clsx'
-import { useReducer, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
+import { Badge, Icon } from '@seed-design/react'
 import { ActionButton } from 'seed-design/ui/action-button'
+import { Callout } from 'seed-design/ui/callout'
 import { Chip } from 'seed-design/ui/chip'
+import { ChipTabsList, ChipTabsRoot, ChipTabsTrigger } from 'seed-design/ui/chip-tabs'
+import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
 import { List, ListButtonItem, ListItem } from 'seed-design/ui/list'
 import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented-control'
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { Switch } from 'seed-design/ui/switch'
-import { performancesByDate, reorderPerformances, setLive } from '../mocks/store'
+import { performancesByDate, reorderPerformances, setLive, useStoreVersion } from '../mocks/store'
 import {
   FESTIVAL_DATES,
   festivalDayLabel,
   findTranslation,
+  hasMissingTranslations,
   missingLanguages,
   PERFORMANCE_TYPES,
   type Performance,
@@ -31,11 +41,65 @@ function titleOf(performance: Performance): string {
   return findTranslation(performance.translations, 'KO')?.title ?? `공연 ${performance.id}`
 }
 
-/** 번역 상태. 장소 목록과 같은 표시를 쓴다 — 빠진 언어가 있으면 그 언어 사용자에게 안 보인다 (§2.4) */
+/** 번역 상태. 빠진 언어가 있으면 그 언어 사용자에게 이 공연이 안 보인다 (§2.4) */
 function LangBadge({ performance }: { performance: Performance }) {
   const missing = missingLanguages(performance.translations)
-  if (missing.length === 0) return <span className={styles.langOk}>3개 언어</span>
-  return <span className={styles.langWarn}>{missing.join('·')} 없음</span>
+  // weak — 목록처럼 같은 배지가 줄줄이 반복되는 자리에 solid 는 너무 시끄럽다
+  if (missing.length === 0)
+    return (
+      <Badge tone="neutral" variant="weak">
+        3개 언어
+      </Badge>
+    )
+  return (
+    <Badge tone="critical" variant="weak">
+      {missing.join('·')} 없음
+    </Badge>
+  )
+}
+
+/**
+ * 빈 목록. 막다른 길을 만들지 않으려고 나갈 문을 같이 둔다.
+ * 번역 누락 필터가 0건인 것은 나쁜 소식이 아니라 좋은 소식이라 따로 말한다.
+ */
+function Empty({
+  filtered,
+  missingOnly,
+  date,
+  onReset,
+}: {
+  filtered: boolean
+  missingOnly: boolean
+  date: string
+  onReset: () => void
+}) {
+  const navigate = useNavigate()
+  const title = missingOnly
+    ? '번역이 빠진 공연이 없습니다'
+    : filtered
+      ? '이 유형에는 아직 공연이 없습니다'
+      : '이 일차에는 아직 공연이 없습니다'
+  const description = missingOnly
+    ? '이 일차는 세 언어가 모두 채워져 있습니다.'
+    : filtered
+      ? '다른 유형을 보거나, 여기에 새 공연을 추가하세요.'
+      : '오른쪽 아래 공연 추가 버튼을 눌러 시작하세요.'
+
+  return (
+    <div className={styles.empty}>
+      <p className={styles.emptyTitle}>{title}</p>
+      <p className={styles.emptyDescription}>{description}</p>
+      {filtered || missingOnly ? (
+        <ActionButton size="medium" variant="neutralWeak" onClick={onReset}>
+          전체 보기
+        </ActionButton>
+      ) : (
+        <ActionButton size="medium" onClick={() => navigate(`/performances/new?date=${date}`)}>
+          공연 추가
+        </ActionButton>
+      )}
+    </div>
+  )
 }
 
 /**
@@ -59,26 +123,29 @@ export function PerformancesRoute() {
     : FESTIVAL_DATES[0]
 
   const [typeFilter, setTypeFilter] = useState<string>('all')
+  const [missingOnly, setMissingOnly] = useState(false)
   /** null 이 아니면 순서 편집 중. 확정 전까지는 이 배열만 움직인다 */
   const [order, setOrder] = useState<number[] | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  // 목을 직접 고치는 구조라 저장 뒤에는 다시 읽어야 화면이 따라온다.
-  // 실제 API(#10)가 붙으면 reload 가 재조회가 된다.
-  //
-  // 목록을 state 에 복사해 두지 않고 렌더마다 다시 만든다. date 가 URL 에서
-  // 오기 때문에 뒤로가기나 링크로 ?date= 만 바뀌는 경우가 있는데, 복사본을
-  // 두면 그때 갱신할 기회가 없어 다른 일차의 목록이 그대로 남는다.
-  // 목 배열을 직접 고치므로 React 가 바뀐 걸 알 방법이 없다. reload 는 다시
-  // 그리라는 신호일 뿐이고, 목록 자체는 렌더마다 새로 만든다. 한 일차가 많아야
-  // 수십 건이라 memo 로 아낄 것이 없다.
-  const [, reload] = useReducer((n: number) => n + 1, 0)
+  // 저장·삭제·실행취소·live 토글이 이 목록에 바로 반영되게 한다
+  useStoreVersion()
+
+  // 메모하지 않는다. PERFORMANCES 는 목 스토어가 제자리에서 바꾸는 배열이라
+  // 의존성으로 적을 것이 없고, 한 일차 수십 건 정렬은 렌더마다 해도 싸다
   const rows = performancesByDate(date)
 
   const reordering = order !== null
+  // 유형과 번역 누락은 다른 축이라 AND 로 건다 — "학생 공연 중 번역 누락"이 보여야 한다
+  const byType = rows.filter((p) => typeFilter === 'all' || p.type === typeFilter)
+  const missingCount = byType.filter((p) => hasMissingTranslations(p.translations)).length
+  // 유형을 옮겨 누락이 0 이 되면 켜둔 토글이 빈 화면만 남긴다. 그때는 푼다
+  const showMissingOnly = missingOnly && missingCount > 0
   const listed = reordering
     ? order.map((id) => rows.find((p) => p.id === id)).filter((p): p is Performance => Boolean(p))
-    : rows.filter((p) => typeFilter === 'all' || p.type === typeFilter)
+    : showMissingOnly
+      ? byType.filter((p) => hasMissingTranslations(p.translations))
+      : byType
 
   const move = (index: number, delta: number) => {
     if (!order) return
@@ -94,27 +161,22 @@ export function PerformancesRoute() {
     const rejected = reorderPerformances(date, order)
     if (rejected) {
       // 이 422 는 동시 수정 감지다 (§5.6). 내가 든 배열이 이미 틀렸으므로
-      // 붙들고 있어봐야 계속 거부된다 — 최신 상태를 다시 읽고 편집을 닫는다.
+      // 붙들고 있어봐야 계속 거부된다 — 편집을 닫고 최신 목록을 보여준다.
       setError(rejected)
       setOrder(null)
-      reload()
       return
     }
     setOrder(null)
     setError(null)
-    reload()
     snackbar.create({ timeout: 3000, render: () => <Snackbar message="순서를 저장했습니다" /> })
   }
 
   const toggleLive = (performance: Performance, next: boolean) => {
     setLive(performance.id, next)
-    reload()
     snackbar.create({
       timeout: 3000,
       render: () => (
-        <Snackbar
-          message={next ? `지금 공연: ${titleOf(performance)}` : '현재 공연을 내렸습니다'}
-        />
+        <Snackbar message={next ? `지금 공연: ${titleOf(performance)}` : '현재 공연을 내렸습니다'} />
       ),
     })
   }
@@ -126,10 +188,10 @@ export function PerformancesRoute() {
           aria-label="축제 일차"
           value={date}
           onValueChange={(value) => {
-            const next = String(value)
-            setSearchParams({ date: next }, { replace: true })
+            setSearchParams({ date: String(value) }, { replace: true })
             setOrder(null)
             setError(null)
+            setMissingOnly(false)
           }}
         >
           {FESTIVAL_DATES.map((value) => (
@@ -141,87 +203,87 @@ export function PerformancesRoute() {
       </div>
 
       {/* 재정렬은 일차 전체를 보내야 해서 (§5.6) 걸러진 목록 위에서는 할 수 없다.
-          그래서 순서 편집 중에는 유형 필터를 감춘다 */}
+          그래서 순서 편집 중에는 유형 필터와 진입 버튼을 감춘다 */}
       {!reordering && (
-        <div className={styles.chips}>
-          <Chip.RadioRoot
-            value={typeFilter}
-            onValueChange={(value) => setTypeFilter(String(value))}
-          >
-            <Chip.RadioItem value="all">
-              <Chip.Label>전체</Chip.Label>
-            </Chip.RadioItem>
-            {PERFORMANCE_TYPES.map((type) => (
-              <Chip.RadioItem key={type} value={type}>
-                <Chip.Label>{TYPE_LABELS[type]}</Chip.Label>
-              </Chip.RadioItem>
-            ))}
-          </Chip.RadioRoot>
-        </div>
-      )}
+        <>
+          {/* 단순 선택이 아니라 목록을 갈아끼우는 필터라 Chip 이 아니라 ChipTabs 다 */}
+          <ChipTabsRoot className={styles.filters} value={typeFilter} onValueChange={setTypeFilter}>
+            <ChipTabsList>
+              <ChipTabsTrigger value="all">전체</ChipTabsTrigger>
+              {PERFORMANCE_TYPES.map((type) => (
+                <ChipTabsTrigger key={type} value={type}>
+                  {TYPE_LABELS[type]}
+                </ChipTabsTrigger>
+              ))}
+            </ChipTabsList>
+          </ChipTabsRoot>
 
-      <div className={styles.actions}>
-        {reordering ? (
-          <>
-            <ActionButton size="small" onClick={saveOrder}>
-              순서 저장
-            </ActionButton>
-            <ActionButton
-              size="small"
-              variant="neutralWeak"
-              onClick={() => {
-                setOrder(null)
-                setError(null)
-              }}
+          <div className={styles.actions}>
+            {/* 유형 탭과 다른 축이라 그 줄에 넣지 않는다. 넣으면 유형 선택이 풀려
+                "학생 공연 중 번역 누락"을 볼 수 없다. 개수가 곧 남은 작업량이다 */}
+            <Chip.Toggle
+              checked={showMissingOnly}
+              disabled={missingCount === 0}
+              onCheckedChange={setMissingOnly}
             >
-              취소
-            </ActionButton>
-          </>
-        ) : (
-          <>
+              <Chip.Label>번역 누락 {missingCount}</Chip.Label>
+            </Chip.Toggle>
+
+            {/* 칩과 같은 알약 모양이면 또 하나의 필터처럼 읽힌다. 외곽선으로 갈라놓는다 */}
             <ActionButton
               size="small"
-              variant="neutralWeak"
+              variant="neutralOutline"
               disabled={rows.length < 2}
               onClick={() => {
+                // 재정렬은 그 일차 전체 ID 배열을 보내야 해서 (§5.6)
+                // 걸러진 목록 위에서는 할 수 없다. 두 필터를 모두 푼다
                 setTypeFilter('all')
+                setMissingOnly(false)
                 setOrder(rows.map((p) => p.id))
               }}
             >
+              <Icon svg={<IconArrowUpArrowDownLine />} />
               순서 바꾸기
             </ActionButton>
-            {/* 보고 있던 일차를 넘겨준다. 추가 화면이 그 일차로 열린다 */}
-            <ActionButton size="small" onClick={() => navigate(`/performances/new?date=${date}`)}>
-              공연 추가
-            </ActionButton>
-          </>
-        )}
-      </div>
-
-      {error && <p className={styles.error}>{error}</p>}
+          </div>
+        </>
+      )}
 
       <div className={styles.list}>
         {listed.length === 0 ? (
-          <p className={styles.empty}>이 일차에는 아직 공연이 없습니다.</p>
+          <Empty
+            filtered={typeFilter !== 'all'}
+            missingOnly={showMissingOnly}
+            date={date}
+            onReset={() => {
+              setTypeFilter('all')
+              setMissingOnly(false)
+            }}
+          />
         ) : (
           <List>
             {listed.map((performance, index) => {
-              const seq = <span className={styles.seq}>{reordering ? index + 1 : performance.seq}</span>
+              const seq = (
+                <span className={styles.seq}>{reordering ? index + 1 : performance.seq}</span>
+              )
               const title = (
-                <>
+                <span className={styles.title}>
                   {titleOf(performance)}
-                  {performance.is_live && <span className={styles.liveTag}>공연 중</span>}
-                </>
+                  {performance.is_live && (
+                    <Badge tone="brand" variant="solid">
+                      공연 중
+                    </Badge>
+                  )}
+                </span>
               )
               const detail = (
-                <>
+                <span className={styles.detail}>
                   {/* enum 에 네 번째 값이 생길 수 있다 (PRD §12 열린 질문 3).
                       모르는 값이면 빈칸 대신 원래 값을 보여준다 */}
-                  {TYPE_LABELS[performance.type] ?? performance.type} · <LangBadge performance={performance} />
-                </>
+                  {TYPE_LABELS[performance.type] ?? performance.type}
+                  <LangBadge performance={performance} />
+                </span>
               )
-              // ListItem 은 props 를 li 에 그대로 펼치고, ListButtonItem 은 버튼과
-              // li 를 나눠 받는다. 그래서 같은 클래스를 주는 방법이 서로 다르다
               const rowClass = clsx(
                 performance.type === 'SPECIAL' && styles.special,
                 performance.is_live && styles.liveRow,
@@ -280,6 +342,42 @@ export function PerformancesRoute() {
           </List>
         )}
       </div>
+
+      {/* 한 손 엄지가 닿는 우하단. 목록을 끝까지 내려도 자리를 지킨다.
+          재정렬 중에는 하단 바가 그 자리를 쓰므로 감춘다 */}
+      {!reordering && (
+        <FloatingActionButton
+          className={styles.fab}
+          icon={<IconPlusLine />}
+          label="공연 추가"
+          onClick={() => navigate(`/performances/new?date=${date}`)}
+        />
+      )}
+
+      {/* 편집 화면의 저장 바와 같은 자리·같은 이유. 긴 라인업을 끝까지 내려도 닿는다.
+          재정렬을 닫은 뒤에도 거부 사유는 남겨 왜 안 됐는지 보이게 한다 */}
+      {(reordering || error) && (
+        <div className={styles.footer}>
+          {error && <Callout tone="critical" description={error} />}
+          {reordering && (
+            <div className={styles.footerRow}>
+              <ActionButton size="large" onClick={saveOrder}>
+                순서 저장
+              </ActionButton>
+              <ActionButton
+                size="large"
+                variant="neutralWeak"
+                onClick={() => {
+                  setOrder(null)
+                  setError(null)
+                }}
+              >
+                취소
+              </ActionButton>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

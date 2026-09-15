@@ -1,10 +1,12 @@
-/* 장소 편집 화면과 같은 여백·간격을 쓴다. 두 편집 화면이 따로 놀지 않게 */
+/* 장소 편집 화면과 같은 값이다. 두 편집 화면이 따로 놀지 않게 한다 */
 .screen {
   display: flex;
   flex: 1;
   flex-direction: column;
   gap: var(--seed-dimension-x5);
-  padding: var(--seed-dimension-x4);
+
+  /* 고정 바가 바닥을 덮으므로 아래 여백은 바가 맡는다 */
+  padding: var(--seed-dimension-x4) var(--seed-dimension-x4) 0;
 }
 
 .section {
@@ -21,14 +23,14 @@
   color: var(--seed-color-fg-neutral);
 }
 
-/* SEED 의 SegmentedControl 은 label 을 받지 않아 직접 붙인다 */
+/* SegmentedControl 은 라벨 슬롯이 없다. TextField 의 라벨과 같은 모양으로 맞춘다 */
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--seed-dimension-x2);
+  gap: var(--seed-dimension-x1_5);
 }
 
-.label {
+.fieldLabel {
   font-size: var(--seed-font-size-t3);
   font-weight: var(--seed-font-weight-medium);
   line-height: var(--seed-line-height-t3);
@@ -43,16 +45,34 @@
   color: var(--seed-color-fg-neutral-muted);
 }
 
-.langMissing {
-  color: var(--seed-color-fg-critical);
-}
-
-.footer {
+/* 삭제. 저장에서 멀리 떼어 놓고 위아래로 숨 쉴 공간을 준다 */
+.dangerZone {
   display: flex;
-  gap: var(--seed-dimension-x2);
-  margin-top: var(--seed-dimension-x2);
+  justify-content: center;
+  padding: var(--seed-dimension-x6) 0;
+  border-top: 1px solid var(--seed-color-stroke-neutral-weak);
 }
 
-.footer > :last-child {
-  margin-left: auto;
+/*
+ * 저장은 스크롤 어디서든 엄지에 닿아야 한다. 편집 화면은 탭바를 숨기므로
+ * 그 자리를 이 바가 받는다. sticky 라 문서 흐름 안에 남아 마지막 요소를
+ * 가리지 않는다.
+ */
+.footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+
+  /* 내용이 짧으면 바가 화면 중간에 뜬다. 남는 공간을 위로 몰아 바닥에 붙인다.
+     내용이 길 때는 free space 가 없어 아무 영향이 없다 */
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x2);
+  margin-right: calc(-1 * var(--seed-dimension-x4));
+  margin-left: calc(-1 * var(--seed-dimension-x4));
+  padding: var(--seed-dimension-x3) var(--seed-dimension-x4);
+  padding-bottom: calc(var(--seed-dimension-x3) + var(--seed-safe-area-bottom));
+  background: var(--seed-color-bg-layer-default);
+  border-top: 1px solid var(--seed-color-stroke-neutral-weak);
 }

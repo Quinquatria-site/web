@@ -18,6 +18,9 @@
   display: flex;
   flex-shrink: 0;
   gap: var(--seed-dimension-x2);
+
+  /* 칩과 small 버튼은 높이가 달라 밑선이 어긋난다 */
+  align-items: center;
   padding: 0 var(--seed-dimension-x4) var(--seed-dimension-x3);
 }
 
@@ -27,8 +30,10 @@
   overflow-y: auto;
   scrollbar-width: none;
 
-  /* FAB 에 마지막 항목이 가리지 않게 바닥을 비운다 */
-  padding-bottom: var(--seed-dimension-x20);
+  /* FAB 에 마지막 항목이 가리지 않게 바닥을 비운다.
+     x20 은 SEED 에 없는 토큰이라 선언이 통째로 무시됐다 — 마지막 항목이
+     실제로 FAB 에 가려 있었다. 있는 토큰으로 같은 높이를 만든다 */
+  padding-bottom: calc(var(--seed-dimension-x16) + var(--seed-dimension-x4));
 }
 
 .list::-webkit-scrollbar {

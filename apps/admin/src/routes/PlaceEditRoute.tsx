@@ -24,6 +24,8 @@ import {
   useStoreVersion,
 } from '../mocks/store'
 import {
+  FESTIVAL_DATES,
+  festivalDateLabel,
   findTranslation,
   LANGUAGE_CODES,
   type LanguageCode,
@@ -31,15 +33,6 @@ import {
   type PlaceTranslation,
 } from '../mocks/types'
 import styles from './PlaceEditRoute.module.css'
-
-/**
- * 축제 일차. PRD 는 "10/6~8 중 이틀"로 열어뒀고 10/6~7 로 확정됐다.
- * 일정이 바뀌면 여기만 고치면 된다.
- */
-const FESTIVAL_DATES = ['2026-10-06', '2026-10-07'] as const
-
-/** 10/6 처럼 짧게. 세그먼트 한 칸에 들어가야 한다 */
-const dateLabel = (date: string) => `${Number(date.slice(5, 7))}/${Number(date.slice(8, 10))}`
 
 /*
  * start_hour·end_hour 는 명세상 datetime 이지만 화면은 일차와 시각을 따로 다룬다.
@@ -210,7 +203,7 @@ function PlaceEditForm() {
           <SegmentedControl aria-label="운영 일자" value={date} onValueChange={setDate}>
             {FESTIVAL_DATES.map((value) => (
               <SegmentedControlItem key={value} value={value}>
-                {dateLabel(value)}
+                {festivalDateLabel(value)}
               </SegmentedControlItem>
             ))}
           </SegmentedControl>

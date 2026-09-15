@@ -1,44 +1,35 @@
-/* 장소 목록과 같은 뼈대다 — screen → 필터 → actions → list.
-   행도 같은 SEED List 를 쓴다. 두 탭이 한 셸 안에서 다른 앱처럼 보이지 않게. */
+/* 장소 목록과 같은 뼈대다 — screen → 필터 → actions → list → FAB.
+   공연에만 있는 것은 일차 세그먼트와 순서 재정렬용 하단 바뿐이다. */
 .screen {
   display: flex;
   flex: 1;
+
+  /* FAB 의 기준 상자 */
+  position: relative;
   flex-direction: column;
   min-height: 0;
 }
 
+/* 일차가 목록의 1차 축이라 필터보다 위에 둔다 */
 .days {
   flex-shrink: 0;
   padding: var(--seed-dimension-x3) var(--seed-dimension-x4) 0;
 }
 
-.chips {
-  display: flex;
+/* ChipTabs 레시피는 좌우 여백만 준다. 위아래는 장소 목록과 같은 값으로 띄운다 */
+.filters {
   flex-shrink: 0;
-  gap: var(--seed-dimension-x2);
-  padding: var(--seed-dimension-x3) var(--seed-dimension-x4) 0;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.chips::-webkit-scrollbar {
-  display: none;
+  padding-block: var(--seed-dimension-x3);
 }
 
 .actions {
   display: flex;
   flex-shrink: 0;
   gap: var(--seed-dimension-x2);
-  padding: var(--seed-dimension-x3) var(--seed-dimension-x4);
-}
 
-.error {
-  flex-shrink: 0;
-  margin: 0;
+  /* 칩과 small 버튼은 높이가 달라 밑선이 어긋난다 */
+  align-items: center;
   padding: 0 var(--seed-dimension-x4) var(--seed-dimension-x3);
-  font-size: var(--seed-font-size-t3);
-  line-height: var(--seed-line-height-t3);
-  color: var(--seed-color-fg-critical);
 }
 
 .list {
@@ -46,20 +37,69 @@
   min-height: 0;
   overflow-y: auto;
   scrollbar-width: none;
+
+  /* FAB·하단 바에 마지막 항목이 가리지 않게 바닥을 비운다 */
+  padding-bottom: calc(var(--seed-dimension-x16) + var(--seed-dimension-x4));
 }
 
 .list::-webkit-scrollbar {
   display: none;
 }
 
-/* 장소 목록에는 없던 것. 한 일차가 통째로 비어 있을 수 있어서 둔다 */
+/* 한 손 엄지 구역. 탭바 위에 뜬다 */
+.fab {
+  position: absolute;
+  right: var(--seed-dimension-x4);
+  bottom: var(--seed-dimension-x4);
+}
+
 .empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x2);
+  align-items: center;
+  padding: var(--seed-dimension-x16) var(--seed-dimension-x4) 0;
+  text-align: center;
+}
+
+.emptyTitle {
   margin: 0;
-  padding: var(--seed-dimension-x8) var(--seed-dimension-x4);
+  font-size: var(--seed-font-size-t5);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t5);
+  color: var(--seed-color-fg-neutral);
+}
+
+.emptyDescription {
+  margin: 0 0 var(--seed-dimension-x2);
   font-size: var(--seed-font-size-t3);
   line-height: var(--seed-line-height-t3);
   color: var(--seed-color-fg-neutral-muted);
-  text-align: center;
+}
+
+/*
+ * 순서 재정렬 중의 저장·취소. 편집 화면의 저장 바와 같은 자리·같은 이유다 —
+ * 긴 라인업을 끝까지 내려도 엄지에 닿아야 한다. 목록이 스크롤 컨테이너라
+ * sticky 가 아니라 흐름 밖 고정이다.
+ */
+.footer {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x2);
+  padding: var(--seed-dimension-x3) var(--seed-dimension-x4);
+  padding-bottom: calc(var(--seed-dimension-x3) + var(--seed-safe-area-bottom));
+  background: var(--seed-color-bg-layer-default);
+  border-top: 1px solid var(--seed-color-stroke-neutral-weak);
+}
+
+.footerRow {
+  display: flex;
+  gap: var(--seed-dimension-x2);
+}
+
+.footerRow > * {
+  flex: 1;
 }
 
 /* PRD §5-2 는 응원제·가요제를 일반 공연과 디자인적으로 구분하라고 한다.
@@ -70,9 +110,16 @@
   background: var(--seed-color-bg-brand-weak);
 }
 
-/* 공연 중인 한 건. 왼쪽 띠로 표시한다 — 배경은 SPECIAL 과 겹칠 수 있다 */
+/*
+ * 공연 중인 한 건. 왼쪽 띠로 표시한다 — 배경은 SPECIAL 과 겹칠 수 있다.
+ *
+ * 브랜드 색이다. 이 행에는 같은 것을 가리키는 신호가 셋 있다 — 띠, "공연 중"
+ * 배지, 켜진 스위치. 스위치가 이미 브랜드 색이라 셋을 한 색으로 묶는다.
+ * critical(빨강)은 SEED 가 "검수 거절·제재·유효성 실패" 로 정의한 톤이라
+ * 활성 상태를 가리키는 데 쓰지 않는다.
+ */
 .liveRow {
-  box-shadow: inset 3px 0 0 var(--seed-color-bg-critical-solid);
+  box-shadow: inset 3px 0 0 var(--seed-color-bg-brand-solid);
 }
 
 .seq {
@@ -85,28 +132,20 @@
   text-align: center;
 }
 
-.liveTag {
-  margin-left: var(--seed-dimension-x2);
-  padding: 0 var(--seed-dimension-x2);
-  font-size: var(--seed-font-size-t1);
-  font-weight: var(--seed-font-weight-bold);
-  line-height: var(--seed-line-height-t2);
-  color: var(--seed-color-fg-critical-contrast);
-  white-space: nowrap;
-  background: var(--seed-color-bg-critical-solid);
-  border-radius: var(--seed-radius-r1);
+/* 제목과 "공연 중" 배지가 한 줄에 선다. 간격은 여기서 준다 —
+   배지가 자기 바깥 여백을 들고 다니지 않게 */
+.title {
+  display: flex;
+  gap: var(--seed-dimension-x2);
+  align-items: center;
+  min-width: 0;
 }
 
-/* 번역 상태. 장소 목록과 같은 표시다 (§2.4) */
-.langWarn {
-  font-weight: var(--seed-font-weight-medium);
-  color: var(--seed-color-fg-critical);
-  white-space: nowrap;
-}
-
-.langOk {
-  color: var(--seed-color-fg-neutral-subtle);
-  white-space: nowrap;
+/* 유형과 번역 배지가 한 줄에 선다. 배지는 인라인 블록이라 가운데 정렬이 필요하다 */
+.detail {
+  display: flex;
+  gap: var(--seed-dimension-x1_5);
+  align-items: center;
 }
 
 .moves {

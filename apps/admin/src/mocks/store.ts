@@ -138,6 +138,7 @@ export function upsertPerformance(draft: PerformanceDraft): Performance {
   if (index < 0) {
     const created: Performance = { ...draft, seq: tail, is_live: false }
     PERFORMANCES.push(created)
+    emit()
     return created
   }
 
@@ -150,6 +151,7 @@ export function upsertPerformance(draft: PerformanceDraft): Performance {
   }
   PERFORMANCES[index] = updated
   if (moved) renumber(previous.date)
+  emit()
   return updated
 }
 
@@ -159,6 +161,7 @@ export function deletePerformance(id: number): Performance | undefined {
   if (index < 0) return undefined
   const [removed] = PERFORMANCES.splice(index, 1)
   renumber(removed.date)
+  emit()
   return removed
 }
 
@@ -170,6 +173,7 @@ export function restorePerformance(performance: Performance): void {
   }
   PERFORMANCES.push(performance)
   renumber(performance.date)
+  emit()
 }
 
 /**
@@ -183,6 +187,7 @@ export function setLive(id: number, isLive: boolean): Performance | undefined {
     for (const p of PERFORMANCES) p.is_live = false
   }
   target.is_live = isLive
+  emit()
   return target
 }
 
@@ -204,5 +209,6 @@ export function reorderPerformances(date: string, order: number[]): string | nul
     const target = performanceById(id)
     if (target) target.seq = index + 1
   })
+  emit()
   return null
 }
