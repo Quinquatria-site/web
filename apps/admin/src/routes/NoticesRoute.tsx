@@ -135,6 +135,13 @@ export function NoticesRoute() {
   ).length
   // 누락이 0 이 되면 켜둔 토글이 빈 화면만 남긴다. 그때는 푼다
   const showMissingOnly = missingOnly && missingCount > 0
+
+  // /notices/latest 는 일반 공지 중 최신 1건만 본다. 그 건에 요청 언어 번역이
+  // 없으면 이전 공지로 대체하지 않고 404 TRANSLATION_NOT_FOUND 다 (§3.5).
+  // 다른 누락은 그 공지 하나가 안 보이는 것이지만, 이건 학생 앱의 "최신 공지"
+  // 자리가 그 언어에서 통째로 닫히는 것이라 무게가 다르다.
+  // 정렬이 created_at DESC 라 일반 섹션 첫 행이 곧 그 대상이다
+  const latestBroken = general.length > 0 && hasMissingTranslations(general[0].translations)
   const onlyMissing = (rows: Notice[]) =>
     showMissingOnly ? rows.filter((n) => hasMissingTranslations(n.translations)) : rows
 
@@ -147,10 +154,20 @@ export function NoticesRoute() {
           약하다 — 지금 몇 건이 외국인에게 안 보이는지 화면에 먼저 말한다 (#17) */}
       {missingCount > 0 && (
         <div className={styles.banner}>
-          <Callout
-            tone="critical"
-            description={`${missingCount}건이 영어·중국어로 보는 학생에게 보이지 않습니다.`}
-          />
+          {/* 최신 일반 공지가 걸렸으면 그것부터 말한다. 나머지 누락은 그 공지
+              하나가 안 보이는 것이지만, 이건 최신 공지 자리 자체가 닫히는 것이다 */}
+          {latestBroken ? (
+            <Callout
+              tone="critical"
+              title="가장 최근 일반 공지가 영어·중국어로 열리지 않습니다."
+              description={`이전 공지로 대체되지 않고 오류가 납니다. 누락은 모두 ${missingCount}건입니다.`}
+            />
+          ) : (
+            <Callout
+              tone="critical"
+              description={`${missingCount}건이 영어·중국어로 보는 학생에게 보이지 않습니다.`}
+            />
+          )}
         </div>
       )}
 
