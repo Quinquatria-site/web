@@ -40,11 +40,23 @@
   display: none;
 }
 
-/* 한 손 엄지 구역. 탭바 위에 뜬다 */
-.fab {
+/* 한 손 엄지 구역. 탭바 위에 뜬다.
+   두 버튼을 한 줄로 묶는다 — 각각 절대 배치하면 좁은 폭에서 서로 겹친다 */
+.floatRow {
   position: absolute;
   right: var(--seed-dimension-x4);
   bottom: var(--seed-dimension-x4);
+  left: var(--seed-dimension-x4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  /* 줄은 목록 위를 가로지른다. 버튼 사이 빈 곳의 클릭은 목록으로 흘려보낸다 */
+  pointer-events: none;
+}
+
+.floatRow > * {
+  pointer-events: auto;
 }
 
 .empty {
