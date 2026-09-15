@@ -10,6 +10,7 @@ import { useNavigate, useSearchParams } from 'react-router'
 import { Badge, Icon } from '@seed-design/react'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { Callout } from 'seed-design/ui/callout'
+import { Chip } from 'seed-design/ui/chip'
 import { ChipTabsList, ChipTabsRoot, ChipTabsTrigger } from 'seed-design/ui/chip-tabs'
 import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
 import { List, ListButtonItem, ListItem } from 'seed-design/ui/list'
@@ -21,6 +22,7 @@ import {
   FESTIVAL_DATES,
   festivalDayLabel,
   findTranslation,
+  hasMissingTranslations,
   missingLanguages,
   PERFORMANCE_TYPES,
   type Performance,
@@ -56,20 +58,38 @@ function LangBadge({ performance }: { performance: Performance }) {
   )
 }
 
-/** 빈 목록. 막다른 길을 만들지 않으려고 나갈 문을 같이 둔다 */
-function Empty({ filtered, date, onReset }: { filtered: boolean; date: string; onReset: () => void }) {
+/**
+ * 빈 목록. 막다른 길을 만들지 않으려고 나갈 문을 같이 둔다.
+ * 번역 누락 필터가 0건인 것은 나쁜 소식이 아니라 좋은 소식이라 따로 말한다.
+ */
+function Empty({
+  filtered,
+  missingOnly,
+  date,
+  onReset,
+}: {
+  filtered: boolean
+  missingOnly: boolean
+  date: string
+  onReset: () => void
+}) {
   const navigate = useNavigate()
+  const title = missingOnly
+    ? '번역이 빠진 공연이 없습니다'
+    : filtered
+      ? '이 유형에는 아직 공연이 없습니다'
+      : '이 일차에는 아직 공연이 없습니다'
+  const description = missingOnly
+    ? '이 일차는 세 언어가 모두 채워져 있습니다.'
+    : filtered
+      ? '다른 유형을 보거나, 여기에 새 공연을 추가하세요.'
+      : '오른쪽 아래 공연 추가 버튼을 눌러 시작하세요.'
+
   return (
     <div className={styles.empty}>
-      <p className={styles.emptyTitle}>
-        {filtered ? '이 유형에는 아직 공연이 없습니다' : '이 일차에는 아직 공연이 없습니다'}
-      </p>
-      <p className={styles.emptyDescription}>
-        {filtered
-          ? '다른 유형을 보거나, 여기에 새 공연을 추가하세요.'
-          : '오른쪽 아래 공연 추가 버튼을 눌러 시작하세요.'}
-      </p>
-      {filtered ? (
+      <p className={styles.emptyTitle}>{title}</p>
+      <p className={styles.emptyDescription}>{description}</p>
+      {filtered || missingOnly ? (
         <ActionButton size="medium" variant="neutralWeak" onClick={onReset}>
           전체 보기
         </ActionButton>
@@ -103,6 +123,7 @@ export function PerformancesRoute() {
     : FESTIVAL_DATES[0]
 
   const [typeFilter, setTypeFilter] = useState<string>('all')
+  const [missingOnly, setMissingOnly] = useState(false)
   /** null 이 아니면 순서 편집 중. 확정 전까지는 이 배열만 움직인다 */
   const [order, setOrder] = useState<number[] | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -115,9 +136,16 @@ export function PerformancesRoute() {
   const rows = performancesByDate(date)
 
   const reordering = order !== null
+  // 유형과 번역 누락은 다른 축이라 AND 로 건다 — "학생 공연 중 번역 누락"이 보여야 한다
+  const byType = rows.filter((p) => typeFilter === 'all' || p.type === typeFilter)
+  const missingCount = byType.filter((p) => hasMissingTranslations(p.translations)).length
+  // 유형을 옮겨 누락이 0 이 되면 켜둔 토글이 빈 화면만 남긴다. 그때는 푼다
+  const showMissingOnly = missingOnly && missingCount > 0
   const listed = reordering
     ? order.map((id) => rows.find((p) => p.id === id)).filter((p): p is Performance => Boolean(p))
-    : rows.filter((p) => typeFilter === 'all' || p.type === typeFilter)
+    : showMissingOnly
+      ? byType.filter((p) => hasMissingTranslations(p.translations))
+      : byType
 
   const move = (index: number, delta: number) => {
     if (!order) return
@@ -163,6 +191,7 @@ export function PerformancesRoute() {
             setSearchParams({ date: String(value) }, { replace: true })
             setOrder(null)
             setError(null)
+            setMissingOnly(false)
           }}
         >
           {FESTIVAL_DATES.map((value) => (
@@ -189,14 +218,27 @@ export function PerformancesRoute() {
             </ChipTabsList>
           </ChipTabsRoot>
 
-          {/* 칩과 같은 알약 모양이면 5번째 필터처럼 읽힌다. 외곽선으로 갈라놓는다 */}
           <div className={styles.actions}>
+            {/* 유형 탭과 다른 축이라 그 줄에 넣지 않는다. 넣으면 유형 선택이 풀려
+                "학생 공연 중 번역 누락"을 볼 수 없다. 개수가 곧 남은 작업량이다 */}
+            <Chip.Toggle
+              checked={showMissingOnly}
+              disabled={missingCount === 0}
+              onCheckedChange={setMissingOnly}
+            >
+              <Chip.Label>번역 누락 {missingCount}</Chip.Label>
+            </Chip.Toggle>
+
+            {/* 칩과 같은 알약 모양이면 또 하나의 필터처럼 읽힌다. 외곽선으로 갈라놓는다 */}
             <ActionButton
               size="small"
               variant="neutralOutline"
               disabled={rows.length < 2}
               onClick={() => {
+                // 재정렬은 그 일차 전체 ID 배열을 보내야 해서 (§5.6)
+                // 걸러진 목록 위에서는 할 수 없다. 두 필터를 모두 푼다
                 setTypeFilter('all')
+                setMissingOnly(false)
                 setOrder(rows.map((p) => p.id))
               }}
             >
@@ -209,7 +251,15 @@ export function PerformancesRoute() {
 
       <div className={styles.list}>
         {listed.length === 0 ? (
-          <Empty filtered={typeFilter !== 'all'} date={date} onReset={() => setTypeFilter('all')} />
+          <Empty
+            filtered={typeFilter !== 'all'}
+            missingOnly={showMissingOnly}
+            date={date}
+            onReset={() => {
+              setTypeFilter('all')
+              setMissingOnly(false)
+            }}
+          />
         ) : (
           <List>
             {listed.map((performance, index) => {

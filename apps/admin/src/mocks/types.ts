@@ -159,3 +159,14 @@ export function findTranslation<T extends { language_code: LanguageCode }>(
 export function missingLanguages(translations: { language_code: LanguageCode }[]): LanguageCode[] {
   return LANGUAGE_CODES.filter((code) => !translations.some((t) => t.language_code === code))
 }
+
+/**
+ * 번역이 빠진 언어가 하나라도 있는지. 목록의 "번역 누락만 보기" 필터가 쓴다.
+ * 빠진 언어 사용자에게는 이 항목이 목록에서 아예 사라지므로(§2.4), 이 판정에
+ * 걸린 것들이 곧 "지금 외국인에게 안 보이는 것" 목록이다.
+ */
+export function hasMissingTranslations(
+  translations: { language_code: LanguageCode }[],
+): boolean {
+  return missingLanguages(translations).length > 0
+}

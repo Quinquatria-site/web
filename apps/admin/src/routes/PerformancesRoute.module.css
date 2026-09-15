@@ -26,6 +26,9 @@
   display: flex;
   flex-shrink: 0;
   gap: var(--seed-dimension-x2);
+
+  /* 칩과 small 버튼은 높이가 달라 밑선이 어긋난다 */
+  align-items: center;
   padding: 0 var(--seed-dimension-x4) var(--seed-dimension-x3);
 }
 

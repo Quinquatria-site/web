@@ -3,13 +3,19 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Badge, Icon } from '@seed-design/react'
 import { ActionButton } from 'seed-design/ui/action-button'
+import { Chip } from 'seed-design/ui/chip'
 import { ChipTabsList, ChipTabsRoot, ChipTabsTrigger } from 'seed-design/ui/chip-tabs'
 import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
 import { List, ListButtonItem } from 'seed-design/ui/list'
 import { CATEGORIES, categoryById } from '../mocks/categories'
 import { PLACES } from '../mocks/places'
 import { useStoreVersion } from '../mocks/store'
-import { findTranslation, missingLanguages, type Place } from '../mocks/types'
+import {
+  findTranslation,
+  hasMissingTranslations,
+  missingLanguages,
+  type Place,
+} from '../mocks/types'
 import styles from './PlacesRoute.module.css'
 
 /**
@@ -50,20 +56,36 @@ function LangBadge({ place }: { place: Place }) {
   )
 }
 
-/** 빈 목록. 막다른 길을 만들지 않으려고 나갈 문을 같이 둔다 */
-function Empty({ filtered, onReset }: { filtered: boolean; onReset: () => void }) {
+/**
+ * 빈 목록. 막다른 길을 만들지 않으려고 나갈 문을 같이 둔다.
+ * 번역 누락 필터가 0건인 것은 나쁜 소식이 아니라 좋은 소식이라 따로 말한다.
+ */
+function Empty({
+  filtered,
+  missingOnly,
+  onReset,
+}: {
+  filtered: boolean
+  missingOnly: boolean
+  onReset: () => void
+}) {
   const navigate = useNavigate()
+  const title = missingOnly
+    ? '번역이 빠진 장소가 없습니다'
+    : filtered
+      ? '이 종류에는 아직 장소가 없습니다'
+      : '아직 등록된 장소가 없습니다'
+  const description = missingOnly
+    ? '세 언어가 모두 채워져 있습니다.'
+    : filtered
+      ? '다른 종류를 보거나, 여기에 새 장소를 추가하세요.'
+      : '오른쪽 아래 장소 추가 버튼을 눌러 시작하세요.'
+
   return (
     <div className={styles.empty}>
-      <p className={styles.emptyTitle}>
-        {filtered ? '이 종류에는 아직 장소가 없습니다' : '아직 등록된 장소가 없습니다'}
-      </p>
-      <p className={styles.emptyDescription}>
-        {filtered
-          ? '다른 종류를 보거나, 여기에 새 장소를 추가하세요.'
-          : '오른쪽 아래 장소 추가 버튼을 눌러 시작하세요.'}
-      </p>
-      {filtered ? (
+      <p className={styles.emptyTitle}>{title}</p>
+      <p className={styles.emptyDescription}>{description}</p>
+      {filtered || missingOnly ? (
         <ActionButton size="medium" variant="neutralWeak" onClick={onReset}>
           전체 보기
         </ActionButton>
@@ -84,6 +106,7 @@ function Empty({ filtered, onReset }: { filtered: boolean; onReset: () => void }
 export function PlacesRoute() {
   const navigate = useNavigate()
   const [filter, setFilter] = useState<string>('all')
+  const [missingOnly, setMissingOnly] = useState(false)
   // 삭제·실행취소가 이 목록에 바로 반영되게 한다
   useStoreVersion()
 
@@ -93,7 +116,15 @@ export function PlacesRoute() {
     (a, b) =>
       a.category_id - b.category_id || a.category_sequence - b.category_sequence || a.id - b.id,
   )
-  const places = filter === 'all' ? sorted : sorted.filter((p) => p.category_id === Number(filter))
+  // 카테고리와 번역 누락은 다른 축이라 AND 로 건다 — "부스 중 번역 누락"이 보여야 한다
+  const byCategory =
+    filter === 'all' ? sorted : sorted.filter((p) => p.category_id === Number(filter))
+  const missingCount = byCategory.filter((p) => hasMissingTranslations(p.translations)).length
+  // 카테고리를 옮겨 누락이 0 이 되면 켜둔 토글이 빈 화면만 남긴다. 그때는 푼다
+  const showMissingOnly = missingOnly && missingCount > 0
+  const places = showMissingOnly
+    ? byCategory.filter((p) => hasMissingTranslations(p.translations))
+    : byCategory
 
   return (
     <div className={styles.screen}>
@@ -110,8 +141,18 @@ export function PlacesRoute() {
         </ChipTabsList>
       </ChipTabsRoot>
 
-      {/* 칩과 같은 알약 모양이라 그냥 두면 7번째 필터처럼 읽힌다. 외곽선으로 갈라놓는다 */}
       <div className={styles.actions}>
+        {/* 카테고리 탭과 다른 축이라 그 줄에 넣지 않는다. 넣으면 카테고리 선택이 풀려
+            "부스 중 번역 누락"을 볼 수 없다. 개수가 곧 남은 작업량이다 */}
+        <Chip.Toggle
+          checked={showMissingOnly}
+          disabled={missingCount === 0}
+          onCheckedChange={setMissingOnly}
+        >
+          <Chip.Label>번역 누락 {missingCount}</Chip.Label>
+        </Chip.Toggle>
+
+        {/* 칩과 같은 알약 모양이라 그냥 두면 또 하나의 필터처럼 읽힌다. 외곽선으로 갈라놓는다 */}
         <ActionButton size="small" variant="neutralOutline" onClick={() => navigate('/places/map')}>
           <Icon svg={<IconMapLine />} />
           지도에서 보기
@@ -120,7 +161,14 @@ export function PlacesRoute() {
 
       <div className={styles.list}>
         {places.length === 0 ? (
-          <Empty filtered={filter !== 'all'} onReset={() => setFilter('all')} />
+          <Empty
+            filtered={filter !== 'all'}
+            missingOnly={showMissingOnly}
+            onReset={() => {
+              setFilter('all')
+              setMissingOnly(false)
+            }}
+          />
         ) : (
           <List>
             {places.map((place) => (
