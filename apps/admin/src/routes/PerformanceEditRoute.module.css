@@ -48,7 +48,9 @@
 /* 삭제. 저장에서 멀리 떼어 놓고 위아래로 숨 쉴 공간을 준다 */
 .dangerZone {
   display: flex;
-  justify-content: center;
+
+  /* 저장과 같은 폭으로 늘린다. justify-content: center 는 버튼을 글자 폭으로 줄인다 */
+  flex-direction: column;
   padding: var(--seed-dimension-x6) 0;
   border-top: 1px solid var(--seed-color-stroke-neutral-weak);
 }
