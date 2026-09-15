@@ -77,6 +77,63 @@ export interface Menu {
   translations: MenuTranslation[]
 }
 
+export const PERFORMANCE_TYPES = ['ARTIST', 'STUDENT', 'SPECIAL'] as const
+export type PerformanceType = (typeof PERFORMANCE_TYPES)[number]
+
+/**
+ * 축제 일차. PERFORMANCE.date 는 자유 입력이 아니라 이 중 하나를 고르는 것이다.
+ * 명세는 YYYY-MM-DD 형식만 규정하지만(§5.6), 이틀짜리 축제라 화면에서는
+ * 날짜 입력칸 대신 일차 선택으로 받는다.
+ *
+ * 축제는 **10/6(화)~10/7(수)** 로 확정됐다. 장소 목의 운영 시간도 10/6 기준이다.
+ *
+ * 문서는 아직 안 따라왔다 — PRD §0 은 "10/6~8 중 이틀 (화·수·목)" 이고 부록 A-6 은
+ * "어느 이틀인지 미정", v0.4 §9 블로커의 "공연 라인업의 축제 일차 배정" 도 비어
+ * 있다. 문서를 고칠 때 이 값이 기준이다.
+ *
+ * 일정이 또 바뀌면 여기만 고치면 된다. API 는 임의의 YYYY-MM-DD 를 받으므로
+ * 계약은 그대로고, 화면은 이 배열의 길이와 순서만 본다.
+ */
+export const FESTIVAL_DATES = ['2026-10-06', '2026-10-07'] as const
+export type FestivalDate = (typeof FESTIVAL_DATES)[number]
+
+/** "2026-10-06" → "1일차". 목록·편집 화면이 함께 쓴다 */
+export function festivalDayLabel(date: string): string {
+  const index = FESTIVAL_DATES.indexOf(date as FestivalDate)
+  return index < 0 ? date : `${index + 1}일차`
+}
+
+export interface PerformanceTranslation {
+  id: number
+  performance_id: number
+  language_code: LanguageCode
+  title: string
+  /** 공연 설명. 선택이며 생략하면 빈 문자열로 저장된다 (§5.2) */
+  description: string
+}
+
+/**
+ * 공연 (§5.6). 시작·종료 시각이 없다 — 축제 일정 지연이 잦아 시각 기반
+ * "현재 공연" 판별이 잘 깨지기 때문이다. 대신 일차(date) 안의 순서(seq)로
+ * 타임라인을 만들고, 현재 공연은 운영자가 올리는 is_live 로만 판단한다.
+ *
+ * seq 와 is_live 는 POST·PATCH 본문에 넣으면 422 다. 서버가 정하거나
+ * 전용 엔드포인트로만 바뀐다 — 화면에 입력칸을 만들지 않는다.
+ */
+export interface Performance {
+  id: number
+  type: PerformanceType
+  /** 이미지 S3 key. 업로드 플로우(#14) 전까지는 목 문자열이거나 null */
+  image_uri: string | null
+  /** 공연이 열리는 축제 일차. YYYY-MM-DD */
+  date: string
+  /** 같은 일차 안의 노출 순서. 서버가 1부터 빈틈 없이 매긴다 */
+  seq: number
+  /** 현재 공연 중 여부. 전체에서 최대 1건 */
+  is_live: boolean
+  translations: PerformanceTranslation[]
+}
+
 /** 번역 배열에서 특정 언어를 찾는다. Backoffice 응답은 language_code ASC 정렬(§5.1) */
 export function findTranslation<T extends { language_code: LanguageCode }>(
   translations: T[],
