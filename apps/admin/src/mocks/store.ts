@@ -1,8 +1,9 @@
 import { useSyncExternalStore } from 'react'
 import { MENUS } from './menus'
+import { NOTICES } from './notices'
 import { PERFORMANCES } from './performances'
 import { PLACES } from './places'
-import type { Menu, Performance, Place } from './types'
+import type { LanguageCode, Menu, Notice, NoticeType, Performance, Place } from './types'
 
 /**
  * 목 데이터의 쓰기 흉내. 실제 API(#10)가 붙으면 이 파일이 POST·PATCH·DELETE
@@ -211,4 +212,113 @@ export function reorderPerformances(date: string, order: number[]): string | nul
   })
   emit()
   return null
+}
+
+/**
+ * 공지 (§5.7). 공연과 달리 순서를 손댈 수단이 없다 — 정렬 키가 서버 생성
+ * created_at 하나뿐이라 재정렬 엔드포인트 자체가 없다 (§5.1).
+ */
+
+/** 저장 화면이 보낼 수 있는 것. created_at 이 빠진 게 핵심이다 (§5.7 서버 생성·수정 불가) */
+export type NoticeDraft = Omit<Notice, 'created_at'>
+
+/**
+ * 명세의 ISO 8601 은 offset 을 포함한다 (§2.2). toISOString() 은 Z 로 끝나서
+ * 목 데이터와 모양이 갈린다 — 장소 목의 운영 시각도 +09:00 이다.
+ */
+function nowKst(): string {
+  return `${new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().slice(0, 19)}+09:00`
+}
+
+/**
+ * 정렬은 명세 그대로 created_at DESC, id DESC (§5.1).
+ *
+ * 문자열 비교가 아니라 Date.parse 다. 지금은 목도 새로 만든 것도 +09:00 이라
+ * 사전순이 시각순과 같지만, offset 이 하나라도 섞이면 (Z 로 오는 응답, 서머타임
+ * 없는 다른 지역) 사전순이 조용히 어긋난다. 정렬이 틀리는 버그는 눈에 안 띈다.
+ */
+export function noticesByType(type: NoticeType): Notice[] {
+  return NOTICES.filter((n) => n.type === type).sort(
+    (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at) || b.id - a.id,
+  )
+}
+
+export function noticeById(id: number): Notice | undefined {
+  return NOTICES.find((n) => n.id === id)
+}
+
+/**
+ * 생성이면 지금 시각을 서버가 찍는다. 수정이면 기존 created_at 을 그대로 둔다 —
+ * 수정 불가 필드라 PATCH 로 바뀌지 않는다 (§5.7). 종류를 바꾸는 것은 허용되며
+ * 그러면 목록에서 반대 섹션으로 옮겨간다.
+ */
+export function upsertNotice(draft: NoticeDraft): Notice {
+  const index = NOTICES.findIndex((n) => n.id === draft.id)
+
+  if (index < 0) {
+    const created: Notice = { ...draft, created_at: nowKst() }
+    NOTICES.push(created)
+    emit()
+    return created
+  }
+
+  const previous = NOTICES[index]
+
+  // §5.2 — PATCH 는 전달한 언어만 upsert 하고 **전달하지 않은 언어는 그대로 둔다.**
+  // 배열을 통째로 갈아끼우면 화면이 "비우고 저장하면 지워진다" 고 믿게 되는데
+  // 실제 API 는 그렇게 동작하지 않는다. 번역 삭제는 전용 경로만이다
+  // (deleteNoticeTranslation). 목에서부터 같은 규칙을 지켜야 그 차이가 드러난다.
+  const translations = [...previous.translations]
+  for (const next of draft.translations) {
+    const at = translations.findIndex((t) => t.language_code === next.language_code)
+    if (at >= 0) translations[at] = next
+    else translations.push(next)
+  }
+  // 응답의 translations 는 language_code ASC = CHN → EN → KO (§5.2)
+  translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
+
+  const updated: Notice = { ...draft, created_at: previous.created_at, translations }
+  NOTICES[index] = updated
+  emit()
+  return updated
+}
+
+/**
+ * DELETE /notices/{notice_id}/translations/{language_code} 흉내 (§5.2).
+ *
+ * 번역을 지우는 유일한 수단이다. PATCH 로는 못 지운다 — 안 보낸 언어는
+ * 유지되기 때문이다. 거부 사유를 문자열로 돌려 화면이 그대로 띄운다
+ * (공연 reorder 와 같은 관례).
+ */
+export function deleteNoticeTranslation(noticeId: number, code: LanguageCode): string | null {
+  // KO 는 모든 기본 리소스에 필요한 번역이라 409 DELETE_CONFLICT 다.
+  // 화면은 KO 필수 검증으로 저장 자체를 먼저 막으므로 여기까지 오지 않지만,
+  // 계약을 코드에 남겨 둔다
+  if (code === 'KO') return '한국어 번역은 지울 수 없습니다.'
+
+  const notice = noticeById(noticeId)
+  if (!notice) return '없는 공지입니다.'
+
+  // 기본 리소스나 그 언어 번역이 없으면 404 RESOURCE_NOT_FOUND
+  const at = notice.translations.findIndex((t) => t.language_code === code)
+  if (at < 0) return '없는 번역입니다.'
+
+  notice.translations.splice(at, 1)
+  emit()
+  return null
+}
+
+/** 지운 것을 돌려줘 실행취소에 쓴다 (§6) */
+export function deleteNotice(id: number): Notice | undefined {
+  const index = NOTICES.findIndex((n) => n.id === id)
+  if (index < 0) return undefined
+  const [removed] = NOTICES.splice(index, 1)
+  emit()
+  return removed
+}
+
+/** 실행취소. 정렬이 created_at 이라 되돌리기만 하면 원래 자리로 돌아간다 */
+export function restoreNotice(notice: Notice): void {
+  NOTICES.push(notice)
+  emit()
 }

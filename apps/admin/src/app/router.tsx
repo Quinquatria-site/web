@@ -3,6 +3,7 @@ import { HomeRoute } from '../routes/HomeRoute'
 import { LoginRoute } from '../routes/LoginRoute'
 import { LostItemsRoute } from '../routes/LostItemsRoute'
 import { MenuEditRoute } from '../routes/MenuEditRoute'
+import { NoticeEditRoute } from '../routes/NoticeEditRoute'
 import { NoticesRoute } from '../routes/NoticesRoute'
 import { PerformanceEditRoute } from '../routes/PerformanceEditRoute'
 import { PerformancesRoute } from '../routes/PerformancesRoute'
@@ -68,6 +69,18 @@ export const router = createBrowserRouter([
             handle: { title: '공연 편집', back: true, hideTabs: true },
           },
           { path: 'notices', element: <NoticesRoute />, handle: { title: '공지' } },
+          {
+            path: 'notices/new',
+            element: <NoticeEditRoute />,
+            handle: { title: '공지 작성', back: true, hideTabs: true },
+          },
+          {
+            // 이 라우트는 두 상태를 갖는다 — 편집, 그리고 없는 공지 안내.
+            // 상단바는 상태가 아니라 화면을 가리키므로 둘 다에서 맞는 이름을 쓴다
+            path: 'notices/:id',
+            element: <NoticeEditRoute />,
+            handle: { title: '공지', back: true, hideTabs: true },
+          },
           { path: 'lost-items', element: <LostItemsRoute />, handle: { title: '분실물' } },
           {
             path: 'settings',

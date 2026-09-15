@@ -1,0 +1,96 @@
+/* 장소·공연 목록과 같은 뼈대다 — screen → actions → list → FAB.
+   공지에만 있는 것은 상단 경고 배너와 종류별 두 섹션이다.
+   일차 세그먼트·순서 재정렬에 해당하는 것은 없다 (정렬 키가 created_at 뿐). */
+.screen {
+  display: flex;
+  flex: 1;
+
+  /* FAB 의 기준 상자 */
+  position: relative;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* 번역 누락 경고. 필터 칩보다 위에 둬야 목록을 보기 전에 읽힌다 */
+.banner {
+  flex-shrink: 0;
+  padding: var(--seed-dimension-x3) var(--seed-dimension-x4) 0;
+}
+
+.actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--seed-dimension-x2);
+  align-items: center;
+  padding: var(--seed-dimension-x3) var(--seed-dimension-x4);
+}
+
+.list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+
+  /* FAB 에 마지막 항목이 가리지 않게 바닥을 비운다 */
+  padding-bottom: calc(var(--seed-dimension-x16) + var(--seed-dimension-x4));
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}
+
+/* 행 사이에 구분선이 생겨 목록이 촘촘해 보이므로, 섹션 간격은 그보다 확실히
+   커야 계층이 선다. 이 값이 행 간격 이하로 내려가면 두 섹션이 다시 붙어 보인다 */
+.section + .section {
+  margin-top: var(--seed-dimension-x8);
+}
+
+/* 섹션 헤더 오른쪽 건수. 헤더가 boldSolid 라 진해졌으므로 숫자는 톤을 낮춰
+   제목이 먼저 읽히게 한다 */
+.count {
+  font-size: var(--seed-font-size-t4);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-subtle);
+}
+
+/* 섹션 하나만 비었을 때. 전체가 빈 것과 달리 나갈 문을 따로 주지 않는다 —
+   FAB 이 이미 그 자리에 있고, 여기서 또 버튼을 내면 두 섹션에 두 개가 뜬다 */
+.sectionEmpty {
+  margin: 0;
+  padding: var(--seed-dimension-x3) var(--seed-dimension-x4) var(--seed-dimension-x1);
+  font-size: var(--seed-font-size-t3);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+/* 한 손 엄지 구역. 탭바 위에 뜬다 */
+.fab {
+  position: absolute;
+  right: var(--seed-dimension-x4);
+  bottom: var(--seed-dimension-x4);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x2);
+  align-items: center;
+  padding: var(--seed-dimension-x16) var(--seed-dimension-x4) 0;
+  text-align: center;
+}
+
+.emptyTitle {
+  margin: 0;
+  font-size: var(--seed-font-size-t5);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t5);
+  color: var(--seed-color-fg-neutral);
+}
+
+.emptyDescription {
+  margin: 0 0 var(--seed-dimension-x2);
+  font-size: var(--seed-font-size-t3);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
+}
