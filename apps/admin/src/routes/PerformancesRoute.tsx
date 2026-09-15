@@ -23,11 +23,11 @@ import {
   festivalDayLabel,
   findTranslation,
   hasMissingTranslations,
-  missingLanguages,
   PERFORMANCE_TYPES,
   type Performance,
   type PerformanceType,
 } from '../mocks/types'
+import { LangBadge } from '../ui'
 import styles from './PerformancesRoute.module.css'
 
 /** ERD 의 enum 은 세 값뿐이다. 응원제·가요제는 SPECIAL 로 받는다 (PRD §12 열린 질문 3) */
@@ -39,23 +39,6 @@ const TYPE_LABELS: Record<PerformanceType, string> = {
 
 function titleOf(performance: Performance): string {
   return findTranslation(performance.translations, 'KO')?.title ?? `공연 ${performance.id}`
-}
-
-/** 번역 상태. 빠진 언어가 있으면 그 언어 사용자에게 이 공연이 안 보인다 (§2.4) */
-function LangBadge({ performance }: { performance: Performance }) {
-  const missing = missingLanguages(performance.translations)
-  // weak — 목록처럼 같은 배지가 줄줄이 반복되는 자리에 solid 는 너무 시끄럽다
-  if (missing.length === 0)
-    return (
-      <Badge tone="neutral" variant="weak">
-        3개 언어
-      </Badge>
-    )
-  return (
-    <Badge tone="critical" variant="weak">
-      {missing.join('·')} 없음
-    </Badge>
-  )
 }
 
 /**
@@ -176,7 +159,9 @@ export function PerformancesRoute() {
     snackbar.create({
       timeout: 3000,
       render: () => (
-        <Snackbar message={next ? `지금 공연: ${titleOf(performance)}` : '현재 공연을 내렸습니다'} />
+        <Snackbar
+          message={next ? `지금 공연: ${titleOf(performance)}` : '현재 공연을 내렸습니다'}
+        />
       ),
     })
   }
@@ -281,7 +266,7 @@ export function PerformancesRoute() {
                   {/* enum 에 네 번째 값이 생길 수 있다 (PRD §12 열린 질문 3).
                       모르는 값이면 빈칸 대신 원래 값을 보여준다 */}
                   {TYPE_LABELS[performance.type] ?? performance.type}
-                  <LangBadge performance={performance} />
+                  <LangBadge translations={performance.translations} />
                 </span>
               )
               const rowClass = clsx(

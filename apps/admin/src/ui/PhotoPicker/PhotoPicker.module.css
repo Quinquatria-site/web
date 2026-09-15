@@ -1,0 +1,78 @@
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x2);
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--seed-dimension-x2);
+}
+
+/* 삭제 버튼의 기준 상자 */
+.thumb {
+  position: relative;
+}
+
+.photo {
+  display: block;
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: var(--seed-radius-r2);
+  background: var(--seed-color-bg-neutral-weak);
+}
+
+/* 사진 위에 얹히므로 배경을 깔아야 밝은 사진에서도 보인다 */
+.remove {
+  position: absolute;
+  top: var(--seed-dimension-x1);
+  right: var(--seed-dimension-x1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: var(--seed-color-palette-static-white);
+  cursor: pointer;
+  background: var(--seed-color-palette-static-black-alpha-500);
+  border: 0;
+  border-radius: var(--seed-radius-full);
+}
+
+.add {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x1);
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  color: var(--seed-color-fg-neutral-muted);
+  cursor: pointer;
+  background: var(--seed-color-bg-neutral-weak);
+  border: 0;
+  border-radius: var(--seed-radius-r2);
+}
+
+.add:active {
+  background: var(--seed-color-bg-neutral-weak-pressed);
+}
+
+.addLabel {
+  font-size: var(--seed-font-size-t1);
+  line-height: var(--seed-line-height-t1);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--seed-font-size-t2);
+  line-height: var(--seed-line-height-t2);
+  color: var(--seed-color-fg-critical);
+}
+
+/* 타일이 트리거다. input 자체는 보이지 않는다 */
+.input {
+  display: none;
+}
