@@ -1,6 +1,6 @@
 import { IconPlusLine } from '@karrotmarket/react-monochrome-icon'
-import { Fragment, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { Fragment } from 'react'
+import { useNavigate, useSearchParams } from 'react-router'
 import { Badge } from '@seed-design/react'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { Callout } from 'seed-design/ui/callout'
@@ -119,7 +119,12 @@ function Section({
  */
 export function NoticesRoute() {
   const navigate = useNavigate()
-  const [missingOnly, setMissingOnly] = useState(false)
+  // 누락 필터를 URL 에 싣는다. 홈의 "번역 누락 · 공지" 가 이 화면을 필터가
+  // 걸린 채로 열어야 해서다
+  const [searchParams, setSearchParams] = useSearchParams()
+  const missingOnly = searchParams.get('missing') === '1'
+  const setMissingOnly = (next: boolean) =>
+    setSearchParams(next ? { missing: '1' } : {}, { replace: true })
 
   // 저장·삭제·실행취소가 이 목록에 바로 반영되게 한다
   useStoreVersion()

@@ -1,6 +1,6 @@
 import { IconMapLine, IconPlusLine } from '@karrotmarket/react-monochrome-icon'
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 import { ContextualFloatingButton, Icon } from '@seed-design/react'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { Chip } from 'seed-design/ui/chip'
@@ -65,7 +65,14 @@ function Empty({
 export function PlacesRoute() {
   const navigate = useNavigate()
   const [filter, setFilter] = useState<string>('all')
-  const [missingOnly, setMissingOnly] = useState(false)
+
+  // 누락 필터만 URL 에 싣는다. 홈의 "번역 누락 · 장소" 가 이 화면을 필터가
+  // 걸린 채로 열어야 해서다. 카테고리는 홈에서 가리키지 않으므로 state 로 둔다
+  const [searchParams, setSearchParams] = useSearchParams()
+  const missingOnly = searchParams.get('missing') === '1'
+  const setMissingOnly = (next: boolean) =>
+    setSearchParams(next ? { missing: '1' } : {}, { replace: true })
+
   // 삭제·실행취소가 이 목록에 바로 반영되게 한다
   useStoreVersion()
 
