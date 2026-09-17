@@ -1,29 +1,151 @@
+/* 회색 바닥 위에 흰 카드를 얹어 블록마다 경계를 세운다.
+
+   SEED 에는 카드 컴포넌트가 없고 divider 레시피도 없다. 대신 층위를 뜻하는
+   면 토큰 쌍(basement ↔ default)이 있어서 그걸로 만든다. 그림자는 넣지
+   않는다 — SEED 에서 --seed-shadow-* 를 쓰는 레시피는 FAB·menu·select 처럼
+   실제로 떠 있는 것뿐이라, 정적인 카드에 쓰면 관례를 벗어난다.
+
+   카드에 좌우 padding 을 주지 않는 것이 핵심이다. ListHeader·ListItem 이
+   이미 자기 global-gutter(16px)를 갖고 있어서, 카드가 또 주면 거터가 두 겹으로
+   쌓여 제목이 본문보다 안쪽으로 들어간다. 거터를 가진 것은 그대로 두고,
+   없는 것(hero·chips·Meter·totals)에만 같은 값을 직접 준다.
+
+   그래서 선은 둘이다 — 카드 밖 16px(헤더·경고·카드 좌변), 카드 안 16px. */
 .screen {
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: var(--seed-dimension-x5);
+  gap: var(--seed-dimension-x3);
   padding: var(--seed-dimension-x4);
+  background: var(--seed-color-bg-layer-basement);
 }
 
-.section {
+/* 국면과 기준 시각. 카드 밖에 둔다 — 화면 전체에 프레임을 씌우는 줄이라
+   한 블록으로 갇히면 오히려 안쪽 정보처럼 읽힌다 */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x1);
+  padding-block: var(--seed-dimension-x1);
+}
+
+.headerLine {
+  display: flex;
+  gap: var(--seed-dimension-x2);
+  align-items: center;
+}
+
+.headline {
+  font-size: var(--seed-font-size-t6);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t6);
+  color: var(--seed-color-fg-neutral);
+}
+
+.headerDetail {
+  margin: 0;
+  font-size: var(--seed-font-size-t3);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+/* 제목·배지 다음 오른쪽 끝. 테스트 시각으로 볼 때만 나타난다 */
+.headerAction {
+  margin-left: auto;
+}
+
+/* 경고 묶음. 카드보다 먼저 오고 서로 붙여 하나의 덩어리로 읽히게 한다.
+   Callout 은 이미 자기 면과 모서리를 가져 카드 노릇을 하므로 감싸지 않는다 */
+.warnings {
   display: flex;
   flex-direction: column;
   gap: var(--seed-dimension-x2);
 }
 
-.sectionTitle {
-  margin: 0;
-  font-size: var(--seed-font-size-t4);
-  font-weight: var(--seed-font-weight-bold);
-  line-height: var(--seed-line-height-t5);
-  color: var(--seed-color-fg-neutral);
+/* 경고가 하나도 없으면 빈 칸이 남지 않게 접는다 */
+.warnings:empty {
+  display: none;
 }
 
-.sectionBody {
+/* 카드 한 장. 좌우 padding 이 없는 것은 위 주석의 이유다 */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x1);
+  padding-block: var(--seed-dimension-x2);
+  background: var(--seed-color-bg-layer-default);
+  border-radius: var(--seed-radius-r3);
+}
+
+/* ListHeader 레시피가 space-between 이라 오른쪽으로 밀려 붙는다 */
+.count {
+  font-size: var(--seed-font-size-t4);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+/* 0 건은 나쁜 소식이 아니라 좋은 소식이라 목록 대신 문장으로 말한다.
+   거터가 없는 요소라 목록과 같은 값을 직접 준다 */
+.sectionEmpty {
+  margin: 0;
+  padding: var(--seed-dimension-x1) var(--seed-dimension-x4) var(--seed-dimension-x2);
+  font-size: var(--seed-font-size-t3);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+/* 이 화면이 이끄는 하나의 숫자 */
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x1);
+  padding: var(--seed-dimension-x2) var(--seed-dimension-x4);
+}
+
+.heroLabel {
   margin: 0;
   font-size: var(--seed-font-size-t3);
   font-weight: var(--seed-font-weight-regular);
   line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+/* t14 = 3rem = 48px. 본문과 같은 sans 그대로 쓴다 — 장식 서체는 딴 브랜드처럼
+   보인다. 등폭(tabular-nums)은 일부러 안 건다 */
+.heroValue {
+  margin: 0;
+  font-size: var(--seed-font-size-t14);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: 1.1;
+  color: var(--seed-color-fg-neutral);
+}
+
+/* 0 건은 나쁜 소식이 아니라 좋은 소식이다 */
+.heroDone {
+  margin: 0;
+  font-size: var(--seed-font-size-t3);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+/* 좁은 폰에서 넘치면 줄바꿈한다. 가로 스크롤을 만들지 않는다 */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--seed-dimension-x2);
+  margin-top: var(--seed-dimension-x1);
+}
+
+/* 총계는 누를 것이 없다. 탭바가 바로 아래 있어 가짜 이동 버튼을 만들지 않는다 */
+.totals {
+  margin: 0;
+  padding: var(--seed-dimension-x1) var(--seed-dimension-x4) var(--seed-dimension-x1);
+  font-size: var(--seed-font-size-t2);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t3);
   color: var(--seed-color-fg-neutral-muted);
 }

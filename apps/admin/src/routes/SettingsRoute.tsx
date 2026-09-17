@@ -5,6 +5,10 @@ import styles from './SettingsRoute.module.css'
 /**
  * 탭을 차지할 만큼 자주 쓰지 않아 상단바 톱니로 연다.
  * 들어갈 것은 ISR 수동 재검증과 로그아웃 정도다.
+ *
+ * 한때 여기 "시각 미리보기" 네 줄(1일차 저녁·2일차 아침·다음 날…)이 있었지만,
+ * 홈에서 걷어낸 "날마다 다른 화면" 이 목록 모양으로 남아 있는 꼴이었다.
+ * 지금은 홈 헤더의 버튼 하나가 그 일을 한다.
  */
 export function SettingsRoute() {
   const { logout } = useAuth()

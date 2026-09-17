@@ -1,0 +1,53 @@
+/* 라벨 · 막대 · 수치 세 칸. 모든 줄이 이 한 격자를 공유해야 막대가 세로로 맞는다.
+
+   좌우 거터를 컴포넌트가 직접 갖는다. Meter 는 언제나 목록·제목과 같은 선에
+   서야 하는데, 그것들은 SEED 레시피가 global-gutter 로 거터를 만들고 Meter 는
+   그런 레시피가 없어서다. 부모가 대신 주면 쓰는 곳마다 어긋난다 */
+.group {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--seed-dimension-x1) var(--seed-dimension-x3);
+  align-items: center;
+  padding-block: var(--seed-dimension-x1);
+  padding-inline: var(--seed-dimension-spacing-x-global-gutter);
+}
+
+.row {
+  display: contents;
+}
+
+.label {
+  min-block-size: var(--seed-dimension-x7);
+  display: flex;
+  align-items: center;
+  font-size: var(--seed-font-size-t3);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral);
+  white-space: nowrap;
+}
+
+/* 8px — 마크는 얇게 둔다. 두꺼운 채색 블록은 시끄럽게 읽힌다 */
+.track {
+  block-size: 8px;
+  overflow: hidden;
+  background: var(--seed-color-bg-brand-weak);
+  border-radius: 999px;
+}
+
+.fill {
+  block-size: 100%;
+  background: var(--seed-color-bg-brand-solid);
+  border-radius: 999px;
+}
+
+/* 세로로 줄지어 비교하는 숫자라 여기는 등폭이 맞다 */
+.value {
+  font-size: var(--seed-font-size-t2);
+  font-weight: var(--seed-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
+  text-align: end;
+  white-space: nowrap;
+}
