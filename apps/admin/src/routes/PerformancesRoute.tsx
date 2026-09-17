@@ -106,7 +106,12 @@ export function PerformancesRoute() {
     : FESTIVAL_DATES[0]
 
   const [typeFilter, setTypeFilter] = useState<string>('all')
-  const [missingOnly, setMissingOnly] = useState(false)
+
+  // 누락 필터도 URL 에 싣는다. 홈의 "번역 누락 · 공연 N일차" 가 일차와 필터를
+  // 함께 걸어 이 화면을 열어야 해서다. date 를 같이 써야 일차가 풀리지 않는다
+  const missingOnly = searchParams.get('missing') === '1'
+  const setMissingOnly = (next: boolean) =>
+    setSearchParams(next ? { date, missing: '1' } : { date }, { replace: true })
   /** null 이 아니면 순서 편집 중. 확정 전까지는 이 배열만 움직인다 */
   const [order, setOrder] = useState<number[] | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -173,10 +178,11 @@ export function PerformancesRoute() {
           aria-label="축제 일차"
           value={date}
           onValueChange={(value) => {
+            // date 만 남기므로 누락 필터는 여기서 함께 풀린다. 다른 일차의
+            // 누락이 0 건이면 켜둔 필터가 빈 화면만 남기기 때문이다
             setSearchParams({ date: String(value) }, { replace: true })
             setOrder(null)
             setError(null)
-            setMissingOnly(false)
           }}
         >
           {FESTIVAL_DATES.map((value) => (
