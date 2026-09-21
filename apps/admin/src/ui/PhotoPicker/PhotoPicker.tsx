@@ -6,10 +6,22 @@ import { uploadImage } from '../../mocks/upload'
 import styles from './PhotoPicker.module.css'
 
 /**
- * 백엔드 계약 전의 잠정값이다. 허용 타입과 최대 용량이 정해지면(#14) 맞춘다.
- * 지금 막아두는 이유는 나중에 풀기보다 지금 넣어두는 편이 안전해서다.
+ * 명세 §4.5 가 정한 업로드 제약이다. 잠정값이었던 5MB · image/* 를 실제 계약으로
+ * 맞췄다.
+ *
+ * 화면에서 먼저 막는 이유는 presigned URL 발급이 size 와 content_type 을 본문에
+ * 싣기 때문이다. 여기서 거르지 않으면 서버까지 갔다가 IMAGE_TOO_LARGE 나
+ * INVALID_IMAGE 로 돌아온다 — 고르자마자 알려주는 편이 낫다.
  */
-const MAX_BYTES = 5 * 1024 * 1024
+const MAX_BYTES = 10 * 1024 * 1024
+
+/**
+ * 허용 MIME (§4.5). enum 에 있는 셋뿐이라 image/* 로는 넓다 — gif·heic 는
+ * 골라져도 업로드에서 거절당한다.
+ */
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+
+const isAllowed = (file: File) => ALLOWED_TYPES.includes(file.type)
 
 export interface PhotoPickerProps {
   /** 이미지 S3 key 목록. 고른 순서가 그대로 저장 순서다 */
@@ -44,12 +56,12 @@ export function PhotoPicker({ value, onChange, max = 10, label }: PhotoPickerPro
 
     const picked = [...files]
     const tooBig = picked.filter((f) => f.size > MAX_BYTES)
-    const notImage = picked.filter((f) => !f.type.startsWith('image/'))
-    const usable = picked.filter((f) => f.size <= MAX_BYTES && f.type.startsWith('image/'))
+    const wrongType = picked.filter((f) => !isAllowed(f))
+    const usable = picked.filter((f) => f.size <= MAX_BYTES && isAllowed(f))
 
     const reasons: string[] = []
-    if (notImage.length > 0) reasons.push(`이미지가 아닌 파일 ${notImage.length}개`)
-    if (tooBig.length > 0) reasons.push(`5MB 가 넘는 파일 ${tooBig.length}개`)
+    if (wrongType.length > 0) reasons.push(`JPG·PNG·WEBP 가 아닌 파일 ${wrongType.length}개`)
+    if (tooBig.length > 0) reasons.push(`10MB 가 넘는 파일 ${tooBig.length}개`)
     if (usable.length > room) reasons.push(`최대 ${max}장까지라 넘치는 ${usable.length - room}개`)
     if (reasons.length > 0) setError(`${reasons.join(', ')}를 빼고 넣었습니다.`)
 
@@ -115,7 +127,7 @@ export function PhotoPicker({ value, onChange, max = 10, label }: PhotoPickerPro
         ref={inputRef}
         className={styles.input}
         type="file"
-        accept="image/*"
+        accept={ALLOWED_TYPES.join(',')}
         multiple={max > 1}
         onChange={(event) => {
           void pick(event.target.files)
