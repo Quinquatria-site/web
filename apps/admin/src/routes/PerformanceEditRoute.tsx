@@ -7,7 +7,7 @@ import { SelectContent, SelectItem, SelectRoot, SelectTrigger } from 'seed-desig
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/text-field'
 import { useFormFields } from '../lib/useFormFields'
-import { ConfirmDialog } from '../ui'
+import { ConfirmDialog, PhotoPicker } from '../ui'
 import {
   deletePerformance,
   deletePerformanceTranslation,
@@ -75,6 +75,9 @@ function PerformanceEditForm() {
   const [date, setDate] = useState<string>(editing?.date ?? initialDate)
   const [error, setError] = useState<string | null>(null)
   const [confirming, setConfirming] = useState(false)
+  // 사진만 useFormFields 밖이다. 그쪽은 문자열 전용이고 이건 key 배열이다.
+  // 명세는 한 장(§5.6)이라 아래에서 접는다
+  const [photos, setPhotos] = useState<string[]>(editing?.image_uri ? [editing.image_uri] : [])
 
   const initialFields: Record<string, string> = {}
   for (const code of LANGUAGE_CODES) {
@@ -114,7 +117,8 @@ function PerformanceEditForm() {
     const draft: PerformanceDraft = {
       id,
       type,
-      image_uri: editing?.image_uri ?? null,
+      // 명세는 한 장이고 PhotoPicker 는 목록을 다룬다. 접는 것은 여기 한 곳뿐이다
+      image_uri: photos[0] ?? null,
       date,
       translations,
     }
@@ -223,6 +227,16 @@ function PerformanceEditForm() {
           표시는 목록의 <strong>스위치</strong> 로 바꿉니다.
           {editing && ` 지금 이 공연은 ${festivalDayLabel(editing.date)} ${editing.seq}번째입니다.`}
         </p>
+      </div>
+
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>사진</h2>
+        <PhotoPicker
+          value={photos}
+          onChange={setPhotos}
+          max={1}
+          label={values.title_KO.trim() || '공연'}
+        />
       </div>
 
       <div className={styles.section}>
