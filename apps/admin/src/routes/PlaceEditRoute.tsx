@@ -118,6 +118,18 @@ function PlaceEditForm() {
     if (!values.name_KO.trim() || !values.host_KO.trim())
       return setError('한국어 이름·주최는 필수입니다.')
 
+    // name 과 host_college 는 §5.4 가 언어 구분 없이 둘 다 필수로 둔 짝이다.
+    // 선택인 것은 description 하나뿐이다. EN·CHN 은 언어 단위로만 선택이라
+    // 이름만 채우고 주최를 비운 상태는 보낼 수 없다 — 그대로 보내면 필수 필드에
+    // 빈 문자열이 들어간다
+    const half = LANGUAGE_CODES.filter((code) => {
+      const name = values[fieldKey('name', code)].trim()
+      const host = values[fieldKey('host', code)].trim()
+      return Boolean(name) !== Boolean(host)
+    })
+    if (half.length > 0)
+      return setError(`${half.join('·')} 은 이름과 주최를 둘 다 채우거나 둘 다 비워주세요.`)
+
     const id = editing?.id ?? draftId()
     const translations: PlaceTranslation[] = []
     for (const code of LANGUAGE_CODES) {
