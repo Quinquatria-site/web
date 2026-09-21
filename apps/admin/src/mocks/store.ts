@@ -435,13 +435,16 @@ export function restoreNotice(notice: Notice): void {
  * 분실물 (§5.8). 공지와 마찬가지로 순서를 손댈 수단이 없다 — 정렬 키가 서버
  * 생성 created_at 하나뿐이라 재정렬 엔드포인트 자체가 없다 (§5.1).
  *
- * 서버 몫으로 남겨야 할 값이 둘이다. created_at 은 생성 시각이고,
- * is_returned 는 목록의 반환 버튼이 전용 엔드포인트로 바꾼다. 둘 다 draft 에서
- * 빼 두면 편집 화면이 그 값을 정하는 코드를 애초에 못 갖는다.
+ * 서버 몫은 created_at 하나뿐이다. is_returned 는 **POST 필수, PATCH 선택**이라
+ * (§5.8) 생성 본문에 반드시 실려야 한다 — draft 에서 빼면 실을 값이 없어 422 다.
+ *
+ * 공연의 seq·is_live 와 헷갈리기 쉬운 자리다. 그쪽은 §5.6 이 "보내지 않음,
+ * 넣으면 422" 로 못박고 전용 엔드포인트(PUT /performances/{id}/live)로만 바꾸지만,
+ * 분실물에는 전용 엔드포인트가 없다. 반환 처리도 공용 PATCH 로 간다.
  */
 
-/** 저장 화면이 보낼 수 있는 것. created_at 과 is_returned 가 빠진 게 핵심이다 */
-export type LostItemDraft = Omit<LostItem, 'created_at' | 'is_returned'>
+/** 저장 화면이 보낼 수 있는 것. 빠지는 것은 created_at 하나다 */
+export type LostItemDraft = Omit<LostItem, 'created_at'>
 
 /**
  * 정렬은 명세 그대로 created_at DESC, id DESC (§5.1).
@@ -460,15 +463,20 @@ export function lostItemById(id: number): LostItem | undefined {
 }
 
 /**
- * 생성이면 지금 시각을 서버가 찍고 미반환으로 시작한다. 수정이면 created_at 과
- * is_returned 를 모두 그대로 둔다 — 전자는 수정 불가 필드고, 후자는 목록의
- * 반환 버튼만 바꾼다. 편집 화면에서 저장했다고 반환 상태가 되돌아가면 안 된다.
+ * 생성이면 지금 시각을 서버가 찍고, is_returned 는 draft 가 실어 온 값을 쓴다
+ * (POST 필수 — §5.8). 화면은 언제나 false 를 보낸다. 주워 온 물건이 이미
+ * 반환됐을 수는 없다.
+ *
+ * 수정이면 created_at 과 is_returned 를 모두 그대로 둔다 — 전자는 수정 불가
+ * 필드고, 후자는 PATCH 에서 선택이라 안 보낸 것으로 친다. 반환 상태를 바꾸는
+ * 것은 목록의 반환 버튼(setReturned)이다. 편집 화면에서 저장했다고 반환 상태가
+ * 되돌아가면 안 된다.
  */
 export function upsertLostItem(draft: LostItemDraft): LostItem {
   const index = LOST_ITEMS.findIndex((item) => item.id === draft.id)
 
   if (index < 0) {
-    const created: LostItem = { ...draft, created_at: nowKst(), is_returned: false }
+    const created: LostItem = { ...draft, created_at: nowKst() }
     LOST_ITEMS.push(created)
     emit()
     return created

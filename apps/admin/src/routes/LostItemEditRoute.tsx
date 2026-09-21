@@ -32,10 +32,12 @@ const fieldKey = (field: TranslationField, lang: LanguageCode) => `${field}_${la
 /**
  * 분실물 편집 (§5.8). /lost-items/new 와 /lost-items/:id 를 겸한다.
  *
- * 입력칸이 없는 것이 둘이다. 둘 다 요청 본문에 넣을 값이 아니다.
- * - created_at: 서버가 찍는다. 수정도 안 된다.
- * - is_returned: 목록의 반환 버튼이 바꾼다. 주인이 물건을 찾아가는 순간은 한 손이
- *   물건에 가 있어서, 이 화면까지 들어와 저장을 누르게 할 여유가 없다.
+ * 입력칸이 없는 것이 둘이지만 성격이 다르다.
+ * - created_at: 서버가 찍는다. 수정도 안 되고 본문에도 안 들어간다.
+ * - is_returned: 본문에는 들어간다. §5.8 이 POST 필수로 정했고, 생성이면 언제나
+ *   false 다 — 주워 온 물건이 이미 반환됐을 수는 없어 고를 것이 없다. 반환 처리는
+ *   목록의 버튼이 맡는다. 주인이 물건을 찾아가는 순간은 한 손이 물건에 가 있어서,
+ *   이 화면까지 들어와 저장을 누르게 할 여유가 없다.
  *
  * 번역은 §5.2 대로 KO 만 필수다. EN·CHN 은 제목이 비어 있으면 아예 안 보낸 것으로
  * 친다. 번역 항목은 전체 교체라서 기존 값을 유지하려면 다시 보내야 한다 —
@@ -120,6 +122,9 @@ function LostItemEditForm() {
       id,
       // 명세는 한 장이고 PhotoPicker 는 목록을 다룬다. 접는 것은 여기 한 곳뿐이다
       image_url: photos[0] ?? null,
+      // POST 필수라 실어 보낸다 (§5.8). 수정일 때 이 값은 쓰이지 않는다 —
+      // upsertLostItem 이 이전 값을 지킨다
+      is_returned: editing?.is_returned ?? false,
       translations,
     }
     // 지우기 전에 원본을 붙잡는다. upsertLostItem 이 LOST_ITEMS 의 항목을 새
@@ -150,7 +155,14 @@ function LostItemEditForm() {
                 message={`${values.title_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
                 actionLabel="실행취소"
                 onAction={() =>
-                  upsertLostItem({ id: saved.id, image_url: saved.image_url, translations: undo })
+                  upsertLostItem({
+                    id: saved.id,
+                    image_url: saved.image_url,
+                    // 이미 있는 항목이라 upsert 가 이전 값을 지킨다. 그래도 draft 는
+                    // POST 본문과 같은 모양이어야 해서 현재 값을 그대로 싣는다
+                    is_returned: saved.is_returned,
+                    translations: undo,
+                  })
                 }
               />
             ),
