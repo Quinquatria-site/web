@@ -1,4 +1,5 @@
 import { BOOTHS, LAYOUT_PLACES, type Localized } from './layout'
+import { BOOTH_INFO, PLACE_INFO } from './placeNames'
 import type { LanguageCode, Place, PlaceTranslation } from './types'
 
 /**
@@ -9,8 +10,9 @@ import type { LanguageCode, Place, PlaceTranslation } from './types'
  * 쓰레기통(bin)은 변환하지 않는다. ERD 에 카테고리가 없고 PRD §7-4 가
  * 편의시설을 정적 마커로 정했다.
  *
- * 이름은 user 관례대로 세 언어 대괄호 자리표시다. 번역 누락 경고 검증용으로
- * 주점 2 · 부스 A-2 · 푸드트럭 2 세 곳만 일부러 KO 단독으로 남긴다.
+ * 이름·주최·설명은 placeNames.ts 에서 온다. layout.ts 의 자리표시 문구를 덮는
+ * 것이라 좌표 원본은 손대지 않는다. 번역 누락 경고 검증용으로 주점 2 ·
+ * 부스 A-2 · 푸드트럭 2 세 곳만 일부러 KO 단독으로 남긴다.
  */
 
 /** user 언어 코드(ko/en/cha) → API 명세 §2.3 (KO/EN/CHN) */
@@ -55,8 +57,6 @@ const HOURS: Record<number, [string, string]> = {
   5: ['2026-10-06T09:00:00+09:00', '2026-10-06T18:00:00+09:00'], // 팔찌
 }
 
-const TBD: Localized = { ko: '[미정]', en: '[TBD]', cha: '[待定]' }
-
 /** 사진이 없는 게 정상인 시설. 의무실·팔찌 수령소는 null 로 남긴다 */
 const PHOTOLESS_CATEGORIES = new Set([4, 5])
 
@@ -80,8 +80,8 @@ function build(
   x: number,
   y: number,
   name: Localized,
-  host: Localized = TBD,
-  description: Localized = TBD,
+  host: Localized,
+  description: Localized,
 ): Place {
   const [start, end] = HOURS[categoryId]
   return {
@@ -102,6 +102,7 @@ const KIND_BASE_ID: Record<string, number> = { pub: 9, food: 29, aid: 39 }
 
 const fromLayoutPlaces: Place[] = LAYOUT_PLACES.filter((p) => p.kind !== 'bin').map((p, _, all) => {
   const sequence = all.filter((q) => q.kind === p.kind).indexOf(p) + 1
+  const named = PLACE_INFO[p.id]
   return build(
     KIND_BASE_ID[p.kind] + sequence,
     KIND_TO_CATEGORY[p.kind],
@@ -109,23 +110,39 @@ const fromLayoutPlaces: Place[] = LAYOUT_PLACES.filter((p) => p.kind !== 'bin').
     p.id,
     p.x,
     p.y,
-    p.name,
+    named.name,
+    named.host,
+    named.description,
   )
 })
 
-const fromBooths: Place[] = BOOTHS.map((booth, index) =>
-  build(1001 + index, 2, index + 1, booth.id, booth.x, booth.y, {
-    ko: `[부스 ${booth.id}]`,
-    en: `[Booth ${booth.id}]`,
-    cha: `[摊位 ${booth.id}]`,
-  }),
-)
+const fromBooths: Place[] = BOOTHS.map((booth, index) => {
+  const named = BOOTH_INFO[booth.id]
+  return build(
+    1001 + index,
+    2,
+    index + 1,
+    booth.id,
+    booth.x,
+    booth.y,
+    named.name,
+    named.host,
+    named.description,
+  )
+})
 
 /** 팔찌 수령소는 user 목에 없다. 오바마홀 한 곳을 admin 쪽에서 유지한다 (PRD §5-3) */
-const bracelet = build(50, 5, 1, 'bracelet-1', 100, 150, {
-  ko: '[팔찌 수령소 (오바마홀)]',
-  en: '[Bracelet Pickup (Obama Hall)]',
-  cha: '[手环领取处（奥巴马厅）]',
-})
+const braceletInfo = PLACE_INFO['bracelet-1']
+const bracelet = build(
+  50,
+  5,
+  1,
+  'bracelet-1',
+  100,
+  150,
+  braceletInfo.name,
+  braceletInfo.host,
+  braceletInfo.description,
+)
 
 export const PLACES: Place[] = [...fromLayoutPlaces, ...fromBooths, bracelet]
