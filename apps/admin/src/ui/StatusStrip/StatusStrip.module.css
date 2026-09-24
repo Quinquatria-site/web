@@ -20,7 +20,11 @@
   align-items: center;
 }
 
-/* 점은 상태의 장식이다. 글자가 이미 상태를 말하므로 읽어줄 필요가 없다 */
+/* 점은 상태의 장식이다. 글자가 이미 상태를 말하므로 읽어줄 필요가 없다.
+
+   색을 상태마다 달리 두는 것은 줄을 읽기 전에 훑어보기 위해서다. 다만 색이
+   유일한 신호가 되면 안 되므로(색각 이상·흑백 출력) 글자는 그대로 상태를
+   말한다. 점은 그 글자를 빨리 찾게 해주는 표식이다. */
 .dot {
   width: 6px;
   height: 6px;
@@ -28,8 +32,25 @@
   border-radius: 50%;
 }
 
+/* 떠 있고 쓸 만하다 */
+.dotOk {
+  background: var(--seed-color-fg-positive);
+}
+
+/* 응답은 왔는데 오류 상태다. 아예 안 오는 것과 구분해야 어디를 볼지 갈린다 —
+   주황은 서버 탓, 빨강은 연결 탓으로 먼저 의심하게 된다 */
+.dotWarn {
+  background: var(--seed-color-fg-warning);
+}
+
+/* 응답 자체가 없다 */
 .dotBad {
   background: var(--seed-color-fg-critical);
+}
+
+/* 주소를 안 넣은 상태. 고장이 아니라 아직 모르는 것이라 제일 조용하다 */
+.dotIdle {
+  background: var(--seed-color-fg-neutral-subtle);
 }
 
 .bad {
