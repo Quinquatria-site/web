@@ -8,7 +8,10 @@
    카드에 좌우 padding 을 주지 않는 것이 핵심이다. ListHeader·ListItem 이
    이미 자기 global-gutter(16px)를 갖고 있어서, 카드가 또 주면 거터가 두 겹으로
    쌓여 제목이 본문보다 안쪽으로 들어간다. 거터를 가진 것은 그대로 두고,
-   없는 것(hero·chips·Meter·totals)에만 같은 값을 직접 준다.
+   없는 것(sectionEmpty)에만 같은 값을 직접 준다.
+
+   맨 위 타일(StatTile)과 바로가기(QuickAction)는 카드가 아니라 제 패딩을 갖는
+   다른 종류다 — 안에 거터를 가진 레시피가 없어서다. 각 컴포넌트 CSS 참고.
 
    그래서 선은 둘이다 — 카드 밖 16px(헤더·경고·카드 좌변), 카드 안 16px. */
 .screen {
@@ -97,55 +100,8 @@
   color: var(--seed-color-fg-neutral-muted);
 }
 
-/* 이 화면이 이끄는 하나의 숫자 */
-.hero {
-  display: flex;
-  flex-direction: column;
-  gap: var(--seed-dimension-x1);
-  padding: var(--seed-dimension-x2) var(--seed-dimension-x4);
-}
-
-.heroLabel {
-  margin: 0;
-  font-size: var(--seed-font-size-t3);
-  font-weight: var(--seed-font-weight-regular);
-  line-height: var(--seed-line-height-t4);
-  color: var(--seed-color-fg-neutral-muted);
-}
-
-/* t14 = 3rem = 48px. 본문과 같은 sans 그대로 쓴다 — 장식 서체는 딴 브랜드처럼
-   보인다. 등폭(tabular-nums)은 일부러 안 건다 */
-.heroValue {
-  margin: 0;
-  font-size: var(--seed-font-size-t14);
-  font-weight: var(--seed-font-weight-bold);
-  line-height: 1.1;
-  color: var(--seed-color-fg-neutral);
-}
-
-/* 0 건은 나쁜 소식이 아니라 좋은 소식이다 */
-.heroDone {
-  margin: 0;
-  font-size: var(--seed-font-size-t3);
-  font-weight: var(--seed-font-weight-regular);
-  line-height: var(--seed-line-height-t4);
-  color: var(--seed-color-fg-neutral-muted);
-}
-
-/* 좁은 폰에서 넘치면 줄바꿈한다. 가로 스크롤을 만들지 않는다 */
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--seed-dimension-x2);
-  margin-top: var(--seed-dimension-x1);
-}
-
-/* 총계는 누를 것이 없다. 탭바가 바로 아래 있어 가짜 이동 버튼을 만들지 않는다 */
-.totals {
-  margin: 0;
-  padding: var(--seed-dimension-x1) var(--seed-dimension-x4) var(--seed-dimension-x1);
-  font-size: var(--seed-font-size-t2);
-  font-weight: var(--seed-font-weight-regular);
-  line-height: var(--seed-line-height-t3);
-  color: var(--seed-color-fg-neutral-muted);
+/* 행 오른쪽 셰브런. 누를 수 있다는 표시일 뿐이라 조용한 색이다 */
+.chevron {
+  display: inline-flex;
+  color: var(--seed-color-fg-neutral-subtle);
 }

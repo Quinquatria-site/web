@@ -1,9 +1,14 @@
 import { Fragment, type ReactNode } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
+import {
+  IconArrowClockwiseCircularLine,
+  IconBoxFlapLine,
+  IconChevronRightLine,
+  IconMegaphoneLine,
+} from '@karrotmarket/react-monochrome-icon'
 import { Badge } from '@seed-design/react'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { ActionableCallout } from 'seed-design/ui/callout'
-import { Chip } from 'seed-design/ui/chip'
 import { List, ListButtonItem, ListDivider } from 'seed-design/ui/list'
 import { ListHeader } from 'seed-design/ui/list-header'
 import {
@@ -17,14 +22,10 @@ import {
   latestGeneralBroken,
   latestGeneralNotice,
   liveNow,
-  menuProgress,
   missingByDomain,
-  missingPerformancesByDate,
   nextInSeq,
   openPlacesByCategory,
   performanceCountByDate,
-  photoProgress,
-  translationProgress,
 } from '../lib/homeStats'
 import { parseAtParam, useNow } from '../lib/useNow'
 import {
@@ -35,7 +36,6 @@ import {
 } from '../mocks/store'
 import {
   dateTimeLabel,
-  festivalDateLabel,
   festivalDayLabel,
   FESTIVAL_DATES,
   findTranslation,
@@ -43,7 +43,7 @@ import {
   type Notice,
   type Performance,
 } from '../mocks/types'
-import { Meter, MeterGroup, StatusStrip } from '../ui'
+import { QuickAction, QuickActions, StatTile, StatTileGrid, StatusStrip } from '../ui'
 import styles from './HomeRoute.module.css'
 
 /**
@@ -66,6 +66,15 @@ import styles from './HomeRoute.module.css'
  * 공연의 "다음" 은 시각이 아니라 같은 일차의 seq+1 이다. 공연에 시각이 없는
  * 것은 일정 지연 때문에 의도적으로 그렇게 둔 것이라(§5.6) 화면이 시각을
  * 지어내지 않는다.
+ *
+ * 큰 숫자는 넷이다. 한때 "화면당 hero 하나" 로 번역 누락 건수를 48px 로
+ * 세웠는데, 운영 현황판에서 가장 큰 글자가 문제 건수라 시선이 "지금 뭐가
+ * 돌아가나" 에서 벗어났다. 공연·장소·분실물·번역 네 숫자를 동급 타일로 놓으면
+ * 인수인계 질문에 한눈에 답하고, 어느 것도 다른 것보다 크게 말하지 않는다.
+ *
+ * 바로가기 셋은 "여기서 아무것도 고치지 않는다" 를 어기지 않는다 — 편집 화면으로
+ * 이동만 하고 이 화면에서는 아무것도 바뀌지 않는다. 학생 화면 새로고침은
+ * POST /revalidations 가 붙기 전까지 비활성이다 (SettingsRoute 의 같은 주석).
  */
 export function HomeRoute() {
   const navigate = useNavigate()
@@ -85,13 +94,9 @@ export function HomeRoute() {
   const live = liveNow()
   const byDate = performanceCountByDate()
   const permanent = noticesByType('PERMANENT')
-  const general = noticesByType('GENERAL')
   const missing = missingByDomain()
   const pending = lostItemsByReturned(false)
   const latestNotice = latestGeneralNotice()
-  const translation = translationProgress()
-  const photo = photoProgress()
-  const menu = menuProgress()
   const performanceTotal = byDate.reduce((sum, row) => sum + row.count, 0)
   const lastDay = FESTIVAL_DATES[FESTIVAL_DATES.length - 1]
 
@@ -163,92 +168,68 @@ export function HomeRoute() {
         )}
       </div>
 
-      {/* 전 기간 정의되는 유일한 숫자라 hero 가 고정이다. §2.4 상 이 값은 곧
-          영어·중국어로 보는 학생에게 존재하지 않는 항목 수다 */}
-      <section className={styles.section}>
-        <Hero label="영어·중국어로 안 보이는 항목" value={missing.total}>
-          {missing.total === 0 ? (
-            <p className={styles.heroDone}>
-              장소·공연·공지·분실물이 모두 세 언어로 채워져 있습니다.
-            </p>
-          ) : (
-            <MissingChips />
-          )}
-        </Hero>
-      </section>
+      {/* 인수인계의 네 질문 — 지금 공연, 몇 곳이 열려 있나, 못 돌려준 물건,
+          학생에게 안 보이는 항목. 넷 다 전 기간 정의된다 */}
+      <StatTileGrid>
+        <StatTile
+          label="지금 공연"
+          valueVariant="text"
+          value={liveRowTitle(live, festivalDay, today, lastDay)}
+          detail={liveRowDetail(live, festivalDay, today, lastDay, todayRows.length, next, {
+            performanceTotal,
+            byDate,
+          })}
+          badge={
+            live && festivalDay ? (
+              <Badge tone={liveMisplaced ? 'critical' : 'brand'} variant="solid">
+                공연 중
+              </Badge>
+            ) : undefined
+          }
+          to={`/performances?date=${festivalDay ?? live?.date ?? FESTIVAL_DATES[0]}`}
+        />
+        <StatTile
+          label="운영 중인 장소"
+          value={festivalDay ? openTotal : placeTotal}
+          unit={festivalDay ? ` / ${placeTotal}` : '곳'}
+          detail={festivalDay ? `${nowHhmm} 기준` : '운영 집계는 축제 당일에'}
+          to="/places"
+        />
+        <StatTile
+          label="미반환 분실물"
+          value={pending.length}
+          unit="건"
+          detail={pending[0] ? `최근: ${lostItemTitle(pending[0])}` : '주인을 기다리는 물건이 없습니다'}
+          to="/lost-items"
+        />
+        {/* 링크가 없다. 갈 곳이 넷(장소·공연·공지·분실물)이라 타일 하나가 고를 수
+            없다. 세부는 각 탭의 "번역 누락" 필터 칩이 맡는다 */}
+        <StatTile
+          label="번역 누락"
+          value={missing.total}
+          unit="건"
+          detail={missing.total === 0 ? '세 언어 모두 채워짐' : '각 탭의 번역 누락 필터에서'}
+        />
+      </StatTileGrid>
 
-      <Card
-        title="지금 공연"
-        rows={[
-          {
-            key: 'live',
-            title: liveRowTitle(live, festivalDay, today, lastDay),
-            detail: liveRowDetail(live, festivalDay, today, lastDay, todayRows.length, next, {
-              performanceTotal,
-              byDate,
-            }),
-            suffix:
-              live && festivalDay ? (
-                <Badge tone={liveMisplaced ? 'critical' : 'brand'} variant="solid">
-                  공연 중
-                </Badge>
-              ) : undefined,
-            to: `/performances?date=${festivalDay ?? live?.date ?? FESTIVAL_DATES[0]}`,
-          },
-        ]}
-      />
-
-      {/* 축제일이 아니면 집계하지 않는다. isOpenAt 은 날짜를 보지 않고 HH:mm 만
-          비교하므로(PLACE 에 운영시간이 한 쌍뿐이라 그게 맞다) 축제 전에도
-          "13곳 운영 중" 을 계산해낸다 — 그건 거짓말이다 */}
-      <section className={styles.section}>
-        <ListHeader as="h2" variant="boldSolid">
-          <span>운영 중인 장소</span>
-          {festivalDay && <span className={styles.count}>{`${openTotal} / ${placeTotal}`}</span>}
-        </ListHeader>
-        {festivalDay ? (
-          <MeterGroup>
-            {byCategory.map((row) => (
-              <Meter key={row.categoryId} label={row.name} value={row.open} max={row.total} />
-            ))}
-          </MeterGroup>
-        ) : (
-          <p className={styles.sectionEmpty}>
-            {`축제 당일(${festivalDateLabel(FESTIVAL_DATES[0])}~${festivalDateLabel(lastDay)})에 이 시각 기준으로 집계합니다. 등록된 장소 ${placeTotal}곳.`}
-          </p>
-        )}
-      </section>
-
-      {/* 공연에는 막대가 없다. 라인업 목표 건수가 정해진 적이 없어 분모가 없고,
-          없는 분모를 지어내면 비율이 거짓말을 한다. 빈 일차는 위 경고가 맡는다 */}
-      <section className={styles.section}>
-        <ListHeader as="h2" variant="boldSolid">
-          <span>준비 현황</span>
-        </ListHeader>
-        <MeterGroup>
-          <Meter label="번역" value={translation.done} max={translation.total} />
-          <Meter label="사진" value={photo.done} max={photo.total} />
-          <Meter label="메뉴" value={menu.done} max={menu.total} />
-        </MeterGroup>
-        <p className={styles.totals}>
-          {`장소 ${photo.total}곳 · 공연 ${performanceTotal}건 · 공지 ${permanent.length + general.length}건`}
-        </p>
-      </section>
-
-      <Card
-        title="분실물"
-        count={pending.length}
-        rows={[
-          {
-            key: 'pending',
-            title: `미반환 ${pending.length}건`,
-            detail: pending[0]
-              ? `최근: ${lostItemTitle(pending[0])} (${dateTimeLabel(pending[0].created_at)})`
-              : '주인을 기다리는 물건이 없습니다',
-            to: '/lost-items',
-          },
-        ]}
-      />
+      <QuickActions>
+        <QuickAction
+          icon={<IconBoxFlapLine width={24} height={24} />}
+          label="분실물 등록"
+          to="/lost-items/new"
+        />
+        <QuickAction
+          icon={<IconMegaphoneLine width={24} height={24} />}
+          label="공지 작성"
+          to="/notices/new"
+        />
+        <QuickAction
+          icon={<IconArrowClockwiseCircularLine width={24} height={24} />}
+          label="학생 화면 새로고침"
+          disabled
+          hint="API 연동 시"
+        />
+      </QuickActions>
 
       {/* "마지막으로 학생들에게 뭐라고 알렸나" 는 인수인계의 필수 문장이다 */}
       <Card
@@ -277,6 +258,7 @@ function noticeTitle(notice: Notice): string {
 function lostItemTitle(item: LostItem): string {
   return findTranslation(item.translations, 'KO')?.title ?? `분실물 ${item.id}`
 }
+
 
 /** 지금 공연 행의 제목. 축제 밖이라고 카드를 숨기지 않고 그 사실을 말한다 */
 function liveRowTitle(
@@ -314,45 +296,6 @@ function liveRowDetail(
   return todayCount === 0
     ? '오늘 등록된 공연이 없습니다'
     : '학생 앱의 "지금 공연" 자리가 비어 있습니다'
-}
-
-/** 누락을 도메인별 칩으로 쪼갠다. 합이 hero 숫자와 같아야 해서 하나도 빼지 않는다 */
-function MissingChips() {
-  const navigate = useNavigate()
-  const missing = missingByDomain()
-
-  const chips: { key: string; label: string; to: string }[] = []
-  if (missing.places > 0) {
-    chips.push({ key: 'places', label: `장소 ${missing.places}`, to: '/places?missing=1' })
-  }
-  // 공연만 일차로 한 번 더 쪼개는 것은 목록이 일차 단위로 열리기 때문이다 —
-  // "공연 2" 라고 써놓고 1건만 걸린 화면을 열면 그 숫자를 못 믿게 된다
-  for (const row of missingPerformancesByDate()) {
-    if (row.count === 0) continue
-    chips.push({
-      key: `performances-${row.date}`,
-      label: `공연 ${festivalDayLabel(row.date).slice(0, 3)} ${row.count}`,
-      to: `/performances?date=${row.date}&missing=1`,
-    })
-  }
-  if (missing.notices > 0) {
-    chips.push({ key: 'notices', label: `공지 ${missing.notices}`, to: '/notices?missing=1' })
-  }
-  // 분실물 목록에는 누락 필터가 없다. 그래도 세는 것은 홈의 합계가 각 탭 숫자의
-  // 합과 어긋나면 둘 다 못 믿게 되기 때문이다
-  if (missing.lostItems > 0) {
-    chips.push({ key: 'lost-items', label: `분실물 ${missing.lostItems}`, to: '/lost-items' })
-  }
-
-  return (
-    <div className={styles.chips}>
-      {chips.map((chip) => (
-        <Chip.Button key={chip.key} size="small" onClick={() => navigate(chip.to)}>
-          <Chip.Label>{chip.label}</Chip.Label>
-        </Chip.Button>
-      ))}
-    </div>
-  )
 }
 
 /**
@@ -439,30 +382,6 @@ function Warning({
   return <ActionableCallout tone={tone} title={title} description={description} onClick={onClick} />
 }
 
-/**
- * 이 화면이 이끄는 단 하나의 숫자. 화면당 하나만 둔다.
- *
- * 숫자에는 tabular-nums 를 쓰지 않는다 — 등폭은 표에서 자릿수를 맞출 때 쓰는
- * 것이고, 큰 글씨에 걸면 121 같은 값이 벌어져 보인다.
- */
-function Hero({
-  label,
-  value,
-  children,
-}: {
-  label?: string
-  value: ReactNode
-  children?: ReactNode
-}) {
-  return (
-    <div className={styles.hero}>
-      {label && <p className={styles.heroLabel}>{label}</p>}
-      <p className={styles.heroValue}>{value}</p>
-      {children}
-    </div>
-  )
-}
-
 interface Row {
   key: string
   title: string
@@ -475,6 +394,9 @@ interface Row {
  * 홈의 모든 카드는 "요약 한 줄 + 그 자리로 가기" 라 행 모양이 같다.
  * 구분선 관례도 목록 화면들과 맞춘다 — ListDivider 는 li 라 ul 안에 넣어도 되고,
  * 행 사이에만 넣는다 (마지막 행 뒤의 선은 목록이 끊긴 것처럼 보인다).
+ *
+ * 셰브런은 SEED 리스트 레시피상 suffix 라 버튼 밖에 선다. 그래서 장식(aria-hidden)
+ * 이고, 누르는 것은 행 전체다.
  */
 function RowList({ rows }: { rows: Row[] }) {
   const navigate = useNavigate()
@@ -486,7 +408,14 @@ function RowList({ rows }: { rows: Row[] }) {
           <ListButtonItem
             title={row.title}
             detail={row.detail}
-            suffix={row.suffix}
+            suffix={
+              <>
+                {row.suffix}
+                <span className={styles.chevron} aria-hidden="true">
+                  <IconChevronRightLine width={20} height={20} />
+                </span>
+              </>
+            }
             onClick={() => navigate(row.to)}
           />
         </Fragment>
