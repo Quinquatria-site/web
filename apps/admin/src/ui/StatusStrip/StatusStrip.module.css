@@ -1,0 +1,47 @@
+/* 카드가 아니라 한 줄이다. 홈의 header 와 같은 층위라 면도 모서리도 주지 않고,
+   좌우 여백은 화면 바깥 거터(.screen 의 padding)를 그대로 쓴다.
+
+   좁은 폰에서 두 서버 이름이 한 줄에 안 들어가면 줄바꿈한다 — 가로 스크롤을
+   만들지 않는 것은 홈의 chips 와 같은 규칙이다. */
+.strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--seed-dimension-x1) var(--seed-dimension-x3);
+  align-items: center;
+  font-size: var(--seed-font-size-t2);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+.item {
+  display: flex;
+  gap: var(--seed-dimension-x1);
+  align-items: center;
+}
+
+/* 점은 상태의 장식이다. 글자가 이미 상태를 말하므로 읽어줄 필요가 없다 */
+.dot {
+  width: 6px;
+  height: 6px;
+  background: var(--seed-color-palette-gray-500);
+  border-radius: 50%;
+}
+
+.dotBad {
+  background: var(--seed-color-fg-critical);
+}
+
+.bad {
+  color: var(--seed-color-fg-critical);
+}
+
+/* 확인 시각. 정상일 때만 나오고, 두 서버 뒤로 물러나 앉는다 */
+.time {
+  color: var(--seed-color-fg-neutral-subtle);
+}
+
+/* 문제가 있을 때만 나타나는 버튼. 오른쪽 끝으로 민다 */
+.action {
+  margin-left: auto;
+}
