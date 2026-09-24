@@ -39,7 +39,8 @@ export function QuickAction({ icon, label, to, disabled = false, hint }: QuickAc
         {icon}
       </span>
       <span className={styles.label}>{label}</span>
-      {hint && <span className={styles.hint}>{hint}</span>}
+      {/* 힌트 줄은 늘 그린다. 한 칸만 있으면 그 칸만 높아져 아이콘 높이가 어긋난다 */}
+      <span className={styles.hint}>{hint}</span>
     </>
   )
 

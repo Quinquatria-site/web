@@ -10,6 +10,7 @@
   flex-direction: column;
   gap: var(--seed-dimension-x1);
   align-items: center;
+  justify-content: center;
   padding: var(--seed-dimension-x3) var(--seed-dimension-x2);
   font: inherit;
   color: var(--seed-color-fg-neutral);
@@ -45,7 +46,9 @@
   text-align: center;
 }
 
+/* 비어 있어도 한 줄 높이를 차지한다 — 세 칸의 아이콘이 같은 높이에 서게 */
 .hint {
+  min-block-size: var(--seed-line-height-t3);
   font-size: var(--seed-font-size-t2);
   font-weight: var(--seed-font-weight-regular);
   line-height: var(--seed-line-height-t3);
