@@ -8,7 +8,7 @@ import type { LanguageCode, Notice, NoticeTranslation, NoticeType } from './type
  * 그 판단을 할 수 없다. 문안이 오면 이 파일만 갈아끼운다.
  *
  * created_at 은 전부 **오늘보다 과거**다. 서버가 찍는 생성 시각이라 미래일 수
- * 없고, 축제 일자(10/6~7)로 적으면 개발 중 새로 만든 공지가 목 아래로 깔려
+ * 없고, 축제 일자(10/7~8)로 적으면 개발 중 새로 만든 공지가 목 아래로 깔려
  * 정렬이 고장난 것처럼 보인다. 공지는 원래 축제 전부터 올라온다.
  *
  * 화면이 지켜야 할 규칙이 실제로 보이도록 일부러 섞어 둔다.
@@ -112,8 +112,8 @@ export const NOTICES: Notice[] = [
     '2026-09-10T09:20:00+09:00',
     { ko: '축제 기간 교내 주차 제한', en: 'Campus Parking During the Festival', cha: '' },
     {
-      ko: '10월 6일부터 7일까지 대운동장 주변 주차장을 닫습니다. 차를 가져오셔야 한다면 정문 옆 임시 주차장을 이용해 주세요. 셔틀버스는 평소대로 운행합니다.',
-      en: 'Parking around the main field is closed on October 6 and 7. If you must drive, use the temporary lot beside the main gate. Shuttle buses run on the usual schedule.',
+      ko: '10월 7일부터 8일까지 대운동장 주변 주차장을 닫습니다. 차를 가져오셔야 한다면 정문 옆 임시 주차장을 이용해 주세요. 셔틀버스는 평소대로 운행합니다.',
+      en: 'Parking around the main field is closed on October 7 and 8. If you must drive, use the temporary lot beside the main gate. Shuttle buses run on the usual schedule.',
       cha: '',
     },
     { langs: ['KO', 'EN'] },

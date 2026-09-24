@@ -62,8 +62,8 @@ function build(
   }
 }
 
-const DAY1 = '2026-10-06'
-const DAY2 = '2026-10-07'
+const DAY1 = '2026-10-07'
+const DAY2 = '2026-10-08'
 
 export const PERFORMANCES: Performance[] = [
   build(
