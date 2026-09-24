@@ -1,0 +1,54 @@
+/* 세 칸 고정. 라벨이 두 줄로 접혀도 grid 가 행 높이를 맞춰준다 */
+.row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--seed-dimension-x2);
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x1);
+  align-items: center;
+  padding: var(--seed-dimension-x3) var(--seed-dimension-x2);
+  font: inherit;
+  color: var(--seed-color-fg-neutral);
+  text-decoration: none;
+  cursor: pointer;
+  background: var(--seed-color-bg-layer-default);
+  border: 0;
+  border-radius: var(--seed-radius-r3);
+}
+
+.action:active {
+  background: var(--seed-color-bg-layer-default-pressed);
+}
+
+.action:disabled {
+  color: var(--seed-color-fg-disabled);
+  cursor: default;
+}
+
+.action:disabled:active {
+  background: var(--seed-color-bg-layer-default);
+}
+
+.icon {
+  display: inline-flex;
+  color: inherit;
+}
+
+.label {
+  font-size: var(--seed-font-size-t3);
+  font-weight: var(--seed-font-weight-medium);
+  line-height: var(--seed-line-height-t4);
+  text-align: center;
+}
+
+.hint {
+  font-size: var(--seed-font-size-t2);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-subtle);
+  text-align: center;
+}

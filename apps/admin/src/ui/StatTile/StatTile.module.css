@@ -1,0 +1,93 @@
+/* 홈 카드(.section)와 같은 면·모서리지만 좌우 padding 은 직접 갖는다.
+   카드가 좌우 padding 을 안 두는 이유는 안의 ListHeader·ListItem 이 이미 거터를
+   갖고 있어서인데, 타일 안에는 그런 레시피가 없다. 그래서 여기가 거터다.
+
+   그림자는 없다 — SEED 에서 --seed-shadow-* 는 실제로 떠 있는 것(FAB·menu)에만
+   쓴다. HomeRoute.module.css 의 머리 주석과 같은 이유다. */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--seed-dimension-x3);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x1);
+  min-inline-size: 0;
+  padding: var(--seed-dimension-x3) var(--seed-dimension-x4);
+  color: inherit;
+  text-decoration: none;
+  background: var(--seed-color-bg-layer-default);
+  border-radius: var(--seed-radius-r3);
+}
+
+/* 링크일 때만 눌림 면. 정적 타일(div)은 상태가 없다. outline 은 건드리지 않는다 */
+a.tile:active {
+  background: var(--seed-color-bg-layer-default-pressed);
+}
+
+.head {
+  display: flex;
+  gap: var(--seed-dimension-x1);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label {
+  font-size: var(--seed-font-size-t3);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+.chevron {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--seed-color-fg-neutral-subtle);
+}
+
+/* 큰 숫자. 옛 hero(t14, 48px)보다 한참 작다 — 네 칸이 나란히 서야 하고,
+   어느 하나가 다른 것보다 크게 말하면 안 된다 */
+.value {
+  font-size: var(--seed-font-size-t8);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t8);
+  color: var(--seed-color-fg-neutral);
+  white-space: nowrap;
+}
+
+/* 공연 제목 같은 글자 값. 숫자 칸과 높이가 맞도록 두 줄에서 자른다 */
+.valueText {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: var(--seed-font-size-t5);
+  line-height: var(--seed-line-height-t5);
+  overflow-wrap: anywhere;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.unit {
+  margin-inline-start: 2px;
+  font-size: var(--seed-font-size-t4);
+  font-weight: var(--seed-font-weight-medium);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+.badge {
+  align-self: flex-start;
+}
+
+.detail {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: var(--seed-font-size-t2);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
