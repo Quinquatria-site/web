@@ -5,6 +5,43 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
+const SERVER_ENUM_MARKER = /^(CHN|FOODTRUCK|ARTIST|PERMANENT|LOST_ITEM_IMAGE|RESOURCE_NOT_FOUND)$/
+const USE_SCHEMA = '서버 데이터 모델은 @quen/schema 에서 가져오세요.'
+
+const schemaRules = {
+  'no-restricted-syntax': [
+    'warn',
+    {
+      selector: `TSAsExpression[typeAnnotation.typeName.name='const'] > ArrayExpression > Literal[value=${SERVER_ENUM_MARKER}]`,
+      message: `서버 enum 을 다시 정의하고 있습니다. ${USE_SCHEMA}`,
+    },
+    {
+      selector: `TSAsExpression[typeAnnotation.typeName.name='const'] > ObjectExpression > Property[key.name=${SERVER_ENUM_MARKER}]`,
+      message: `서버 enum 을 다시 정의하고 있습니다. ${USE_SCHEMA}`,
+    },
+    {
+      selector: `TSUnionType > TSLiteralType > Literal[value=${SERVER_ENUM_MARKER}]`,
+      message: `서버 enum 을 다시 정의하고 있습니다. ${USE_SCHEMA}`,
+    },
+    {
+      selector:
+        ":matches(TSInterfaceDeclaration, TSTypeAliasDeclaration)[id.name=/Translation$/]:has(TSPropertySignature[key.name='language_code'])",
+      message: `번역 타입을 다시 정의하고 있습니다. @quen/schema 의 WithTranslations 로 조립하세요.`,
+    },
+  ],
+  'no-restricted-imports': [
+    'warn',
+    {
+      patterns: [
+        {
+          group: ['**/packages/schema/**', '@quen/schema/src/**'],
+          message: '@quen/schema/entities/… 처럼 패키지 경로로 가져오세요.',
+        },
+      ],
+    },
+  ],
+}
+
 export default defineConfig([
   globalIgnores(['dist', 'seed-design']),
   {
@@ -18,5 +55,6 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: schemaRules,
   },
 ])
