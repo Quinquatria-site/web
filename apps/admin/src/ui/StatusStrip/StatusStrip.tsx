@@ -27,6 +27,27 @@ function isBad(result: HealthResult | null): boolean {
   return result?.state === 'down' || result?.state === 'error'
 }
 
+/**
+ * 상태마다 점 색을 달리한다. 줄을 읽기 전에 훑어보라는 것이고, 글자가 여전히
+ * 상태를 말하므로 색이 유일한 신호는 아니다.
+ *
+ * 확인 전(null)은 기본 회색 그대로다 — 잠깐 스쳐가는 상태에 색을 주면
+ * 화면이 깜빡이는 것처럼 보인다.
+ */
+function dotClass(result: HealthResult | null): string {
+  if (!result) return styles.dot
+  switch (result.state) {
+    case 'ok':
+      return `${styles.dot} ${styles.dotOk}`
+    case 'error':
+      return `${styles.dot} ${styles.dotWarn}`
+    case 'down':
+      return `${styles.dot} ${styles.dotBad}`
+    case 'unconfigured':
+      return `${styles.dot} ${styles.dotIdle}`
+  }
+}
+
 function stateLabel(result: HealthResult | null): string {
   if (!result) return '확인 중'
   switch (result.state) {
@@ -62,10 +83,7 @@ export function StatusStrip() {
     <div className={styles.strip}>
       {servers.map((server) => (
         <span key={server.key} className={styles.item}>
-          <span
-            className={isBad(server.result) ? `${styles.dot} ${styles.dotBad}` : styles.dot}
-            aria-hidden="true"
-          />
+          <span className={dotClass(server.result)} aria-hidden="true" />
           <span className={isBad(server.result) ? styles.bad : undefined}>
             {`${server.name} ${stateLabel(server.result)}`}
           </span>
