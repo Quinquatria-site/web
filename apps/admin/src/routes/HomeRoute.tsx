@@ -43,7 +43,7 @@ import {
   type Notice,
   type Performance,
 } from '../mocks/types'
-import { Meter, MeterGroup } from '../ui'
+import { Meter, MeterGroup, StatusStrip } from '../ui'
 import styles from './HomeRoute.module.css'
 
 /**
@@ -114,6 +114,9 @@ export function HomeRoute() {
         onPreview={() => setSearchParams({ at: festivalPreviewAt() }, { replace: true })}
         onReset={() => setSearchParams({}, { replace: true })}
       />
+
+      {/* 데이터가 아니라 연결의 상태라 경고 묶음 밖에 둔다. StatusStrip 주석 참고 */}
+      <StatusStrip />
 
       <div className={styles.warnings}>
         {broken && (
