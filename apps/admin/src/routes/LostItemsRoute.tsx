@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { IconPlusLine } from '@karrotmarket/react-monochrome-icon'
 import { useNavigate, useSearchParams } from 'react-router'
 import { ActionButton } from 'seed-design/ui/action-button'
@@ -108,20 +109,55 @@ export function LostItemsRoute() {
 
   const showPending = () => setSearchParams({}, { replace: true })
 
+  // 연달아 누른 반환을 한 스낵바로 묶는다. 스낵바는 새로 만들 때마다 앞 것을
+  // 밀어내고 6초를 다시 세므로, 건마다 하나씩 띄우면 마지막 탭 뒤 6초까지
+  // 내내 떠 있고 실행취소는 마지막 한 건만 남는다. 묶으면 "3건 반환 처리" 한
+  // 줄에 실행취소가 세 건을 다 되돌린다. 시간은 여전히 마지막 탭 기준 6초다 —
+  // 그게 되돌릴 수 있는 창이라 줄이지 않는다.
+  //
+  // onClose 는 밀려난 스낵바에서도 불린다. 세대 번호로 최신 것일 때만 묶음을 비운다
+  const batch = useRef<{ ids: number[]; next: boolean; gen: number }>({
+    ids: [],
+    next: true,
+    gen: 0,
+  })
+
   const changeReturned = (item: LostItem, next: boolean) => {
     setReturned(item.id, next)
+
+    const current = batch.current
+    if (current.next !== next) current.ids = []
+    current.next = next
+    current.ids.push(item.id)
+    current.gen += 1
+    const gen = current.gen
+    const ids = [...current.ids]
+
+    const message =
+      ids.length === 1
+        ? next
+          ? `${titleOf(item)} 반환 처리했습니다`
+          : `${titleOf(item)} 미반환으로 되돌렸습니다`
+        : next
+          ? `${ids.length}건 반환 처리했습니다`
+          : `${ids.length}건 미반환으로 되돌렸습니다`
+
     // 누르는 순간 행이 반대 세그먼트로 넘어가 화면에서 사라진다. 버튼이라
     // 의도는 분명하지만 폰에서 오탭은 여전히 가능하고, 되돌릴 수단이 이 스낵바
     // 뿐이라 삭제와 같은 6초를 준다
     snackbar.create({
       timeout: 6000,
+      onClose: () => {
+        if (batch.current.gen === gen) batch.current.ids = []
+      },
       render: () => (
         <Snackbar
-          message={
-            next ? `${titleOf(item)} 반환 처리했습니다` : `${titleOf(item)} 미반환으로 되돌렸습니다`
-          }
+          message={message}
           actionLabel="실행취소"
-          onAction={() => setReturned(item.id, !next)}
+          onAction={() => {
+            for (const id of ids) setReturned(id, !next)
+            batch.current.ids = []
+          }}
         />
       ),
     })
