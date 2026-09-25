@@ -1,5 +1,5 @@
 import { request } from './client'
-import { ApiError, ERROR_CODES } from './errors'
+import { ApiError, NETWORK_ERROR } from './errors'
 
 /**
  * 서버가 떠 있는지. `GET /api/v1/` 는 두 앱 모두 인증 없이 열려 있고
@@ -40,7 +40,7 @@ export async function pingHealth(base: string | null): Promise<HealthResult> {
     return { state: 'ok', durationMs: Math.round(performance.now() - startedAt) }
   } catch (error) {
     if (!(error instanceof ApiError)) throw error
-    if (error.code === ERROR_CODES.NETWORK_ERROR) return { state: 'down' }
+    if (error.code === NETWORK_ERROR) return { state: 'down' }
     return {
       state: 'error',
       status: error.status,

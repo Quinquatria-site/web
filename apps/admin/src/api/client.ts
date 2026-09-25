@@ -1,5 +1,5 @@
 import { apiUrl } from './config'
-import { ApiError, ERROR_CODES, isApiErrorBody, type ApiErrorBody } from './errors'
+import { ApiError, isApiErrorBody, NETWORK_ERROR, type ApiErrorBody } from './errors'
 
 /**
  * 모든 API 호출이 지나는 한 지점.
@@ -86,7 +86,7 @@ export async function request<T>(
     // 연결 실패·타임아웃·CORS 차단이 모두 여기로 온다. 브라우저가 이유를
     // 알려주지 않으므로(보안상 의도된 것이다) 셋을 구분하지 않는다
     throw new ApiError(0, {
-      code: ERROR_CODES.NETWORK_ERROR,
+      code: NETWORK_ERROR,
       message: cause instanceof Error ? cause.message : '요청을 보내지 못했습니다.',
       details: [],
     })
@@ -122,7 +122,7 @@ async function readErrorBody(response: Response): Promise<ApiErrorBody> {
 
   // 토큰 만료는 어느 화면에서 나든 같은 결말이다 — 로그인 화면으로 보낸다.
   // 발급 코드가 틀린 것(INVALID_CREDENTIALS)은 로그인 화면 자신의 오류라 제외한다
-  if (response.status === 401 && body.code === ERROR_CODES.INVALID_TOKEN) hooks.onUnauthorized()
+  if (response.status === 401 && body.code === 'INVALID_TOKEN') hooks.onUnauthorized()
 
   return body
 }
