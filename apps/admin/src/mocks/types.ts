@@ -1,87 +1,40 @@
 /**
- * API 명세 §5 Backoffice 스키마를 그대로 옮긴 타입.
+ * 서버 데이터 모델은 `@quen/schema` 에서 가져오고, 여기서는 Backoffice 응답 모양으로
+ * **조립**만 한다 — 스키마는 엔티티를 `XxxBase`(언어 무관) · `XxxText`(번역) 조각으로
+ * 두고 완성 이름은 앱이 짓는다 (packages/schema/CLAUDE.md). Backoffice 는 모든 언어의
+ * 번역을 `translations[]` 로 받으므로 `WithTranslations<Base, Text, parent>` 다.
  *
- * 필드는 명세와 같은 snake_case 다. 임의로 camelCase 로 바꾸지 않는다 —
- * 이 타입이 곧 응답 형태라서, 나중에 실제 API(#10)가 붙을 때 화면 코드를
- * 다시 짜지 않아도 된다.
+ * 필드는 서버와 같은 snake_case 다. 이 타입이 곧 응답 형태라서, 실제 API 가 붙을 때
+ * 화면 코드를 다시 짜지 않아도 된다. datetime 은 UTC offset 이 포함된 ISO 8601 이다 (§2.2).
  *
- * enum 값은 backend packages/common/enums.py 와 글자까지 같다.
- * datetime 은 UTC offset 이 포함된 ISO 8601 문자열이다 (§2.2).
+ * 아래에 남은 것은 스키마가 앱 몫으로 정한 것들이다 — 축제 날짜, 라벨 포맷,
+ * 번역 찾기·누락 검사. 서버 enum 이나 번역 타입을 여기서 다시 정의하면 린트가 막는다.
  */
 
-export const LANGUAGE_CODES = ['KO', 'EN', 'CHN'] as const
-export type LanguageCode = (typeof LANGUAGE_CODES)[number]
+import type { Translation, WithTranslations } from '@quen/schema/common/localize'
+import { LANGUAGE_CODES, type LanguageCode } from '@quen/schema/common/language'
+import type { CategoryBase, CategoryText } from '@quen/schema/entities/category'
+import type { LostItemBase, LostItemText } from '@quen/schema/entities/lost-item'
+import type { MenuBase, MenuText } from '@quen/schema/entities/menu'
+import type { NoticeBase, NoticeText } from '@quen/schema/entities/notice'
+import type { PerformanceBase, PerformanceText } from '@quen/schema/entities/performance'
+import type { PlaceBase, PlaceText } from '@quen/schema/entities/place'
 
-export const CATEGORY_CODES = ['PUB', 'BOOTH', 'FOODTRUCK', 'MEDI', 'BRACELET'] as const
-export type CategoryCode = (typeof CATEGORY_CODES)[number]
+export { LANGUAGE_CODES, type LanguageCode }
+export { CATEGORY_CODES, type CategoryCode } from '@quen/schema/entities/category'
+export { PERFORMANCE_TYPES, type PerformanceType } from '@quen/schema/entities/performance'
+export { NOTICE_TYPES, type NoticeType } from '@quen/schema/entities/notice'
+export type { Page } from '@quen/schema/common/page'
 
-/** 모든 목록 API 의 응답 컨테이너 (§2.5) */
-export interface Page<T> {
-  items: T[]
-  page: number
-  size: number
-  total: number
-}
+export type CategoryTranslation = Translation<CategoryText, 'category'>
+export type Category = WithTranslations<CategoryBase, CategoryText, 'category'>
 
-export interface CategoryTranslation {
-  id: number
-  category_id: number
-  language_code: LanguageCode
-  name: string
-}
+export type PlaceTranslation = Translation<PlaceText, 'place'>
+/** 좌표는 배치 도면(390×329, 좌상단 원점). user 앱 목과 같은 좌표계다 (§8) */
+export type Place = WithTranslations<PlaceBase, PlaceText, 'place'>
 
-export interface Category {
-  id: number
-  code: CategoryCode
-  /** 아이콘 S3 key. 없으면 null (§5.3) */
-  category_icon_uri: string | null
-  translations: CategoryTranslation[]
-}
-
-export interface PlaceTranslation {
-  id: number
-  place_id: number
-  language_code: LanguageCode
-  name: string
-  host_college: string
-  description: string
-}
-
-export interface Place {
-  id: number
-  category_id: number
-  /** 카테고리 안 표시 순서. 1 이상 (§5.4) */
-  category_sequence: number
-  /** 배치 도면(390×329, 좌상단 원점) 좌표. user 앱 목과 같은 좌표계다 (§8) */
-  x: number
-  y: number
-  start_hour: string
-  end_hour: string
-  /** 순서가 보존되는 이미지 목록. 없으면 null — 빈 배열은 422 다 (§5.4) */
-  place_image_uri: string[] | null
-  translations: PlaceTranslation[]
-}
-
-export interface MenuTranslation {
-  id: number
-  menu_id: number
-  language_code: LanguageCode
-  name: string
-  description: string
-}
-
-export interface Menu {
-  id: number
-  place_id: number
-  /** 메뉴 이미지 S3 key. 없으면 null (§5.5) */
-  image_url: string | null
-  /** 원 단위 0 이상 정수 (§2.2) */
-  price: number
-  translations: MenuTranslation[]
-}
-
-export const PERFORMANCE_TYPES = ['ARTIST', 'STUDENT', 'SPECIAL'] as const
-export type PerformanceType = (typeof PERFORMANCE_TYPES)[number]
+export type MenuTranslation = Translation<MenuText, 'menu'>
+export type Menu = WithTranslations<MenuBase, MenuText, 'menu'>
 
 /**
  * 축제 일차. PERFORMANCE.date 는 자유 입력이 아니라 이 중 하나를 고르는 것이다.
@@ -126,14 +79,7 @@ export function dateTimeLabel(iso: string): string {
   return `${festivalDateLabel(iso)} ${iso.slice(11, 16)}`
 }
 
-export interface PerformanceTranslation {
-  id: number
-  performance_id: number
-  language_code: LanguageCode
-  title: string
-  /** 공연 설명. 선택이며 생략하면 빈 문자열로 저장된다 (§5.2) */
-  description: string
-}
+export type PerformanceTranslation = Translation<PerformanceText, 'performance'>
 
 /**
  * 공연 (§5.6). 시작·종료 시각이 없다 — 축제 일정 지연이 잦아 시각 기반
@@ -143,36 +89,14 @@ export interface PerformanceTranslation {
  * seq 와 is_live 는 POST·PATCH 본문에 넣으면 422 다. 서버가 정하거나
  * 전용 엔드포인트로만 바뀐다 — 화면에 입력칸을 만들지 않는다.
  */
-export interface Performance {
-  id: number
-  type: PerformanceType
-  /** 이미지 S3 key. 업로드 플로우(#14) 전까지는 목 문자열이거나 null */
-  image_uri: string | null
-  /** 공연이 열리는 축제 일차. YYYY-MM-DD */
-  date: string
-  /** 같은 일차 안의 노출 순서. 서버가 1부터 빈틈 없이 매긴다 */
-  seq: number
-  /** 현재 공연 중 여부. 전체에서 최대 1건 */
-  is_live: boolean
-  translations: PerformanceTranslation[]
-}
+export type Performance = WithTranslations<PerformanceBase, PerformanceText, 'performance'>
 
-export const NOTICE_TYPES = ['PERMANENT', 'GENERAL'] as const
-export type NoticeType = (typeof NOTICE_TYPES)[number]
-
-export interface NoticeTranslation {
-  id: number
-  notice_id: number
-  language_code: LanguageCode
-  title: string
-  /**
-   * 공지 본문. 공연의 description 과 달리 **필수**다 (§5.7).
-   *
-   * 그래서 한 언어의 제목만 채우고 본문을 비우는 것은 저장할 수 없는 상태다 —
-   * 편집 화면이 그 조합을 막는다. 여기 배열에 들어온 번역은 이미 둘 다 찬 것이다.
-   */
-  content: string
-}
+/**
+ * 공지 본문(content)은 공연의 description 과 달리 **필수**다 (§5.7). 한 언어의 제목만
+ * 채우고 본문을 비우는 것은 저장할 수 없는 상태라 편집 화면이 그 조합을 막는다 —
+ * 여기 배열에 들어온 번역은 이미 둘 다 찬 것이다.
+ */
+export type NoticeTranslation = Translation<NoticeText, 'notice'>
 
 /**
  * 공지 (§5.7). 운영자가 정하는 것은 type 과 번역뿐이고 나머지는 서버 몫이다.
@@ -184,13 +108,7 @@ export interface NoticeTranslation {
  * /notices 하나에 type 쿼리를 걸지만 Customer API 는 /notices(GENERAL) 과
  * /notices/permanent 로 경로가 갈린다 (§3.5).
  */
-export interface Notice {
-  id: number
-  type: NoticeType
-  /** 서버 생성, 수정 불가. 목록 정렬의 1차 키다 (§5.7) */
-  created_at: string
-  translations: NoticeTranslation[]
-}
+export type Notice = WithTranslations<NoticeBase, NoticeText, 'notice'>
 
 /** 번역 배열에서 특정 언어를 찾는다. Backoffice 응답은 language_code ASC 정렬(§5.1) */
 export function findTranslation<T extends { language_code: LanguageCode }>(
@@ -227,37 +145,14 @@ export function hasMissingTranslations(
  * 공지와 마찬가지로 순서를 손댈 수단이 없다. 정렬 키가 created_at 하나뿐이라
  * (§5.1 created_at DESC, id DESC) 재정렬 엔드포인트 자체가 없다.
  */
-export interface LostItemTranslation {
-  id: number
-  lost_item_id: number
-  language_code: LanguageCode
-  title: string
-  /** 분실물 설명. 공연의 description 과 같이 선택이다 (§5.8) */
-  description: string
-  /**
-   * 습득 장소. 좌표나 장소 ID 가 아니라 자유 입력 문자열이라 번역 대상이다 —
-   * "정문 앞 벤치" 를 영어 사용자도 읽어야 물건을 찾아간다.
-   */
-  found_location: string
-}
+export type LostItemTranslation = Translation<LostItemText, 'lost_item'>
 
-export interface LostItem {
-  id: number
-  /**
-   * 이미지 S3 key. 타입은 Menu.image_url 과 같이 nullable 이지만 이 도메인에서는
-   * 화면이 필수로 막는다 — 사진 없는 분실물은 주인이 자기 물건인지 알아볼 수
-   * 없어서 목록에 있으나 마나다. 업로드 플로우(#14) 전까지는 목 문자열이다.
-   */
-  image_url: string | null
-  /**
-   * 반환 완료 여부. 편집 화면이 아니라 **목록의 반환 버튼**으로만 바뀐다 —
-   * 주인이 물건을 찾아가는 순간은 한 손이 물건에 가 있어서, 화면을 옮겨
-   * 저장까지 누르게 할 여유가 없다.
-   *
-   * 공연의 is_live 와 달리 배타적이지 않다. 반환된 물건은 여럿일 수 있다.
-   */
-  is_returned: boolean
-  /** 서버 생성, 수정 불가. 목록 정렬의 1차 키다 (§5.8) */
-  created_at: string
-  translations: LostItemTranslation[]
-}
+/**
+ * image_url 은 타입상 nullable 이지만 이 도메인에서는 화면이 필수로 막는다 — 사진 없는
+ * 분실물은 주인이 자기 물건인지 알아볼 수 없어서 목록에 있으나 마나다.
+ *
+ * is_returned 는 편집 화면이 아니라 **목록의 반환 버튼**으로만 바뀐다 — 주인이 물건을
+ * 찾아가는 순간은 한 손이 물건에 가 있어서, 화면을 옮겨 저장까지 누르게 할 여유가 없다.
+ * 공연의 is_live 와 달리 배타적이지 않다.
+ */
+export type LostItem = WithTranslations<LostItemBase, LostItemText, 'lost_item'>

@@ -7,7 +7,7 @@ const USE_SCHEMA = '서버 데이터 모델은 @quen/schema 에서 가져오세�
 
 const schemaRules = {
   'no-restricted-syntax': [
-    'warn',
+    'error',
     {
       selector: `TSAsExpression[typeAnnotation.typeName.name='const'] > ArrayExpression > Literal[value=${SERVER_ENUM_MARKER}]`,
       message: `서버 enum 을 다시 정의하고 있습니다. ${USE_SCHEMA}`,
@@ -27,7 +27,7 @@ const schemaRules = {
     },
   ],
   'no-restricted-imports': [
-    'warn',
+    'error',
     {
       patterns: [
         {

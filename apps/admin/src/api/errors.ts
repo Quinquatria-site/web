@@ -10,6 +10,8 @@
  * 고른다. `message` 는 개발 중 로그용이다.
  */
 
+import type { ErrorCode } from '@quen/schema/common/error'
+
 export interface ApiErrorDetail {
   /** 문제가 된 필드. 폼의 어느 칸에 표시할지 정하는 데 쓴다 */
   field: string
@@ -23,27 +25,15 @@ export interface ApiErrorBody {
 }
 
 /**
- * 계약에 있는 오류 코드. 배포된 서버에서 앞의 셋을 직접 확인했다.
+ * 서버 오류 코드는 `@quen/schema` 의 `ErrorCode` 다.
  *
  * NETWORK_ERROR 만 **서버가 주는 값이 아니다** — 응답 자체를 못 받았을 때
- * (연결 실패·타임아웃) 호출부가 같은 방식으로 다룰 수 있도록 client 가
- * 만들어 붙인다. 그때 status 는 0 이다.
+ * (연결 실패·타임아웃·CORS 차단) 호출부가 같은 방식으로 다룰 수 있도록 client 가
+ * 만들어 붙인다. 그때 status 는 0 이다. 클라이언트 전용 값이라 스키마에 없다.
  */
-export const ERROR_CODES = {
-  INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
-  INVALID_TOKEN: 'INVALID_TOKEN',
-  VALIDATION_ERROR: 'VALIDATION_ERROR',
-  RATE_LIMIT_EXCEEDED: 'RATE_LIMIT_EXCEEDED',
-  RESOURCE_NOT_FOUND: 'RESOURCE_NOT_FOUND',
-  DELETE_CONFLICT: 'DELETE_CONFLICT',
-  IMAGE_TOO_LARGE: 'IMAGE_TOO_LARGE',
-  INVALID_IMAGE: 'INVALID_IMAGE',
-  IMAGE_ALREADY_ATTACHED: 'IMAGE_ALREADY_ATTACHED',
-  INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',
-  NETWORK_ERROR: 'NETWORK_ERROR',
-} as const
+export const NETWORK_ERROR = 'NETWORK_ERROR' as const
 
-export type ErrorCode = (typeof ERROR_CODES)[keyof typeof ERROR_CODES]
+export type ClientErrorCode = ErrorCode | typeof NETWORK_ERROR
 
 export class ApiError extends Error {
   /** HTTP 상태. 응답을 받지 못했으면 0 */

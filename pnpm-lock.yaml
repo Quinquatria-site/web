@@ -20,6 +20,9 @@ importers:
       '@karrotmarket/react-monochrome-icon':
         specifier: ^1.26.0
         version: 1.26.0(@types/react@19.2.18)(react@19.2.8)
+      '@quen/schema':
+        specifier: workspace:*
+        version: link:../../packages/schema
       '@seed-design/css':
         specifier: ^2.6.1
         version: 2.6.1
