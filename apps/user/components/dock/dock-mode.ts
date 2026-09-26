@@ -4,10 +4,11 @@ export type DockMode = 'hidden' | 'top' | 'tabs' | 'back'
 /** 탭바에 놓이는 메인 탭. 여기 있는 주소만 tabs 모드가 된다 */
 export const DOCK_TABS = [
   { href: '/', label: '홈' },
-  { href: '/performances', label: '공연' },
+  { href: '/timeline', label: '타임라인' },
   { href: '/map', label: '지도' },
   { href: '/notices', label: '공지' },
   { href: '/lost-items', label: '분실물' },
+  { href: '/goods', label: '굿즈' },
 ] as const
 
 /** 주소와 랜딩 통과 여부로 도크 모드를 정한다 */
