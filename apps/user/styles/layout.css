@@ -1,13 +1,33 @@
 :root {
   --app-max-width: 480px;
   --app-width: min(100vw, var(--app-max-width));
-  --dock-size: 56px;
-  --dock-inset: 16px;
+  --dock-size: 60px;
+  --dock-inset: 15px;
+  --dock-pad: 4px;
   --dock-gap: 8px;
   --dock-bottom: calc(env(safe-area-inset-bottom) + var(--dock-gap));
   --dock-right: calc((100% - var(--app-width)) / 2 + var(--dock-inset));
-  --dock-bar-width: calc(var(--app-width) - 2 * var(--dock-inset));
+  /* 피그마 탭바 폭. 넓은 폰에서도 여기서 멈춘다 */
+  --dock-bar-width: min(360px, calc(var(--app-width) - 2 * var(--dock-inset)));
+  /* 탭바가 가운데에 오도록 오른쪽 여백에 더하는 값. 390 미만은 탭바가 꽉 차서 0 */
+  --dock-bar-offset: calc((var(--app-width) - 2 * var(--dock-inset) - var(--dock-bar-width)) / 2);
+  /* 360 미만 폰은 칸이 좁아 글자가 넘치지 않게 안쪽과 간격을 줄인다 */
+  --dock-tab-side: 12px;
+  --dock-tab-gap: 8px;
+  --dock-tab-icon: 18px;
+  --dock-tab-label: 11px;
+  --dock-pill-inset: 6px;
   --dock-space: calc(var(--dock-bottom) + var(--dock-size) + 16px);
+  /* 양끝 탭이 도크 안쪽 여백과 간격 반쪽을 빼고 더 가져가는 폭 */
+  --dock-tab-end: calc(var(--dock-tab-side) - var(--dock-pad) - var(--dock-tab-gap) / 2);
+
+  @variant phone-md {
+    --dock-tab-side: 18px;
+    --dock-tab-gap: 12px;
+    --dock-tab-icon: 20px;
+    --dock-tab-label: 12px;
+    --dock-pill-inset: 4px;
+  }
 }
 
 :root[data-dock='hidden'] {
