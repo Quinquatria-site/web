@@ -1,0 +1,68 @@
+'use client'
+
+import Image from 'next/image'
+import { useEffect, useRef, useState } from 'react'
+import { DockSentinel } from '@/components/dock/DockSentinel'
+import { LandingScrollCue } from './LandingScrollCue'
+
+/** 홈 랜딩. 영상이 끝나거나 자동재생이 막히면 같은 장면의 고화질 이미지로 크로스페이드한다 */
+export function LandingHero() {
+  const sectionRef = useRef<HTMLElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [showStill, setShowStill] = useState(false)
+
+  const scrollPastLanding = () => {
+    const section = sectionRef.current
+    if (!section) return
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+    window.scrollBy({
+      top: section.getBoundingClientRect().bottom,
+      behavior: reduced ? 'auto' : 'smooth',
+    })
+  }
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    // 하이드레이션 전에 이미 끝났을 수 있어 다시 틀지 않는다
+    if (video.ended) {
+      setShowStill(true)
+      return
+    }
+    // autoPlay 는 막혀도 조용히 실패하므로 play() 거절로 저전력 모드 등을 감지한다
+    video.play().catch(() => setShowStill(true))
+  }, [])
+
+  return (
+    <section ref={sectionRef} className="relative h-dvh overflow-hidden">
+      {/* muted·playsInline 이 없으면 iOS 가 자동재생을 막거나 전체화면으로 연다 */}
+      <video
+        ref={videoRef}
+        className="absolute inset-0 size-full object-cover"
+        src="/landing.mp4"
+        poster="/landing-poster.jpg"
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        aria-hidden
+        onEnded={() => setShowStill(true)}
+        onError={() => setShowStill(true)}
+      />
+      {/* 영상이 끝나는 순간 바로 보이도록 lazy 대신 처음부터 받아 둔다 */}
+      <Image
+        className={`object-cover transition-opacity duration-500 ${showStill ? 'opacity-100' : 'opacity-0'}`}
+        src="/home.png"
+        alt="HUFS 2026 QUINQUATRIA TWILIGHT, 10월 7일~8일"
+        fill
+        sizes="(max-width: 480px) 100vw, 480px"
+        loading="eager"
+      />
+      {showStill && <LandingScrollCue onPress={scrollPastLanding} />}
+      {/* 랜딩을 절반 넘게 내리면 위로 가기 원이 뜨도록 가운데에 감지 표시를 둔다 */}
+      <div className="absolute top-1/2">
+        <DockSentinel />
+      </div>
+    </section>
+  )
+}

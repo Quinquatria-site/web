@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { landingStore } from './landing-store'
 
-/** 홈 랜딩 끝의 보이지 않는 표시. 화면 위로 지나가면 위로 가기 원을 띄운다 */
+/** 홈 랜딩 안의 보이지 않는 표시. 화면 위로 지나가면 위로 가기 원을 띄운다 */
 export function DockSentinel() {
   const ref = useRef<HTMLDivElement>(null)
 

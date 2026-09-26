@@ -1,0 +1,6 @@
+/* 글꼴 변수는 next/font 가 html·섹션에 달아 주므로 inline 으로 받아야 쓰는 자리에서 풀린다 */
+@theme inline {
+  --font-sans: var(--pretendard), system-ui, sans-serif;
+  --font-paperlogy: var(--paperlogy), var(--pretendard), sans-serif;
+  --font-cinzel: var(--cinzel), serif;
+}

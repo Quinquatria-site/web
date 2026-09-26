@@ -1,11 +1,14 @@
-import { DockSentinel } from '@/components/dock/DockSentinel'
+import { HomeCredits } from '@/components/home-credits/HomeCredits'
+import { HomeNav } from '@/components/home-nav/HomeNav'
+import { LandingHero } from '@/components/landing/LandingHero'
 
-/** 홈. 랜딩 영역이 끝나는 지점에 도크 감지 표시를 둔다 */
+/** 홈. 랜딩 영상 · 메인 탭 바로가기 · 크레딧을 차례로 쌓는다 */
 export default function Home() {
   return (
     <>
-      <section className="h-dvh" />
-      <DockSentinel />
+      <LandingHero />
+      <HomeNav />
+      <HomeCredits />
     </>
   )
 }
