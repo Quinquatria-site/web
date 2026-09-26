@@ -1,0 +1,18 @@
+@theme inline {
+  --color-bg: var(--neutral-50);
+  --color-bg-subtle: var(--neutral-100);
+  --color-bg-inverse: var(--deep-purple);
+
+  --color-text: var(--neutral-900);
+  --color-text-muted: var(--neutral-500);
+  --color-text-inverse: var(--warm-white);
+
+  --color-border: var(--neutral-200);
+  --color-border-strong: var(--neutral-300);
+
+  --color-primary: var(--sun-yellow);
+  --color-on-primary: var(--deep-purple);
+
+  --color-secondary: var(--deep-purple);
+  --color-on-secondary: var(--warm-white);
+}
