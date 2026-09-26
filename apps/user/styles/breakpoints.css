@@ -1,0 +1,6 @@
+@theme {
+  --breakpoint-*: initial;
+
+  --breakpoint-phone-md: 360px;
+  --breakpoint-phone-lg: 400px;
+}
