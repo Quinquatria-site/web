@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, type CSSProperties } from 'react'
 import { DOCK_TABS } from './dock-mode'
-import { BAR_COLLAPSE, DOCK_POP } from './dock-motion'
+import { BAR_COLLAPSE, DOCK_POP, PRESS_SCALE } from './dock-motion'
 import { DockButton } from './DockButton'
 import { DockTabs } from './DockTabs'
 import { useDockMode } from './useDockMode'
@@ -23,10 +23,10 @@ export function Dock() {
   return (
     <motion.nav
       aria-label="메인 메뉴"
-      // 고정 요소라 스크롤이 바뀌어도 선택 표시가 튀지 않게 레이아웃 기준을 여기로 둔다
-      layoutRoot
       initial={false}
       animate={{ scale: hidden ? 0 : 1, opacity: hidden ? 0 : 1 }}
+      // 원은 도크 자체가 버튼이라 도크를 줄이고, 탭바는 탭마다 따로 줄인다
+      whileTap={mode === 'tabs' ? undefined : { scale: PRESS_SCALE }}
       // 탭바에서 숨을 때는 원으로 다 접힌 뒤에 사라진다
       transition={{ ...DOCK_POP, delay: hidden && from === 'tabs' ? BAR_COLLAPSE : 0 }}
       inert={hidden}
