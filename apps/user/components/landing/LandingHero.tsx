@@ -2,11 +2,23 @@
 
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
+import { LandingScrollCue } from './LandingScrollCue'
 
 /** 홈 랜딩. 영상이 끝나거나 자동재생이 막히면 같은 장면의 고화질 이미지로 크로스페이드한다 */
 export function LandingHero() {
+  const sectionRef = useRef<HTMLElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const [showStill, setShowStill] = useState(false)
+
+  const scrollPastLanding = () => {
+    const section = sectionRef.current
+    if (!section) return
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+    window.scrollBy({
+      top: section.getBoundingClientRect().bottom,
+      behavior: reduced ? 'auto' : 'smooth',
+    })
+  }
 
   useEffect(() => {
     const video = videoRef.current
@@ -21,7 +33,7 @@ export function LandingHero() {
   }, [])
 
   return (
-    <section className="relative h-dvh overflow-hidden">
+    <section ref={sectionRef} className="relative h-dvh overflow-hidden">
       {/* muted·playsInline 이 없으면 iOS 가 자동재생을 막거나 전체화면으로 연다 */}
       <video
         ref={videoRef}
@@ -45,6 +57,7 @@ export function LandingHero() {
         sizes="(max-width: 480px) 100vw, 480px"
         loading="eager"
       />
+      {showStill && <LandingScrollCue onPress={scrollPastLanding} />}
     </section>
   )
 }
