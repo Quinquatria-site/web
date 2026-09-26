@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import { Dock } from '@/components/dock/Dock'
 import '@/styles/index.css'
 
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <main className="outline outline-black -outline-offset-1 min-h-dvh pt-[env(safe-area-inset-top)] pb-(--dock-space)">
           {children}
         </main>
+        <Dock />
       </body>
     </html>
   )

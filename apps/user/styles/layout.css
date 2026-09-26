@@ -9,3 +9,7 @@
   --dock-bar-width: calc(var(--app-width) - 2 * var(--dock-inset));
   --dock-space: calc(var(--dock-bottom) + var(--dock-size) + 16px);
 }
+
+:root[data-dock='hidden'] {
+  --dock-space: 0px;
+}
