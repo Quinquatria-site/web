@@ -1,0 +1,11 @@
+:root {
+  --app-max-width: 480px;
+  --app-width: min(100vw, var(--app-max-width));
+  --dock-size: 56px;
+  --dock-inset: 16px;
+  --dock-gap: 8px;
+  --dock-bottom: calc(env(safe-area-inset-bottom) + var(--dock-gap));
+  --dock-right: calc((100% - var(--app-width)) / 2 + var(--dock-inset));
+  --dock-bar-width: calc(var(--app-width) - 2 * var(--dock-inset));
+  --dock-space: calc(var(--dock-bottom) + var(--dock-size) + 16px);
+}
