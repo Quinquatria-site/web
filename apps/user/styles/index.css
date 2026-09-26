@@ -5,3 +5,4 @@
 @import './breakpoints.css';
 @import './layout.css';
 @import '../components/landing/landing-scroll-cue.css';
+@import '../components/home-credits/credit-light.css';

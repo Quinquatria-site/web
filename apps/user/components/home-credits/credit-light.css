@@ -1,0 +1,95 @@
+/* 크레딧 위에서 아래로 흐르는 빛. 6초마다 되풀이하고, 요소마다 --credit-delay 로 빛이 닿는 시각을 받는다 */
+
+/* 글자 위를 밝은 띠가 왼쪽에서 오른쪽으로 훑는다. 띠가 보이도록 평소 글자는 흰색 70% 로 둔다 */
+@utility credit-shimmer {
+  color: transparent;
+  background: linear-gradient(
+      100deg,
+      rgb(255 255 255 / 0.7) 42%,
+      #fff 50%,
+      rgb(255 255 255 / 0.7) 58%
+    )
+    100% 0 / 260% 100% no-repeat;
+  background-clip: text;
+  animation: credit-sweep 6s ease-in-out var(--credit-delay, 0s) infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    color: #fff;
+    background: none;
+    animation: none;
+  }
+}
+
+/* 별이 45도 돌며 커지고 번졌다 제자리로 돌아온다. clip-path 는 번짐까지 자르므로 감싼 요소에 건다 */
+@utility credit-twinkle {
+  animation: credit-twinkle 6s ease-in-out var(--credit-delay, 0s) infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+/* 세로선 안을 작은 빛 점이 위에서 아래로 지나간다 */
+@utility credit-line-light {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: -1px;
+    top: 0;
+    height: 10px;
+    opacity: 0;
+    background: radial-gradient(closest-side, #fff, transparent);
+    box-shadow: 0 0 6px 2px #fff;
+    animation: credit-dot 6s linear var(--credit-delay, 0s) infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      animation: none;
+    }
+  }
+}
+
+/* 한 번 훑는 데 1.4초 = 6초 중 23.33% */
+@keyframes credit-sweep {
+  0% {
+    background-position: 100% 0;
+  }
+  23.33%,
+  100% {
+    background-position: 0 0;
+  }
+}
+
+@keyframes credit-twinkle {
+  0%,
+  23.33%,
+  100% {
+    transform: none;
+    filter: none;
+  }
+  10.5% {
+    transform: rotate(45deg) scale(1.15);
+    filter: drop-shadow(0 0 6px #fff);
+  }
+}
+
+/* 선 하나를 지나는 데 0.8초 = 6초 중 13.33% */
+@keyframes credit-dot {
+  0% {
+    transform: translateY(-12px);
+    opacity: 0;
+  }
+  1.6%,
+  11.73% {
+    opacity: 1;
+  }
+  13.33%,
+  100% {
+    transform: translateY(26px);
+    opacity: 0;
+  }
+}
