@@ -40,7 +40,10 @@ export function Dock() {
           '--dock-tab-width': `calc((var(--dock-bar-width) - 2 * var(--dock-tab-side) - ${DOCK_TABS.length - 1} * var(--dock-tab-gap)) / ${DOCK_TABS.length})`,
         } as CSSProperties
       }
-      className="fixed bottom-(--dock-bottom) transition-[right] duration-300 ease-out flex h-(--dock-size) overflow-hidden rounded-full p-(--dock-pad) bg-bg ring-1 ring-border"
+      // 빛 번짐은 짙은 배경, 아래 그림자는 밝은 배경에서 떠 보이게 한다. 피그마에서 테두리는 탭바에만 있다
+      className={`fixed bottom-(--dock-bottom) transition-[right,box-shadow] duration-300 ease-out flex h-(--dock-size) overflow-hidden rounded-full p-(--dock-pad) bg-secondary text-on-secondary shadow-[0_0_8px_var(--color-on-secondary),0_4px_12px_color-mix(in_srgb,var(--color-secondary)_25%,transparent)] ${
+        mode === 'tabs' ? 'ring-1 ring-on-secondary' : ''
+      }`}
     >
       <DockTabs open={mode === 'tabs'} />
       <AnimatePresence initial={false}>
