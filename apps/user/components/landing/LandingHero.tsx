@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
+import { DockSentinel } from '@/components/dock/DockSentinel'
 import { LandingScrollCue } from './LandingScrollCue'
 
 /** 홈 랜딩. 영상이 끝나거나 자동재생이 막히면 같은 장면의 고화질 이미지로 크로스페이드한다 */
@@ -58,6 +59,10 @@ export function LandingHero() {
         loading="eager"
       />
       {showStill && <LandingScrollCue onPress={scrollPastLanding} />}
+      {/* 랜딩을 절반 넘게 내리면 위로 가기 원이 뜨도록 가운데에 감지 표시를 둔다 */}
+      <div className="absolute top-1/2">
+        <DockSentinel />
+      </div>
     </section>
   )
 }
