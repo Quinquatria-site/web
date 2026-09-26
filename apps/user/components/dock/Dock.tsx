@@ -17,7 +17,7 @@ export function Dock() {
   return (
     <nav
       data-mode={mode}
-      className={`outline outline-black -outline-offset-1 fixed right-(--dock-right) bottom-(--dock-bottom) h-(--dock-size) ${
+      className={`fixed right-(--dock-right) bottom-(--dock-bottom) h-(--dock-size) ${
         mode === 'tabs' ? 'w-(--dock-bar-width)' : 'w-(--dock-size)'
       }`}
     />

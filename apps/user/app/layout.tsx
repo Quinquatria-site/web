@@ -19,7 +19,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="ko">
       <body className="mx-auto max-w-(--app-max-width)">
-        <main className="outline outline-black -outline-offset-1 min-h-dvh pt-[env(safe-area-inset-top)] pb-(--dock-space)">
+        <main className="min-h-dvh pt-[env(safe-area-inset-top)] pb-(--dock-space)">
           {children}
         </main>
         <Dock />
