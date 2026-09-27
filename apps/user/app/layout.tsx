@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
-import { Dock } from '@/components/dock/Dock'
-import { pretendard } from './fonts'
+import { Dock } from '@/shared/dock/Dock'
+import { pretendard } from '@/shared/fonts'
 import '@/styles/index.css'
 
 /** 학생 앱 공통 문서 메타데이터 */

@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
-import { DockSentinel } from '@/components/dock/DockSentinel'
+import { DockSentinel } from '@/shared/dock/DockSentinel'
 import { LandingScrollCue } from './LandingScrollCue'
 
 /** 홈 랜딩. 영상이 끝나거나 자동재생이 막히면 같은 장면의 고화질 이미지로 크로스페이드한다 */

@@ -4,5 +4,5 @@
 @import './tokens/font.css';
 @import './breakpoints.css';
 @import './layout.css';
-@import '../components/landing/landing-scroll-cue.css';
-@import '../components/home-credits/credit-light.css';
+@import '../features/home/landing/landing-scroll-cue.css';
+@import '../features/home/credits/credit-light.css';

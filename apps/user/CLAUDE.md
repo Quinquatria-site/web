@@ -8,6 +8,20 @@
 
 폭 대응은 `phone-md:`(360 이상) · `phone-lg:`(400 이상)만 쓴다. `sm:` · `md:` 같은 Tailwind 기본 브레이크포인트는 꺼져 있다. 기준값은 `styles/breakpoints.css` 에 두고, 앱 최대 폭(480) 이하로만 정한다 — 넘으면 PC 에서 창은 넓은데 앱은 480 인 상태로 잘못 적용된다. 대부분은 한 벌로 두고, 작은 폰·큰 폰에서 꼭 달라야 하는 곳에만 별칭을 쓴다.
 
+## 폴더 구조
+
+| 폴더        | 두는 것                                                     |
+| ----------- | ----------------------------------------------------------- |
+| `app/`      | 라우트 파일만. `features`·`shared` 를 가져와 조립한다       |
+| `features/` | 페이지(도메인)별 코드. `features/home/landing` 처럼 쪼갠다  |
+| `shared/`   | 두 곳 이상에서 쓰는 코드. 도크처럼 layout 에 붙는 것도 여기 |
+| `styles/`   | 전역 토큰 · 브레이크포인트 · 레이아웃                       |
+
+- feature 는 다른 feature 를 가져오지 않는다. 두 번째 feature 가 쓰게 되는 순간 `shared/` 로 올린다. `shared` 는 feature 를, `features`·`shared` 는 `app` 을 가져오지 않는다. `pnpm lint` 가 막는다.
+- 한 컴포넌트만 쓰는 CSS · 이미지 · 애니메이션 값 · 글꼴은 그 컴포넌트 옆에 둔다. `@utility` CSS 는 `styles/index.css` 에서 `@import` 해야 동작하므로 이 import 만 예외로 feature 경로를 가리킨다.
+- 글꼴은 앱 전체가 쓰면 `shared/fonts.ts`, 한 feature 만 쓰면 그 feature 의 `fonts.ts` 에 둔다.
+- barrel(`index.ts`) 은 만들지 않는다. 파일 경로로 직접 가져온다.
+
 ## 확인 명령
 
 변경이 `apps/user` 안에만 있으면 user 로 좁혀 실행한다.
