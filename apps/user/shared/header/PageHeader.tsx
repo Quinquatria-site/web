@@ -1,11 +1,14 @@
 import Image from 'next/image'
 import { SparkleOrnament } from '@/shared/ornament/SparkleOrnament'
+import { kimjungchulMyungjo } from './fonts'
 import headerSky from './images/header-sky.jpg'
 
 /** 탭 페이지 맨 위 머리. 노을 하늘 위에 별 장식과 페이지 제목을 가운데 둔다 */
 export function PageHeader({ title }: { title: string }) {
   return (
-    <header className="relative flex h-24 items-center justify-center overflow-hidden">
+    <header
+      className={`${kimjungchulMyungjo.variable} relative flex h-24 items-center justify-center overflow-hidden`}
+    >
       {/* 오른쪽 해가 잘리지 않게 아래 기준으로 자른다 */}
       <Image
         src={headerSky}
@@ -19,7 +22,7 @@ export function PageHeader({ title }: { title: string }) {
         <div className="-mb-[3px]">
           <SparkleOrnament axis="horizontal" size="sm" />
         </div>
-        <h1 className="font-serif text-[22px] leading-[normal] tracking-[0.02em] text-text-inverse">
+        <h1 className="font-myungjo text-[22px] leading-[normal] tracking-[0.02em] text-text-inverse">
           {title}
         </h1>
       </div>
