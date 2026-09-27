@@ -1,3 +1,5 @@
+import { readdirSync } from 'node:fs'
+import { join } from 'node:path'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import nextVitals from 'eslint-config-next/core-web-vitals'
 import nextTs from 'eslint-config-next/typescript'
@@ -39,12 +41,44 @@ const schemaRules = {
   ],
 }
 
+// feature 는 서로 모르고 shared 만 본다. 둘 이상이 쓰게 되면 shared 로 올린다
+const features = readdirSync(join(import.meta.dirname, 'features'), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory())
+  .map((entry) => entry.name)
+
+const layerRules = {
+  'import/no-restricted-paths': [
+    'error',
+    {
+      basePath: import.meta.dirname,
+      zones: [
+        ...features.map((feature) => ({
+          target: `./features/${feature}`,
+          from: './features',
+          except: [`./${feature}`],
+          message: '다른 feature 를 가져오지 마세요. 함께 쓰려면 shared 로 올리세요.',
+        })),
+        {
+          target: './shared',
+          from: './features',
+          message: 'shared 는 feature 를 가져올 수 없습니다.',
+        },
+        {
+          target: ['./features', './shared'],
+          from: './app',
+          message: 'app 은 조립만 합니다. 필요한 코드는 features 나 shared 로 옮기세요.',
+        },
+      ],
+    },
+  ],
+}
+
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   {
     files: ['**/*.{ts,tsx}'],
-    rules: schemaRules,
+    rules: { ...schemaRules, ...layerRules },
   },
   // Override default ignores of eslint-config-next.
   globalIgnores([

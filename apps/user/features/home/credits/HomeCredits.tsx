@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { cinzel, paperlogy } from '@/app/fonts'
+import { cinzel, paperlogy } from './fonts'
 import { CreditGroup } from './CreditGroup'
 import { lightAt } from './credit-light'
 import nightSky from './images/night-sky.jpg'
