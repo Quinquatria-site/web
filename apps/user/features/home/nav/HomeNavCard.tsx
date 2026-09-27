@@ -3,7 +3,7 @@
 import { motion } from 'motion/react'
 import Image, { type StaticImageData } from 'next/image'
 import Link from 'next/link'
-import { DOCK_PRESS, PRESS_SCALE } from '@/components/dock/dock-motion'
+import { DOCK_PRESS, PRESS_SCALE } from '@/shared/dock/dock-motion'
 
 /** 홈 바로가기 카드 한 장에 필요한 값. imageBox 는 피그마의 그림 크기·자리 */
 export type HomeNavItem = {
