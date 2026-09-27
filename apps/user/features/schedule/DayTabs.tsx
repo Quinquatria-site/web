@@ -3,6 +3,12 @@
 import { cinzel } from '@/shared/fonts'
 import { FESTIVAL_DAYS } from './festival-days'
 
+/** 탭이 가리키는 일정 영역 id */
+export const SCHEDULE_PANEL_ID = 'schedule-panel'
+
+/** DAY 탭 버튼 id. 일정 영역이 어느 탭의 내용인지 이어 준다 */
+export const dayTabId = (day: number) => `day-tab-${day}`
+
 // 겹쳐 둔 알약 한 장. lag 면 90ms 늦게 출발해 앞장과 벌어진 만큼 알약이 늘어나 보인다
 function PillPiece({ atSecond, lag }: { atSecond: boolean; lag: boolean }) {
   return (
@@ -31,8 +37,10 @@ export function DayTabs({ value, onChange }: { value: number; onChange: (day: nu
           <button
             key={date}
             type="button"
+            id={dayTabId(i)}
             role="tab"
             aria-selected={selected}
+            aria-controls={SCHEDULE_PANEL_ID}
             onClick={() => onChange(i)}
             className="relative flex items-center justify-center gap-1 leading-[normal]"
           >
