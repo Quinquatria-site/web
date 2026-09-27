@@ -6,23 +6,25 @@ const STAR =
 const AXIS = {
   vertical: {
     box: 'w-[29px] flex-col',
-    lead: 'h-6 w-px bg-linear-to-b from-transparent to-white',
-    trail: 'mt-px h-6 w-px bg-linear-to-b from-white to-transparent',
+    lead: 'sparkle-lead-y h-6 w-px bg-linear-to-b from-transparent to-white',
+    trail: 'sparkle-trail-y mt-px h-6 w-px bg-linear-to-b from-white to-transparent',
   },
   horizontal: {
     box: 'h-[30px]',
-    lead: 'h-px w-6 bg-linear-to-r from-transparent to-white',
-    trail: 'h-px w-6 bg-linear-to-r from-white to-transparent',
+    lead: 'sparkle-lead-x h-px w-6 bg-linear-to-r from-transparent to-white',
+    trail: 'sparkle-trail-x h-px w-6 bg-linear-to-r from-white to-transparent',
   },
 }
 
-/** 별 양옆으로 흐려지는 선을 둔 구분 장식. 선은 별 쪽 흰색에서 바깥 끝으로 갈수록 투명해진다 */
+/** 별 양옆으로 흐려지는 선을 둔 구분 장식. 3초마다 빛이 한쪽 끝에서 별을 한 바퀴 돌리고 반대 끝으로 흐른다 */
 export function SparkleOrnament({ axis = 'vertical' }: { axis?: keyof typeof AXIS }) {
   const { box, lead, trail } = AXIS[axis]
   return (
     <div aria-hidden className={`flex items-center gap-[3px] ${box}`}>
       <span className={lead} />
-      <span className="block h-[30px] w-[29px] bg-white" style={{ clipPath: STAR }} />
+      <span className="block animate-sparkle-spin motion-reduce:animate-none">
+        <span className="block h-[30px] w-[29px] bg-white" style={{ clipPath: STAR }} />
+      </span>
       <span className={trail} />
     </div>
   )
