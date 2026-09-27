@@ -1,5 +1,6 @@
 import Image from 'next/image'
-import { cinzel, paperlogy } from './fonts'
+import { cinzel } from '@/shared/fonts'
+import { paperlogy } from './fonts'
 import { CreditGroup } from './CreditGroup'
 import sunsetSky from './images/sunset-sky.jpg'
 
