@@ -34,7 +34,8 @@ export function LandingHero() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative h-dvh overflow-hidden">
+    // dvh 는 모바일 주소창이 오갈 때마다 높이가 바뀌어 그림이 확대·축소되고 아래가 밀려 svh 로 고정한다
+    <section ref={sectionRef} className="relative h-svh overflow-hidden">
       {/* muted·playsInline 이 없으면 iOS 가 자동재생을 막거나 전체화면으로 연다 */}
       <video
         ref={videoRef}

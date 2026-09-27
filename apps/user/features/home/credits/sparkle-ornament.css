@@ -1,0 +1,161 @@
+/* 별 장식에 빛이 흐르는 3초 주기. 앞선 0.6초 → 별 한 바퀴 0.8초 → 뒷선 0.6초 → 1초 쉼 */
+@theme inline {
+  /* 빛이 별에 닿는 동안 별이 번지며 한 바퀴 돈다. clip-path 가 번짐까지 자르므로 별을 감싼 요소에 건다 */
+  --animate-sparkle-spin: sparkle-spin 3s ease-in-out infinite;
+
+  @keyframes sparkle-spin {
+    0%,
+    20% {
+      transform: none;
+      filter: none;
+    }
+    33.33% {
+      transform: rotate(180deg) scale(1.15);
+      filter: drop-shadow(0 0 6px #fff);
+    }
+    46.67%,
+    100% {
+      transform: rotate(360deg);
+      filter: none;
+    }
+  }
+}
+
+/* 선 위를 지나는 2px 빛 점과 그 번짐. 어느 선·방향인지는 아래 네 유틸리티가 정한다 */
+@utility sparkle-light {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    opacity: 0;
+    background: #fff;
+    box-shadow: 0 0 10px 4px rgb(255 255 255 / 0.85);
+    animation: var(--sparkle-light) 3s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      animation: none;
+    }
+  }
+}
+
+@utility sparkle-lead-y {
+  @apply sparkle-light;
+  --sparkle-light: sparkle-lead-y;
+  &::after {
+    top: -1px;
+    left: calc(50% - 1px);
+  }
+}
+
+@utility sparkle-trail-y {
+  @apply sparkle-light;
+  --sparkle-light: sparkle-trail-y;
+  &::after {
+    top: -1px;
+    left: calc(50% - 1px);
+  }
+}
+
+@utility sparkle-lead-x {
+  @apply sparkle-light;
+  --sparkle-light: sparkle-lead-x;
+  &::after {
+    top: calc(50% - 1px);
+    left: -1px;
+  }
+}
+
+@utility sparkle-trail-x {
+  @apply sparkle-light;
+  --sparkle-light: sparkle-trail-x;
+  &::after {
+    top: calc(50% - 1px);
+    left: -1px;
+  }
+}
+
+/* 선 길이 24 기준. 앞선은 바깥 끝 밖에서 들어와 별 쪽 끝을 조금 지나 사라진다 */
+@keyframes sparkle-lead-y {
+  0% {
+    translate: 0 -6px;
+    opacity: 0;
+  }
+  3%,
+  20% {
+    opacity: 1;
+  }
+  20% {
+    translate: 0 26px;
+  }
+  21%,
+  100% {
+    translate: 0 26px;
+    opacity: 0;
+  }
+}
+
+/* 뒷선은 별이 한 바퀴를 마친 뒤 별 쪽 끝에서 나와 바깥 끝에서 사라진다 */
+@keyframes sparkle-trail-y {
+  0%,
+  46.67% {
+    translate: 0 -4px;
+    opacity: 0;
+  }
+  48%,
+  63.5% {
+    opacity: 1;
+  }
+  66.67% {
+    translate: 0 22px;
+    opacity: 0;
+  }
+  100% {
+    translate: 0 22px;
+    opacity: 0;
+  }
+}
+
+@keyframes sparkle-lead-x {
+  0% {
+    translate: -6px 0;
+    opacity: 0;
+  }
+  3%,
+  20% {
+    opacity: 1;
+  }
+  20% {
+    translate: 26px 0;
+  }
+  21%,
+  100% {
+    translate: 26px 0;
+    opacity: 0;
+  }
+}
+
+@keyframes sparkle-trail-x {
+  0%,
+  46.67% {
+    translate: -4px 0;
+    opacity: 0;
+  }
+  48%,
+  63.5% {
+    opacity: 1;
+  }
+  66.67% {
+    translate: 22px 0;
+    opacity: 0;
+  }
+  100% {
+    translate: 22px 0;
+    opacity: 0;
+  }
+}

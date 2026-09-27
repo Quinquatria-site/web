@@ -1,5 +1,5 @@
 /** 선택 표시가 탭 사이를 옮겨가는 시간(ms) */
-export const PILL_MOVE_MS = 300
+export const PILL_MOVE_MS = 160
 
 /** 선택 표시가 서 있는 자리를 잰 값. 모두 선택 표시 층 안쪽 기준 px */
 export type PillGeometry = {
