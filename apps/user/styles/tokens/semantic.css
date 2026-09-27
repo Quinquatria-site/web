@@ -16,4 +16,7 @@
 
   --color-secondary: var(--dark);
   --color-on-secondary: var(--warm-white);
+
+  --color-accent: var(--twilight);
+  --color-on-accent: var(--warm-white);
 }
