@@ -12,6 +12,7 @@
 
   --color-primary: var(--sunlight);
   --color-on-primary: var(--dark);
+  --color-primary-border: var(--beige-yellow);
 
   --color-secondary: var(--dark);
   --color-on-secondary: var(--warm-white);
