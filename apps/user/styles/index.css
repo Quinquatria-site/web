@@ -5,7 +5,6 @@
 @import './breakpoints.css';
 @import './layout.css';
 @import '../features/home/landing/landing-scroll-cue.css';
-@import '../shared/ornament/sparkle-ornament.css';
 @import '../features/schedule/day-tabs.css';
 @import '../features/schedule/performance-card.css';
 @import '../features/schedule/live-badge.css';
