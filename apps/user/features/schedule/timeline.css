@@ -1,0 +1,12 @@
+/* 진행 중인 타임라인 점에서 퍼지는 파동 */
+@theme {
+  --animate-dot-ping: dot-ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+
+  @keyframes dot-ping {
+    75%,
+    100% {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+}

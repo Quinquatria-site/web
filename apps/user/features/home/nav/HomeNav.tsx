@@ -8,7 +8,7 @@ import timetable from './images/timetable.png'
 // 그림마다 피그마에서 크기와 오른쪽 여백이 조금씩 달라 카드별로 옮겨 둔다
 const ITEMS: HomeNavItem[] = [
   {
-    href: '/timeline',
+    href: '/schedule',
     title: '축제 일정표',
     description: '축제 일정과 공연 시간을 확인해보세요!',
     image: timetable,

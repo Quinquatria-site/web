@@ -102,7 +102,7 @@ export function ArrowLeftIcon(props: IconProps) {
 /** 탭 주소별 아이콘. 피그마 탭바(517:626)에서 옮겼다 */
 export const TAB_ICONS: Record<(typeof DOCK_TABS)[number]['href'], ComponentType<IconProps>> = {
   '/': HomeIcon,
-  '/timeline': TimetableIcon,
+  '/schedule': TimetableIcon,
   '/map': MapIcon,
   '/notices': NoticeIcon,
   '/lost-items': LostItemsIcon,

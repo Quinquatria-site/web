@@ -1,0 +1,13 @@
+/* 공연 중 뱃지의 음파 막대. 막대마다 길이·출발점은 컴포넌트에서 엇갈린다 */
+@theme {
+  --animate-live-eq: live-eq 0.9s ease-in-out infinite alternate;
+
+  @keyframes live-eq {
+    from {
+      transform: scaleY(0.3);
+    }
+    to {
+      transform: scaleY(1);
+    }
+  }
+}

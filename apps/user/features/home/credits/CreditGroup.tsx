@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { CreditReveal, CreditRevealItem } from './CreditReveal'
-import { SparkleOrnament } from './SparkleOrnament'
+import { SparkleOrnament } from '@/shared/ornament/SparkleOrnament'
 
 /** 크레딧 한 묶음. 장식 · 영문 제목 · 단체명 · 이름들 · 인스타그램 버튼을 가운데로 쌓고 스크롤해 닿으면 차례로 띄운다 */
 export function CreditGroup({
