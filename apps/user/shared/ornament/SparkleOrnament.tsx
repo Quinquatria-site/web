@@ -5,25 +5,38 @@ const STAR =
 // 아래 갈래가 길어 세로일 때만 아랫선을 1px 더 띄워야 위아래 틈이 같아 보인다
 const AXIS = {
   vertical: {
-    box: 'w-[29px] flex-col',
+    box: 'flex-col',
     lead: 'sparkle-lead-y h-6 w-px bg-linear-to-b from-transparent to-white',
     trail: 'sparkle-trail-y mt-px h-6 w-px bg-linear-to-b from-white to-transparent',
   },
   horizontal: {
-    box: 'h-[30px]',
+    box: '',
     lead: 'sparkle-lead-x h-px w-6 bg-linear-to-r from-transparent to-white',
     trail: 'sparkle-trail-x h-px w-6 bg-linear-to-r from-white to-transparent',
   },
 }
 
+// md 는 홈 크레딧, sm 은 페이지 헤더 제목 위
+const SIZE = {
+  md: { gap: 'gap-[3px]', star: 'h-[30px] w-[29px]' },
+  sm: { gap: 'gap-1.5', star: 'h-[23px] w-[22px]' },
+}
+
 /** 별 양옆으로 흐려지는 선을 둔 구분 장식. 3초마다 빛이 한쪽 끝에서 별을 한 바퀴 돌리고 반대 끝으로 흐른다 */
-export function SparkleOrnament({ axis = 'vertical' }: { axis?: keyof typeof AXIS }) {
+export function SparkleOrnament({
+  axis = 'vertical',
+  size = 'md',
+}: {
+  axis?: keyof typeof AXIS
+  size?: keyof typeof SIZE
+}) {
   const { box, lead, trail } = AXIS[axis]
+  const { gap, star } = SIZE[size]
   return (
-    <div aria-hidden className={`flex items-center gap-[3px] ${box}`}>
+    <div aria-hidden className={`flex items-center ${gap} ${box}`}>
       <span className={lead} />
       <span className="block animate-sparkle-spin motion-reduce:animate-none">
-        <span className="block h-[30px] w-[29px] bg-white" style={{ clipPath: STAR }} />
+        <span className={`block bg-white ${star}`} style={{ clipPath: STAR }} />
       </span>
       <span className={trail} />
     </div>
