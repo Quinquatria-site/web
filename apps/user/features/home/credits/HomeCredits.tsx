@@ -1,21 +1,21 @@
 import Image from 'next/image'
 import { cinzel, paperlogy } from './fonts'
 import { CreditGroup } from './CreditGroup'
-import nightSky from './images/night-sky.jpg'
+import sunsetSky from './images/sunset-sky.jpg'
 
 // 피그마에서 한 줄에 두 명씩, 사이에 점을 두고 마지막 한 명은 홀로 둔다
 const MAKERS = [['Hwang Junho', 'Kim Jiyong'], ['Lim Jaejoon', 'Kim Taeheon'], ['Wi Soomin']]
 
-/** 홈 맨 아래 크레딧. 만든 사람과 함께한 총학생회를 밤하늘 위에 둔다 */
+/** 홈 맨 아래 크레딧. 만든 사람과 함께한 총학생회를 노을 하늘 위에 둔다 */
 export function HomeCredits() {
   return (
     // 크레딧 글꼴은 여기서만 쓰여 이 섹션에만 변수를 달아 다른 페이지가 미리 받지 않게 한다
-    // main 의 도크 여백만큼 아래로 늘려 밤하늘이 화면 끝까지 닿고 위로 가기 원이 그 위에 뜬다
+    // main 의 도크 여백만큼 아래로 늘려 노을 하늘이 화면 끝까지 닿고 위로 가기 원이 그 위에 뜬다
     <footer
       className={`${cinzel.variable} ${paperlogy.variable} relative -mb-(--dock-space) h-[705px] overflow-hidden bg-[#232323] pt-[49px]`}
     >
       <Image
-        src={nightSky}
+        src={sunsetSky}
         alt=""
         fill
         sizes="(max-width: 480px) 100vw, 480px"
