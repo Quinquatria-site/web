@@ -20,7 +20,14 @@ export function DockTabFace({ tab }: { tab: Tab }) {
   return (
     <>
       <Icon className="size-(--dock-tab-icon)" />
-      <span className="text-(length:--dock-tab-label) leading-[calc(var(--dock-tab-label)+2px)] font-medium whitespace-nowrap">
+      {/* 피그마에서 홈만 아이콘뿐이라 이름은 화면 읽기 프로그램에만 남긴다 */}
+      <span
+        className={
+          tab.id === 'home'
+            ? 'sr-only'
+            : 'text-(length:--dock-tab-label) leading-[calc(var(--dock-tab-label)+2px)] font-semibold whitespace-nowrap'
+        }
+      >
         {label}
       </span>
     </>
