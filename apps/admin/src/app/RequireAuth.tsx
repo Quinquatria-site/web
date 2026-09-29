@@ -5,7 +5,8 @@ import { useAuth } from '../auth/authContext'
  * 미인증이면 /login 으로 보낸다. 가려던 경로를 state.from 에 실어
  * 로그인 후 그대로 돌아오게 한다.
  *
- * 이 가드는 화면 흐름이지 접근 통제가 아니다. 이유는 auth/verifyPassword.ts 참고.
+ * 실제 접근 통제는 서버가 한다 — 모든 Backoffice API 가 Bearer 토큰을 요구하고,
+ * 토큰이 죽으면 client 가 401 을 받아 로그아웃시킨다. 이 가드는 화면 흐름이다.
  */
 export function RequireAuth() {
   const { isAuthenticated } = useAuth()

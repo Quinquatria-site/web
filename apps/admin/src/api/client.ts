@@ -23,9 +23,8 @@ interface ClientHooks {
 /**
  * 기본값은 "토큰 없음, 아무것도 안 함" 이다.
  *
- * 로그인이 아직 목이라(`auth/verifyPassword.ts`) 실을 토큰이 없다. #12 가
- * 로그인을 실제 API 로 바꿀 때 `configureClient` 로 두 함수만 갈아끼우면
- * 되고, 호출부는 한 줄도 안 바뀐다.
+ * AuthProvider 가 마운트될 때 `configureClient` 로 두 함수를 갈아끼운다.
+ * 그 전(로그인 화면)에 나가는 요청은 토큰 없이 나간다 — auth/token 과 헬스체크뿐이다.
  */
 const hooks: ClientHooks = {
   authToken: () => null,
