@@ -1,3 +1,5 @@
+import { getMessages } from '@/shared/i18n/messages'
+import { useLocale } from '@/shared/i18n/useLocale'
 import { TAB_ICONS } from './dock-icons'
 import { DOCK_TABS } from './dock-mode'
 
@@ -14,11 +16,12 @@ export function tabBoxClass(index: number) {
 /** 탭 한 칸의 아이콘과 이름 */
 export function DockTabFace({ tab }: { tab: Tab }) {
   const Icon = TAB_ICONS[tab.href]
+  const label = getMessages(useLocale()).dock.tabs[tab.id]
   return (
     <>
       <Icon className="size-(--dock-tab-icon)" />
       <span className="text-(length:--dock-tab-label) leading-[calc(var(--dock-tab-label)+2px)] font-medium whitespace-nowrap">
-        {tab.label}
+        {label}
       </span>
     </>
   )

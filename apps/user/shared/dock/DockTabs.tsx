@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from 'motion/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { localePath, splitLocale } from '@/shared/i18n/paths'
 import { DOCK_TABS } from './dock-mode'
 import { DOCK_PRESS, DOCK_SPRING, PRESS_SCALE, TAB_COLLAPSE, TAB_STAGGER } from './dock-motion'
 import { DockIndicator } from './DockIndicator'
@@ -10,8 +11,8 @@ import { DockTabFace, tabBoxClass } from './DockTabFace'
 
 /** 탭바. 오른쪽 원 자리에서 왼쪽으로 펼쳐지고, 오른쪽으로 접힌다 */
 export function DockTabs({ open }: { open: boolean }) {
-  const pathname = usePathname()
-  const activeIndex = DOCK_TABS.findIndex((tab) => tab.href === pathname)
+  const { locale, path } = splitLocale(usePathname())
+  const activeIndex = DOCK_TABS.findIndex((tab) => tab.href === path)
   const last = DOCK_TABS.length - 1
 
   return (
@@ -40,7 +41,7 @@ export function DockTabs({ open }: { open: boolean }) {
               className="relative shrink-0 overflow-hidden"
             >
               <Link
-                href={tab.href}
+                href={localePath(locale, tab.href)}
                 aria-current={index === activeIndex ? 'page' : undefined}
                 className={tabBoxClass(index)}
               >

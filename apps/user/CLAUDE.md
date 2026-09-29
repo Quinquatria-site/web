@@ -22,6 +22,17 @@
 - 글꼴은 앱 전체가 쓰면 `shared/fonts.ts`, 한 feature 만 쓰면 그 feature 의 `fonts.ts` 에 둔다.
 - barrel(`index.ts`) 은 만들지 않는다. 파일 경로로 직접 가져온다.
 
+## 다국어
+
+주소 첫 칸이 언어다: `/ko` · `/en` · `/zh`. `/` 는 `/ko` 로 보낸다. 코드는 `shared/i18n/` 에 있다.
+
+- 페이지는 `app/[lang]/` 안에 만든다. 레이아웃의 `generateStaticParams` 가 세 언어로 한 벌씩 굽는다. 밖에 두면 루트 레이아웃이 없어 빌드가 깨진다.
+- API 는 `serverApi` 로만 부르고 언어를 넘기지 않는다. 지금 그리는 페이지 언어를 `language_code` 로 알아서 붙인다. 번역이 없는 데이터는 API 가 주지 않으니 따로 거르지 않는다.
+- 화면에 쓰는 글자는 JSX 에 적지 않고 `messages/{ko,en,zh}.ts` 에 넣어 `getMessages(locale)` 로 꺼낸다. `ko.ts` 가 기준이라 다른 언어에 빠진 키는 타입 검사가 막는다.
+- 언어는 서버 컴포넌트에서 `getLocale()`, `'use client'` 에서 `useLocale()` 로 읽는다. 바꿔 쓰면 빌드가 깨진다.
+- 앱 안 링크는 `localePath(locale, '/notices')` 로 만든다. `'/notices'` 를 그대로 쓰면 언어 칸이 빠져 404 다.
+- 날짜·요일은 `Intl.DateTimeFormat(HTML_LANG[locale], …)` 로 언어에 맞춰 적는다.
+
 ## 확인 명령
 
 변경이 `apps/user` 안에만 있으면 user 로 좁혀 실행한다.

@@ -1,21 +1,20 @@
+'use client'
+
 import * as Dialog from '@radix-ui/react-dialog'
 import type { PerformanceType } from '@quen/schema/entities/performance'
+import { getMessages } from '@/shared/i18n/messages'
+import { useLocale } from '@/shared/i18n/useLocale'
 import type { Performance } from './performance'
-
-const TYPE_LABEL: Record<PerformanceType, string> = {
-  STUDENT: '학생 공연',
-  SPECIAL: '특별 공연',
-  ARTIST: '아티스트 공연',
-}
 
 // 공연 종류 칩과 닫기 버튼
 function ModalHeader({ type }: { type: PerformanceType }) {
+  const { schedule } = getMessages(useLocale())
   return (
     <div className="flex items-center justify-between">
       <span className="rounded-xl bg-bg-subtle px-2 py-1 text-xs leading-[normal]">
-        {TYPE_LABEL[type]}
+        {schedule.performanceTypes[type]}
       </span>
-      <Dialog.Close aria-label="닫기" className="-m-2 p-2">
+      <Dialog.Close aria-label={schedule.close} className="-m-2 p-2">
         <svg aria-hidden viewBox="0 0 24 24" className="size-6 fill-current">
           <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
         </svg>

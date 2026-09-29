@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { DockSentinel } from '@/shared/dock/DockSentinel'
 import { LandingScrollCue } from './LandingScrollCue'
 import { LandingTitle, TITLE_REVEAL_SECONDS } from './LandingTitle'
+import { LanguageSwitcher } from './LanguageSwitcher'
 import { useLockedViewportHeight } from './useLockedViewportHeight'
 
 /** 홈 랜딩. 영상이 멈추는 순간 제목이 다 펼쳐지도록 끝나기 전부터 드러낸다. 자동재생이 막히면 마지막 장면 포스터 위에 바로 드러낸다 */
@@ -80,6 +81,7 @@ export function LandingHero() {
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[200px] bg-linear-to-b from-transparent to-secondary"
       />
       <LandingTitle lag={titleLag} />
+      <LanguageSwitcher />
       {done && <LandingScrollCue onPress={scrollPastLanding} />}
       {/* 랜딩을 절반 넘게 내리면 위로 가기 원이 뜨도록 가운데에 감지 표시를 둔다 */}
       <div className="absolute top-1/2">

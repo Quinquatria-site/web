@@ -11,8 +11,8 @@ export function canGoBackInApp() {
   return window.navigation?.canGoBack ?? false
 }
 
-/** 이전 페이지가 없을 때 갈 곳. 상세의 상위 탭, 없으면 홈 */
-export function backFallback(pathname: string) {
-  const parent = pathname.slice(0, pathname.lastIndexOf('/')) || '/'
+/** 이전 페이지가 없을 때 갈 언어 없는 경로. 상세의 상위 탭, 없으면 홈 */
+export function backFallback(path: string) {
+  const parent = path.slice(0, path.lastIndexOf('/')) || '/'
   return DOCK_TABS.some((tab) => tab.href === parent) ? parent : '/'
 }

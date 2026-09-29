@@ -1,7 +1,17 @@
 import type { Metadata, Viewport } from 'next'
 import { Dock } from '@/shared/dock/Dock'
 import { pretendard } from '@/shared/fonts'
+import { getLocale } from '@/shared/i18n/get-locale'
+import { HTML_LANG, LOCALES } from '@/shared/i18n/locales'
 import '@/styles/index.css'
+
+/** 세 언어를 빌드 때 모두 굽는다 */
+export function generateStaticParams() {
+  return LOCALES.map((lang) => ({ lang }))
+}
+
+/** 목록에 없는 언어는 런타임에 만들지 않고 404 로 보낸다 */
+export const dynamicParams = false
 
 /** 학생 앱 공통 문서 메타데이터 */
 export const metadata: Metadata = {
@@ -16,9 +26,10 @@ export const viewport: Viewport = {
 }
 
 /** 480 기둥 · 본문 · 도크를 두는 루트. 페이지를 옮겨도 유지돼 도크가 이어진다 */
-export default function RootLayout({ children }: LayoutProps<'/'>) {
+export default async function RootLayout({ children }: LayoutProps<'/[lang]'>) {
+  const locale = await getLocale()
   return (
-    <html lang="ko" className={pretendard.variable}>
+    <html lang={HTML_LANG[locale]} className={pretendard.variable}>
       <body>
         {/* 모달이 스크롤을 잠글 때 body 의 좌우 margin 을 padding 으로 바꿔 넣어서, 가운데 정렬은 body 가 아닌 안쪽 기둥에 둔다 */}
         <div className="mx-auto max-w-(--app-max-width)">
