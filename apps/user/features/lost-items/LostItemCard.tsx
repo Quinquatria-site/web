@@ -31,7 +31,7 @@ export function LostItemCard({ item }: { item: LostItem }) {
           <div className="flex min-w-0 flex-1 flex-col gap-1 text-secondary">
             <p className="truncate leading-[normal] font-medium">{item.title}</p>
             <p className="flex gap-1 text-xs leading-[1.18]">
-              <span className="shrink-0 text-[#8f848c]">{lostItems.foundLocation}</span>
+              <span className="shrink-0 text-text-muted">{lostItems.foundLocation}</span>
               <span className="truncate">{item.found_location}</span>
             </p>
           </div>

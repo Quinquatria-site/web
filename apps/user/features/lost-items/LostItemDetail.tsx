@@ -24,7 +24,7 @@ export function LostItemDetail({
             {item.is_returned && <ReturnedBadge label={returnedLabel} />}
           </div>
           <p className="flex gap-3 leading-[1.18]">
-            <span className="shrink-0 text-[#8f848c]">{foundLocationLabel}</span>
+            <span className="shrink-0 text-text-muted">{foundLocationLabel}</span>
             <span>{item.found_location}</span>
           </p>
         </div>
