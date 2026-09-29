@@ -1,7 +1,6 @@
 import { Fragment, type ReactNode } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import {
-  IconArrowClockwiseCircularLine,
   IconBoxFlapLine,
   IconChevronRightLine,
   IconMegaphoneLine,
@@ -89,8 +88,11 @@ import styles from './HomeRoute.module.css'
  * 인수인계 질문에 한눈에 답하고, 어느 것도 다른 것보다 크게 말하지 않는다.
  *
  * 바로가기 셋은 "여기서 아무것도 고치지 않는다" 를 어기지 않는다 — 편집 화면으로
- * 이동만 하고 이 화면에서는 아무것도 바뀌지 않는다. 학생 화면 새로고침은
- * POST /revalidations 가 붙기 전까지 비활성이다 (SettingsRoute 의 같은 주석).
+ * 이동만 하고 이 화면에서는 아무것도 바뀌지 않는다.
+ *
+ * 학생 화면 새로고침은 두지 않는다. 학생 앱의 /api/revalidate 는 백엔드만 아는 비밀
+ * 키를 요구하는데, admin 은 정적 SPA 라 그 키를 넣으면 번들에 그대로 드러난다.
+ * 자동 재검증은 백엔드가 저장 뒤 직접 보낸다.
  *
  * 맨 아래 "학생 앱 방문" 은 인수인계 질문이 아니라 "학생들이 지금 얼마나
  * 몰려 있나" 에 대한 답이라 네 타일에 끼우지 않고 다른 카드와 같은 한 줄로 둔다.
@@ -245,12 +247,6 @@ export function HomeRoute() {
           icon={<IconMegaphoneLine width={24} height={24} />}
           label="공지 작성"
           to="/notices/new"
-        />
-        <QuickAction
-          icon={<IconArrowClockwiseCircularLine width={24} height={24} />}
-          label="학생 화면 새로고침"
-          disabled
-          hint="API 연동 시"
         />
       </QuickActions>
 

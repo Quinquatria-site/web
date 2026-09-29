@@ -1,7 +1,8 @@
-/* 세 칸 고정. 라벨이 두 줄로 접혀도 grid 가 행 높이를 맞춰준다 */
+/* 칸 수는 자식 수를 따른다. 라벨이 두 줄로 접혀도 grid 가 행 높이를 맞춰준다 */
 .row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
   gap: var(--seed-dimension-x2);
 }
 
@@ -46,7 +47,8 @@
   text-align: center;
 }
 
-/* 비어 있어도 한 줄 높이를 차지한다 — 세 칸의 아이콘이 같은 높이에 서게 */
+/* 힌트가 있는 칸이 하나라도 있으면 빈 칸도 한 줄을 차지해 아이콘 높이를 맞춘다.
+   아무 칸에도 없으면 빈 줄이 아래 여백만 늘리므로 접는다 */
 .hint {
   min-block-size: var(--seed-line-height-t3);
   font-size: var(--seed-font-size-t2);
@@ -54,4 +56,12 @@
   line-height: var(--seed-line-height-t3);
   color: var(--seed-color-fg-neutral-subtle);
   text-align: center;
+}
+
+.hint:empty {
+  display: none;
+}
+
+.row:has(.hint:not(:empty)) .hint:empty {
+  display: block;
 }
