@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from 'next'
+import Script from 'next/script'
+import { SunsetBackground } from '@/shared/background/SunsetBackground'
 import { Dock } from '@/shared/dock/Dock'
 import { pretendard } from '@/shared/fonts'
 import { getLocale } from '@/shared/i18n/get-locale'
@@ -25,19 +27,31 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 }
 
-/** 480 기둥 · 본문 · 도크를 두는 루트. 페이지를 옮겨도 유지돼 도크가 이어진다 */
+/** Cloudflare Web Analytics 토큰. 없으면(로컬·스테이징) 비콘을 싣지 않는다 */
+const CF_BEACON_TOKEN = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN
+
+/** 480 기둥 · 노을 배경 · 본문 · 도크를 두는 루트. 페이지를 옮겨도 유지돼 도크가 이어진다 */
 export default async function RootLayout({ children }: LayoutProps<'/[lang]'>) {
   const locale = await getLocale()
   return (
     <html lang={HTML_LANG[locale]} className={pretendard.variable}>
-      <body>
+      <body className="bg-bg">
         {/* 모달이 스크롤을 잠글 때 body 의 좌우 margin 을 padding 으로 바꿔 넣어서, 가운데 정렬은 body 가 아닌 안쪽 기둥에 둔다 */}
         <div className="mx-auto max-w-(--app-max-width)">
+          <SunsetBackground />
           <main className="min-h-dvh pt-[env(safe-area-inset-top)] pb-(--dock-space)">
             {children}
           </main>
           <Dock />
         </div>
+        {/* spa: 클라이언트 라우팅(pushState)도 페이지 조회로 센다 */}
+        {CF_BEACON_TOKEN && (
+          <Script
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon={JSON.stringify({ token: CF_BEACON_TOKEN, spa: true })}
+            strategy="afterInteractive"
+          />
+        )}
       </body>
     </html>
   )

@@ -1,10 +1,10 @@
 @theme inline {
-  --color-bg: var(--neutral-50);
+  --color-bg: var(--warm-white);
   --color-bg-subtle: var(--neutral-100);
   --color-bg-inverse: var(--dark);
 
-  --color-text: var(--neutral-900);
-  --color-text-muted: var(--neutral-500);
+  --color-text: var(--dark);
+  --color-text-muted: var(--mauve-gray);
   --color-text-inverse: var(--warm-white);
 
   --color-border: var(--neutral-200);
@@ -19,4 +19,14 @@
 
   --color-accent: var(--twilight);
   --color-on-accent: var(--warm-white);
+
+  --color-performance-student: var(--beige-peach);
+  --color-performance-special: var(--beige-coral);
+  --color-performance-artist: var(--beige-rose);
+
+  --color-dock: var(--warm-white);
+  --color-on-dock: var(--twilight);
+  --color-dock-border: var(--brick);
+  /* 피그마 선택 표시(#f7d3aa)가 팔레트에 없어 가장 가까운 햇빛 40% 를 웜화이트에 섞는다. 탭 글자 위에 겹쳐 그려서 불투명해야 한다 */
+  --color-dock-selected: color-mix(in srgb, var(--sunlight) 40%, var(--warm-white));
 }
