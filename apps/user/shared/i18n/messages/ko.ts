@@ -34,11 +34,14 @@ export const ko = {
   pages: {
     schedule: '축제 일정표',
     map: '지도',
-    notices: '공지',
+    notices: '공지사항',
     noticeDetail: '공지 상세',
     lostItems: '분실물 찾기',
     lostItemDetail: '분실물 상세',
     goods: '굿즈',
+  },
+  notices: {
+    important: '중요',
   },
   lostItems: {
     contactNotice: '분실물 관련 문의는 총학생회로 연락주세요!',

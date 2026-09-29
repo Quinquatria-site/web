@@ -48,6 +48,9 @@ export const en: Messages = {
     lostItemDetail: 'Lost Item',
     goods: 'Goods',
   },
+  notices: {
+    important: 'Important',
+  },
   lostItems: {
     contactNotice: 'For lost item inquiries, contact the Student Council!',
     councilInstagram: 'Council Instagram',
