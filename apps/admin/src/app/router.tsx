@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router'
+import { AnalyticsRoute } from '../routes/AnalyticsRoute'
 import { HomeRoute } from '../routes/HomeRoute'
 import { LoginRoute } from '../routes/LoginRoute'
 import { LostItemEditRoute } from '../routes/LostItemEditRoute'
@@ -92,6 +93,11 @@ export const router = createBrowserRouter([
             path: 'lost-items/:id',
             element: <LostItemEditRoute />,
             handle: { title: '분실물 편집', back: true, hideTabs: true },
+          },
+          {
+            path: 'analytics',
+            element: <AnalyticsRoute />,
+            handle: { title: '방문 통계', back: true, hideTabs: true },
           },
           {
             path: 'settings',
