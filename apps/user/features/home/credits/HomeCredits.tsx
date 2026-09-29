@@ -20,7 +20,7 @@ export function HomeCredits() {
         alt=""
         fill
         sizes="(max-width: 480px) 100vw, 480px"
-        className="object-cover"
+        className="object-cover opacity-30"
       />
       <div className="relative mx-auto flex w-[302px] flex-col items-center gap-[72px]">
         <CreditGroup
