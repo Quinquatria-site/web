@@ -18,6 +18,16 @@ function apiBaseUrl() {
   return base
 }
 
+/** Customer API 가 오류 상태로 답했을 때. 호출하는 쪽이 status 로 404 같은 경우를 가려 쓴다 */
+export class ApiError extends Error {
+  status: number
+
+  constructor(path: string, status: number) {
+    super(`GET ${path} ${status}`)
+    this.status = status
+  }
+}
+
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /** Customer API GET. 지금 그리는 페이지의 언어로 받고, 5xx·네트워크 오류는 다시 시도하며, 끝내 실패하면 던져서 빈 화면이 배포되지 않게 한다 */
@@ -40,7 +50,7 @@ export async function serverApi<T>(path: string, { tags, query }: GetOptions): P
     }
     if (res.ok) return res.json() as Promise<T>
     // 4xx 는 요청이 틀린 것이라 다시 보내도 같다
-    if (res.status < 500 || last) throw new Error(`GET ${path} ${res.status}`)
+    if (res.status < 500 || last) throw new ApiError(path, res.status)
     await sleep(RETRY_DELAY_MS)
   }
 }
