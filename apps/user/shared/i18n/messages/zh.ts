@@ -43,6 +43,9 @@ export const zh: Messages = {
     goods: '周边',
   },
   lostItems: {
+    contactNotice: '失物相关咨询请联系总学生会！',
+    councilInstagram: '总学生会 instagram →',
+    councilCall: '致电总学生会 →',
     foundLocation: '拾获地点',
     returned: '已归还',
     emptyTitle: '失物信息将在庆典结束后\n陆续上传。',

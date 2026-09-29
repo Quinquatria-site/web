@@ -49,6 +49,9 @@ export const en: Messages = {
     goods: 'Goods',
   },
   lostItems: {
+    contactNotice: 'For lost item inquiries, contact the Student Council!',
+    councilInstagram: 'Council Instagram →',
+    councilCall: 'Call the Council →',
     foundLocation: 'Found at',
     returned: 'Returned',
     emptyTitle: 'Lost items will be posted\nafter the festival ends.',
