@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { CreditReveal, CreditRevealItem } from './CreditReveal'
+import { LinkBadge } from '@/shared/link-badge/LinkBadge'
 import { SparkleOrnament } from '@/shared/ornament/SparkleOrnament'
 
 /** 크레딧 한 묶음. 장식 · 영문 제목 · 단체명 · 이름들 · 인스타그램 버튼을 가운데로 쌓고 스크롤해 닿으면 차례로 띄운다 */
@@ -32,14 +33,9 @@ export function CreditGroup({
           {children && <CreditRevealItem>{children}</CreditRevealItem>}
         </div>
         <CreditRevealItem>
-          <a
-            href={instagram.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block rounded-2xl bg-primary px-4 py-1 font-paperlogy text-sm leading-[normal] tracking-[0.12em] text-black"
-          >
+          <LinkBadge href={instagram.href} tone="primary">
             {instagram.label}
-          </a>
+          </LinkBadge>
         </CreditRevealItem>
       </div>
     </CreditReveal>

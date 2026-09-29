@@ -34,9 +34,9 @@ export const en: Messages = {
     },
     credits: {
       likelion: 'LIKELION HUFS (Seoul)',
-      likelionInstagram: 'LIKELION instagram →',
+      likelionInstagram: 'LIKELION instagram',
       council: 'HUFS Seoul Campus 60th Student Council ‘Seonmyeong’',
-      councilInstagram: 'Seonmyeong instagram →',
+      councilInstagram: 'Seonmyeong instagram',
     },
   },
   pages: {
@@ -50,8 +50,8 @@ export const en: Messages = {
   },
   lostItems: {
     contactNotice: 'For lost item inquiries, contact the Student Council!',
-    councilInstagram: 'Council Instagram →',
-    councilCall: 'Call the Council →',
+    councilInstagram: 'Council Instagram',
+    councilCall: 'Call the Council',
     foundLocation: 'Found at',
     returned: 'Returned',
     emptyTitle: 'Lost items will be posted\nafter the festival ends.',

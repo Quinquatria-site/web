@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import { cinzel } from '@/shared/fonts'
+import { paperlogy } from '@/shared/fonts/paperlogy'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
-import { paperlogy } from './fonts'
 import { CreditGroup } from './CreditGroup'
 import sunsetSky from './images/sunset-sky.jpg'
 
@@ -32,7 +32,7 @@ const SKY_FADE = `linear-gradient(to bottom, ${[
 export async function HomeCredits() {
   const { credits } = getMessages(await getLocale()).home
   return (
-    // 크레딧 글꼴은 여기서만 쓰여 이 섹션에만 변수를 달아 다른 페이지가 미리 받지 않게 한다
+    // 크레딧 글꼴 변수는 이 섹션에만 달아 크레딧이 없는 페이지가 미리 받지 않게 한다
     // main 의 도크 여백만큼 아래로 늘려 노을 하늘이 화면 끝까지 닿고 위로 가기 원이 그 위에 뜬다
     <footer
       className={`${cinzel.variable} ${paperlogy.variable} relative -mb-(--dock-space) h-[705px] overflow-hidden bg-[#232323] pt-[49px]`}

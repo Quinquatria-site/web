@@ -26,9 +26,9 @@ export const ko = {
     },
     credits: {
       likelion: '한국외대(서울) 멋쟁이사자처럼',
-      likelionInstagram: '멋쟁이사자처럼 instagram →',
+      likelionInstagram: '멋쟁이사자처럼 instagram',
       council: '한국외대 서울캠퍼스 제60대 총학생회 ‘선명’',
-      councilInstagram: '선명 instagram →',
+      councilInstagram: '선명 instagram',
     },
   },
   pages: {
@@ -42,8 +42,8 @@ export const ko = {
   },
   lostItems: {
     contactNotice: '분실물 관련 문의는 총학생회로 연락주세요!',
-    councilInstagram: '총학생회 instagram →',
-    councilCall: '총학생회 전화하기 →',
+    councilInstagram: '총학생회 instagram',
+    councilCall: '총학생회 전화하기',
     foundLocation: '습득 장소',
     returned: '반환 완료',
     emptyTitle: '분실물은 축제 종료 후\n순차적으로 등록됩니다.',
