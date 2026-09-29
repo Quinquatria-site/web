@@ -3,14 +3,15 @@
 import { useEffect, useRef, useState } from 'react'
 import { DockSentinel } from '@/shared/dock/DockSentinel'
 import { LandingScrollCue } from './LandingScrollCue'
-import { LandingTitle } from './LandingTitle'
+import { LandingTitle, TITLE_REVEAL_SECONDS } from './LandingTitle'
 
-/** 홈 랜딩. 영상을 한 번 틀고 마지막 장면에 멈춘 뒤 제목을 드러낸다. 자동재생이 막히면 마지막 장면 포스터 위에 바로 드러낸다 */
+/** 홈 랜딩. 영상이 멈추는 순간 제목이 다 펼쳐지도록 끝나기 전부터 드러낸다. 자동재생이 막히면 마지막 장면 포스터 위에 바로 드러낸다 */
 export function LandingHero() {
   const sectionRef = useRef<HTMLElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const [done, setDone] = useState(false)
   const [blocked, setBlocked] = useState(false)
+  const [titleLag, setTitleLag] = useState<number | null>(null)
 
   const scrollPastLanding = () => {
     const section = sectionRef.current
@@ -25,6 +26,14 @@ export function LandingHero() {
   const showEnd = () => {
     setBlocked(true)
     setDone(true)
+    setTitleLag(0)
+  }
+
+  const startTitleBeforeEnd = (video: HTMLVideoElement) => {
+    if (titleLag !== null) return
+    // timeupdate 는 0.25초 간격이라 문턱을 넘은 만큼 애니메이션을 앞당겨 영상과 같은 순간에 끝낸다
+    const lag = video.currentTime - (video.duration - TITLE_REVEAL_SECONDS)
+    if (lag >= 0) setTitleLag(lag)
   }
 
   useEffect(() => {
@@ -33,6 +42,7 @@ export function LandingHero() {
     // 하이드레이션 전에 이미 끝났을 수 있어 다시 틀지 않는다
     if (video.ended) {
       setDone(true)
+      setTitleLag(0)
       return
     }
     // autoPlay 는 막혀도 조용히 실패하므로 play() 거절로 저전력 모드 등을 감지한다
@@ -54,6 +64,7 @@ export function LandingHero() {
         playsInline
         preload="auto"
         aria-hidden
+        onTimeUpdate={(e) => startTitleBeforeEnd(e.currentTarget)}
         onEnded={() => setDone(true)}
         onError={showEnd}
       />
@@ -62,7 +73,7 @@ export function LandingHero() {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[200px] bg-linear-to-b from-transparent to-secondary"
       />
-      <LandingTitle shown={done} />
+      <LandingTitle lag={titleLag} />
       {done && <LandingScrollCue onPress={scrollPastLanding} />}
       {/* 랜딩을 절반 넘게 내리면 위로 가기 원이 뜨도록 가운데에 감지 표시를 둔다 */}
       <div className="absolute top-1/2">

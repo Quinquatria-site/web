@@ -1,6 +1,10 @@
 import Image from 'next/image'
+import type { CSSProperties } from 'react'
 import { cinzel } from '@/shared/fonts'
 import logo from './images/logo.png'
+
+/** 로고가 다 펼쳐지는 데 걸리는 초. landing-title.css 의 title-reveal 길이와 같다 */
+export const TITLE_REVEAL_SECONDS = 2
 
 /** 글자 양옆에 바깥으로 옅어지는 선을 단 한 줄. 크기는 부모의 --u(피그마 1px) 배수로 받는다 */
 function RuledLine({
@@ -29,8 +33,9 @@ function RuledLine({
   )
 }
 
-/** 랜딩 제목. shown 이 켜지면 로고가 가운데에서 양 끝으로 드러나고 HUFS·날짜가 뒤따른다 */
-export function LandingTitle({ shown }: { shown: boolean }) {
+/** 랜딩 제목. lag 가 들어오면 그만큼 지난 시점부터 로고가 양 끝으로 드러나고 HUFS·날짜가 뒤따른다 */
+export function LandingTitle({ lag }: { lag: number | null }) {
+  const shown = lag !== null
   // 로고는 미리 받아 두고 보이지만 않게 해야 펼쳐질 때 비어 있지 않다
   const reveal = shown
     ? 'motion-safe:animate-title-reveal motion-reduce:animate-title-fade'
@@ -43,6 +48,7 @@ export function LandingTitle({ shown }: { shown: boolean }) {
     // 기기 폭이 달라도 피그마 390 화면과 같은 비율로 보이도록 모든 치수를 앱 폭의 1/390 배수로 잡는다
     <div
       className={`${cinzel.variable} absolute inset-x-0 top-[calc(83*var(--u))] flex flex-col items-center font-cinzel [--u:calc(100cqw/390)]`}
+      style={{ '--title-lag': `${lag ?? 0}s` } as CSSProperties}
     >
       <RuledLine
         text="HUFS"
