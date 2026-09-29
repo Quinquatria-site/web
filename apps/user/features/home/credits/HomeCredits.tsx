@@ -7,6 +7,25 @@ import sunsetSky from './images/sunset-sky.jpg'
 // 피그마에서 한 줄에 두 명씩, 사이에 점을 두고 마지막 한 명은 홀로 둔다
 const MAKERS = [['Hwang Junho', 'Kim Jiyong'], ['Lim Jaejoon', 'Kim Taeheon'], ['Wi Soomin']]
 
+// 직선 그라데이션은 중간에 탁한 띠가 남아 처음엔 빨리, 끝은 천천히 옅어지는 곡선으로 짚는다
+const SKY_FADE = `linear-gradient(to bottom, ${[
+  [100, 0],
+  [73.8, 19],
+  [54.1, 34],
+  [38.2, 47],
+  [27.8, 56.5],
+  [19.4, 65],
+  [12.6, 73],
+  [7.5, 80.2],
+  [4.2, 86.1],
+  [2.1, 91],
+  [0.8, 95.2],
+  [0.2, 98.2],
+  [0, 100],
+]
+  .map(([alpha, at]) => `color-mix(in srgb, var(--color-secondary) ${alpha}%, transparent) ${at}%`)
+  .join(', ')})`
+
 /** 홈 맨 아래 크레딧. 만든 사람과 함께한 총학생회를 노을 하늘 위에 둔다 */
 export function HomeCredits() {
   return (
@@ -20,7 +39,13 @@ export function HomeCredits() {
         alt=""
         fill
         sizes="(max-width: 480px) 100vw, 480px"
-        className="object-cover"
+        className="object-cover opacity-30"
+      />
+      {/* 위 바로가기 면에서 하늘로 경계선 없이 이어지게 같은 색에서 옅어진다 */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-[80px]"
+        style={{ backgroundImage: SKY_FADE }}
       />
       <div className="relative mx-auto flex w-[302px] flex-col items-center gap-[72px]">
         <CreditGroup

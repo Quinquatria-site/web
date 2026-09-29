@@ -36,7 +36,7 @@ export function CreditGroup({
             href={instagram.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="block rounded-2xl border border-primary-border bg-primary px-4 py-1 font-paperlogy text-sm leading-[normal] tracking-[0.12em] text-on-primary"
+            className="block rounded-2xl bg-primary px-4 py-1 font-paperlogy text-sm leading-[normal] tracking-[0.12em] text-black"
           >
             {instagram.label}
           </a>
