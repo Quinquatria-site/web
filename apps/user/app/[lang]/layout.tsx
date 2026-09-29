@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next'
+import Script from 'next/script'
 import { SunsetBackground } from '@/shared/background/SunsetBackground'
 import { Dock } from '@/shared/dock/Dock'
 import { pretendard } from '@/shared/fonts'
@@ -26,6 +27,9 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 }
 
+/** Cloudflare Web Analytics 토큰. 없으면(로컬·스테이징) 비콘을 싣지 않는다 */
+const CF_BEACON_TOKEN = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN
+
 /** 480 기둥 · 노을 배경 · 본문 · 도크를 두는 루트. 페이지를 옮겨도 유지돼 도크가 이어진다 */
 export default async function RootLayout({ children }: LayoutProps<'/[lang]'>) {
   const locale = await getLocale()
@@ -40,6 +44,14 @@ export default async function RootLayout({ children }: LayoutProps<'/[lang]'>) {
           </main>
           <Dock />
         </div>
+        {/* spa: 클라이언트 라우팅(pushState)도 페이지 조회로 센다 */}
+        {CF_BEACON_TOKEN && (
+          <Script
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon={JSON.stringify({ token: CF_BEACON_TOKEN, spa: true })}
+            strategy="afterInteractive"
+          />
+        )}
       </body>
     </html>
   )
