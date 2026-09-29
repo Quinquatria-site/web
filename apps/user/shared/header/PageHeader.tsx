@@ -7,18 +7,17 @@ import headerSky from './images/header-sky.jpg'
 export function PageHeader({ title }: { title: string }) {
   return (
     <header
-      className={`${kimjungchulMyungjo.variable} relative flex h-24 items-center justify-center overflow-hidden`}
+      className={`${kimjungchulMyungjo.variable} relative flex h-19 items-center justify-center overflow-hidden`}
     >
-      {/* 오른쪽 해가 잘리지 않게 아래 기준으로 자른다 */}
       <Image
         src={headerSky}
         alt=""
         fill
         priority
         sizes="(max-width: 480px) 100vw, 480px"
-        className="object-cover object-bottom"
+        className="object-cover"
       />
-      <div className="relative mt-[11px] flex flex-col items-center drop-shadow-[0_2px_2px_rgb(0_0_0/0.25)]">
+      <div className="relative flex flex-col items-center drop-shadow-[0_2px_2px_rgb(0_0_0/0.25)]">
         <div className="-mb-[3px]">
           <SparkleOrnament axis="horizontal" size="sm" />
         </div>

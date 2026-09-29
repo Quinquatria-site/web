@@ -77,6 +77,102 @@ function GoodsIcon(props: IconProps) {
   )
 }
 
+// 선택 아이콘은 속을 채우고, 안쪽 표시는 선택 표시 면 색으로 파내 모양을 남긴다
+const KNOCKOUT = 'stroke-dock-selected'
+
+function TimetableSelectedIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden {...props}>
+      <path
+        d="M5.83333 3.33333V16.6667"
+        stroke="currentColor"
+        strokeWidth={1.45833}
+        strokeLinecap="round"
+      />
+      <circle cx="5.83333" cy="7.08333" r="2.1" />
+      <circle cx="5.83333" cy="12.9167" r="2.1" />
+      <rect x="9" y="4.4" width="8.5" height="12.2" rx="2" />
+      <path
+        d="M11 7.4H15.5M11 10.4H13.6M11 13.4H15.5"
+        className={KNOCKOUT}
+        strokeWidth={1.3}
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
+function MapSelectedIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden {...props}>
+      <path
+        d="M7.5 3.33333L3.33333 5V16.6667L7.5 15L12.5 16.6667L16.6667 15V3.33333L12.5 5L7.5 3.33333Z"
+        stroke="currentColor"
+        strokeWidth={1.45833}
+        strokeLinejoin="round"
+      />
+      <path
+        d="M7.5 4.2V14.3M12.5 5.7V15.8"
+        className={KNOCKOUT}
+        strokeWidth={1.1}
+        strokeLinecap="round"
+      />
+    </svg>
+  )
+}
+
+function NoticeSelectedIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden {...props}>
+      <path
+        d="M4.16667 6.66667H11.6667L15.8333 4.16667V15.8333L11.6667 13.3333H4.16667C3.94565 13.3333 3.73369 13.2455 3.57741 13.0893C3.42113 12.933 3.33333 12.721 3.33333 12.5V7.5C3.33333 7.27899 3.42113 7.06703 3.57741 6.91074C3.73369 6.75446 3.94565 6.66667 4.16667 6.66667Z"
+        stroke="currentColor"
+        strokeWidth={1.45833}
+        strokeLinejoin="round"
+      />
+      <path
+        d="M6.66667 13.3333V15.8333H9.16667"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.45833}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function LostItemsSelectedIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden {...props}>
+      <circle cx="8.75" cy="8.75" r="5.6" />
+      <path
+        d="M12.5 12.5L16.25 16.25"
+        stroke="currentColor"
+        strokeWidth={2.2}
+        strokeLinecap="round"
+      />
+      <path d="M8.75 6.2V9.2" className={KNOCKOUT} strokeWidth={1.5} strokeLinecap="round" />
+      <circle cx="8.75" cy="11.2" r="0.85" className="fill-dock-selected" />
+    </svg>
+  )
+}
+
+function GoodsSelectedIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden {...props}>
+      <path
+        d="M10 6C8.8 3.9 6.6 3.4 6.3 4.7C6.1 5.7 8 6 10 6ZM10 6C11.2 3.9 13.4 3.4 13.7 4.7C13.9 5.7 12 6 10 6Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+      />
+      <rect x="3.5" y="6" width="13" height="3.4" rx="1" />
+      <rect x="4.6" y="9.4" width="10.8" height="7.2" rx="1.2" />
+      <path d="M10 6V16.6M4.6 9.4H15.4" className={KNOCKOUT} strokeWidth={1.2} />
+    </svg>
+  )
+}
+
 const ARROW_UP =
   'M36.3197 32.623L31.4467 37.4959C31.1387 37.804 30.7466 37.958 30.2705 37.958C29.7944 37.958 29.4023 37.804 29.0943 37.4959C28.7862 37.1878 28.6322 36.7958 28.6322 36.3197C28.6322 35.8436 28.7862 35.4515 29.0943 35.1434L36.8238 27.4139C37.1598 27.0779 37.5519 26.9098 38 26.9098C38.4481 26.9098 38.8402 27.0779 39.1762 27.4139L46.9057 35.1434C47.2138 35.4515 47.3678 35.8436 47.3678 36.3197C47.3678 36.7958 47.2138 37.1878 46.9057 37.4959C46.5977 37.804 46.2056 37.958 45.7295 37.958C45.2534 37.958 44.8613 37.804 44.5533 37.4959L39.6803 32.623V46.4016C39.6803 46.8777 39.5193 47.2768 39.1972 47.5989C38.8752 47.9209 38.4761 48.082 38 48.082C37.5239 48.082 37.1248 47.9209 36.8028 47.5989C36.4807 47.2768 36.3197 46.8777 36.3197 46.4016V32.623Z'
 
@@ -107,4 +203,14 @@ export const TAB_ICONS: Record<(typeof DOCK_TABS)[number]['href'], ComponentType
   '/notices': NoticeIcon,
   '/lost-items': LostItemsIcon,
   '/goods': GoodsIcon,
+}
+
+/** 선택된 탭의 아이콘. 홈만 선택 전 모양을 그대로 쓴다 */
+export const SELECTED_TAB_ICONS: typeof TAB_ICONS = {
+  '/': HomeIcon,
+  '/schedule': TimetableSelectedIcon,
+  '/map': MapSelectedIcon,
+  '/notices': NoticeSelectedIcon,
+  '/lost-items': LostItemsSelectedIcon,
+  '/goods': GoodsSelectedIcon,
 }
