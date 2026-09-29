@@ -80,7 +80,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo(
-    () => ({ isAuthenticated: session !== null, login, logout }),
+    () => ({
+      isAuthenticated: session !== null,
+      expiresAt: session?.expiresAt ?? null,
+      login,
+      logout,
+    }),
     [session, login, logout],
   )
 
