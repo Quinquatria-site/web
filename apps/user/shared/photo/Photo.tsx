@@ -16,7 +16,8 @@ export function Photo({ src, alt, sizes }: { src: string | null; alt: string; si
             alt=""
             fill
             sizes="(max-width: 480px) 55vw, 264px"
-            className="opacity-50"
+            // 피그마는 50% 인데 브라우저가 크게 줄여 그리면 가는 선이 옅어져, 70% 여야 피그마만큼 보인다
+            className="opacity-70"
           />
         </div>
       )}
