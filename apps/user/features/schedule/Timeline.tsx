@@ -1,14 +1,18 @@
+import { getLocale } from '@/shared/i18n/get-locale'
+import { getMessages } from '@/shared/i18n/messages'
 import { ClockDot } from './ClockDot'
 import type { Performance } from './performance'
 import { PerformanceCard } from './PerformanceCard'
-import { TIMELINE_SLOTS } from './timeline-slots'
+import { TIMELINE_SLOTS, type TimelineSlot } from './timeline-slots'
 import { TimelineDot } from './TimelineDot'
 
 /** 타임라인 공연 줄의 id. 배너가 이 줄로 옮겨 갈 때 쓴다 */
 export const performanceAnchorId = (id: number) => `performance-${id}`
 
+type TextSlot = Extract<TimelineSlot, { text: string }>
+
 type Row = { key: string; time: string | null } & (
-  { text: string; start: number; end: number | null } | { performance: Performance }
+  { text: TextSlot['text']; start: number; end: number | null } | { performance: Performance }
 )
 
 // 서울 기준 그날 그 시각. 기기 시간대와 상관없이 같은 순간을 가리킨다
@@ -36,7 +40,14 @@ function toRows(date: string, performances: Performance[]): Row[] {
 }
 
 /** 하루 타임라인. 고정 문구 사이에 종류별 공연을 seq 순으로 끼워 넣고, 진행 중인 줄의 점을 반짝인다 */
-export function Timeline({ date, performances }: { date: string; performances: Performance[] }) {
+export async function Timeline({
+  date,
+  performances,
+}: {
+  date: string
+  performances: Performance[]
+}) {
+  const { slots } = getMessages(await getLocale()).schedule
   const rows = toRows(date, performances)
   return (
     <ol className="flex flex-col gap-[3px] text-secondary">
@@ -59,7 +70,7 @@ export function Timeline({ date, performances }: { date: string; performances: P
             )}
           </span>
           {'text' in row ? (
-            <span className="truncate pl-1.5 text-base leading-[normal]">{row.text}</span>
+            <span className="truncate pl-1.5 text-base leading-[normal]">{slots[row.text]}</span>
           ) : (
             <div className="pl-1">
               <PerformanceCard performance={row.performance} />

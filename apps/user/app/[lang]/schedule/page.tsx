@@ -4,9 +4,12 @@ import type { Performance } from '@/features/schedule/performance'
 import { ScheduleBoard } from '@/features/schedule/ScheduleBoard'
 import { Timeline, performanceAnchorId } from '@/features/schedule/Timeline'
 import { PageHeader } from '@/shared/header/PageHeader'
+import { getLocale } from '@/shared/i18n/get-locale'
+import { getMessages } from '@/shared/i18n/messages'
 
 /** 일정표 탭. 배너와 두 날치 타임라인을 미리 그려 두고, 탭만 브라우저에서 고른다 */
-export default function SchedulePage() {
+export default async function SchedulePage() {
+  const { pages } = getMessages(await getLocale())
   // API 를 붙이면 여기서 받아 온다. 백오피스가 공연 중을 바꾸면 재검증돼 이 페이지가 다시 그려진다
   const performances: Performance[] = []
   const byDay = groupByFestivalDay(performances)
@@ -15,7 +18,7 @@ export default function SchedulePage() {
 
   return (
     <>
-      <PageHeader title="축제 일정표" />
+      <PageHeader title={pages.schedule} />
       <ScheduleBoard
         banner={<LiveBanner performance={live} />}
         panels={FESTIVAL_DAYS.map(({ date }, i) => (

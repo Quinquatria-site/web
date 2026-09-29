@@ -1,3 +1,8 @@
+'use client'
+
+import { getMessages } from '@/shared/i18n/messages'
+import { useLocale } from '@/shared/i18n/useLocale'
+
 // 아래 꺾쇠가 0.15초 늦게 나오고 0.25초 늦게 깜빡여 빛이 아래로 흐르는 것처럼 보인다
 const CHEVRONS = [
   { d: 'M0 0L20 20L39 0', enter: '[--cue-in-delay:300ms]', pulse: '[--cue-pulse-delay:800ms]' },
@@ -6,10 +11,11 @@ const CHEVRONS = [
 
 /** 랜딩 아래 가운데의 두 줄 꺾쇠. 위에서 차례로 내려와 빛이 아래로 흐르듯 깜빡이고, 누르면 onPress 를 부른다 */
 export function LandingScrollCue({ onPress }: { onPress: () => void }) {
+  const locale = useLocale()
   return (
     <button
       type="button"
-      aria-label="다음 섹션으로"
+      aria-label={getMessages(locale).home.scrollCue}
       onClick={onPress}
       // 피그마 39 상자보다 누를 곳을 넓히되 꺾쇠 중심은 피그마 자리에 둔다
       className="absolute bottom-[54.5px] left-1/2 grid size-12 -translate-x-1/2 place-items-center"

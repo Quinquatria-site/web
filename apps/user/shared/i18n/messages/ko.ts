@@ -1,0 +1,62 @@
+/** 한국어 화면 문구. 다른 언어 문구는 이 모양을 그대로 따른다 */
+export const ko = {
+  dock: {
+    label: '메인 메뉴',
+    back: '뒤로 가기',
+    top: '맨 위로',
+    tabs: {
+      home: '홈',
+      schedule: '일정표',
+      map: '지도',
+      notices: '공지',
+      lostItems: '분실물',
+      goods: '굿즈',
+    },
+  },
+  home: {
+    languageLabel: '언어 선택',
+    scrollCue: '다음 섹션으로',
+    navLabel: '바로가기',
+    nav: {
+      schedule: { title: '축제 일정표', description: '축제 일정과 공연 시간을 확인해보세요!' },
+      map: { title: '캠퍼스 지도', description: '다양한 부스와 편의시설 위치를 찾아보세요!' },
+      notices: { title: '공지사항', description: '축제 관련 주요 소식을 알려드립니다.' },
+      lostItems: { title: '분실물 찾기', description: '축제가 끝나면 분실물이 업로드됩니다.' },
+      goods: { title: '퀸쿠아트리아 굿즈', description: '2026 퀸쿠아트리아 굿즈를 만나보세요!' },
+    },
+    credits: {
+      likelion: '한국외대(서울) 멋쟁이사자처럼',
+      likelionInstagram: '멋쟁이사자처럼 instagram →',
+      council: '한국외대 서울캠퍼스 제60대 총학생회 ‘선명’',
+      councilInstagram: '선명 instagram →',
+    },
+  },
+  pages: {
+    schedule: '축제 일정표',
+    map: '지도',
+    notices: '공지',
+    noticeDetail: '공지 상세',
+    lostItems: '분실물',
+    lostItemDetail: '분실물 상세',
+    goods: '굿즈',
+  },
+  schedule: {
+    festivalStarted: '축제가 시작됐습니다!',
+    liveNow: '지금 공연 중!',
+    liveBadge: '공연 중',
+    dayTabsLabel: '축제 일자',
+    close: '닫기',
+    performanceTypes: {
+      STUDENT: '학생 공연',
+      SPECIAL: '특별 공연',
+      ARTIST: '아티스트 공연',
+    },
+    slots: {
+      wristbands: '외대인 입장팔찌 배부 시작',
+      boothsOpen: '전체 부스 오픈',
+      studentEntry: '외대인 관객 운동장 입장 시작',
+      visitorEntry: '외부인 관객 운동장 입장 시작',
+      dayEnd: '축제 첫째날 종료',
+    },
+  },
+}
