@@ -36,9 +36,13 @@ export const ko = {
     map: '지도',
     notices: '공지',
     noticeDetail: '공지 상세',
-    lostItems: '분실물',
+    lostItems: '분실물 찾기',
     lostItemDetail: '분실물 상세',
     goods: '굿즈',
+  },
+  lostItems: {
+    emptyTitle: '분실물은 축제 종료 후\n순차적으로 등록됩니다.',
+    emptyHint: '조금만 기다려주세요!',
   },
   schedule: {
     festivalStarted: '축제가 시작됐습니다!',

@@ -42,6 +42,10 @@ export const zh: Messages = {
     lostItemDetail: '失物详情',
     goods: '周边',
   },
+  lostItems: {
+    emptyTitle: '失物信息将在庆典结束后\n陆续上传。',
+    emptyHint: '请稍候！',
+  },
   schedule: {
     festivalStarted: '庆典开始了！',
     liveNow: '正在演出！',

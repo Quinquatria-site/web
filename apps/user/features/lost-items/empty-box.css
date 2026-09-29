@@ -1,0 +1,24 @@
+/* 빈 분실물 그림의 나비. 상자 둘레 타원을 시계 방향으로 돌며 날갯짓한다 */
+@theme {
+  --animate-butterfly-orbit: butterfly-orbit 7s linear infinite;
+  --animate-butterfly-flutter: butterfly-flutter 0.18s ease-in-out infinite alternate;
+
+  @keyframes butterfly-orbit {
+    to {
+      offset-distance: 100%;
+    }
+  }
+
+  @keyframes butterfly-flutter {
+    to {
+      transform: scaleX(0.55);
+    }
+  }
+}
+
+/* 208×146 틀 기준 타원(중심 104,72 · 반지름 90×54). 시작점은 EmptyBox 의 BUTTERFLY_FROM 과 맞춘다 */
+@utility butterfly-orbit {
+  offset-path: path('M172.9 37.3A90 54 0 1 1 35.1 106.7A90 54 0 1 1 172.9 37.3');
+  offset-anchor: center;
+  offset-rotate: 0deg;
+}

@@ -48,6 +48,10 @@ export const en: Messages = {
     lostItemDetail: 'Lost Item',
     goods: 'Goods',
   },
+  lostItems: {
+    emptyTitle: 'Lost items will be posted\nafter the festival ends.',
+    emptyHint: 'Please hang tight!',
+  },
   schedule: {
     festivalStarted: 'The festival has begun!',
     liveNow: 'Performing now!',
