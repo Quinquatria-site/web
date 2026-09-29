@@ -11,3 +11,8 @@ export async function getLostItems(): Promise<LostItem[]> {
   })
   return page.items
 }
+
+/** 페이지 언어의 분실물 한 건. 목록과 같은 lost-items 태그로 재검증된다 */
+export async function getLostItem(id: number): Promise<LostItem> {
+  return serverApi<LostItem>(`/lost-items/${id}`, { tags: [CACHE_TAGS.lostItems] })
+}
