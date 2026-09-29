@@ -22,7 +22,6 @@ const easeInOut = (u: number) => (u < 0.5 ? 4 * u ** 3 : 1 - (-2 * u + 2) ** 3 /
 /** 탭 사이마다 좁은 틈을 비집고 지나가듯 눌렸다 부푸는 이동의 키프레임 */
 export function squeezeFrames(from: number, to: number, g: PillGeometry) {
   const clip: Keyframe[] = []
-  const shadow: Keyframe[] = []
   for (let n = 0; n <= FRAMES; n++) {
     const at = from + (to - from) * easeInOut(n / FRAMES)
     // 탭 한가운데서 0, 두 탭 사이 틈에서 1
@@ -34,9 +33,8 @@ export function squeezeFrames(from: number, to: number, g: PillGeometry) {
     const top = g.top + (g.height - h) / 2
     const bottom = g.boxHeight - top - h
     clip.push({
-      clipPath: `inset(${top}px ${right}px ${bottom}px ${left}px round ${Math.min(24, h / 2)}px)`,
+      clipPath: `inset(${top}px ${right}px ${bottom}px ${left}px round ${Math.min(20, h / 2)}px)`,
     })
-    shadow.push({ right: `${right}px`, width: `${w}px`, top: `${top}px`, bottom: `${bottom}px` })
   }
-  return { clip, shadow }
+  return clip
 }

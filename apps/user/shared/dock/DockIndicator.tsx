@@ -16,16 +16,16 @@ const pillRight = (index: number) =>
 /** 탭바의 선택 표시. 선택 색 탭 줄을 알약 모양만 남겨 겹치고, 탭을 옮기면 틈을 비집고 지나가듯 움직인다 */
 export function DockIndicator({ index }: { index: number | null }) {
   const boxRef = useRef<HTMLDivElement>(null)
-  const shadowRef = useRef<HTMLSpanElement>(null)
+  const pillRef = useRef<HTMLSpanElement>(null)
   const lastIndex = useRef(index)
 
   useLayoutEffect(() => {
     const from = lastIndex.current
     lastIndex.current = index
     const box = boxRef.current
-    const shadow = shadowRef.current
+    const pill = pillRef.current
     // 펼치거나 접힐 때는 옮겨가는 게 아니라 나타나고 사라지는 것이라 건너뛴다
-    if (from === null || index === null || from === index || !box || !shadow) return
+    if (from === null || index === null || from === index || !box || !pill) return
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     // 새 자리로 그려진 뒤에 재서, 탭 간격과 선택 표시 크기를 px 로 얻는다
@@ -34,19 +34,17 @@ export function DockIndicator({ index }: { index: number | null }) {
       return r.left + r.width / 2
     })
     const boxRect = box.getBoundingClientRect()
-    const { clip, shadow: shadowFrames } = squeezeFrames(from, index, {
+    const frames = squeezeFrames(from, index, {
       firstCenter: icons[0] - boxRect.left,
       pitch: icons[1] - icons[0],
-      width: shadow.offsetWidth,
-      height: shadow.offsetHeight,
-      top: shadow.offsetTop,
+      width: pill.offsetWidth,
+      height: pill.offsetHeight,
+      top: pill.offsetTop,
       boxWidth: box.clientWidth,
       boxHeight: box.clientHeight,
     })
     box.getAnimations().forEach((a) => a.cancel())
-    shadow.getAnimations().forEach((a) => a.cancel())
-    box.animate(clip, { duration: PILL_MOVE_MS })
-    shadow.animate(shadowFrames, { duration: PILL_MOVE_MS })
+    box.animate(frames, { duration: PILL_MOVE_MS })
   }, [index])
 
   return (
@@ -66,20 +64,20 @@ export function DockIndicator({ index }: { index: number | null }) {
             delay: TAB_EXPAND + (DOCK_TABS.length - 1 - index) * TAB_STAGGER,
           }}
           style={{
-            clipPath: `inset(var(--dock-pill-inset) ${pillRight(index)} var(--dock-pill-inset) calc(100% - ${pillRight(index)} - ${PILL_WIDTH}) round 24px)`,
+            clipPath: `inset(var(--dock-pill-inset) ${pillRight(index)} var(--dock-pill-inset) calc(100% - ${pillRight(index)} - ${PILL_WIDTH}) round 20px)`,
           }}
-          className="pointer-events-none absolute inset-0 z-10 flex justify-end bg-on-secondary p-(--dock-pad) text-secondary"
+          className="pointer-events-none absolute inset-0 z-10 flex justify-end bg-dock-selected p-(--dock-pad) text-on-dock"
         >
           {DOCK_TABS.map((tab, i) => (
             <span key={tab.href} className={tabBoxClass(i)}>
-              <DockTabFace tab={tab} />
+              <DockTabFace tab={tab} selected />
             </span>
           ))}
-          {/* 눌려 들어간 느낌의 안쪽 그림자와 옅은 테두리. 잘라낸 자리와 같은 키프레임으로 따라간다 */}
+          {/* 선택 표시 자리를 px 로 재는 보이지 않는 기준 */}
           <span
-            ref={shadowRef}
+            ref={pillRef}
             style={{ right: pillRight(index), width: PILL_WIDTH }}
-            className="absolute inset-y-(--dock-pill-inset) rounded-[24px] shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--color-secondary)_25%,transparent),inset_0_2px_4px_color-mix(in_srgb,var(--color-secondary)_28%,transparent)]"
+            className="absolute inset-y-(--dock-pill-inset)"
           />
         </motion.div>
       )}

@@ -1,6 +1,6 @@
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
-import { TAB_ICONS } from './dock-icons'
+import { SELECTED_TAB_ICONS, TAB_ICONS } from './dock-icons'
 import { DOCK_TABS } from './dock-mode'
 
 type Tab = (typeof DOCK_TABS)[number]
@@ -13,14 +13,21 @@ export function tabBoxClass(index: number) {
   } ${index === DOCK_TABS.length - 1 ? 'pr-(--dock-tab-end)' : ''}`
 }
 
-/** 탭 한 칸의 아이콘과 이름 */
-export function DockTabFace({ tab }: { tab: Tab }) {
-  const Icon = TAB_ICONS[tab.href]
+/** 탭 한 칸의 아이콘과 이름. selected 면 채운 아이콘을 쓴다 */
+export function DockTabFace({ tab, selected = false }: { tab: Tab; selected?: boolean }) {
+  const Icon = (selected ? SELECTED_TAB_ICONS : TAB_ICONS)[tab.href]
   const label = getMessages(useLocale()).dock.tabs[tab.id]
   return (
     <>
       <Icon className="size-(--dock-tab-icon)" />
-      <span className="text-(length:--dock-tab-label) leading-[calc(var(--dock-tab-label)+2px)] font-medium whitespace-nowrap">
+      {/* 피그마에서 홈만 아이콘뿐이라 이름은 화면 읽기 프로그램에만 남긴다 */}
+      <span
+        className={
+          tab.id === 'home'
+            ? 'sr-only'
+            : 'text-(length:--dock-tab-label) leading-[calc(var(--dock-tab-label)+2px)] font-semibold whitespace-nowrap'
+        }
+      >
         {label}
       </span>
     </>
