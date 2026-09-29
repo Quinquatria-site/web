@@ -6,6 +6,7 @@ import { DOCK_PRESS, PRESS_SCALE } from '@/shared/dock/dock-motion'
 import { getMessages } from '@/shared/i18n/messages'
 import { localePath } from '@/shared/i18n/paths'
 import { useLocale } from '@/shared/i18n/useLocale'
+import { ChevronRightIcon } from '@/shared/icons/ChevronRightIcon'
 import { Photo } from '@/shared/photo/Photo'
 import type { LostItem } from './lost-item'
 import { ReturnedBadge } from './ReturnedBadge'
@@ -39,18 +40,5 @@ export function LostItemCard({ item }: { item: LostItem }) {
         </div>
       </Link>
     </motion.div>
-  )
-}
-
-function ChevronRightIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden
-      className="size-6 shrink-0 text-secondary"
-    >
-      <path d="M10 6L8.59 7.41L13.17 12L8.59 16.59L10 18L16 12L10 6Z" />
-    </svg>
   )
 }

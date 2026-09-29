@@ -1,21 +1,32 @@
+import { notFound } from 'next/navigation'
+import { getNotice, getNotices } from '@/features/notices/get-notices'
+import { NoticeDetail } from '@/features/notices/NoticeDetail'
+import { PageHeader } from '@/shared/header/PageHeader'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
 
-/** 데이터 연결 전이라 목 id 로만 정적 생성한다. 언어는 레이아웃이 세 가지로 곱한다 */
-export function generateStaticParams() {
-  return [{ id: '1' }, { id: '2' }]
+/** 목록에 있는 공지 id 로 정적 생성한다. 언어는 레이아웃이 곱한다 */
+export async function generateStaticParams() {
+  const notices = await getNotices()
+  return notices.map(({ id }) => ({ id: String(id) }))
 }
 
-/** 목록에 없는 id 는 런타임에 만들지 않고 404 로 보낸다 */
-export const dynamicParams = false
+/** 빌드 뒤에 올라온 공지도 첫 요청 때 굽고 캐시한다. 재검증은 이미 있는 페이지만 다시 굽기 때문이다 */
+export const dynamicParams = true
 
 /** 공지 상세 */
 export default async function NoticeDetailPage({ params }: PageProps<'/[lang]/notices/[id]'>) {
   const { id } = await params
   const { pages } = getMessages(await getLocale())
+  // 숫자가 아닌 주소는 API 가 422 로 답해 500 이 되므로 부르기 전에 걸러 낸다
+  if (!/^\d+$/.test(id)) notFound()
+  const notice = await getNotice(Number(id))
+  if (!notice) notFound()
+
   return (
-    <h1>
-      {pages.noticeDetail} {id}
-    </h1>
+    <>
+      <PageHeader title={pages.notices} />
+      <NoticeDetail notice={notice} />
+    </>
   )
 }

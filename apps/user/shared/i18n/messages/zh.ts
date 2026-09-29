@@ -42,6 +42,9 @@ export const zh: Messages = {
     lostItemDetail: '失物详情',
     goods: '周边',
   },
+  notices: {
+    important: '重要',
+  },
   lostItems: {
     contactNotice: '失物相关咨询请联系总学生会！',
     councilInstagram: '总学生会 instagram',
