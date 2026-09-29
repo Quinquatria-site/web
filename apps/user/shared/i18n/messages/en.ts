@@ -2,6 +2,9 @@ import type { Messages } from '../messages'
 
 /** 영어 화면 문구. 초안이라 확정 번역이 오면 바꾼다 */
 export const en: Messages = {
+  bottomSheet: {
+    close: 'Close',
+  },
   dock: {
     label: 'Main menu',
     back: 'Go back',

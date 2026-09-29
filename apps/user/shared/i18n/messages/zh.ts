@@ -2,6 +2,9 @@ import type { Messages } from '../messages'
 
 /** 중국어(간체) 화면 문구. 초안이라 확정 번역이 오면 바꾼다 */
 export const zh: Messages = {
+  bottomSheet: {
+    close: '关闭',
+  },
   dock: {
     label: '主菜单',
     back: '返回',

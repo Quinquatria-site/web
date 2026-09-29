@@ -1,5 +1,8 @@
 /** 한국어 화면 문구. 다른 언어 문구는 이 모양을 그대로 따른다 */
 export const ko = {
+  bottomSheet: {
+    close: '닫기',
+  },
   dock: {
     label: '메인 메뉴',
     back: '뒤로 가기',
