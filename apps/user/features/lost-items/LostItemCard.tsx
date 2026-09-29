@@ -8,6 +8,7 @@ import { localePath } from '@/shared/i18n/paths'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { Photo } from '@/shared/photo/Photo'
 import type { LostItem } from './lost-item'
+import { ReturnedBadge } from './ReturnedBadge'
 
 /** 분실물 목록의 카드 한 장. 위에 사진, 아래에 이름·습득 장소를 두고 누르면 상세로 간다 */
 export function LostItemCard({ item }: { item: LostItem }) {
@@ -23,9 +24,7 @@ export function LostItemCard({ item }: { item: LostItem }) {
         <div className="relative h-[103px] shrink-0">
           <Photo src={item.image_url} alt={item.title} sizes="(max-width: 480px) 50vw, 240px" />
           {item.is_returned && (
-            <span className="absolute top-2.5 left-2.5 rounded-xl bg-secondary px-2 py-1 text-xs leading-[normal] font-semibold text-on-secondary">
-              {lostItems.returned}
-            </span>
+            <ReturnedBadge label={lostItems.returned} className="absolute top-2.5 left-2.5" />
           )}
         </div>
         <div className="flex flex-1 items-center gap-0.5 pr-1.5 pl-[11px]">
