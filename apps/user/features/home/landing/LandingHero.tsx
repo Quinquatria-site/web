@@ -3,8 +3,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { DockSentinel } from '@/shared/dock/DockSentinel'
 import { LandingScrollCue } from './LandingScrollCue'
+import { LandingTitle } from './LandingTitle'
 
-/** 홈 랜딩. 영상을 한 번 틀고 마지막 장면에 멈춘다. 자동재생이 막히면 마지막 장면을 포스터로 보여 준다 */
+/** 홈 랜딩. 영상을 한 번 틀고 마지막 장면에 멈춘 뒤 제목을 드러낸다. 자동재생이 막히면 마지막 장면 포스터 위에 바로 드러낸다 */
 export function LandingHero() {
   const sectionRef = useRef<HTMLElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -40,7 +41,8 @@ export function LandingHero() {
 
   return (
     // dvh 는 모바일 주소창이 오갈 때마다 높이가 바뀌어 그림이 확대·축소되고 아래가 밀려 svh 로 고정한다
-    <section ref={sectionRef} className="relative h-svh overflow-hidden">
+    // 제목이 앱 폭 비율로 크기를 잡도록 컨테이너로 둔다
+    <section ref={sectionRef} className="@container relative h-svh overflow-hidden">
       {/* muted·playsInline 이 없으면 iOS 가 자동재생을 막거나 전체화면으로 연다 */}
       <video
         ref={videoRef}
@@ -51,10 +53,16 @@ export function LandingHero() {
         muted
         playsInline
         preload="auto"
-        aria-label="HUFS 2026 QUINQUATRIA TWILIGHT"
+        aria-hidden
         onEnded={() => setDone(true)}
         onError={showEnd}
       />
+      {/* 아래 바로가기 면과 경계선이 보이지 않게 영상 끝을 같은 색으로 번지게 한다 */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[200px] bg-linear-to-b from-transparent to-secondary"
+      />
+      <LandingTitle shown={done} />
       {done && <LandingScrollCue onPress={scrollPastLanding} />}
       {/* 랜딩을 절반 넘게 내리면 위로 가기 원이 뜨도록 가운데에 감지 표시를 둔다 */}
       <div className="absolute top-1/2">
