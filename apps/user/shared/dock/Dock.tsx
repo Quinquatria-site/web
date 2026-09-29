@@ -2,6 +2,8 @@
 
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, type CSSProperties } from 'react'
+import { getMessages } from '@/shared/i18n/messages'
+import { useLocale } from '@/shared/i18n/useLocale'
 import { DOCK_TABS } from './dock-mode'
 import { BAR_COLLAPSE, DOCK_POP, PRESS_SCALE } from './dock-motion'
 import { DockButton } from './DockButton'
@@ -11,6 +13,7 @@ import { usePreviousMode } from './usePreviousMode'
 
 /** 앱 전체에 하나만 떠 있는 도크. 모드가 바뀌면 원과 탭바 사이를 이어서 변한다 */
 export function Dock() {
+  const locale = useLocale()
   const mode = useDockMode()
   const from = usePreviousMode(mode)
   const hidden = mode === 'hidden'
@@ -22,7 +25,7 @@ export function Dock() {
 
   return (
     <motion.nav
-      aria-label="메인 메뉴"
+      aria-label={getMessages(locale).dock.label}
       initial={false}
       animate={{ scale: hidden ? 0 : 1, opacity: hidden ? 0 : 1 }}
       // 원은 도크 자체가 버튼이라 도크를 줄이고, 탭바는 탭마다 따로 줄인다

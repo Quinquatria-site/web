@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import { useSyncExternalStore } from 'react'
+import { splitLocale } from '@/shared/i18n/paths'
 import { getDockMode } from './dock-mode'
 import { landingStore } from './landing-store'
 
@@ -10,5 +11,5 @@ export function useDockMode() {
   const pathname = usePathname()
   // 정적 HTML 은 랜딩 최상단 기준으로 그려야 하므로 서버 값은 false
   const pastLanding = useSyncExternalStore(landingStore.subscribe, landingStore.get, () => false)
-  return getDockMode(pathname, pastLanding)
+  return getDockMode(splitLocale(pathname).path, pastLanding)
 }

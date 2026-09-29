@@ -2,6 +2,8 @@
 
 import { AnimatePresence, motion } from 'motion/react'
 import { usePathname, useRouter } from 'next/navigation'
+import { getMessages } from '@/shared/i18n/messages'
+import { localePath, splitLocale } from '@/shared/i18n/paths'
 import { backFallback, canGoBackInApp, scrollToTop } from './dock-actions'
 import { ArrowLeftIcon, ArrowUpIcon } from './dock-icons'
 import type { DockMode } from './dock-mode'
@@ -10,20 +12,21 @@ import { ARROW_IN, ARROW_OUT, DOCK_POP, DOCK_SPRING, TAB_COLLAPSE } from './dock
 /** 원 모양일 때의 버튼. 숨김 상태에서도 위로 가기 모양으로 남아 다시 뜰 때 그대로 커진다 */
 export function DockButton({ mode }: { mode: DockMode }) {
   const router = useRouter()
-  const pathname = usePathname()
+  const { locale, path } = splitLocale(usePathname())
+  const { dock } = getMessages(locale)
   const back = mode === 'back'
 
   function handleClick() {
     if (!back) return scrollToTop()
     if (canGoBackInApp()) router.back()
-    else router.push(backFallback(pathname))
+    else router.push(localePath(locale, backFallback(path)))
   }
 
   return (
     <motion.button
       type="button"
       onClick={handleClick}
-      aria-label={back ? '뒤로 가기' : '맨 위로'}
+      aria-label={back ? dock.back : dock.top}
       // 폭 0 에서 벌어져야 접히는 탭과 합쳐 도크 폭이 끊기지 않는다
       initial={{ width: 0, opacity: 0 }}
       animate={{ width: 'auto', opacity: 1 }}

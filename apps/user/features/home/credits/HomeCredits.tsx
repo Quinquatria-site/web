@@ -1,5 +1,7 @@
 import Image from 'next/image'
 import { cinzel } from '@/shared/fonts'
+import { getLocale } from '@/shared/i18n/get-locale'
+import { getMessages } from '@/shared/i18n/messages'
 import { paperlogy } from './fonts'
 import { CreditGroup } from './CreditGroup'
 import sunsetSky from './images/sunset-sky.jpg'
@@ -27,7 +29,8 @@ const SKY_FADE = `linear-gradient(to bottom, ${[
   .join(', ')})`
 
 /** 홈 맨 아래 크레딧. 만든 사람과 함께한 총학생회를 노을 하늘 위에 둔다 */
-export function HomeCredits() {
+export async function HomeCredits() {
+  const { credits } = getMessages(await getLocale()).home
   return (
     // 크레딧 글꼴은 여기서만 쓰여 이 섹션에만 변수를 달아 다른 페이지가 미리 받지 않게 한다
     // main 의 도크 여백만큼 아래로 늘려 노을 하늘이 화면 끝까지 닿고 위로 가기 원이 그 위에 뜬다
@@ -50,9 +53,9 @@ export function HomeCredits() {
       <div className="relative mx-auto flex w-[302px] flex-col items-center gap-[72px]">
         <CreditGroup
           title="Made by"
-          organization="한국외대(서울) 멋쟁이사자처럼"
+          organization={credits.likelion}
           instagram={{
-            label: '멋쟁이사자처럼 instagram →',
+            label: credits.likelionInstagram,
             href: 'https://www.instagram.com/likelion_hufs/',
           }}
         >
@@ -71,9 +74,9 @@ export function HomeCredits() {
         </CreditGroup>
         <CreditGroup
           title="In Partnership With"
-          organization="한국외대 서울캠퍼스 제60대 총학생회 ‘선명’"
+          organization={credits.council}
           instagram={{
-            label: '선명 instagram →',
+            label: credits.councilInstagram,
             href: 'https://www.instagram.com/hufsstudent/',
           }}
         />
