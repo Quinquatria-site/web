@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation'
 import { getLostItem, getLostItems } from '@/features/lost-items/get-lost-items'
 import { LostItemDetail } from '@/features/lost-items/LostItemDetail'
 import { PageHeader } from '@/shared/header/PageHeader'
@@ -10,14 +11,17 @@ export async function generateStaticParams() {
   return items.map(({ id }) => ({ id: String(id) }))
 }
 
-/** 목록에 없는 id 는 런타임에 만들지 않고 404 로 보낸다 */
-export const dynamicParams = false
+/** 빌드 뒤에 올라온 분실물도 첫 요청 때 굽고 캐시한다. 재검증은 이미 있는 페이지만 다시 굽기 때문이다 */
+export const dynamicParams = true
 
 /** 분실물 상세 */
 export default async function LostItemDetailPage({ params }: PageProps<'/[lang]/lost-items/[id]'>) {
   const { id } = await params
   const { pages, lostItems } = getMessages(await getLocale())
+  // 숫자가 아닌 주소는 API 가 422 로 답해 500 이 되므로 부르기 전에 걸러 낸다
+  if (!/^\d+$/.test(id)) notFound()
   const item = await getLostItem(Number(id))
+  if (!item) notFound()
 
   return (
     <>
