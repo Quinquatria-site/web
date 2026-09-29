@@ -28,9 +28,9 @@ export const zh: Messages = {
     },
     credits: {
       likelion: '韩国外国语大学（首尔）LIKELION',
-      likelionInstagram: 'LIKELION instagram →',
+      likelionInstagram: 'LIKELION instagram',
       council: '韩国外国语大学首尔校区第60届总学生会“鲜明”',
-      councilInstagram: '鲜明 instagram →',
+      councilInstagram: '鲜明 instagram',
     },
   },
   pages: {
@@ -41,6 +41,15 @@ export const zh: Messages = {
     lostItems: '失物招领',
     lostItemDetail: '失物详情',
     goods: '周边',
+  },
+  lostItems: {
+    contactNotice: '失物相关咨询请联系总学生会！',
+    councilInstagram: '总学生会 instagram',
+    councilCall: '致电总学生会',
+    foundLocation: '拾获地点',
+    returned: '已归还',
+    emptyTitle: '失物信息将在庆典结束后\n陆续上传。',
+    emptyHint: '请稍候！',
   },
   schedule: {
     festivalStarted: '庆典开始了！',
