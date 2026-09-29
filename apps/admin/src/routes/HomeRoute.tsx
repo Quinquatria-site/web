@@ -29,6 +29,15 @@ import {
 } from '../lib/homeStats'
 import { parseAtParam, useNow } from '../lib/useNow'
 import {
+  CONGESTION_LABEL,
+  congestion,
+  dailyTotals,
+  formatCount,
+  slowLoading,
+  trafficUnavailableText,
+} from '../lib/trafficStats'
+import { useTraffic } from '../lib/useTraffic'
+import {
   lostItemsByReturned,
   noticesByType,
   performancesByDate,
@@ -43,7 +52,14 @@ import {
   type Notice,
   type Performance,
 } from '../mocks/types'
-import { QuickAction, QuickActions, StatTile, StatTileGrid, StatusStrip } from '../ui'
+import {
+  CongestionBadge,
+  QuickAction,
+  QuickActions,
+  StatTile,
+  StatTileGrid,
+  StatusStrip,
+} from '../ui'
 import styles from './HomeRoute.module.css'
 
 /**
@@ -75,6 +91,11 @@ import styles from './HomeRoute.module.css'
  * 바로가기 셋은 "여기서 아무것도 고치지 않는다" 를 어기지 않는다 — 편집 화면으로
  * 이동만 하고 이 화면에서는 아무것도 바뀌지 않는다. 학생 화면 새로고침은
  * POST /revalidations 가 붙기 전까지 비활성이다 (SettingsRoute 의 같은 주석).
+ *
+ * 맨 아래 "학생 앱 방문" 은 인수인계 질문이 아니라 "학생들이 지금 얼마나
+ * 몰려 있나" 에 대한 답이라 네 타일에 끼우지 않고 다른 카드와 같은 한 줄로 둔다.
+ * 자세한 것(15분 흐름·페이지·유입 경로)은 누르면 가는 방문 통계 화면이 맡는다.
+ * 축제 전에도 줄은 그대로 있다 — 위의 "화면은 하나다" 와 같은 이유.
  */
 export function HomeRoute() {
   const navigate = useNavigate()
@@ -199,7 +220,9 @@ export function HomeRoute() {
           label="미반환 분실물"
           value={pending.length}
           unit="건"
-          detail={pending[0] ? `최근: ${lostItemTitle(pending[0])}` : '주인을 기다리는 물건이 없습니다'}
+          detail={
+            pending[0] ? `최근: ${lostItemTitle(pending[0])}` : '주인을 기다리는 물건이 없습니다'
+          }
           to="/lost-items"
         />
         {/* 링크가 없다. 갈 곳이 넷(장소·공연·공지·분실물)이라 타일 하나가 고를 수
@@ -243,6 +266,8 @@ export function HomeRoute() {
           },
         ]}
       />
+
+      <TrafficCard />
     </div>
   )
 }
@@ -258,7 +283,6 @@ function noticeTitle(notice: Notice): string {
 function lostItemTitle(item: LostItem): string {
   return findTranslation(item.translations, 'KO')?.title ?? `분실물 ${item.id}`
 }
-
 
 /** 지금 공연 행의 제목. 축제 밖이라고 카드를 숨기지 않고 그 사실을 말한다 */
 function liveRowTitle(
@@ -448,5 +472,51 @@ function Card({
         <RowList rows={rows} />
       )}
     </section>
+  )
+}
+
+/**
+ * 학생 앱 접속 요약 한 줄. 다른 카드처럼 "요약 + 그 자리로 가기" 라 RowList 를
+ * 그대로 쓰고, 누르면 방문 통계 화면으로 간다.
+ *
+ * 불러오기에 실패해도 줄은 남기고 그 사실을 제목으로 말한다. 이전 값이 있으면
+ * 그것을 계속 보여준다 — 잠깐의 네트워크 실패로 숫자가 사라지면 오히려 불안하다.
+ */
+function TrafficCard() {
+  const { traffic, error } = useTraffic()
+
+  if (!traffic) {
+    return (
+      <Card
+        title="학생 앱 방문"
+        rows={[{ key: 'traffic', title: trafficUnavailableText(error), to: '/analytics' }]}
+      />
+    )
+  }
+
+  const now = new Date(traffic.generatedAt)
+  const current = congestion(traffic.buckets, now)
+  const [today] = dailyTotals(traffic.buckets, [traffic.today])
+  const detail = [
+    `${kstTimeString(current.recentAt)}부터 15분 조회 ${formatCount(current.recent)}`,
+    `${kstTimeString(now)} 기준`,
+    slowLoading(traffic.performance) ? '현장 로딩 느림' : null,
+  ]
+    .filter(Boolean)
+    .join(' · ')
+
+  return (
+    <Card
+      title="학생 앱 방문"
+      rows={[
+        {
+          key: 'traffic',
+          title: `지금 ${CONGESTION_LABEL[current.level]} · 오늘 방문 ${formatCount(today.visits)}`,
+          detail,
+          suffix: <CongestionBadge level={current.level} />,
+          to: '/analytics',
+        },
+      ]}
+    />
   )
 }

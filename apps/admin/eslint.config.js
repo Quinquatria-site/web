@@ -57,4 +57,11 @@ export default defineConfig([
     },
     rules: schemaRules,
   },
+  {
+    // Vercel 서버리스 함수는 브라우저가 아니라 Node 에서 돈다
+    files: ['api/**/*.ts'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
 ])

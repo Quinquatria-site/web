@@ -1,0 +1,103 @@
+/* 홈(HomeRoute.module.css)과 같은 회색 바닥 + 흰 카드. 좌우 padding 을 카드에 주지
+   않는 이유도 같다 — ListHeader·Meter 가 이미 제 거터를 갖는다. 거터가 없는
+   문장 요소(.line 등)에만 같은 값을 직접 준다 */
+.screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--seed-dimension-x3);
+  padding: var(--seed-dimension-x4);
+  background: var(--seed-color-bg-layer-basement);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x1);
+  padding-block: var(--seed-dimension-x2);
+  background: var(--seed-color-bg-layer-default);
+  border-radius: var(--seed-radius-r3);
+}
+
+.count {
+  font-size: var(--seed-font-size-t4);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+/* 운영 중에 이 화면을 여는 이유가 이 한 단어라 화면에서 가장 큰 글자다 */
+.now {
+  display: flex;
+  gap: var(--seed-dimension-x2);
+  align-items: center;
+  padding-inline: var(--seed-dimension-x4);
+}
+
+.level {
+  font-size: var(--seed-font-size-t8);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t8);
+  color: var(--seed-color-fg-neutral);
+}
+
+.line,
+.empty {
+  margin: 0;
+  padding: var(--seed-dimension-x1) var(--seed-dimension-x4);
+  font-size: var(--seed-font-size-t3);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+/* 숫자를 어떻게 읽어야 하는지에 대한 단서. 본문보다 한 단계 조용하게 */
+.note {
+  margin: 0;
+  padding: 0 var(--seed-dimension-x4) var(--seed-dimension-x1);
+  font-size: var(--seed-font-size-t2);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-subtle);
+}
+
+.callout {
+  padding: var(--seed-dimension-x1) var(--seed-dimension-x4);
+}
+
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x2);
+  margin: 0;
+  padding: var(--seed-dimension-x1) var(--seed-dimension-x4);
+}
+
+.fact {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--seed-dimension-x3);
+  font-size: var(--seed-font-size-t3);
+  line-height: var(--seed-line-height-t4);
+}
+
+.fact dt {
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+.fact dd {
+  margin: 0;
+  font-weight: var(--seed-font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--seed-color-fg-neutral);
+}
+
+/* 카드 밖. 화면 전체 숫자의 기준 시각이라 홈의 헤더처럼 블록에 가두지 않는다 */
+.footer {
+  display: flex;
+  gap: var(--seed-dimension-x2);
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--seed-font-size-t2);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
+}
