@@ -15,7 +15,7 @@ import { ChipTabsList, ChipTabsRoot, ChipTabsTrigger } from 'seed-design/ui/chip
 import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
 import { List, ListButtonItem, ListItem } from 'seed-design/ui/list'
 import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented-control'
-import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
+import { Snackbar, SnackbarAvoidOverlap, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { Switch } from 'seed-design/ui/switch'
 import { performancesByDate, reorderPerformances, setLive, useStoreVersion } from '../mocks/store'
 import {
@@ -337,12 +337,15 @@ export function PerformancesRoute() {
       {/* 한 손 엄지가 닿는 우하단. 목록을 끝까지 내려도 자리를 지킨다.
           재정렬 중에는 하단 바가 그 자리를 쓰므로 감춘다 */}
       {!reordering && (
-        <FloatingActionButton
-          className={styles.fab}
-          icon={<IconPlusLine />}
-          label="공연 추가"
-          onClick={() => navigate(`/performances/new?date=${date}`)}
-        />
+        // 스낵바가 이 버튼을 덮지 않고 그 위로 뜨게 감싼다 (AppLayout 의 탭바와 같은 이유)
+        <SnackbarAvoidOverlap>
+          <FloatingActionButton
+            className={styles.fab}
+            icon={<IconPlusLine />}
+            label="공연 추가"
+            onClick={() => navigate(`/performances/new?date=${date}`)}
+          />
+        </SnackbarAvoidOverlap>
       )}
 
       {/* 편집 화면의 저장 바와 같은 자리·같은 이유. 긴 라인업을 끝까지 내려도 닿는다.

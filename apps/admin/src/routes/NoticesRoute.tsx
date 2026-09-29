@@ -8,6 +8,7 @@ import { Chip } from 'seed-design/ui/chip'
 import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
 import { List, ListButtonItem, ListDivider } from 'seed-design/ui/list'
 import { ListHeader } from 'seed-design/ui/list-header'
+import { SnackbarAvoidOverlap } from 'seed-design/ui/snackbar'
 import { noticesByType, useStoreVersion } from '../mocks/store'
 import {
   dateTimeLabel,
@@ -213,13 +214,16 @@ export function NoticesRoute() {
         )}
       </div>
 
-      {/* 한 손 엄지가 닿는 우하단. 목록을 끝까지 내려도 자리를 지킨다 */}
-      <FloatingActionButton
-        className={styles.fab}
-        icon={<IconPlusLine />}
-        label="공지 추가"
-        onClick={() => navigate('/notices/new')}
-      />
+      {/* 한 손 엄지가 닿는 우하단. 목록을 끝까지 내려도 자리를 지킨다.
+          스낵바가 이 버튼을 덮지 않고 그 위로 뜨게 감싼다 (AppLayout 의 탭바와 같은 이유) */}
+      <SnackbarAvoidOverlap>
+        <FloatingActionButton
+          className={styles.fab}
+          icon={<IconPlusLine />}
+          label="공지 추가"
+          onClick={() => navigate('/notices/new')}
+        />
+      </SnackbarAvoidOverlap>
     </div>
   )
 }

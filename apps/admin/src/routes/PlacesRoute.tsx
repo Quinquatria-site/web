@@ -7,6 +7,7 @@ import { Chip } from 'seed-design/ui/chip'
 import { ChipTabsList, ChipTabsRoot, ChipTabsTrigger } from 'seed-design/ui/chip-tabs'
 import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
 import { List, ListButtonItem } from 'seed-design/ui/list'
+import { SnackbarAvoidOverlap } from 'seed-design/ui/snackbar'
 import { detailOf } from '../lib/placeText'
 import { CATEGORIES } from '../mocks/categories'
 import { PLACES } from '../mocks/places'
@@ -146,19 +147,22 @@ export function PlacesRoute() {
 
       {/* 한 손 엄지가 닿는 바닥. 목록을 끝까지 내려도 자리를 지킨다.
           지도는 보조라 왼쪽, 장소 추가는 주 액션이라 엄지가 가장 편한 오른쪽이다 */}
-      <div className={styles.floatRow}>
-        {/* layer — 브랜드 solid 인 장소 추가와 같은 무게로 경쟁하면 안 된다 */}
-        <ContextualFloatingButton variant="layer" onClick={() => navigate('/places/map')}>
-          <Icon svg={<IconMapLine />} />
-          지도
-        </ContextualFloatingButton>
+      {/* 스낵바가 이 버튼을 덮지 않고 그 위로 뜨게 한다 (AppLayout 의 탭바와 같은 이유) */}
+      <SnackbarAvoidOverlap>
+        <div className={styles.floatRow}>
+          {/* layer — 브랜드 solid 인 장소 추가와 같은 무게로 경쟁하면 안 된다 */}
+          <ContextualFloatingButton variant="layer" onClick={() => navigate('/places/map')}>
+            <Icon svg={<IconMapLine />} />
+            지도
+          </ContextualFloatingButton>
 
-        <FloatingActionButton
-          icon={<IconPlusLine />}
-          label="장소 추가"
-          onClick={() => navigate('/places/new')}
-        />
-      </div>
+          <FloatingActionButton
+            icon={<IconPlusLine />}
+            label="장소 추가"
+            onClick={() => navigate('/places/new')}
+          />
+        </div>
+      </SnackbarAvoidOverlap>
     </div>
   )
 }
