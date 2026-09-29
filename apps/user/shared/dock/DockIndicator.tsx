@@ -70,7 +70,7 @@ export function DockIndicator({ index }: { index: number | null }) {
         >
           {DOCK_TABS.map((tab, i) => (
             <span key={tab.href} className={tabBoxClass(i)}>
-              <DockTabFace tab={tab} />
+              <DockTabFace tab={tab} selected />
             </span>
           ))}
           {/* 선택 표시 자리를 px 로 재는 보이지 않는 기준 */}

@@ -1,6 +1,6 @@
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
-import { TAB_ICONS } from './dock-icons'
+import { SELECTED_TAB_ICONS, TAB_ICONS } from './dock-icons'
 import { DOCK_TABS } from './dock-mode'
 
 type Tab = (typeof DOCK_TABS)[number]
@@ -13,9 +13,9 @@ export function tabBoxClass(index: number) {
   } ${index === DOCK_TABS.length - 1 ? 'pr-(--dock-tab-end)' : ''}`
 }
 
-/** 탭 한 칸의 아이콘과 이름 */
-export function DockTabFace({ tab }: { tab: Tab }) {
-  const Icon = TAB_ICONS[tab.href]
+/** 탭 한 칸의 아이콘과 이름. selected 면 채운 아이콘을 쓴다 */
+export function DockTabFace({ tab, selected = false }: { tab: Tab; selected?: boolean }) {
+  const Icon = (selected ? SELECTED_TAB_ICONS : TAB_ICONS)[tab.href]
   const label = getMessages(useLocale()).dock.tabs[tab.id]
   return (
     <>
