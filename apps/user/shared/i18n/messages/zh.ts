@@ -43,6 +43,8 @@ export const zh: Messages = {
     goods: '周边',
   },
   lostItems: {
+    foundLocation: '拾获地点',
+    returned: '已归还',
     emptyTitle: '失物信息将在庆典结束后\n陆续上传。',
     emptyHint: '请稍候！',
   },

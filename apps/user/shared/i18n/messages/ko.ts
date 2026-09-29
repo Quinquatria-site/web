@@ -41,6 +41,8 @@ export const ko = {
     goods: '굿즈',
   },
   lostItems: {
+    foundLocation: '습득 장소',
+    returned: '반환 완료',
     emptyTitle: '분실물은 축제 종료 후\n순차적으로 등록됩니다.',
     emptyHint: '조금만 기다려주세요!',
   },

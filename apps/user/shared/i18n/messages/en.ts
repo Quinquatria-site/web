@@ -49,6 +49,8 @@ export const en: Messages = {
     goods: 'Goods',
   },
   lostItems: {
+    foundLocation: 'Found at',
+    returned: 'Returned',
     emptyTitle: 'Lost items will be posted\nafter the festival ends.',
     emptyHint: 'Please hang tight!',
   },
