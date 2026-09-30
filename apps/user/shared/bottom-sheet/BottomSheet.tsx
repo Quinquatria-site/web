@@ -31,12 +31,12 @@ interface SheetProps {
   onClose: () => void
   /** 지도를 움직이는 동안처럼 닫지 않고 잠깐 아래로 숨긴다 */
   hidden?: boolean
-  /** 1단계에서 보이는 높이. 손잡이 줄을 포함하고 홈 인디케이터 여백은 따로 더한다 */
+  /** 1단계에서 보이는 높이. 손잡이 줄을 포함하고 홈 인디케이터 여백은 따로 더한다. 안 주면 1단계 없이 끝까지 펼쳐 연다 */
   peekHeight?: number
   children: ReactNode
 }
 
-/** 두 단계로 올라오는 시트. 1단계는 뒤 화면을 막지 않고, 2단계는 화면을 덮어 닫아야 뒤를 만질 수 있다 */
+/** 두 단계로 올라오는 시트. 1단계는 뒤 화면을 막지 않고, 2단계는 화면을 덮어 닫아야 뒤를 만질 수 있다. peekHeight 가 없으면 2단계만 있다 */
 export function BottomSheet({ open, ...props }: SheetProps & { open: boolean }) {
   useCloseOnBack(open, props.onClose)
 
@@ -54,9 +54,10 @@ export function BottomSheet({ open, ...props }: SheetProps & { open: boolean }) 
   )
 }
 
-function SheetPanel({ onClose, hidden = false, peekHeight = 197, children }: SheetProps) {
+function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetProps) {
   const { bottomSheet } = getMessages(useLocale())
-  const [step, setStep] = useState<Step>('peek')
+  const hasPeek = peekHeight !== undefined
+  const [step, setStep] = useState<Step>(hasPeek ? 'peek' : 'full')
   const [height, setHeight] = useState(0)
   const [safeBottom, setSafeBottom] = useState(0)
   const sheetRef = useRef<HTMLElement>(null)
@@ -66,7 +67,7 @@ function SheetPanel({ onClose, hidden = false, peekHeight = 197, children }: She
   const y = useMotionValue(typeof window === 'undefined' ? 0 : window.innerHeight)
   const dragControls = useDragControls()
 
-  const peekY = height - peekHeight - safeBottom
+  const peekY = height - (peekHeight ?? 0) - safeBottom
   const target = hidden ? height : step === 'full' ? 0 : peekY
 
   useLayoutEffect(() => {
@@ -96,8 +97,8 @@ function SheetPanel({ onClose, hidden = false, peekHeight = 197, children }: She
 
   const handleDragEnd = (_: unknown, { velocity }: PanInfo) => {
     const projected = y.get() + velocity.y * PROJECTION
-    // 2단계에서 세게 내려도 한 번에 닫히지 않고 1단계에 멈춘다
-    const stops = step === 'full' ? [0, peekY] : [0, peekY, height]
+    // 2단계에서 세게 내려도 한 번에 닫히지 않고 1단계에 멈춘다. 1단계가 없으면 바로 닫힌다
+    const stops = !hasPeek ? [0, height] : step === 'full' ? [0, peekY] : [0, peekY, height]
     const nearest = stops.reduce((a, b) =>
       Math.abs(b - projected) < Math.abs(a - projected) ? b : a,
     )
