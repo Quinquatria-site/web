@@ -44,7 +44,7 @@ export const en: Messages = {
   },
   pages: {
     schedule: 'Festival Schedule',
-    map: 'Map',
+    map: 'Campus Map',
     notices: 'Notices',
     noticeDetail: 'Notice',
     lostItems: 'Lost & Found',

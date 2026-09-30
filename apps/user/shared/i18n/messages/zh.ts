@@ -38,7 +38,7 @@ export const zh: Messages = {
   },
   pages: {
     schedule: '庆典日程',
-    map: '地图',
+    map: '校园地图',
     notices: '公告',
     noticeDetail: '公告详情',
     lostItems: '失物招领',
