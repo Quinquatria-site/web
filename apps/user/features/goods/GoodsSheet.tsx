@@ -10,7 +10,7 @@ import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { Photo } from '@/shared/photo/Photo'
 import { formatPrice } from './format-price'
-import { PRICE_TEXT } from './GoodsCard'
+import { PHOTO_SIZES, PRICE_TEXT } from './GoodsCard'
 import type { Goods } from './goods'
 
 /** 전체 굿즈 보기 버튼과, 누르면 끝까지 펼쳐 올라오는 두 줄 격자 시트 */
@@ -41,7 +41,7 @@ export function GoodsSheet({ goods }: { goods: Goods[] }) {
             return (
               <li key={g.id} className="flex flex-col gap-2">
                 <div className="aspect-square overflow-hidden rounded-lg">
-                  <Photo src={g.image.src} alt={item.name} sizes="(max-width: 480px) 45vw, 220px" />
+                  <Photo src={g.image.src} alt={item.name} sizes={PHOTO_SIZES} />
                 </div>
                 <div className="flex flex-col text-text">
                   <p className="leading-[normal] font-semibold">{item.name}</p>

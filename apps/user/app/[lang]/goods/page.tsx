@@ -1,5 +1,6 @@
 import { GOODS } from '@/features/goods/goods'
 import { GoodsCarousel } from '@/features/goods/GoodsCarousel'
+import { GoodsImagePreload } from '@/features/goods/GoodsImagePreload'
 import { GoodsIntro } from '@/features/goods/GoodsIntro'
 import { GoodsSheet } from '@/features/goods/GoodsSheet'
 import { PageHeader } from '@/shared/header/PageHeader'
@@ -14,6 +15,7 @@ export default async function GoodsPage() {
 
   return (
     <>
+      <GoodsImagePreload goods={GOODS} />
       <PageHeader title={pages.goods} />
       <div className="flex flex-col gap-[22px] px-[11px] pt-2.5">
         <GoodsIntro
