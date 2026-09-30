@@ -16,6 +16,12 @@
   padding: var(--seed-dimension-x3) var(--seed-dimension-x4) 0;
 }
 
+/* 축제 일차 밖 공연 안내. 일차 세그먼트와 같은 좌우 여백 */
+.outside {
+  flex-shrink: 0;
+  padding: var(--seed-dimension-x3) var(--seed-dimension-x4) 0;
+}
+
 /* ChipTabs 레시피는 좌우 여백만 준다. 위아래는 장소 목록과 같은 값으로 띄운다 */
 .filters {
   flex-shrink: 0;

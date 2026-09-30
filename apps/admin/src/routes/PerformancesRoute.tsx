@@ -9,7 +9,7 @@ import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { Badge, Icon } from '@seed-design/react'
 import { ActionButton } from 'seed-design/ui/action-button'
-import { Callout } from 'seed-design/ui/callout'
+import { ActionableCallout, Callout } from 'seed-design/ui/callout'
 import { Chip } from 'seed-design/ui/chip'
 import { ChipTabsList, ChipTabsRoot, ChipTabsTrigger } from 'seed-design/ui/chip-tabs'
 import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
@@ -17,9 +17,19 @@ import { List, ListButtonItem, ListItem } from 'seed-design/ui/list'
 import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented-control'
 import { Snackbar, SnackbarAvoidOverlap, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { Switch } from 'seed-design/ui/switch'
-import { performancesByDate, reorderPerformances, setLive, useStoreVersion } from '../mocks/store'
+import { apiErrorText } from '../lib/apiErrorText'
+import {
+  loadPerformances,
+  performancesByDate,
+  performancesOutsideFestival,
+  reorderPerformances,
+  setPerformanceLive,
+  useStoreVersion,
+} from '../mocks/store'
+import { isApiError } from '../api'
 import {
   FESTIVAL_DATES,
+  festivalDateLabel,
   festivalDayLabel,
   findTranslation,
   hasMissingTranslations,
@@ -115,13 +125,19 @@ export function PerformancesRoute() {
   /** null 이 아니면 순서 편집 중. 확정 전까지는 이 배열만 움직인다 */
   const [order, setOrder] = useState<number[] | null>(null)
   const [error, setError] = useState<string | null>(null)
+  // 순서 저장을 서버에 보내는 중. 두 번 누르면 같은 순서가 두 번 간다
+  const [savingOrder, setSavingOrder] = useState(false)
+  /** live 요청이 가는 중인 공연. 끝날 때까지 그 스위치를 잠근다 */
+  const [liveBusy, setLiveBusy] = useState<number | null>(null)
 
   // 저장·삭제·실행취소·live 토글이 이 목록에 바로 반영되게 한다
   useStoreVersion()
 
-  // 메모하지 않는다. PERFORMANCES 는 목 스토어가 제자리에서 바꾸는 배열이라
+  // 메모하지 않는다. PERFORMANCES 는 스토어가 제자리에서 바꾸는 캐시 배열이라
   // 의존성으로 적을 것이 없고, 한 일차 수십 건 정렬은 렌더마다 해도 싸다
   const rows = performancesByDate(date)
+  // 일차 탭 어디에도 안 보이는 공연. 따로 알리지 않으면 있는지도 모른다
+  const outside = performancesOutsideFestival()
 
   const reordering = order !== null
   // 유형과 번역 누락은 다른 축이라 AND 로 건다 — "학생 공연 중 번역 누락"이 보여야 한다
@@ -144,31 +160,55 @@ export function PerformancesRoute() {
     setOrder(next)
   }
 
-  const saveOrder = () => {
-    if (!order) return
-    const rejected = reorderPerformances(date, order)
-    if (rejected) {
-      // 이 422 는 동시 수정 감지다 (§5.6). 내가 든 배열이 이미 틀렸으므로
-      // 붙들고 있어봐야 계속 거부된다 — 편집을 닫고 최신 목록을 보여준다.
-      setError(rejected)
+  const saveOrder = async () => {
+    if (!order || savingOrder) return
+    setSavingOrder(true)
+    try {
+      await reorderPerformances(date, order)
       setOrder(null)
-      return
+      setError(null)
+      snackbar.create({ timeout: 3000, render: () => <Snackbar message="순서를 저장했습니다" /> })
+    } catch (saveError) {
+      // 422 는 동시 수정 감지다 (§5.6). 내가 든 배열과 캐시가 이미 틀렸으므로 붙들고
+      // 있어봐야 계속 거부된다 — 편집을 닫고 서버에서 최신 목록을 다시 받는다
+      if (isApiError(saveError) && saveError.status === 422) {
+        setOrder(null)
+        setError('그 사이 이 일차의 공연이 바뀌어 최신 목록을 불러왔습니다. 다시 옮겨주세요.')
+        await loadPerformances().catch(() => {})
+      } else {
+        // 네트워크 등 다른 실패는 옮긴 순서를 그대로 두고 다시 누를 수 있게 한다
+        setError(apiErrorText(saveError))
+      }
+    } finally {
+      setSavingOrder(false)
     }
-    setOrder(null)
-    setError(null)
-    snackbar.create({ timeout: 3000, render: () => <Snackbar message="순서를 저장했습니다" /> })
   }
 
-  const toggleLive = (performance: Performance, next: boolean) => {
-    setLive(performance.id, next)
-    snackbar.create({
-      timeout: 3000,
-      render: () => (
-        <Snackbar
-          message={next ? `지금 공연: ${titleOf(performance)}` : '현재 공연을 내렸습니다'}
-        />
-      ),
-    })
+  /**
+   * 요청이 끝난 뒤에 스위치가 바뀐다. 켜진 척했는데 서버에는 안 켜진 상태가 축제 당일
+   * 가장 나쁜 실패라, 낙관적으로 먼저 켜지 않는다.
+   */
+  const toggleLive = async (performance: Performance, next: boolean) => {
+    if (liveBusy !== null) return
+    setLiveBusy(performance.id)
+    try {
+      await setPerformanceLive(performance.id, next)
+      snackbar.create({
+        timeout: 3000,
+        render: () => (
+          <Snackbar
+            message={next ? `지금 공연: ${titleOf(performance)}` : '현재 공연을 내렸습니다'}
+          />
+        ),
+      })
+    } catch (liveError) {
+      snackbar.create({
+        timeout: 4000,
+        render: () => <Snackbar variant="critical" message={apiErrorText(liveError)} />,
+      })
+    } finally {
+      setLiveBusy(null)
+    }
   }
 
   return (
@@ -192,6 +232,20 @@ export function PerformancesRoute() {
           ))}
         </SegmentedControl>
       </div>
+
+      {/* 서버는 아무 날짜나 받으므로 축제 일차 밖의 공연이 있을 수 있다. 탭 어디에도
+          안 보이니 여기서 알리고, 눌러서 편집 화면에서 일차를 옮기게 한다.
+          여러 건이면 앞에서부터 하나씩 연다 — 옮기면 건수가 준다 */}
+      {!reordering && outside.length > 0 && (
+        <div className={styles.outside}>
+          <ActionableCallout
+            tone="warning"
+            title={`축제 일차가 아닌 공연 ${outside.length}건`}
+            description={`${titleOf(outside[0])} (${festivalDateLabel(outside[0].date)}) — 눌러서 일차를 옮기세요.`}
+            onClick={() => navigate(`/performances/${outside[0].id}`)}
+          />
+        </div>
+      )}
 
       {/* 재정렬은 일차 전체를 보내야 해서 (§5.6) 걸러진 목록 위에서는 할 수 없다.
           그래서 순서 편집 중에는 유형 필터와 진입 버튼을 감춘다 */}
@@ -322,7 +376,8 @@ export function PerformancesRoute() {
                   suffix={
                     <Switch
                       checked={performance.is_live}
-                      onCheckedChange={(next) => toggleLive(performance, next)}
+                      disabled={liveBusy !== null}
+                      onCheckedChange={(next) => void toggleLive(performance, next)}
                       inputProps={{ 'aria-label': `${titleOf(performance)} 공연 중` }}
                     />
                   }
@@ -355,12 +410,13 @@ export function PerformancesRoute() {
           {error && <Callout tone="critical" description={error} />}
           {reordering && (
             <div className={styles.footerRow}>
-              <ActionButton size="large" onClick={saveOrder}>
+              <ActionButton size="large" loading={savingOrder} onClick={() => void saveOrder()}>
                 순서 저장
               </ActionButton>
               <ActionButton
                 size="large"
                 variant="neutralWeak"
+                disabled={savingOrder}
                 onClick={() => {
                   setOrder(null)
                   setError(null)

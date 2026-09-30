@@ -6,25 +6,25 @@ import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented
 import { SelectContent, SelectItem, SelectRoot, SelectTrigger } from 'seed-design/ui/select'
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/text-field'
+import type { PerformanceTextWrite } from '../api/performances'
+import { apiErrorText } from '../lib/apiErrorText'
 import { useFormFields } from '../lib/useFormFields'
 import { ConfirmDialog, PhotoPicker } from '../ui'
 import {
-  deletePerformance,
-  deletePerformanceTranslation,
-  draftId,
   performanceById,
-  restorePerformance,
-  upsertPerformance,
-  type PerformanceDraft,
+  removePerformance,
+  removePerformanceTranslation,
+  restorePerformanceTranslations,
+  savePerformance,
 } from '../mocks/store'
 import {
   FESTIVAL_DATES,
+  festivalDateLabel,
   festivalDayLabel,
   findTranslation,
   LANGUAGE_CODES,
   PERFORMANCE_TYPES,
   type LanguageCode,
-  type PerformanceTranslation,
   type PerformanceType,
 } from '../mocks/types'
 import styles from './PerformanceEditRoute.module.css'
@@ -52,9 +52,38 @@ const fieldKey = (field: TranslationField, lang: LanguageCode) => `${field}_${la
  */
 export function PerformanceEditRoute() {
   const params = useParams()
+
+  // 없는 공연을 편집으로 열면 빈 작성 폼이 떠서 새로 쓰는 것인지 알 수 없다.
+  // 캐시는 DataGate 가 서버에서 채운 뒤라, 여기 없으면 서버에도 없다 (공지와 같다)
+  if (params.id && !performanceById(Number(params.id))) return <PerformanceNotFound />
+
   // 폼 초기값은 첫 렌더에서만 읽힌다. 다른 공연으로 이동해도 같은 컴포넌트가
   // 재사용되므로, key 로 갈아끼워 이전 입력이 남지 않게 한다
   return <PerformanceEditForm key={params.id ?? 'new'} />
+}
+
+/** 편집 화면의 뼈대를 그대로 쓴다. 상단바에 뒤로가기가 이미 있어 문은 하나면 된다 */
+function PerformanceNotFound() {
+  const navigate = useNavigate()
+  return (
+    <div className={styles.screen}>
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>없는 공연입니다</h2>
+        <p className={styles.hint}>
+          지워졌거나 주소가 잘못됐습니다. 다른 운영자가 먼저 지웠을 수도 있습니다.
+        </p>
+        <div>
+          <ActionButton
+            size="medium"
+            variant="neutralWeak"
+            onClick={() => navigate('/performances')}
+          >
+            공연 목록으로
+          </ActionButton>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 function PerformanceEditForm() {
@@ -75,6 +104,8 @@ function PerformanceEditForm() {
   const [date, setDate] = useState<string>(editing?.date ?? initialDate)
   const [error, setError] = useState<string | null>(null)
   const [confirming, setConfirming] = useState(false)
+  // 서버를 다녀오는 동안 버튼을 막는다. 두 번 누르면 공연이 두 건 생긴다
+  const [pending, setPending] = useState(false)
   // 사진만 useFormFields 밖이다. 그쪽은 문자열 전용이고 이건 key 배열이다.
   // 명세는 한 장(§5.6)이라 아래에서 접는다
   const [photos, setPhotos] = useState<string[]>(editing?.image_uri ? [editing.image_uri] : [])
@@ -87,96 +118,114 @@ function PerformanceEditForm() {
   }
   const { values, bind } = useFormFields(initialFields)
 
+  // 서버는 아무 날짜나 받아서 축제 일차 밖의 공연이 있을 수 있다. 그때 일차 선택에
+  // 맞는 칸이 없어 아무것도 안 골라진 채로 보인다. 왜 그런지 적고 옮길 일차를 고르게 한다
+  const outsideFestival = !FESTIVAL_DATES.some((value) => value === date)
+
   /** 저장·삭제 뒤에는 방금 손댄 일차로 돌아가야 바뀐 것이 보인다 */
   const backToList = (target: string) => navigate(`/performances?date=${target}`)
 
-  const save = () => {
+  const save = async () => {
+    if (pending) return
     if (!values.title_KO.trim()) return setError('한국어 제목은 필수입니다.')
 
-    const id = editing?.id ?? draftId()
-    const translations: PerformanceTranslation[] = []
+    // 요청 본문의 번역에는 id·performance_id 를 싣지 않는다 — 서버가 모르는 필드는
+    // 422 다. 새 공연도 id 없이 보내고 서버가 매긴다
+    const translations: PerformanceTextWrite[] = []
     for (const code of LANGUAGE_CODES) {
       const title = values[fieldKey('title', code)].trim()
       // PATCH 본문에서 뺀다 — 다만 빼는 것만으로는 안 지워진다. 원래 있던
       // 언어라면 아래에서 전용 삭제를 부른다 (§5.2)
       if (!title) continue // EN·CHN 은 선택 (§5.2)
-      const existing = editing ? findTranslation(editing.translations, code) : undefined
       translations.push({
-        id: existing?.id ?? draftId(), // 기존 번역의 id 는 유지 (§5.2)
-        performance_id: id,
         language_code: code,
         title,
         description: values[fieldKey('desc', code)].trim(),
       })
     }
-    // 목이 곧 서버 응답이라 정렬까지 맞춘다. Backoffice 응답의 translations 는
-    // language_code ASC — 즉 CHN → EN → KO 다 (§5.2). 화면 탭 순서(KO 먼저)와
-    // 반대라서, 입력 순서 그대로 두면 목만 다른 모양이 된다.
-    translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
 
-    const draft: PerformanceDraft = {
-      id,
-      type,
-      // 명세는 한 장이고 PhotoPicker 는 목록을 다룬다. 접는 것은 여기 한 곳뿐이다
-      image_uri: photos[0] ?? null,
-      date,
-      translations,
+    // 지우기 전에 원본 문안을 붙잡는다. 실행취소가 PATCH 로 다시 올린다
+    const undo: PerformanceTextWrite[] = removing.flatMap((code) => {
+      const t = editing && findTranslation(editing.translations, code)
+      return t
+        ? [{ language_code: t.language_code, title: t.title, description: t.description }]
+        : []
+    })
+
+    setError(null)
+    setPending(true)
+    try {
+      const saved = await savePerformance(editing?.id ?? null, {
+        type,
+        // 명세는 한 장이고 PhotoPicker 는 목록을 다룬다. 접는 것은 여기 한 곳뿐이다
+        image_uri: photos[0] ?? null,
+        date,
+        translations,
+      })
+
+      // PATCH 로 남길 언어를 올리고, 지울 언어는 전용 DELETE 로 따로 부른다 (§5.2).
+      // 여기서 실패하면 PATCH 는 이미 반영된 채 화면에 남는다
+      for (const code of removing) await removePerformanceTranslation(saved.id, code)
+
+      // seq 는 서버가 정한 값이다. 생성·일차 이동이면 그 일차의 맨 뒤다
+      const message = `${values.title_KO} 저장했습니다 (${festivalDayLabel(saved.date)} ${saved.seq}번째)`
+      snackbar.create(
+        undo.length > 0
+          ? {
+              timeout: 6000,
+              render: () => (
+                <Snackbar
+                  message={`${message} · ${removing.join('·')} 번역 삭제`}
+                  actionLabel="실행취소"
+                  onAction={() => {
+                    // 언어별 upsert 라(§5.2) 지운 언어만 다시 넣고 나머지는 그대로다
+                    restorePerformanceTranslations(saved.id, undo).catch((undoError: unknown) =>
+                      snackbar.create({
+                        timeout: 4000,
+                        render: () => (
+                          <Snackbar variant="critical" message={apiErrorText(undoError)} />
+                        ),
+                      }),
+                    )
+                  }}
+                />
+              ),
+            }
+          : {
+              timeout: 3000,
+              render: () => <Snackbar message={message} />,
+            },
+      )
+      // navigate(-1) 이 아니다 — 이 화면을 새로고침하거나 링크로 바로 열면
+      // 뒤로 갈 곳이 admin 밖이다
+      backToList(saved.date)
+    } catch (saveError) {
+      setError(apiErrorText(saveError))
+    } finally {
+      setPending(false)
     }
-    // 지우기 전에 원본을 붙잡는다. upsertPerformance 가 PERFORMANCES 의 항목을
-    // 새 객체로 갈아끼우므로 editing 은 이전 상태를 그대로 들고 있다
-    const undo = removing
-      .map((code) => editing && findTranslation(editing.translations, code))
-      .filter((t): t is PerformanceTranslation => Boolean(t))
-
-    const saved = upsertPerformance(draft)
-
-    // PATCH 로 남길 언어를 올리고, 지울 언어는 전용 DELETE 로 따로 부른다 (§5.2)
-    for (const code of removing) {
-      const rejected = deletePerformanceTranslation(saved.id, code)
-      if (rejected) return setError(rejected)
-    }
-
-    const message = `${values.title_KO} 저장했습니다 (${festivalDayLabel(saved.date)} ${saved.seq}번째)`
-    snackbar.create(
-      undo.length > 0
-        ? {
-            timeout: 6000,
-            render: () => (
-              <Snackbar
-                message={`${message} · ${removing.join('·')} 번역 삭제`}
-                actionLabel="실행취소"
-                // draft 를 쓴다. saved 를 퍼뜨리면 seq·is_live 가 딸려와
-                // PerformanceDraft 타입에 안 맞는다 — 둘 다 서버 몫이다
-                onAction={() => upsertPerformance({ ...draft, translations: undo })}
-              />
-            ),
-          }
-        : {
-            timeout: 3000,
-            render: () => <Snackbar message={message} />,
-          },
-    )
-    // navigate(-1) 이 아니다 — 이 화면을 새로고침하거나 링크로 바로 열면
-    // 뒤로 갈 곳이 admin 밖이다
-    backToList(saved.date)
   }
 
-  const remove = () => {
-    if (!editing) return
-    const removed = deletePerformance(editing.id)
-    if (!removed) return
-    backToList(removed.date)
-    // 확인을 받고 지웠더라도 실행취소는 남긴다. 확인은 실수를, 이쪽은 변심을 받는다
-    snackbar.create({
-      timeout: 6000,
-      render: () => (
-        <Snackbar
-          message={`삭제했습니다 (${festivalDayLabel(removed.date)} 순서 다시 매김)`}
-          actionLabel="실행취소"
-          onAction={() => restorePerformance(removed)}
-        />
-      ),
-    })
+  // 영구 삭제라 실행취소를 두지 않는다 (§6). 되살릴 수단이 서버에 없다 — 같은 내용으로
+  // 새로 만들면 id 가 바뀌고 그 일차의 맨 뒤로 간다. 대신 확인 창이 막는다
+  const remove = async () => {
+    if (!editing || pending) return
+    setPending(true)
+    try {
+      await removePerformance(editing.id)
+      backToList(editing.date)
+      snackbar.create({
+        timeout: 3000,
+        render: () => (
+          <Snackbar message={`삭제했습니다 (${festivalDayLabel(editing.date)} 순서 다시 매김)`} />
+        ),
+      })
+    } catch (removeError) {
+      setConfirming(false)
+      setError(apiErrorText(removeError))
+    } finally {
+      setPending(false)
+    }
   }
 
   const missing = LANGUAGE_CODES.filter((code) => !values[fieldKey('title', code)].trim())
@@ -220,6 +269,12 @@ function PerformanceEditForm() {
             ))}
           </SegmentedControl>
         </div>
+        {outsideFestival && (
+          <Callout
+            tone="warning"
+            description={`이 공연의 날짜(${festivalDateLabel(date)})는 축제 일차가 아니라 목록 탭에 보이지 않습니다. 옮길 일차를 고르고 저장하세요.`}
+          />
+        )}
 
         {/* 왜 순서·현재공연 입력칸이 없는지 적어 둔다. 없는 것이 실수로 보이지 않게 */}
         <p className={styles.hint}>
@@ -284,7 +339,12 @@ function PerformanceEditForm() {
       {/* 되돌릴 수 없는 액션이라 저장 옆에 두지 않는다. 일부러 내려와야 닿는 자리다 */}
       {editing && (
         <div className={styles.dangerZone}>
-          <ActionButton size="medium" variant="criticalSolid" onClick={() => setConfirming(true)}>
+          <ActionButton
+            size="medium"
+            variant="criticalSolid"
+            disabled={pending}
+            onClick={() => setConfirming(true)}
+          >
             이 공연 삭제
           </ActionButton>
         </div>
@@ -296,10 +356,12 @@ function PerformanceEditForm() {
           onOpenChange={setConfirming}
           title="이 공연을 삭제할까요?"
           // 편집 중인 입력값이 아니라 저장된 제목을 보여준다.
-          // 삭제하면 그 일차의 seq 가 다시 매겨지므로(§5.6) 그것도 같이 알린다
+          // 삭제하면 그 일차의 seq 가 다시 매겨지므로(§5.6) 그것도 같이 알린다.
+          // 영구 삭제라 실행취소가 없다는 것도 여기서 말한다
           description={[
             findTranslation(editing.translations, 'KO')?.title ?? `공연 ${editing.id}`,
             `${festivalDayLabel(editing.date)} 순서가 다시 매겨집니다`,
+            '되돌릴 수 없습니다',
           ].join(' · ')}
           confirmLabel="삭제"
           onConfirm={remove}
@@ -309,7 +371,7 @@ function PerformanceEditForm() {
       {/* 스크롤 위치와 무관하게 닿는 하단 고정 바. 오류도 여기 붙어야 보인다 */}
       <div className={styles.footer}>
         {error && <Callout tone="critical" description={error} />}
-        <ActionButton size="large" onClick={save}>
+        <ActionButton size="large" loading={pending} onClick={() => void save()}>
           저장
         </ActionButton>
       </div>
