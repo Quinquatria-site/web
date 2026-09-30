@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Outlet } from 'react-router'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { apiErrorText } from '../lib/apiErrorText'
-import { loadNotices } from '../mocks/store'
+import { loadCatalog, loadNotices } from '../mocks/store'
 import styles from './DataGate.module.css'
 
 /** 창에 돌아올 때 다시 받는 최소 간격 */
@@ -20,7 +20,8 @@ type GateState = { kind: 'loading' } | { kind: 'ready' } | { kind: 'error'; mess
  * 올려도 탭을 오가면 맞춰진다. 폴링은 하지 않는다(useHealth 와 같은 이유). 다시 받기가
  * 실패하면 화면을 막지 않고 있던 캐시를 그대로 둔다. 실패는 오류 기록에 남는다.
  *
- * 지금은 공지만 받는다. 도메인을 API 로 옮길 때마다 load 에 하나씩 더한다.
+ * 지금은 공지와 카탈로그(카테고리·장소·메뉴)를 받는다. 도메인을 API 로 옮길 때마다
+ * load 에 하나씩 더한다.
  */
 export function DataGate() {
   const [state, setState] = useState<GateState>({ kind: 'loading' })
@@ -39,7 +40,7 @@ export function DataGate() {
     lastRunAt.current = now
 
     try {
-      await loadNotices()
+      await Promise.all([loadNotices(), loadCatalog()])
       loaded.current = true
       return { kind: 'ready' }
     } catch (error) {
