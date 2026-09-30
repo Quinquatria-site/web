@@ -1,0 +1,52 @@
+/* 홈과 같은 바닥이다 — 회색 바닥 위 흰 카드. 홈에서 한 걸음 들어온 화면이라
+   모양이 이어져야 같은 이야기의 자세한 쪽으로 읽힌다. 거터 이유는
+   HomeRoute.module.css 머리 주석 참고 */
+.screen {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--seed-dimension-x3);
+  padding: var(--seed-dimension-x4);
+  background: var(--seed-color-bg-layer-basement);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x1);
+  padding-block: var(--seed-dimension-x2);
+  background: var(--seed-color-bg-layer-default);
+  border-radius: var(--seed-radius-r3);
+}
+
+/* ListHeader 레시피가 space-between 이라 오른쪽으로 밀려 붙는다 */
+.count {
+  font-size: var(--seed-font-size-t4);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+/* 빈 상태는 거터가 없는 요소라 목록과 같은 값을 직접 준다 */
+.emptyTitle {
+  margin: 0;
+  padding: var(--seed-dimension-x2) var(--seed-dimension-x4) 0;
+  font-size: var(--seed-font-size-t5);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t5);
+  color: var(--seed-color-fg-neutral);
+}
+
+.emptyDescription {
+  margin: 0;
+  padding: 0 var(--seed-dimension-x4) var(--seed-dimension-x2);
+  font-size: var(--seed-font-size-t3);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+/* 행 오른쪽 셰브런. 누를 수 있다는 표시일 뿐이라 조용한 색이다 */
+.chevron {
+  display: inline-flex;
+  color: var(--seed-color-fg-neutral-subtle);
+}
