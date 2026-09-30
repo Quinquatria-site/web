@@ -1,5 +1,6 @@
-import { Navigate, Outlet, useLocation } from 'react-router'
+import { Navigate, useLocation } from 'react-router'
 import { useAuth } from '../auth/authContext'
+import { DataGate } from './DataGate'
 
 /**
  * 미인증이면 /login 으로 보낸다. 가려던 경로를 state.from 에 실어
@@ -17,5 +18,6 @@ export function RequireAuth() {
     return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />
   }
 
-  return <Outlet />
+  // 로그인 뒤에만 서버 데이터를 받는다 — 토큰 없이 부르면 401 이다
+  return <DataGate />
 }
