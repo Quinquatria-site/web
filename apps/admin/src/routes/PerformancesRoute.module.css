@@ -165,7 +165,12 @@
   align-items: center;
 }
 
+/*
+ * SEED 목록 행은 눌림 표시용 ::after 를 행 전체에 absolute 로 깐다. 제자리(static) 인
+ * 접미 칸은 그 아래에 그려져 화살표를 눌러도 클릭이 ::after 로 간다. 위치를 주어 위로 올린다
+ */
 .moves {
+  position: relative;
   display: flex;
   gap: var(--seed-dimension-x1);
   align-items: center;

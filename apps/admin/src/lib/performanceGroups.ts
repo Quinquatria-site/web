@@ -23,6 +23,12 @@ export function groupKeyOf(performance: Performance): PerformanceType | null {
   return SCHEDULE_TYPE_SLOTS.some(({ type }) => type === performance.type) ? performance.type : null
 }
 
+/** index 의 공연이 delta 칸 옆 이웃과 자리를 바꿀 수 있는지. 묶음 경계를 넘으면 학생 앱에서 순서가 안 바뀐다 */
+export function canSwapWithinGroup(list: Performance[], index: number, delta: number): boolean {
+  const swap = index + delta
+  return swap >= 0 && swap < list.length && groupKeyOf(list[swap]) === groupKeyOf(list[index])
+}
+
 /**
  * 학생 앱 칸 순서대로 묶는다. 묶음 안은 받은 순서를 그대로 지킨다 — 넘기는 쪽이 seq 순으로
  * 정렬해 두면 묶음 안도 seq 순이다.

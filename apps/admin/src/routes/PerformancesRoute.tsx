@@ -18,7 +18,11 @@ import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented
 import { Snackbar, SnackbarAvoidOverlap, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { Switch } from 'seed-design/ui/switch'
 import { apiErrorText } from '../lib/apiErrorText'
-import { groupByScheduleType, groupKeyOf, type PerformanceGroup } from '../lib/performanceGroups'
+import {
+  canSwapWithinGroup,
+  groupByScheduleType,
+  type PerformanceGroup,
+} from '../lib/performanceGroups'
 import {
   loadPerformances,
   performancesByDate,
@@ -137,13 +141,8 @@ export function PerformancesRoute() {
   // 순서 편집 중의 order 는 이미 묶음 순서로 이어 붙인 배열이라 다시 묶어도 순서가 같다
   const groups = groupByScheduleType(listed, { keepEmpty: unfiltered })
 
-  /** 같은 묶음 안의 이웃과만 자리를 바꾼다. 묶음 경계를 넘으면 학생 앱에서 순서가 안 바뀐다 */
-  const canMove = (index: number, delta: number) => {
-    const swap = index + delta
-    return (
-      swap >= 0 && swap < listed.length && groupKeyOf(listed[swap]) === groupKeyOf(listed[index])
-    )
-  }
+  /** 같은 묶음 안의 이웃과만 자리를 바꾼다 */
+  const canMove = (index: number, delta: number) => canSwapWithinGroup(listed, index, delta)
 
   const move = (index: number, delta: number) => {
     if (!order || !canMove(index, delta)) return
