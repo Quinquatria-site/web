@@ -82,6 +82,8 @@ export const zh: Messages = {
     },
   },
   map: {
+    filterLabel: '场所类型',
+    filterAll: '全部',
     zoomIn: '放大',
     zoomOut: '缩小',
     sheet: {

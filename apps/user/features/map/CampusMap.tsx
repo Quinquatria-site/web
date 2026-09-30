@@ -23,10 +23,10 @@ const MAX_ZOOM = 1
 // 기본 최소 배율 0 이 전체 맞춤 계산까지 잘라 먹어서, 계산 전에는 충분히 낮춰 둔다
 const FLOOR_ZOOM = -5
 
-// 처음엔 캠퍼스 전체가 화면에 들어오게 두고, 그보다 작아지지 않게 막는다. bottomInset 만큼은 아래로 더 밀 수 있게 열어 둔다
-function FitCampus({ bottomInset }: { bottomInset: number }) {
+// 처음엔 캠퍼스 전체가 화면에 들어오게 두고, 그보다 작아지지 않게 막는다. 위아래를 가린 높이만큼은 더 밀 수 있게 열어 둔다
+function FitCampus({ topInset, bottomInset }: { topInset: number; bottomInset: number }) {
   const map = useMap()
-  const insetRef = useRef(bottomInset)
+  const insetRef = useRef({ top: topInset, bottom: bottomInset })
   const lockRef = useRef<() => void>(undefined)
 
   useEffect(() => {
@@ -41,9 +41,10 @@ function FitCampus({ bottomInset }: { bottomInset: number }) {
       const padX = Math.max(0, (x / scale - MAP_WIDTH) / 2)
       const padY = Math.max(0, (y / scale - MAP_HEIGHT) / 2)
       // 시트가 아래를 가리는 동안은 그 높이만큼 지도를 위로 올릴 수 있어야 아래쪽 장소가 시트 위로 나온다
+      // 위는 칩이 늘 가리는데, 전체 보기처럼 지도 위에 빈 곳이 이미 있으면 잠금을 풀지 않도록 모자란 만큼만 연다
       map.setMaxBounds([
-        [-padY - insetRef.current / scale, -padX],
-        [MAP_HEIGHT + padY, MAP_WIDTH + padX],
+        [-padY - insetRef.current.bottom / scale, -padX],
+        [MAP_HEIGHT + Math.max(padY, insetRef.current.top / scale), MAP_WIDTH + padX],
       ])
     }
     lockRef.current = lockShortAxis
@@ -59,9 +60,9 @@ function FitCampus({ bottomInset }: { bottomInset: number }) {
   }, [map])
 
   useEffect(() => {
-    insetRef.current = bottomInset
+    insetRef.current = { top: topInset, bottom: bottomInset }
     lockRef.current?.()
-  }, [bottomInset])
+  }, [topInset, bottomInset])
 
   return null
 }
@@ -93,14 +94,16 @@ function TrackpadPinchZoom() {
   return null
 }
 
-// 고른 장소를 아래를 가린 시트 위 남은 화면 가운데로 옮긴다. 점으로 보이는 배율이면 큰 마커가 보일 때까지 확대한다
+// 고른 장소를 위 칩과 아래 시트 사이 남은 화면 가운데로 옮긴다. 점으로 보이는 배율이면 큰 마커가 보일 때까지 확대한다
 function FocusPlace({
   point,
   request,
+  topInset,
   bottomInset,
 }: {
   point: MapPoint | null
   request: number
+  topInset: number
   bottomInset: number
 }) {
   const map = useMap()
@@ -131,14 +134,14 @@ function FocusPlace({
     if (!point) return
     const focus = () => {
       const zoom = Math.max(map.getZoom(), FULL_MARKER_ZOOM)
-      // 화면 가운데보다 가린 높이의 절반만큼 위에 오도록 중심을 그만큼 아래로 잡는다
-      const center = map.project(toLatLng(point), zoom).add([0, bottomInset / 2])
+      // 칩과 시트 사이 가운데에 오도록, 두 높이 차의 절반만큼 중심을 아래로 잡는다
+      const center = map.project(toLatLng(point), zoom).add([0, (bottomInset - topInset) / 2])
       map.setView(map.unproject(center, zoom), zoom)
     }
     if (zoomingRef.current) pendingRef.current = focus
     else focus()
     // request 는 같은 장소를 다시 눌러도 다시 옮기려고 받는다
-  }, [map, point, request, bottomInset])
+  }, [map, point, request, topInset, bottomInset])
 
   return null
 }
@@ -159,6 +162,7 @@ export default function CampusMap({
   onSelect,
   onClear,
   focusRequest,
+  topInset,
   bottomInset,
   onDragChange,
 }: {
@@ -168,6 +172,8 @@ export default function CampusMap({
   onClear: () => void
   /** 마커를 누를 때마다 늘어나는 수. 같은 장소를 다시 눌러도 다시 옮긴다 */
   focusRequest: number
+  /** 지도 위를 늘 가리는 칩 층 높이 */
+  topInset: number
   /** 장소를 고른 동안 아래를 가리는 높이. 고른 장소를 이만큼 위로 비켜 둔다 */
   bottomInset: number
   onDragChange: (dragging: boolean) => void
@@ -188,10 +194,15 @@ export default function CampusMap({
     >
       <ImageOverlay url={MAP_IMAGE_URL} bounds={MAP_BOUNDS} />
       <MapLabels />
-      <FitCampus bottomInset={selected ? bottomInset : 0} />
+      <FitCampus topInset={topInset} bottomInset={selected ? bottomInset : 0} />
       <TrackpadPinchZoom />
       <PlaceMarkers places={places} selectedId={selectedId} onSelect={onSelect} onClear={onClear} />
-      <FocusPlace point={selected} request={focusRequest} bottomInset={bottomInset} />
+      <FocusPlace
+        point={selected}
+        request={focusRequest}
+        topInset={topInset}
+        bottomInset={bottomInset}
+      />
       <DragWatch onDragChange={onDragChange} />
       <ZoomButtons />
     </MapContainer>

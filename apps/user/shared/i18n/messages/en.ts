@@ -88,6 +88,8 @@ export const en: Messages = {
     },
   },
   map: {
+    filterLabel: 'Place type',
+    filterAll: 'All',
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom out',
     sheet: {

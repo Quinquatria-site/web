@@ -79,6 +79,8 @@ export const ko = {
     },
   },
   map: {
+    filterLabel: '장소 종류',
+    filterAll: '전체',
     zoomIn: '확대',
     zoomOut: '축소',
     sheet: {
