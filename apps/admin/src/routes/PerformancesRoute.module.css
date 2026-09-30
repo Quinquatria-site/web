@@ -62,6 +62,15 @@
   color: var(--seed-color-fg-neutral-muted);
 }
 
+/* 공연이 없는 묶음의 빈 줄. 머리 아래 한 줄로만 자리를 표시한다 */
+.groupEmpty {
+  margin: 0;
+  padding: var(--seed-dimension-x2) var(--seed-dimension-x4) var(--seed-dimension-x3);
+  font-size: var(--seed-font-size-t4);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-subtle);
+}
+
 /* 한 손 엄지 구역. 탭바 위에 뜬다 */
 .fab {
   position: absolute;
