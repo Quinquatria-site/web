@@ -9,7 +9,8 @@ export default async function MapPage() {
   return (
     <>
       <PageHeader title={pages.map} />
-      <MapView />
+      {/* 장소 API 를 잇기 전이라 비워 둔다 */}
+      <MapView places={[]} />
     </>
   )
 }

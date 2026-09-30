@@ -1,10 +1,19 @@
 'use client'
 
 import { CRS } from 'leaflet'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { ImageOverlay, MapContainer, useMap } from 'react-leaflet'
-import { MAP_BOUNDS, MAP_HEIGHT, MAP_IMAGE_URL, MAP_WIDTH } from './map-coords'
+import {
+  MAP_BOUNDS,
+  MAP_HEIGHT,
+  MAP_IMAGE_URL,
+  MAP_WIDTH,
+  type MapPoint,
+  toLatLng,
+} from './map-coords'
 import { MapLabels } from './MapLabels'
+import type { MapPlace } from './map-place'
+import { FULL_MARKER_ZOOM, PlaceMarkers } from './PlaceMarkers'
 import 'leaflet/dist/leaflet.css'
 
 // 이미지 1px 이 화면 2px 까지 커진다. 그 이상은 흐려진다
@@ -13,9 +22,11 @@ const MAX_ZOOM = 1
 // 기본 최소 배율 0 이 전체 맞춤 계산까지 잘라 먹어서, 계산 전에는 충분히 낮춰 둔다
 const FLOOR_ZOOM = -5
 
-// 처음엔 캠퍼스 전체가 화면에 들어오게 두고, 그보다 작아지지 않게 막는다
-function FitCampus() {
+// 처음엔 캠퍼스 전체가 화면에 들어오게 두고, 그보다 작아지지 않게 막는다. bottomInset 만큼은 아래로 더 밀 수 있게 열어 둔다
+function FitCampus({ bottomInset }: { bottomInset: number }) {
   const map = useMap()
+  const insetRef = useRef(bottomInset)
+  const lockRef = useRef<() => void>(undefined)
 
   useEffect(() => {
     const fit = () => {
@@ -28,11 +39,13 @@ function FitCampus() {
       const scale = map.getZoomScale(map.getZoom(), 0)
       const padX = Math.max(0, (x / scale - MAP_WIDTH) / 2)
       const padY = Math.max(0, (y / scale - MAP_HEIGHT) / 2)
+      // 시트가 아래를 가리는 동안은 그 높이만큼 지도를 위로 올릴 수 있어야 아래쪽 장소가 시트 위로 나온다
       map.setMaxBounds([
-        [-padY, -padX],
+        [-padY - insetRef.current / scale, -padX],
         [MAP_HEIGHT + padY, MAP_WIDTH + padX],
       ])
     }
+    lockRef.current = lockShortAxis
     fit()
     map.setView([MAP_HEIGHT / 2, MAP_WIDTH / 2], map.getMinZoom(), { animate: false })
     lockShortAxis()
@@ -43,6 +56,11 @@ function FitCampus() {
       map.off('zoomend resize', lockShortAxis)
     }
   }, [map])
+
+  useEffect(() => {
+    insetRef.current = bottomInset
+    lockRef.current?.()
+  }, [bottomInset])
 
   return null
 }
@@ -74,8 +92,76 @@ function TrackpadPinchZoom() {
   return null
 }
 
-/** 캠퍼스 지도. 이미지 한 장을 픽셀 좌표(CRS.Simple)로 깔고 끌기·확대만 받는다 */
-export default function CampusMap() {
+// 고른 장소를 아래를 가린 시트 위 남은 화면 가운데로 옮긴다. 점으로 보이는 배율이면 큰 마커가 보일 때까지 확대한다
+function FocusPlace({
+  point,
+  request,
+  bottomInset,
+}: {
+  point: MapPoint | null
+  request: number
+  bottomInset: number
+}) {
+  const map = useMap()
+  const zoomingRef = useRef(false)
+  const pendingRef = useRef<() => void>(undefined)
+
+  // 확대 전환 중에 다시 옮기면 끝날 때 이전 자리로 돌아가서, 전환이 끝난 뒤 마지막 요청만 옮긴다
+  useEffect(() => {
+    const start = () => {
+      zoomingRef.current = true
+    }
+    const end = () => {
+      zoomingRef.current = false
+      const pending = pendingRef.current
+      pendingRef.current = undefined
+      pending?.()
+    }
+    map.on('zoomstart', start)
+    map.on('zoomend', end)
+    return () => {
+      map.off('zoomstart', start)
+      map.off('zoomend', end)
+    }
+  }, [map])
+
+  useEffect(() => {
+    pendingRef.current = undefined
+    if (!point) return
+    const focus = () => {
+      const zoom = Math.max(map.getZoom(), FULL_MARKER_ZOOM)
+      // 화면 가운데보다 가린 높이의 절반만큼 위에 오도록 중심을 그만큼 아래로 잡는다
+      const center = map.project(toLatLng(point), zoom).add([0, bottomInset / 2])
+      map.setView(map.unproject(center, zoom), zoom)
+    }
+    if (zoomingRef.current) pendingRef.current = focus
+    else focus()
+    // request 는 같은 장소를 다시 눌러도 다시 옮기려고 받는다
+  }, [map, point, request, bottomInset])
+
+  return null
+}
+
+/** 캠퍼스 지도. 이미지 한 장을 픽셀 좌표(CRS.Simple)로 깔고 끌기·확대를 받으며, 장소 마커를 올린다 */
+export default function CampusMap({
+  places,
+  selectedId,
+  onSelect,
+  onClear,
+  focusRequest,
+  bottomInset,
+}: {
+  places: MapPlace[]
+  selectedId: number | null
+  onSelect: (id: number) => void
+  onClear: () => void
+  /** 마커를 누를 때마다 늘어나는 수. 같은 장소를 다시 눌러도 다시 옮긴다 */
+  focusRequest: number
+  /** 장소를 고른 동안 아래를 가리는 높이. 고른 장소를 이만큼 위로 비켜 둔다 */
+  bottomInset: number
+}) {
+  const selected = places.find((place) => place.id === selectedId) ?? null
+
   return (
     <MapContainer
       crs={CRS.Simple}
@@ -90,8 +176,10 @@ export default function CampusMap() {
     >
       <ImageOverlay url={MAP_IMAGE_URL} bounds={MAP_BOUNDS} />
       <MapLabels />
-      <FitCampus />
+      <FitCampus bottomInset={selected ? bottomInset : 0} />
       <TrackpadPinchZoom />
+      <PlaceMarkers places={places} selectedId={selectedId} onSelect={onSelect} onClear={onClear} />
+      <FocusPlace point={selected} request={focusRequest} bottomInset={bottomInset} />
     </MapContainer>
   )
 }
