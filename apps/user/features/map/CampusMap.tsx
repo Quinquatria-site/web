@@ -4,6 +4,7 @@ import { CRS } from 'leaflet'
 import { useEffect } from 'react'
 import { ImageOverlay, MapContainer, useMap } from 'react-leaflet'
 import { MAP_BOUNDS, MAP_HEIGHT, MAP_IMAGE_URL, MAP_WIDTH } from './map-coords'
+import { MapLabels } from './MapLabels'
 import 'leaflet/dist/leaflet.css'
 
 // 이미지 1px 이 화면 2px 까지 커진다. 그 이상은 흐려진다
@@ -88,6 +89,7 @@ export default function CampusMap() {
       className="size-full bg-transparent!"
     >
       <ImageOverlay url={MAP_IMAGE_URL} bounds={MAP_BOUNDS} />
+      <MapLabels />
       <FitCampus />
       <TrackpadPinchZoom />
     </MapContainer>
