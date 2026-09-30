@@ -82,6 +82,15 @@ export const zh: Messages = {
     },
   },
   map: {
+    places: {
+      BOOTH: '摊位',
+      PUB: '酒馆',
+      FOODTRUCK: '餐车',
+      MEDI: '医务室',
+      BRACELET: '入场手环',
+      PHOTO: '拍照亭',
+      TRASH: '垃圾桶',
+    },
     labels: {
       globalDorm: '国际学舍',
       socialScience: '社会\n科学馆',

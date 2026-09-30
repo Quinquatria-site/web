@@ -88,6 +88,15 @@ export const en: Messages = {
     },
   },
   map: {
+    places: {
+      BOOTH: 'Booth',
+      PUB: 'Pub',
+      FOODTRUCK: 'Food Truck',
+      MEDI: 'First Aid',
+      BRACELET: 'Wristband',
+      PHOTO: 'Photo Booth',
+      TRASH: 'Trash Can',
+    },
     labels: {
       globalDorm: 'Global Dorm',
       socialScience: 'Social\nSciences',
