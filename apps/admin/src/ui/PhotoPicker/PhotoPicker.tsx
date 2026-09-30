@@ -1,8 +1,9 @@
 import { IconCameraLine, IconXmarkLine } from '@karrotmarket/react-monochrome-icon'
 import { useRef, useState } from 'react'
+import type { ImageResourceType } from '@quen/schema/common/image'
+import { uploadImage } from '../../api/uploads'
 import { imageSrc } from '../../lib/imageSrc'
 import { PhotoViewer } from '../PhotoViewer'
-import { uploadImage } from '../../mocks/upload'
 import styles from './PhotoPicker.module.css'
 
 /**
@@ -31,6 +32,8 @@ export interface PhotoPickerProps {
   max?: number
   /** 접근성 레이블에 쓴다 */
   label: string
+  /** 어느 리소스의 사진인지. 서버가 key 접두사를 정하고, 저장 때 맞는지 확인한다 */
+  resourceType: ImageResourceType
 }
 
 /**
@@ -40,13 +43,15 @@ export interface PhotoPickerProps {
  * 사진은 S3 key 라 File 이 없다. 기존 사진과 새로 고른 사진이 두 목록으로 갈리므로
  * 목록은 여기서 들고 파일 선택만 숨긴 input 으로 받는다.
  *
- * 폼 상태에 File 을 담지 않는다. 고르는 즉시 uploadImage 를 거쳐 key 로 바꾼다 —
+ * 폼 상태에 File 을 담지 않는다. 고르는 즉시 S3 에 올려 key 로 바꾼다(api/uploads.ts) —
  * 그래야 명세의 string[] 계약이 화면에서도 그대로 유지된다.
  */
-export function PhotoPicker({ value, onChange, max = 10, label }: PhotoPickerProps) {
+export function PhotoPicker({ value, onChange, max = 10, label, resourceType }: PhotoPickerProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState<string | null>(null)
   const [opened, setOpened] = useState<string | null>(null)
+  // 폰에서 10MB 는 몇 초 걸린다. 표시가 없으면 다시 누른다
+  const [uploading, setUploading] = useState(false)
 
   const room = max - value.length
 
@@ -63,10 +68,19 @@ export function PhotoPicker({ value, onChange, max = 10, label }: PhotoPickerPro
     if (wrongType.length > 0) reasons.push(`JPG·PNG·WEBP 가 아닌 파일 ${wrongType.length}개`)
     if (tooBig.length > 0) reasons.push(`10MB 가 넘는 파일 ${tooBig.length}개`)
     if (usable.length > room) reasons.push(`최대 ${max}장까지라 넘치는 ${usable.length - room}개`)
-    if (reasons.length > 0) setError(`${reasons.join(', ')}를 빼고 넣었습니다.`)
 
-    // 고른 순서를 지킨다. Promise.all 은 순서를 보존한다
-    const keys = await Promise.all(usable.slice(0, room).map(uploadImage))
+    // 하나가 실패해도 나머지는 넣는다. allSettled 도 순서를 보존해 고른 순서가 저장 순서다
+    setUploading(true)
+    const results = await Promise.allSettled(
+      usable.slice(0, room).map((file) => uploadImage(file, resourceType)),
+    )
+    setUploading(false)
+    const keys = results.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : []))
+    const failed = results.length - keys.length
+    // 실패 사유는 client·uploads 가 설정 › 오류 기록에 남겼다
+    if (failed > 0) reasons.push(`업로드에 실패한 파일 ${failed}개`)
+
+    if (reasons.length > 0) setError(`${reasons.join(', ')}를 빼고 넣었습니다.`)
     if (keys.length > 0) onChange([...value, ...keys])
   }
 
@@ -103,12 +117,13 @@ export function PhotoPicker({ value, onChange, max = 10, label }: PhotoPickerPro
           <button
             type="button"
             className={styles.add}
+            disabled={uploading}
             onClick={() => inputRef.current?.click()}
             aria-label={`${label} 사진 추가`}
           >
             <IconCameraLine width={24} height={24} />
             <span className={styles.addLabel}>
-              {value.length}/{max}
+              {uploading ? '올리는 중…' : `${value.length}/${max}`}
             </span>
           </button>
         )}

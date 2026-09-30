@@ -232,6 +232,7 @@ function PerformanceEditForm() {
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>사진</h2>
         <PhotoPicker
+          resourceType="PERFORMANCE_IMAGE"
           value={photos}
           onChange={setPhotos}
           max={1}
