@@ -52,6 +52,16 @@
   display: none;
 }
 
+/* 종류별 묶음 머리. 학생 앱이 그 종류를 펼치는 시각이 같이 붙는다 */
+.groupTitle {
+  margin: 0;
+  padding: var(--seed-dimension-x4) var(--seed-dimension-x4) var(--seed-dimension-x1);
+  font-size: var(--seed-font-size-t3);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
 /* 한 손 엄지 구역. 탭바 위에 뜬다 */
 .fab {
   position: absolute;

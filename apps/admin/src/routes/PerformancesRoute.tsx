@@ -18,6 +18,7 @@ import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented
 import { Snackbar, SnackbarAvoidOverlap, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { Switch } from 'seed-design/ui/switch'
 import { apiErrorText } from '../lib/apiErrorText'
+import { groupByScheduleType, groupKeyOf, type PerformanceGroup } from '../lib/performanceGroups'
 import {
   loadPerformances,
   performancesByDate,
@@ -45,6 +46,17 @@ const TYPE_LABELS: Record<PerformanceType, string> = {
   ARTIST: '연예인',
   STUDENT: '학생',
   SPECIAL: '특별 무대',
+}
+
+/** 묶음 머리. 학생 앱이 그 종류를 펼치는 시각을 같이 적어 어느 칸에 나가는지 보이게 한다 */
+const GROUP_TITLES: Record<PerformanceType, string> = {
+  STUDENT: '학생 공연',
+  SPECIAL: '특별 무대',
+  ARTIST: '연예인 공연',
+}
+
+function groupTitle(group: PerformanceGroup): string {
+  return group.type === null ? '기타' : `${GROUP_TITLES[group.type]} · ${group.time}`
 }
 
 function titleOf(performance: Performance): string {
@@ -97,6 +109,8 @@ function Empty({
 
 /**
  * 공연 목록. 축제가 이틀이라 일차가 목록의 1차 축이다 (§5.1 date ASC, seq ASC, id ASC).
+ * 일차 안은 학생 앱 일정표와 같은 종류별 묶음으로 나눈다 — 학생 앱은 종류마다 고정 칸에
+ * 공연을 펼치므로 seq 는 같은 종류 안에서만 순서가 된다 (lib/performanceGroups).
  *
  * 이 화면이 축제 당일 가장 자주 쓰이는 이유는 두 가지다.
  * - 현재 공연 토글. 시각으로 계산하지 않고 운영자가 올린 is_live 를 그대로 쓴다.
@@ -150,12 +164,21 @@ export function PerformancesRoute() {
     : showMissingOnly
       ? byType.filter((p) => hasMissingTranslations(p.translations))
       : byType
+  // 순서 편집 중의 order 는 이미 묶음 순서로 이어 붙인 배열이라 다시 묶어도 순서가 같다
+  const groups = groupByScheduleType(listed)
+
+  /** 같은 묶음 안의 이웃과만 자리를 바꾼다. 묶음 경계를 넘으면 학생 앱에서 순서가 안 바뀐다 */
+  const canMove = (index: number, delta: number) => {
+    const swap = index + delta
+    return (
+      swap >= 0 && swap < listed.length && groupKeyOf(listed[swap]) === groupKeyOf(listed[index])
+    )
+  }
 
   const move = (index: number, delta: number) => {
-    if (!order) return
+    if (!order || !canMove(index, delta)) return
     const next = [...order]
     const swap = index + delta
-    if (swap < 0 || swap >= next.length) return
     ;[next[index], next[swap]] = [next[swap], next[index]]
     setOrder(next)
   }
@@ -284,7 +307,11 @@ export function PerformancesRoute() {
                 // 걸러진 목록 위에서는 할 수 없다. 두 필터를 모두 푼다
                 setTypeFilter('all')
                 setMissingOnly(false)
-                setOrder(rows.map((p) => p.id))
+                // 묶음 순서로 이어 붙여 둔다. 그대로 저장되므로 서버 seq 도 학생 앱 칸 순서와
+                // 맞게 다시 매겨진다 — 종류를 섞어 올린 일차는 옮기지 않고 저장만 해도 맞춰진다
+                setOrder(
+                  groupByScheduleType(rows).flatMap((group) => group.performances.map((p) => p.id)),
+                )
               }}
             >
               <Icon svg={<IconArrowUpArrowDownLine />} />
@@ -306,86 +333,92 @@ export function PerformancesRoute() {
             }}
           />
         ) : (
-          <List>
-            {listed.map((performance, index) => {
-              const seq = (
-                <span className={styles.seq}>{reordering ? index + 1 : performance.seq}</span>
-              )
-              const title = (
-                <span className={styles.title}>
-                  {titleOf(performance)}
-                  {performance.is_live && (
-                    <Badge tone="brand" variant="solid">
-                      공연 중
-                    </Badge>
-                  )}
-                </span>
-              )
-              const detail = (
-                <span className={styles.detail}>
-                  {/* enum 에 네 번째 값이 생길 수 있다 (PRD §12 열린 질문 3).
+          groups.map((group) => (
+            <section key={group.type ?? 'other'} aria-label={groupTitle(group)}>
+              <h2 className={styles.groupTitle}>{groupTitle(group)}</h2>
+              <List>
+                {group.performances.map((performance) => {
+                  const index = listed.indexOf(performance)
+                  const seq = (
+                    <span className={styles.seq}>{reordering ? index + 1 : performance.seq}</span>
+                  )
+                  const title = (
+                    <span className={styles.title}>
+                      {titleOf(performance)}
+                      {performance.is_live && (
+                        <Badge tone="brand" variant="solid">
+                          공연 중
+                        </Badge>
+                      )}
+                    </span>
+                  )
+                  const detail = (
+                    <span className={styles.detail}>
+                      {/* enum 에 네 번째 값이 생길 수 있다 (PRD §12 열린 질문 3).
                       모르는 값이면 빈칸 대신 원래 값을 보여준다 */}
-                  {TYPE_LABELS[performance.type] ?? performance.type}
-                  <LangBadge translations={performance.translations} />
-                </span>
-              )
-              const rowClass = clsx(
-                performance.type === 'SPECIAL' && styles.special,
-                performance.is_live && styles.liveRow,
-              )
+                      {TYPE_LABELS[performance.type] ?? performance.type}
+                      <LangBadge translations={performance.translations} />
+                    </span>
+                  )
+                  const rowClass = clsx(
+                    performance.type === 'SPECIAL' && styles.special,
+                    performance.is_live && styles.liveRow,
+                  )
 
-              // 순서 편집 중에는 행을 누를 수 없게 ListItem 으로 바꾼다.
-              // 편집을 확정하지 않은 채 다른 화면으로 나가면 옮긴 순서가 사라진다.
-              return reordering ? (
-                <ListItem
-                  key={performance.id}
-                  className={rowClass}
-                  prefix={seq}
-                  title={title}
-                  detail={detail}
-                  suffix={
-                    <div className={styles.moves}>
-                      <button
-                        type="button"
-                        className={styles.moveButton}
-                        aria-label={`${titleOf(performance)} 위로`}
-                        disabled={index === 0}
-                        onClick={() => move(index, -1)}
-                      >
-                        <IconChevronUpLine width={20} height={20} />
-                      </button>
-                      <button
-                        type="button"
-                        className={styles.moveButton}
-                        aria-label={`${titleOf(performance)} 아래로`}
-                        disabled={index === listed.length - 1}
-                        onClick={() => move(index, 1)}
-                      >
-                        <IconChevronDownLine width={20} height={20} />
-                      </button>
-                    </div>
-                  }
-                />
-              ) : (
-                <ListButtonItem
-                  key={performance.id}
-                  rootProps={{ className: rowClass }}
-                  prefix={seq}
-                  title={title}
-                  detail={detail}
-                  suffix={
-                    <Switch
-                      checked={performance.is_live}
-                      disabled={liveBusy !== null}
-                      onCheckedChange={(next) => void toggleLive(performance, next)}
-                      inputProps={{ 'aria-label': `${titleOf(performance)} 공연 중` }}
+                  // 순서 편집 중에는 행을 누를 수 없게 ListItem 으로 바꾼다.
+                  // 편집을 확정하지 않은 채 다른 화면으로 나가면 옮긴 순서가 사라진다.
+                  return reordering ? (
+                    <ListItem
+                      key={performance.id}
+                      className={rowClass}
+                      prefix={seq}
+                      title={title}
+                      detail={detail}
+                      suffix={
+                        <div className={styles.moves}>
+                          <button
+                            type="button"
+                            className={styles.moveButton}
+                            aria-label={`${titleOf(performance)} 위로`}
+                            disabled={!canMove(index, -1)}
+                            onClick={() => move(index, -1)}
+                          >
+                            <IconChevronUpLine width={20} height={20} />
+                          </button>
+                          <button
+                            type="button"
+                            className={styles.moveButton}
+                            aria-label={`${titleOf(performance)} 아래로`}
+                            disabled={!canMove(index, 1)}
+                            onClick={() => move(index, 1)}
+                          >
+                            <IconChevronDownLine width={20} height={20} />
+                          </button>
+                        </div>
+                      }
                     />
-                  }
-                  onClick={() => navigate(`/performances/${performance.id}`)}
-                />
-              )
-            })}
-          </List>
+                  ) : (
+                    <ListButtonItem
+                      key={performance.id}
+                      rootProps={{ className: rowClass }}
+                      prefix={seq}
+                      title={title}
+                      detail={detail}
+                      suffix={
+                        <Switch
+                          checked={performance.is_live}
+                          disabled={liveBusy !== null}
+                          onCheckedChange={(next) => void toggleLive(performance, next)}
+                          inputProps={{ 'aria-label': `${titleOf(performance)} 공연 중` }}
+                        />
+                      }
+                      onClick={() => navigate(`/performances/${performance.id}`)}
+                    />
+                  )
+                })}
+              </List>
+            </section>
+          ))
         )}
       </div>
 
