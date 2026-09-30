@@ -36,6 +36,17 @@
   padding-bottom: calc(var(--seed-dimension-x16) + var(--seed-dimension-x4));
 }
 
+/* 줄 앞 번호. 공연 목록의 순서 번호(PerformancesRoute .seq)와 같은 모양·크기다 */
+.seq {
+  display: block;
+  min-width: var(--seed-dimension-x5);
+  font-size: var(--seed-font-size-t3);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-subtle);
+  text-align: center;
+}
+
 .list::-webkit-scrollbar {
   display: none;
 }
