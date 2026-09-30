@@ -25,18 +25,21 @@ export function groupKeyOf(performance: Performance): PerformanceType | null {
 
 /**
  * 학생 앱 칸 순서대로 묶는다. 묶음 안은 받은 순서를 그대로 지킨다 — 넘기는 쪽이 seq 순으로
- * 정렬해 두면 묶음 안도 seq 순이다. 빈 묶음은 뺀다.
+ * 정렬해 두면 묶음 안도 seq 순이다.
+ *
+ * keepEmpty 면 학생 앱에 칸이 있는 세 묶음은 비어도 남긴다. 공연이 없어도 칸 순서가
+ * 보여야 해서다. "기타" 는 칸이 없는 묶음이라 공연이 있을 때만 둔다.
  */
-export function groupByScheduleType(performances: Performance[]): PerformanceGroup[] {
+export function groupByScheduleType(
+  performances: Performance[],
+  { keepEmpty = false }: { keepEmpty?: boolean } = {},
+): PerformanceGroup[] {
   const groups: PerformanceGroup[] = SCHEDULE_TYPE_SLOTS.map(({ type, time }) => ({
     type,
     time,
     performances: performances.filter((p) => p.type === type),
-  }))
-  groups.push({
-    type: null,
-    time: null,
-    performances: performances.filter((p) => groupKeyOf(p) === null),
-  })
-  return groups.filter((group) => group.performances.length > 0)
+  })).filter((group) => keepEmpty || group.performances.length > 0)
+  const other = performances.filter((p) => groupKeyOf(p) === null)
+  if (other.length > 0) groups.push({ type: null, time: null, performances: other })
+  return groups
 }

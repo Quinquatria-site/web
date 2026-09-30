@@ -62,6 +62,15 @@
   color: var(--seed-color-fg-neutral-muted);
 }
 
+/* 공연이 없는 묶음의 빈 줄. 머리 아래 한 줄로만 자리를 표시한다 */
+.groupEmpty {
+  margin: 0;
+  padding: var(--seed-dimension-x2) var(--seed-dimension-x4) var(--seed-dimension-x3);
+  font-size: var(--seed-font-size-t4);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-subtle);
+}
+
 /* 한 손 엄지 구역. 탭바 위에 뜬다 */
 .fab {
   position: absolute;
@@ -118,16 +127,8 @@
   flex: 1;
 }
 
-/* PRD §5-2 는 응원제·가요제를 일반 공연과 디자인적으로 구분하라고 한다.
-   PERFORMANCE.type 에 그 값이 없어 SPECIAL 로 대신 받는다 — 전용 enum 이
-   생기면 고칠 곳은 여기 한 곳과 TSX 의 type 비교 한 줄뿐이다.
-   평평한 목록이라 테두리 대신 면으로 구분한다 */
-.special {
-  background: var(--seed-color-bg-brand-weak);
-}
-
 /*
- * 공연 중인 한 건. 왼쪽 띠로 표시한다 — 배경은 SPECIAL 과 겹칠 수 있다.
+ * 공연 중인 한 건. 왼쪽 띠로 표시한다.
  *
  * 브랜드 색이다. 이 행에는 같은 것을 가리키는 신호가 셋 있다 — 띠, "공연 중"
  * 배지, 켜진 스위치. 스위치가 이미 브랜드 색이라 셋을 한 색으로 묶는다.

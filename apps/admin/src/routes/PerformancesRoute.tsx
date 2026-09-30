@@ -49,14 +49,8 @@ const TYPE_LABELS: Record<PerformanceType, string> = {
 }
 
 /** 묶음 머리. 학생 앱이 그 종류를 펼치는 시각을 같이 적어 어느 칸에 나가는지 보이게 한다 */
-const GROUP_TITLES: Record<PerformanceType, string> = {
-  STUDENT: '학생 공연',
-  SPECIAL: '특별 무대',
-  ARTIST: '연예인 공연',
-}
-
 function groupTitle(group: PerformanceGroup): string {
-  return group.type === null ? '기타' : `${GROUP_TITLES[group.type]} · ${group.time}`
+  return group.type === null ? '기타' : `${TYPE_LABELS[group.type]} · ${group.time}`
 }
 
 function titleOf(performance: Performance): string {
@@ -64,45 +58,18 @@ function titleOf(performance: Performance): string {
 }
 
 /**
- * 빈 목록. 막다른 길을 만들지 않으려고 나갈 문을 같이 둔다.
- * 번역 누락 필터가 0건인 것은 나쁜 소식이 아니라 좋은 소식이라 따로 말한다.
+ * 유형 필터로 걸러 0건인 목록. 막다른 길을 만들지 않으려고 나갈 문을 같이 둔다.
+ * 필터가 없으면 이 화면 대신 빈 묶음 머리가 보이고, 번역 누락 필터는 0건이면
+ * 스스로 풀려서 여기까지 오지 않는다.
  */
-function Empty({
-  filtered,
-  missingOnly,
-  date,
-  onReset,
-}: {
-  filtered: boolean
-  missingOnly: boolean
-  date: string
-  onReset: () => void
-}) {
-  const navigate = useNavigate()
-  const title = missingOnly
-    ? '번역이 빠진 공연이 없습니다'
-    : filtered
-      ? '이 유형에는 아직 공연이 없습니다'
-      : '이 일차에는 아직 공연이 없습니다'
-  const description = missingOnly
-    ? '이 일차는 세 언어가 모두 채워져 있습니다.'
-    : filtered
-      ? '다른 유형을 보거나, 여기에 새 공연을 추가하세요.'
-      : '오른쪽 아래 공연 추가 버튼을 눌러 시작하세요.'
-
+function Empty({ onReset }: { onReset: () => void }) {
   return (
     <div className={styles.empty}>
-      <p className={styles.emptyTitle}>{title}</p>
-      <p className={styles.emptyDescription}>{description}</p>
-      {filtered || missingOnly ? (
-        <ActionButton size="medium" variant="neutralWeak" onClick={onReset}>
-          전체 보기
-        </ActionButton>
-      ) : (
-        <ActionButton size="medium" onClick={() => navigate(`/performances/new?date=${date}`)}>
-          공연 추가
-        </ActionButton>
-      )}
+      <p className={styles.emptyTitle}>이 유형에는 아직 공연이 없습니다</p>
+      <p className={styles.emptyDescription}>다른 유형을 보거나, 여기에 새 공연을 추가하세요.</p>
+      <ActionButton size="medium" variant="neutralWeak" onClick={onReset}>
+        전체 보기
+      </ActionButton>
     </div>
   )
 }
@@ -164,8 +131,11 @@ export function PerformancesRoute() {
     : showMissingOnly
       ? byType.filter((p) => hasMissingTranslations(p.translations))
       : byType
+  // 걸러 보는 중이 아니면 빈 묶음 머리도 띄운다. 공연이 없어도 학생 앱 칸 순서가 보여야 한다.
+  // 걸러 보는 중에 빈 머리를 늘어놓으면 필터가 안 먹은 것처럼 보여 해당 묶음만 둔다
+  const unfiltered = reordering || (typeFilter === 'all' && !showMissingOnly)
   // 순서 편집 중의 order 는 이미 묶음 순서로 이어 붙인 배열이라 다시 묶어도 순서가 같다
-  const groups = groupByScheduleType(listed)
+  const groups = groupByScheduleType(listed, { keepEmpty: unfiltered })
 
   /** 같은 묶음 안의 이웃과만 자리를 바꾼다. 묶음 경계를 넘으면 학생 앱에서 순서가 안 바뀐다 */
   const canMove = (index: number, delta: number) => {
@@ -322,11 +292,8 @@ export function PerformancesRoute() {
       )}
 
       <div className={styles.list}>
-        {listed.length === 0 ? (
+        {groups.length === 0 ? (
           <Empty
-            filtered={typeFilter !== 'all'}
-            missingOnly={showMissingOnly}
-            date={date}
             onReset={() => {
               setTypeFilter('all')
               setMissingOnly(false)
@@ -336,6 +303,7 @@ export function PerformancesRoute() {
           groups.map((group) => (
             <section key={group.type ?? 'other'} aria-label={groupTitle(group)}>
               <h2 className={styles.groupTitle}>{groupTitle(group)}</h2>
+              {group.performances.length === 0 && <p className={styles.groupEmpty}>아직 없음</p>}
               <List>
                 {group.performances.map((performance) => {
                   const index = listed.indexOf(performance)
@@ -360,10 +328,7 @@ export function PerformancesRoute() {
                       <LangBadge translations={performance.translations} />
                     </span>
                   )
-                  const rowClass = clsx(
-                    performance.type === 'SPECIAL' && styles.special,
-                    performance.is_live && styles.liveRow,
-                  )
+                  const rowClass = clsx(performance.is_live && styles.liveRow)
 
                   // 순서 편집 중에는 행을 누를 수 없게 ListItem 으로 바꾼다.
                   // 편집을 확정하지 않은 채 다른 화면으로 나가면 옮긴 순서가 사라진다.
