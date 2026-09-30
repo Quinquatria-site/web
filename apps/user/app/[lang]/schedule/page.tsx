@@ -1,6 +1,6 @@
 import { FESTIVAL_DAYS, groupByFestivalDay } from '@/features/schedule/festival-days'
 import { getPerformances } from '@/features/schedule/get-performances'
-import { LiveBanner } from '@/features/schedule/LiveBanner'
+import { ScheduleBanner } from '@/features/schedule/ScheduleBanner'
 import { ScheduleBoard } from '@/features/schedule/ScheduleBoard'
 import { Timeline, performanceAnchorId } from '@/features/schedule/Timeline'
 import { PageHeader } from '@/shared/header/PageHeader'
@@ -20,7 +20,7 @@ export default async function SchedulePage() {
     <>
       <PageHeader title={pages.schedule} />
       <ScheduleBoard
-        banner={<LiveBanner performance={live} />}
+        banner={<ScheduleBanner live={live} />}
         panels={FESTIVAL_DAYS.map(({ date }, i) => (
           <Timeline key={date} date={date} performances={byDay[i]} />
         ))}

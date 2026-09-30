@@ -3,6 +3,7 @@ import { getMessages } from '@/shared/i18n/messages'
 import { ClockDot } from './ClockDot'
 import type { Performance } from './performance'
 import { PerformanceCard } from './PerformanceCard'
+import { at } from './seoul-time'
 import { TIMELINE_SLOTS, type TimelineSlot } from './timeline-slots'
 import { TimelineDot } from './TimelineDot'
 
@@ -14,9 +15,6 @@ type TextSlot = Extract<TimelineSlot, { text: string }>
 type Row = { key: string; time: string | null } & (
   { text: TextSlot['text']; start: number; end: number | null } | { performance: Performance }
 )
-
-// 서울 기준 그날 그 시각. 기기 시간대와 상관없이 같은 순간을 가리킨다
-const at = (date: string, time: string) => new Date(`${date}T${time}:00+09:00`).getTime()
 
 // 문구 칸은 다음 칸 시각 전까지 진행 중이다. 공연이 없는 종류는 칸째 숨긴다
 function toRows(date: string, performances: Performance[]): Row[] {

@@ -62,6 +62,11 @@ export const en: Messages = {
   },
   schedule: {
     festivalStarted: 'The festival has begun!',
+    // 임시 번역: 축제 전 · 밤사이 · 끝 배너
+    festivalBefore: 'Festival coming soon...',
+    festivalBreak: 'The festival resumes soon',
+    festivalEnded: 'The festival is over',
+    festivalEndedSub: 'See you next time!',
     liveNow: 'Performing now!',
     liveBadge: 'Live',
     dayTabsLabel: 'Festival day',

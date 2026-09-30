@@ -1,6 +1,8 @@
 @theme inline {
   --color-bg: var(--warm-white);
   --color-bg-subtle: var(--neutral-100);
+  /* 피그마 '데이터 없을 때' 색. 사진이 없는 자리를 채운다 */
+  --color-placeholder: var(--sand);
   --color-bg-inverse: var(--dark);
 
   --color-text: var(--dark);
