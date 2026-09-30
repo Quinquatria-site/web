@@ -64,13 +64,44 @@
   display: flex;
 }
 
-/* 심각도는 앞 아이콘 색으로만 준다. SEED Chip 에 tone 이 없어서다 */
-.alertsCritical {
-  color: var(--seed-color-fg-critical);
+/* 심각도는 칩 바탕색으로 준다. SEED Chip 에 tone 이 없어 outlineStrong 위에 덮어쓴다.
+   레시피가 칩·라벨·아이콘에 각각 색을 박아 두어 클래스를 겹쳐 명시도로 이긴다
+   (눌림은 레시피가 (0,3,0) 이라 세 번).
+   글자는 fg-*-contrast (palette 900) — weak 바탕 위에서 라이트·다크 모두 7:1 이상.
+   포커스 링은 레시피의 stroke-focus-ring 을 그대로 쓴다 */
+.alertsChip.alertsCritical {
+  --alerts-bg: var(--seed-color-bg-critical-weak);
+  --alerts-bg-pressed: var(--seed-color-bg-critical-weak-pressed);
+  --alerts-stroke: var(--seed-color-stroke-critical-weak);
+  --alerts-fg: var(--seed-color-fg-critical-contrast);
 }
 
-.alertsWarning {
-  color: var(--seed-color-fg-warning);
+.alertsChip.alertsWarning {
+  --alerts-bg: var(--seed-color-bg-warning-weak);
+  --alerts-bg-pressed: var(--seed-color-bg-warning-weak-pressed);
+  --alerts-stroke: var(--seed-color-stroke-warning-weak);
+  --alerts-fg: var(--seed-color-fg-warning-contrast);
+}
+
+.alertsChip.alertsChip {
+  background: var(--alerts-bg);
+  box-shadow: inset 0 0 0 1px var(--alerts-stroke);
+  --seed-icon-color: var(--alerts-fg);
+}
+
+.alertsChip.alertsChip.alertsChip:is(:active, [data-active]) {
+  background: var(--alerts-bg-pressed);
+}
+
+/* 터치 화면에서 hover 가 눌린 채 남지 않게 레시피처럼 hover 가능한 기기에만 */
+@media (hover: hover) {
+  .alertsChip.alertsChip.alertsChip:is(:hover, [data-hover]) {
+    background: var(--alerts-bg-pressed);
+  }
+}
+
+.alertsChip.alertsChip > * {
+  color: var(--alerts-fg);
 }
 
 /* 카드 한 장. 좌우 padding 이 없는 것은 위 주석의 이유다 */
