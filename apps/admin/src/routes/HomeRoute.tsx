@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams } from 'react-router'
 import {
   IconBoxFlapLine,
   IconChevronRightLine,
-  IconExclamationmarkCircleFill,
   IconMegaphoneLine,
 } from '@karrotmarket/react-monochrome-icon'
 import { Badge } from '@seed-design/react'
@@ -356,20 +355,22 @@ function Header({
  * 0 건이면 아무것도 그리지 않는다. 문제가 없을 때 늘 켜진 "이상 없음" 은 며칠 지나면
  * 아무도 안 읽고, 정작 문제가 생겼을 때 칩이 나타나는 변화가 신호가 된다.
  *
- * SEED Chip 에는 tone 이 없어 심각도는 앞 아이콘 색으로만 준다. 글자가 이미
- * "오류/경고" 를 말하므로 색이 유일한 신호는 아니다.
+ * SEED Chip 에는 tone 이 없어 배경·테두리·글자색을 직접 칠한다. 오류가 하나라도 있으면
+ * 오류 톤, 경고만 있으면 경고 톤이다. 글자가 이미 "오류/경고" 를 말하므로 색이 유일한
+ * 신호는 아니다. 뒤의 › 는 누르면 다른 화면으로 간다는 표시라 남긴다.
  */
 function AlertsChip({ alerts, onClick }: { alerts: HomeAlert[]; onClick: () => void }) {
   if (alerts.length === 0) return null
   const counts = countAlerts(alerts)
+  const tone = counts.critical > 0 ? styles.alertsCritical : styles.alertsWarning
   return (
     <div className={styles.alerts}>
-      <Chip.Button variant="outlineStrong" size="medium" onClick={onClick}>
-        <Chip.PrefixIcon
-          className={counts.critical > 0 ? styles.alertsCritical : styles.alertsWarning}
-        >
-          <IconExclamationmarkCircleFill />
-        </Chip.PrefixIcon>
+      <Chip.Button
+        variant="outlineStrong"
+        size="medium"
+        className={`${styles.alertsChip} ${tone}`}
+        onClick={onClick}
+      >
         <Chip.Label>{alertSummary(counts)}</Chip.Label>
         <Chip.SuffixIcon>
           <IconChevronRightLine />
