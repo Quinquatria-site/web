@@ -12,8 +12,11 @@ export function generateStaticParams() {
   return LOCALES.map((lang) => ({ lang }))
 }
 
-/** 목록에 없는 언어는 런타임에 만들지 않고 404 로 보낸다 */
-export const dynamicParams = false
+/**
+ * 빌드 뒤에 생긴 공지·분실물 상세를 첫 요청 때 굽게 둔다. false 면 하위 상세 페이지까지
+ * 빌드 때 만든 id 만 열리고 새 id 는 전부 404 가 된다. 목록에 없는 언어는 getLocale 이 404 로 보낸다
+ */
+export const dynamicParams = true
 
 /** 학생 앱 공통 문서 메타데이터 */
 export const metadata: Metadata = {
