@@ -43,7 +43,7 @@ export const zh: Messages = {
     noticeDetail: '公告详情',
     lostItems: '失物招领',
     lostItemDetail: '失物详情',
-    goods: '周边',
+    goods: 'Quinquatria 周边',
   },
   notices: {
     important: '重要',
@@ -79,6 +79,23 @@ export const zh: Messages = {
       studentEntry: '外大学生观众开始入场',
       visitorEntry: '校外观众开始入场',
       dayEnd: '庆典第一天结束',
+    },
+  },
+  // 임시 번역: 굿즈 탭
+  goods: {
+    introTitle: '2026 QUINQUATRIA',
+    introSubtitle: '来看看官方周边吧！',
+    salesLocation: '查看销售地点',
+    viewAll: '查看全部周边',
+    sheetDescription: '2026 Quinquatria 官方周边',
+    previous: '上一个',
+    next: '下一个',
+    items: {
+      soccer: { name: '足球球衣', description: '印有星星的招牌足球球衣' },
+      baseball: { name: '棒球球衣', description: '印有星星的招牌棒球球衣' },
+      soccerCrop: { name: '足球球衣（短款）', description: '印有星星的招牌足球球衣' },
+      rugby: { name: '橄榄球球衣', description: '印有星星的招牌橄榄球球衣' },
+      baseballBoo: { name: '棒球球衣（BOO 版）', description: '印有 BOO 的招牌棒球球衣' },
     },
   },
 }
