@@ -1,17 +1,26 @@
 'use client'
 
 import * as Dialog from '@radix-ui/react-dialog'
+import Image from 'next/image'
 import type { PerformanceType } from '@quen/schema/entities/performance'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
+import placeholderImage from './images/performance-placeholder.png'
 import type { Performance } from './performance'
+
+// 타임라인 카드와 같은 종류별 색
+const CHIP_BG: Record<PerformanceType, string> = {
+  STUDENT: 'bg-performance-student',
+  SPECIAL: 'bg-performance-special',
+  ARTIST: 'bg-performance-artist',
+}
 
 // 공연 종류 칩과 닫기 버튼
 function ModalHeader({ type }: { type: PerformanceType }) {
   const { schedule } = getMessages(useLocale())
   return (
     <div className="flex items-center justify-between">
-      <span className="rounded-xl bg-bg-subtle px-2 py-1 text-xs leading-[normal]">
+      <span className={`rounded-xl px-2 py-1 text-xs leading-[normal] ${CHIP_BG[type]}`}>
         {schedule.performanceTypes[type]}
       </span>
       <Dialog.Close aria-label={schedule.close} className="-m-2 p-2">
@@ -27,8 +36,19 @@ function ModalHeader({ type }: { type: PerformanceType }) {
 function ModalContent({ title, description }: Pick<Performance, 'title' | 'description'>) {
   return (
     <div className="mt-3 flex flex-col gap-4">
-      {/* image_uri 는 key 라 붙일 이미지 주소가 정해지기 전까지 자리만 둔다 */}
-      <div aria-hidden className="h-[159px] rounded-xl bg-bg-subtle" />
+      {/* 임시: image_uri 는 key 라 이미지 주소가 정해지기 전까지 시안의 아테나 그림을 흐리게 띄운다 */}
+      <div
+        aria-hidden
+        className="flex h-[159px] items-center justify-center rounded-xl bg-placeholder"
+      >
+        {/* 시안처럼 가운데를 오른쪽으로 치우쳐 잘라 창끝까지 보인다 */}
+        <Image
+          src={placeholderImage}
+          alt=""
+          sizes="156px"
+          className="h-[132px] w-[156px] object-cover object-[65%_50%] opacity-50"
+        />
+      </div>
       <div className="flex flex-col gap-2 px-2">
         <Dialog.Title className="text-2xl leading-[normal] font-bold">{title}</Dialog.Title>
         <Dialog.Description className="text-sm leading-[1.18] whitespace-pre-line">
