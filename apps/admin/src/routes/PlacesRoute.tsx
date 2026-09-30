@@ -61,7 +61,8 @@ function Empty({
 /**
  * 장소 목록. CATEGORY 다섯 종을 모두 다룬다 — 의무실·팔찌 수령소도
  * ERD 상 장소라 여기서 관리한다.
- * 정렬은 명세 §5.1 그대로 category_id ASC, category_sequence ASC, id ASC.
+ * 정렬은 category_sequence ASC, category_id ASC, id ASC. 명세 §5.1 은 카테고리부터
+ * 묶지만, 현장에서는 부스 번호로 찾으니 "전체" 에서도 번호가 이어져야 한다.
  */
 export function PlacesRoute() {
   const navigate = useNavigate()
@@ -81,7 +82,7 @@ export function PlacesRoute() {
   // 의존성으로 적을 것이 없고, 수십 건 정렬은 렌더마다 해도 싸다
   const sorted = [...PLACES].sort(
     (a, b) =>
-      a.category_id - b.category_id || a.category_sequence - b.category_sequence || a.id - b.id,
+      a.category_sequence - b.category_sequence || a.category_id - b.category_id || a.id - b.id,
   )
   // 카테고리와 번역 누락은 다른 축이라 AND 로 건다 — "부스 중 번역 누락"이 보여야 한다
   const byCategory =
