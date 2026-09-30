@@ -5,24 +5,17 @@ import { Callout } from 'seed-design/ui/callout'
 import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented-control'
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/text-field'
+import type { NoticeTextWrite } from '../api/notices'
+import { apiErrorText } from '../lib/apiErrorText'
 import { useFormFields } from '../lib/useFormFields'
 import { ConfirmDialog } from '../ui'
-import {
-  deleteNotice,
-  deleteNoticeTranslation,
-  draftId,
-  noticeById,
-  restoreNotice,
-  upsertNotice,
-  type NoticeDraft,
-} from '../mocks/store'
+import { noticeById, removeNotice, removeNoticeTranslation, saveNotice } from '../mocks/store'
 import {
   dateTimeLabel,
   findTranslation,
   LANGUAGE_CODES,
   NOTICE_TYPES,
   type LanguageCode,
-  type NoticeTranslation,
   type NoticeType,
 } from '../mocks/types'
 // 폼 뼈대는 공연 편집 화면과 같은 값을 쓴다 (MenuEditRoute 전례).
@@ -52,8 +45,7 @@ export function NoticeEditRoute() {
   const params = useParams()
 
   // 없는 공지를 편집으로 열면 빈 작성 폼이 떠서, 새로 쓰는 것인지 고치는 것인지
-  // 알 수 없다. 실제 API 에서는 404 RESOURCE_NOT_FOUND 다 (§6). 목 스토어는
-  // 세션 한정이라 새로고침만 해도 같은 상태가 되므로 둘을 같게 다룬다.
+  // 알 수 없다. 캐시는 DataGate 가 서버에서 채운 뒤라, 여기 없으면 서버에도 없다.
   // 폼보다 바깥에서 거르는 이유는 폼이 훅을 여럿 쓰기 때문이다 — 안에서
   // 조기 반환하면 렌더마다 훅 수가 달라진다.
   if (params.id && !noticeById(Number(params.id))) return <NoticeNotFound />
@@ -71,8 +63,7 @@ function NoticeNotFound() {
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>없는 공지입니다</h2>
         <p className={styles.hint}>
-          지워졌거나 주소가 잘못됐습니다. 목 데이터는 새로고침하면 처음 상태로 돌아가므로, 방금 만든
-          공지는 새로고침 뒤 사라집니다.
+          지워졌거나 주소가 잘못됐습니다. 다른 운영자가 먼저 지웠을 수도 있습니다.
         </p>
         <div>
           <ActionButton size="medium" variant="neutralWeak" onClick={() => navigate('/notices')}>
@@ -95,6 +86,8 @@ function NoticeEditForm() {
   const [lang, setLang] = useState<LanguageCode>('KO')
   const [confirming, setConfirming] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // 서버를 다녀오는 동안 버튼을 막는다. 두 번 누르면 공지가 두 건 생긴다
+  const [pending, setPending] = useState(false)
 
   const initialFields: Record<string, string> = {}
   for (const code of LANGUAGE_CODES) {
@@ -104,7 +97,8 @@ function NoticeEditForm() {
   }
   const { values, bind } = useFormFields(initialFields)
 
-  const save = () => {
+  const save = async () => {
+    if (pending) return
     if (!values.title_KO.trim()) return setError('한국어 제목은 필수입니다.')
     if (!values.content_KO.trim()) return setError('한국어 본문은 필수입니다.')
 
@@ -119,92 +113,96 @@ function NoticeEditForm() {
     if (half.length > 0)
       return setError(`${half.join('·')} 은 제목과 본문을 둘 다 채우거나 둘 다 비워주세요.`)
 
-    const id = editing?.id ?? draftId()
-    const translations: NoticeTranslation[] = []
+    // 요청 본문의 번역에는 id·notice_id 를 싣지 않는다 — 서버가 모르는 필드는 422 다.
+    // 새 공지도 id 없이 보내고 서버가 매긴다
+    const translations: NoticeTextWrite[] = []
     for (const code of LANGUAGE_CODES) {
       const title = values[fieldKey('title', code)].trim()
       // 위 검사를 통과했으므로 본문도 비어 있다. PATCH 본문에서 뺀다 — 다만
       // 빼는 것만으로는 안 지워진다. 원래 있던 언어라면 아래에서 전용 삭제를
       // 부른다 (§5.2)
       if (!title) continue
-      const existing = editing ? findTranslation(editing.translations, code) : undefined
       translations.push({
-        id: existing?.id ?? draftId(), // 기존 번역의 id 는 유지 (§5.2)
-        notice_id: id,
         language_code: code,
         title,
         content: values[fieldKey('content', code)].trim(),
       })
     }
-    // 목이 곧 서버 응답이라 정렬까지 맞춘다. Backoffice 응답의 translations 는
-    // language_code ASC — 즉 CHN → EN → KO 다 (§5.2). 화면 탭 순서(KO 먼저)와
-    // 반대라서, 입력 순서 그대로 두면 목만 다른 모양이 된다.
-    translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
 
-    // 지우기 전에 원본을 붙잡는다. upsertNotice 가 NOTICES 의 항목을 새 객체로
-    // 갈아끼우므로 editing 은 이전 상태를 그대로 들고 있다
-    const undo = removing
-      .map((code) => editing && findTranslation(editing.translations, code))
-      .filter((t): t is NoticeTranslation => Boolean(t))
+    // 지우기 전에 원본 문안을 붙잡는다. 실행취소가 PATCH 로 다시 올린다
+    const undo: NoticeTextWrite[] = removing.flatMap((code) => {
+      const t = editing && findTranslation(editing.translations, code)
+      return t ? [{ language_code: t.language_code, title: t.title, content: t.content }] : []
+    })
 
-    const draft: NoticeDraft = { id, type, translations }
-    const saved = upsertNotice(draft)
+    setError(null)
+    setPending(true)
+    try {
+      const saved = await saveNotice(editing?.id ?? null, { type, translations })
 
-    // 실제 클라이언트가 보낼 두 호출과 같은 순서다 — PATCH 로 남길 언어를
-    // 올리고, 지울 언어는 전용 DELETE 로 따로 부른다 (§5.2)
-    for (const code of removing) {
-      const rejected = deleteNoticeTranslation(saved.id, code)
-      if (rejected) return setError(rejected)
+      // 두 호출의 순서다 — PATCH 로 남길 언어를 올리고, 지울 언어는 전용 DELETE 로
+      // 따로 부른다 (§5.2). 여기서 실패하면 PATCH 는 이미 반영된 채 화면에 남는다
+      for (const code of removing) await removeNoticeTranslation(saved.id, code)
+
+      // 번역을 지웠으면 무엇을 지웠는지 밝히고 되돌릴 틈을 준다 — 지워진 번역문은
+      // 다시 타이핑해야 해서 실수의 대가가 크다. 되돌리기는 PATCH 로 충분하다.
+      // 언어별 upsert 라(§5.2) 지운 언어만 다시 넣고 나머지는 건드리지 않는다
+      snackbar.create(
+        undo.length > 0
+          ? {
+              timeout: 6000,
+              render: () => (
+                <Snackbar
+                  message={`${values.title_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
+                  actionLabel="실행취소"
+                  onAction={() => {
+                    saveNotice(saved.id, { type: saved.type, translations: undo }).catch(
+                      (undoError: unknown) =>
+                        snackbar.create({
+                          timeout: 4000,
+                          render: () => (
+                            <Snackbar variant="critical" message={apiErrorText(undoError)} />
+                          ),
+                        }),
+                    )
+                  }}
+                />
+              ),
+            }
+          : {
+              timeout: 3000,
+              render: () => (
+                <Snackbar
+                  message={`${values.title_KO} 저장했습니다 (${TYPE_LABELS[saved.type]} 공지)`}
+                />
+              ),
+            },
+      )
+      // navigate(-1) 이 아니다 — 이 화면을 새로고침하거나 링크로 바로 열면
+      // 뒤로 갈 곳이 admin 밖이다
+      navigate('/notices')
+    } catch (saveError) {
+      setError(apiErrorText(saveError))
+    } finally {
+      setPending(false)
     }
-
-    // 번역을 지웠으면 무엇을 지웠는지 밝히고 되돌릴 틈을 준다. 공지 삭제와 같은
-    // 정책이다 — 지워진 번역문은 다시 타이핑해야 해서 실수의 대가가 크다.
-    // 되돌리기는 upsertNotice 로 충분하다. 언어별 병합이라(§5.2) 지운 언어만
-    // 다시 넣고 나머지는 건드리지 않는다
-    snackbar.create(
-      undo.length > 0
-        ? {
-            timeout: 6000,
-            render: () => (
-              <Snackbar
-                message={`${values.title_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
-                actionLabel="실행취소"
-                onAction={() =>
-                  upsertNotice({ id: saved.id, type: saved.type, translations: undo })
-                }
-              />
-            ),
-          }
-        : {
-            timeout: 3000,
-            render: () => (
-              <Snackbar
-                message={`${values.title_KO} 저장했습니다 (${TYPE_LABELS[saved.type]} 공지)`}
-              />
-            ),
-          },
-    )
-    // navigate(-1) 이 아니다 — 이 화면을 새로고침하거나 링크로 바로 열면
-    // 뒤로 갈 곳이 admin 밖이다
-    navigate('/notices')
   }
 
-  const remove = () => {
-    if (!editing) return
-    const removed = deleteNotice(editing.id)
-    if (!removed) return
-    navigate('/notices')
-    // 확인을 받고 지웠더라도 실행취소는 남긴다. 확인은 실수를, 이쪽은 변심을 받는다
-    snackbar.create({
-      timeout: 6000,
-      render: () => (
-        <Snackbar
-          message="공지를 삭제했습니다"
-          actionLabel="실행취소"
-          onAction={() => restoreNotice(removed)}
-        />
-      ),
-    })
+  // 영구 삭제라 실행취소를 두지 않는다 (§6). 되살릴 수단이 서버에 없다 —
+  // 같은 내용으로 새로 만들면 id·등록 시각이 달라진다. 대신 확인 창이 막는다
+  const remove = async () => {
+    if (!editing || pending) return
+    setPending(true)
+    try {
+      await removeNotice(editing.id)
+      navigate('/notices')
+      snackbar.create({ timeout: 3000, render: () => <Snackbar message="공지를 삭제했습니다" /> })
+    } catch (removeError) {
+      setConfirming(false)
+      setError(apiErrorText(removeError))
+    } finally {
+      setPending(false)
+    }
   }
 
   // 저장했을 때 실제로 빠질 언어. 제목·본문 중 하나라도 비면 그 언어는 못 나간다
@@ -331,7 +329,12 @@ function NoticeEditForm() {
       {/* 되돌릴 수 없는 액션이라 저장 옆에 두지 않는다. 일부러 내려와야 닿는 자리다 */}
       {editing && (
         <div className={styles.dangerZone}>
-          <ActionButton size="medium" variant="criticalSolid" onClick={() => setConfirming(true)}>
+          <ActionButton
+            size="medium"
+            variant="criticalSolid"
+            disabled={pending}
+            onClick={() => setConfirming(true)}
+          >
             이 공지 삭제
           </ActionButton>
         </div>
@@ -358,7 +361,7 @@ function NoticeEditForm() {
       {/* 스크롤 위치와 무관하게 닿는 하단 고정 바. 오류도 여기 붙어야 보인다 */}
       <div className={styles.footer}>
         {error && <Callout tone="critical" description={error} />}
-        <ActionButton size="large" onClick={save}>
+        <ActionButton size="large" loading={pending} onClick={() => void save()}>
           저장
         </ActionButton>
       </div>

@@ -1,4 +1,13 @@
 import { useSyncExternalStore } from 'react'
+import { isApiError } from '../api'
+import {
+  createNotice,
+  deleteNotice as apiDeleteNotice,
+  deleteNoticeTranslation as apiDeleteNoticeTranslation,
+  fetchNotices,
+  updateNotice,
+  type NoticeWrite,
+} from '../api/notices'
 import { LOST_ITEMS } from './lostItems'
 import { MENUS } from './menus'
 import { NOTICES } from './notices'
@@ -7,11 +16,11 @@ import { PLACES } from './places'
 import type { LanguageCode, LostItem, Menu, Notice, NoticeType, Performance, Place } from './types'
 
 /**
- * 목 데이터의 쓰기 흉내. 실제 API(#10)가 붙으면 이 파일이 POST·PATCH·DELETE
- * 호출로 바뀌고 호출부는 그대로 남는다.
+ * 도메인 데이터의 한 자리. 화면은 여기서 동기로 읽는다.
  *
- * SPA 세션 동안만 유지된다 — 새로고침하면 초기 목으로 돌아간다. 목업이라 의도된
- * 동작이고, 화면 상단에 따로 알리지 않는다.
+ * 도메인마다 실제 API 로 하나씩 옮기는 중이다. **공지는 API 캐시**(서버에서 받아 채우고
+ * 쓰기는 API 를 부른 뒤 반영), 나머지는 아직 목의 쓰기 흉내다 — SPA 세션 동안만
+ * 유지되고 새로고침하면 초기 목으로 돌아간다.
  */
 
 let nextId = 100000
@@ -323,12 +332,65 @@ export function reorderPerformances(date: string, order: number[]): string | nul
 }
 
 /**
- * 공지 (§5.7). 공연과 달리 순서를 손댈 수단이 없다 — 정렬 키가 서버 생성
- * created_at 하나뿐이라 재정렬 엔드포인트 자체가 없다 (§5.1).
+ * 공지 (§5.7). **실제 API 에 붙은 첫 도메인이다.** NOTICES 는 더 이상 목이 아니라
+ * 서버 응답의 캐시다 — 로그인 뒤 DataGate 가 loadNotices 로 전부 받아 채우고, 쓰기는
+ * API 를 부른 뒤 응답으로 이 배열을 고친다. 화면은 예전처럼 여기서 동기로 읽는다.
+ *
+ * 공연과 달리 순서를 손댈 수단이 없다 — 정렬 키가 서버 생성 created_at 하나뿐이라
+ * 재정렬 엔드포인트 자체가 없다 (§5.1).
  */
 
-/** 저장 화면이 보낼 수 있는 것. created_at 이 빠진 게 핵심이다 (§5.7 서버 생성·수정 불가) */
-export type NoticeDraft = Omit<Notice, 'created_at'>
+/** 서버에서 전부 받아 캐시를 갈아끼운다. 배열은 제자리에서 바꾼다 — import 한 참조가 살아 있게 */
+export async function loadNotices(): Promise<void> {
+  const items = await fetchNotices()
+  NOTICES.splice(0, NOTICES.length, ...items)
+  emit()
+}
+
+/** 응답 한 건을 캐시에 넣는다. 있으면 교체, 없으면 추가 */
+function putNotice(notice: Notice): void {
+  const index = NOTICES.findIndex((n) => n.id === notice.id)
+  if (index < 0) NOTICES.push(notice)
+  else NOTICES[index] = notice
+  emit()
+}
+
+/**
+ * id 가 없으면 POST, 있으면 PATCH. created_at 은 서버가 찍고 PATCH 로 바뀌지 않는다.
+ * PATCH 는 보낸 언어만 upsert 한다 — 비운 언어를 지우려면 removeNoticeTranslation 을
+ * 따로 불러야 한다 (§5.2).
+ */
+export async function saveNotice(id: number | null, body: NoticeWrite): Promise<Notice> {
+  const saved = id === null ? await createNotice(body) : await updateNotice(id, body)
+  putNotice(saved)
+  return saved
+}
+
+/** 번역 하나를 지운다. PATCH 로는 못 지운다. KO 는 서버가 409 로 막는다 */
+export async function removeNoticeTranslation(id: number, code: LanguageCode): Promise<void> {
+  await apiDeleteNoticeTranslation(id, code)
+  const notice = noticeById(id)
+  if (!notice) return
+  putNotice({
+    ...notice,
+    translations: notice.translations.filter((t) => t.language_code !== code),
+  })
+}
+
+/**
+ * 영구 삭제라 되살릴 수 없다 (§6). 이미 없는 것(404)은 지워진 것으로 친다 — 다른
+ * 운영자가 먼저 지웠을 때 "없는 공지" 오류를 내면 운영자가 할 일이 없다.
+ */
+export async function removeNotice(id: number): Promise<void> {
+  try {
+    await apiDeleteNotice(id)
+  } catch (error) {
+    if (!(isApiError(error) && error.status === 404)) throw error
+  }
+  const index = NOTICES.findIndex((n) => n.id === id)
+  if (index >= 0) NOTICES.splice(index, 1)
+  emit()
+}
 
 /**
  * 명세의 ISO 8601 은 offset 을 포함한다 (§2.2). toISOString() 은 Z 로 끝나서
@@ -353,82 +415,6 @@ export function noticesByType(type: NoticeType): Notice[] {
 
 export function noticeById(id: number): Notice | undefined {
   return NOTICES.find((n) => n.id === id)
-}
-
-/**
- * 생성이면 지금 시각을 서버가 찍는다. 수정이면 기존 created_at 을 그대로 둔다 —
- * 수정 불가 필드라 PATCH 로 바뀌지 않는다 (§5.7). 종류를 바꾸는 것은 허용되며
- * 그러면 목록에서 반대 섹션으로 옮겨간다.
- */
-export function upsertNotice(draft: NoticeDraft): Notice {
-  const index = NOTICES.findIndex((n) => n.id === draft.id)
-
-  if (index < 0) {
-    const created: Notice = { ...draft, created_at: nowKst() }
-    NOTICES.push(created)
-    emit()
-    return created
-  }
-
-  const previous = NOTICES[index]
-
-  // §5.2 — PATCH 는 전달한 언어만 upsert 하고 **전달하지 않은 언어는 그대로 둔다.**
-  // 배열을 통째로 갈아끼우면 화면이 "비우고 저장하면 지워진다" 고 믿게 되는데
-  // 실제 API 는 그렇게 동작하지 않는다. 번역 삭제는 전용 경로만이다
-  // (deleteNoticeTranslation). 목에서부터 같은 규칙을 지켜야 그 차이가 드러난다.
-  const translations = [...previous.translations]
-  for (const next of draft.translations) {
-    const at = translations.findIndex((t) => t.language_code === next.language_code)
-    if (at >= 0) translations[at] = next
-    else translations.push(next)
-  }
-  // 응답의 translations 는 language_code ASC = CHN → EN → KO (§5.2)
-  translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
-
-  const updated: Notice = { ...draft, created_at: previous.created_at, translations }
-  NOTICES[index] = updated
-  emit()
-  return updated
-}
-
-/**
- * DELETE /notices/{notice_id}/translations/{language_code} 흉내 (§5.2).
- *
- * 번역을 지우는 유일한 수단이다. PATCH 로는 못 지운다 — 안 보낸 언어는
- * 유지되기 때문이다. 거부 사유를 문자열로 돌려 화면이 그대로 띄운다
- * (공연 reorder 와 같은 관례).
- */
-export function deleteNoticeTranslation(noticeId: number, code: LanguageCode): string | null {
-  // KO 는 모든 기본 리소스에 필요한 번역이라 409 DELETE_CONFLICT 다.
-  // 화면은 KO 필수 검증으로 저장 자체를 먼저 막으므로 여기까지 오지 않지만,
-  // 계약을 코드에 남겨 둔다
-  if (code === 'KO') return '한국어 번역은 지울 수 없습니다.'
-
-  const notice = noticeById(noticeId)
-  if (!notice) return '없는 공지입니다.'
-
-  // 기본 리소스나 그 언어 번역이 없으면 404 RESOURCE_NOT_FOUND
-  const at = notice.translations.findIndex((t) => t.language_code === code)
-  if (at < 0) return '없는 번역입니다.'
-
-  notice.translations.splice(at, 1)
-  emit()
-  return null
-}
-
-/** 지운 것을 돌려줘 실행취소에 쓴다 (§6) */
-export function deleteNotice(id: number): Notice | undefined {
-  const index = NOTICES.findIndex((n) => n.id === id)
-  if (index < 0) return undefined
-  const [removed] = NOTICES.splice(index, 1)
-  emit()
-  return removed
-}
-
-/** 실행취소. 정렬이 created_at 이라 되돌리기만 하면 원래 자리로 돌아간다 */
-export function restoreNotice(notice: Notice): void {
-  NOTICES.push(notice)
-  emit()
 }
 
 /**
