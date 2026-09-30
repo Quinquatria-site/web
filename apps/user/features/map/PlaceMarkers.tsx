@@ -18,6 +18,7 @@ import photoIcon from './images/photo.svg'
 import trashIcon from './images/trash.svg'
 import { toLatLng } from './map-coords'
 import { type MapPlace, type PlaceCode, placeLabel } from './map-place'
+import { PLACE_BG, PLACE_RING_BG } from './place-colors'
 
 /** 이 배율부터 점이 글자·아이콘 든 마커로 커진다. 쓰면서 맞춘다 */
 export const FULL_MARKER_ZOOM = -1
@@ -25,26 +26,24 @@ export const FULL_MARKER_ZOOM = -1
 // 선택된 마커를 이웃 위로 올린다
 const SELECTED_Z_OFFSET = 1000
 
-// Tailwind 가 클래스 이름을 찾아야 해서 조합하지 않고 통째로 적는다. 링은 고유 색 52%
-const PLACE_STYLES: Record<PlaceCode, { dot: string; ring: string; icon?: StaticImageData }> = {
-  BOOTH: { dot: 'bg-place-booth', ring: 'bg-place-booth/52' },
-  PUB: { dot: 'bg-place-pub', ring: 'bg-place-pub/52' },
-  FOODTRUCK: { dot: 'bg-place-foodtruck', ring: 'bg-place-foodtruck/52', icon: foodtruckIcon },
-  MEDI: { dot: 'bg-place-medi', ring: 'bg-place-medi/52', icon: mediIcon },
-  BRACELET: { dot: 'bg-place-bracelet', ring: 'bg-place-bracelet/52', icon: braceletIcon },
-  PHOTO: { dot: 'bg-place-photo', ring: 'bg-place-photo/52', icon: photoIcon },
-  TRASH: { dot: 'bg-place-trash', ring: 'bg-place-trash/52', icon: trashIcon },
+// 구역 번호 대신 아이콘을 보여 주는 카테고리
+const PLACE_ICONS: Partial<Record<PlaceCode, StaticImageData>> = {
+  FOODTRUCK: foodtruckIcon,
+  MEDI: mediIcon,
+  BRACELET: braceletIcon,
+  PHOTO: photoIcon,
+  TRASH: trashIcon,
 }
 
 // Leaflet 이 문자열로 받아 그리므로 JSX 대신 HTML 로 만든다. 크기 0 인 뿌리에 가운데를 맞추고, 링(62/42)은 마커 크기에 비례해 둘러싼다. 점은 촘촘해서 터치 영역을 키우면 이웃 점을 가로채니 보이는 크기 그대로 둔다
 function markerHtml(code: PlaceCode, label: string | null) {
-  const { dot, ring, icon } = PLACE_STYLES[code]
+  const icon = PLACE_ICONS[code]
   const content = icon
     ? `<img src="${icon.src}" width="${icon.width}" height="${icon.height}" alt="" draggable="false" />`
     : label
   return `<span class="absolute size-5 -translate-1/2 in-data-[markers=full]:size-[42px]">
-  <span class="pointer-events-none absolute inset-[-23.8%] rounded-full ${ring} scale-68 opacity-0 transition-[scale,opacity] duration-120 ease-out group-data-selected:scale-100 group-data-selected:opacity-100 group-data-selected:duration-220 group-data-selected:ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:scale-100"></span>
-  <span class="absolute inset-0 grid place-items-center rounded-full ${dot} font-sans text-[17px] leading-none font-semibold text-text-inverse outline-offset-2 outline-text group-focus-visible:outline-2">
+  <span class="pointer-events-none absolute inset-[-23.8%] rounded-full ${PLACE_RING_BG[code]} scale-68 opacity-0 transition-[scale,opacity] duration-120 ease-out group-data-selected:scale-100 group-data-selected:opacity-100 group-data-selected:duration-220 group-data-selected:ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:scale-100"></span>
+  <span class="absolute inset-0 grid place-items-center rounded-full ${PLACE_BG[code]} font-sans text-[17px] leading-none font-semibold text-text-inverse outline-offset-2 outline-text group-focus-visible:outline-2">
     <span class="hidden in-data-[markers=full]:contents">${content}</span>
   </span>
 </span>`

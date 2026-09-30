@@ -79,6 +79,11 @@ export const ko = {
     },
   },
   map: {
+    sheet: {
+      host: '운영',
+      hours: '운영 시간',
+      location: '위치',
+    },
     places: {
       BOOTH: '부스',
       PUB: '주점',

@@ -82,6 +82,11 @@ export const zh: Messages = {
     },
   },
   map: {
+    sheet: {
+      host: '运营',
+      hours: '运营时间',
+      location: '位置',
+    },
     places: {
       BOOTH: '摊位',
       PUB: '酒馆',

@@ -88,6 +88,11 @@ export const en: Messages = {
     },
   },
   map: {
+    sheet: {
+      host: 'Host',
+      hours: 'Hours',
+      location: 'Location',
+    },
     places: {
       BOOTH: 'Booth',
       PUB: 'Pub',

@@ -2,7 +2,7 @@
 
 import { CRS } from 'leaflet'
 import { useEffect, useRef } from 'react'
-import { ImageOverlay, MapContainer, useMap } from 'react-leaflet'
+import { ImageOverlay, MapContainer, useMap, useMapEvents } from 'react-leaflet'
 import {
   MAP_BOUNDS,
   MAP_HEIGHT,
@@ -142,6 +142,15 @@ function FocusPlace({
   return null
 }
 
+// 손으로 지도를 끄는 동안을 알린다. 시트가 그동안 아래로 비켜 지도를 가리지 않는다
+function DragWatch({ onDragChange }: { onDragChange: (dragging: boolean) => void }) {
+  useMapEvents({
+    dragstart: () => onDragChange(true),
+    dragend: () => onDragChange(false),
+  })
+  return null
+}
+
 /** 캠퍼스 지도. 이미지 한 장을 픽셀 좌표(CRS.Simple)로 깔고 끌기·확대를 받으며, 장소 마커를 올린다 */
 export default function CampusMap({
   places,
@@ -150,6 +159,7 @@ export default function CampusMap({
   onClear,
   focusRequest,
   bottomInset,
+  onDragChange,
 }: {
   places: MapPlace[]
   selectedId: number | null
@@ -159,6 +169,7 @@ export default function CampusMap({
   focusRequest: number
   /** 장소를 고른 동안 아래를 가리는 높이. 고른 장소를 이만큼 위로 비켜 둔다 */
   bottomInset: number
+  onDragChange: (dragging: boolean) => void
 }) {
   const selected = places.find((place) => place.id === selectedId) ?? null
 
@@ -180,6 +191,7 @@ export default function CampusMap({
       <TrackpadPinchZoom />
       <PlaceMarkers places={places} selectedId={selectedId} onSelect={onSelect} onClear={onClear} />
       <FocusPlace point={selected} request={focusRequest} bottomInset={bottomInset} />
+      <DragWatch onDragChange={onDragChange} />
     </MapContainer>
   )
 }
