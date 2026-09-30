@@ -328,10 +328,7 @@ export function PerformancesRoute() {
                       <LangBadge translations={performance.translations} />
                     </span>
                   )
-                  const rowClass = clsx(
-                    performance.type === 'SPECIAL' && styles.special,
-                    performance.is_live && styles.liveRow,
-                  )
+                  const rowClass = clsx(performance.is_live && styles.liveRow)
 
                   // 순서 편집 중에는 행을 누를 수 없게 ListItem 으로 바꾼다.
                   // 편집을 확정하지 않은 채 다른 화면으로 나가면 옮긴 순서가 사라진다.
