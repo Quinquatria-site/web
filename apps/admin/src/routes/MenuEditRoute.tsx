@@ -5,23 +5,18 @@ import { Callout } from 'seed-design/ui/callout'
 import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented-control'
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { TextField, TextFieldInput } from 'seed-design/ui/text-field'
+import type { MenuTextWrite } from '../api/catalog'
+import { apiErrorText } from '../lib/apiErrorText'
 import { useFormFields } from '../lib/useFormFields'
 import { ConfirmDialog, PhotoPicker } from '../ui'
 import {
-  deleteMenu,
-  deleteMenuTranslation,
-  draftId,
   menuById,
-  restoreMenu,
-  upsertMenu,
+  removeMenu,
+  removeMenuTranslation,
+  restoreMenuTranslations,
+  saveMenu,
 } from '../mocks/store'
-import {
-  findTranslation,
-  LANGUAGE_CODES,
-  type LanguageCode,
-  type Menu,
-  type MenuTranslation,
-} from '../mocks/types'
+import { findTranslation, LANGUAGE_CODES, type LanguageCode } from '../mocks/types'
 import styles from './PlaceEditRoute.module.css'
 
 const fieldKey = (field: 'name' | 'desc', lang: LanguageCode) => `${field}_${lang}` as const
@@ -46,6 +41,8 @@ function MenuEditForm() {
   const [confirming, setConfirming] = useState(false)
   // image_url 은 단수지만 picker 는 배열로 다룬다. 저장할 때만 접는다
   const [photos, setPhotos] = useState<string[]>(editing?.image_url ? [editing.image_url] : [])
+  // 서버를 다녀오는 동안 버튼을 막는다. 두 번 누르면 메뉴가 두 개 생긴다
+  const [pending, setPending] = useState(false)
 
   const initialFields: Record<string, string> = {
     price: editing ? String(editing.price) : '',
@@ -57,7 +54,8 @@ function MenuEditForm() {
   }
   const { values, bind } = useFormFields(initialFields)
 
-  const save = () => {
+  const save = async () => {
+    if (pending) return
     // Number('') 은 0 이라 빈 칸이 0원으로 새어 들어간다. 먼저 거른다
     if (!values.price.trim()) return setError('가격을 입력해주세요.')
     const price = Number(values.price)
@@ -66,80 +64,92 @@ function MenuEditForm() {
       return setError('가격은 0 이상의 정수(원)여야 합니다.')
     if (!values.name_KO.trim()) return setError('한국어 이름은 필수입니다.')
 
-    const id = editing?.id ?? draftId()
-    const translations: MenuTranslation[] = []
+    // 사진 올리기는 아직 붙지 않았다. 새로 고른 사진의 key 는 서버에 없어 422 다.
+    // 서버에 이미 있는 사진을 두거나 빼는 것은 된다 (장소 편집과 같다)
+    if (photos[0] && photos[0] !== editing?.image_url)
+      return setError('새 사진 올리기는 아직 준비 중입니다. 새로 고른 사진을 빼고 저장해 주세요.')
+
+    // 요청 번역에는 id·menu_id 를 싣지 않는다 — 서버가 모르는 필드는 422 다
+    const translations: MenuTextWrite[] = []
     for (const code of LANGUAGE_CODES) {
       const name = values[fieldKey('name', code)].trim()
       // PATCH 본문에서 뺀다 — 다만 빼는 것만으로는 안 지워진다. 원래 있던
       // 언어라면 아래에서 전용 삭제를 부른다 (§5.2)
       if (!name) continue
-      const existing = editing ? findTranslation(editing.translations, code) : undefined
       translations.push({
-        id: existing?.id ?? draftId(),
-        menu_id: id,
         language_code: code,
         name,
         description: values[fieldKey('desc', code)].trim(),
       })
     }
 
-    const menu: Menu = {
-      id,
-      place_id: placeId,
-      image_url: photos[0] ?? null,
-      price,
-      translations,
+    // 지우기 전에 원본 문안을 붙잡는다. 실행취소가 PATCH 로 다시 올린다
+    const undo: MenuTextWrite[] = removing.flatMap((code) => {
+      const t = editing && findTranslation(editing.translations, code)
+      return t ? [{ language_code: t.language_code, name: t.name, description: t.description }] : []
+    })
+
+    setError(null)
+    setPending(true)
+    try {
+      const saved = await saveMenu(editing?.id ?? null, {
+        place_id: placeId,
+        image_url: photos[0] ?? null,
+        price,
+        translations,
+      })
+
+      // PATCH 로 남길 언어를 올리고, 지울 언어는 전용 DELETE 로 따로 부른다 (§5.2)
+      for (const code of removing) await removeMenuTranslation(saved.id, code)
+
+      snackbar.create(
+        undo.length > 0
+          ? {
+              timeout: 6000,
+              render: () => (
+                <Snackbar
+                  message={`${values.name_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
+                  actionLabel="실행취소"
+                  onAction={() => {
+                    restoreMenuTranslations(saved.id, undo).catch((undoError: unknown) =>
+                      snackbar.create({
+                        timeout: 4000,
+                        render: () => (
+                          <Snackbar variant="critical" message={apiErrorText(undoError)} />
+                        ),
+                      }),
+                    )
+                  }}
+                />
+              ),
+            }
+          : {
+              timeout: 3000,
+              render: () => <Snackbar message={`${values.name_KO} 저장했습니다`} />,
+            },
+      )
+      navigate(`/places/${placeId}`)
+    } catch (saveError) {
+      setError(apiErrorText(saveError))
+    } finally {
+      setPending(false)
     }
-    // 지우기 전에 원본을 붙잡는다. upsertMenu 가 MENUS 의 항목을 새 객체로
-    // 갈아끼우므로 editing 은 이전 상태를 그대로 들고 있다
-    const undo = removing
-      .map((code) => editing && findTranslation(editing.translations, code))
-      .filter((t): t is MenuTranslation => Boolean(t))
-
-    const saved = upsertMenu(menu)
-
-    // PATCH 로 남길 언어를 올리고, 지울 언어는 전용 DELETE 로 따로 부른다 (§5.2)
-    for (const code of removing) {
-      const rejected = deleteMenuTranslation(saved.id, code)
-      if (rejected) return setError(rejected)
-    }
-
-    snackbar.create(
-      undo.length > 0
-        ? {
-            timeout: 6000,
-            render: () => (
-              <Snackbar
-                message={`${values.name_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
-                actionLabel="실행취소"
-                onAction={() => upsertMenu({ ...menu, translations: undo })}
-              />
-            ),
-          }
-        : {
-            timeout: 3000,
-            render: () => <Snackbar message={`${values.name_KO} 저장했습니다`} />,
-          },
-    )
-    navigate(`/places/${placeId}`)
   }
 
-  const remove = () => {
-    if (!editing) return
-    const removed = deleteMenu(editing.id)
-    if (!removed) return
-    navigate(`/places/${placeId}`)
-    // 확인을 받고 지웠더라도 실행취소는 남긴다. 확인은 실수를, 이쪽은 변심을 받는다
-    snackbar.create({
-      timeout: 6000,
-      render: () => (
-        <Snackbar
-          message="메뉴를 삭제했습니다"
-          actionLabel="실행취소"
-          onAction={() => restoreMenu(removed)}
-        />
-      ),
-    })
+  // 영구 삭제라 실행취소를 두지 않는다 (§6). 대신 확인 창이 막는다
+  const remove = async () => {
+    if (!editing || pending) return
+    setPending(true)
+    try {
+      await removeMenu(editing.id)
+      navigate(`/places/${placeId}`)
+      snackbar.create({ timeout: 3000, render: () => <Snackbar message="메뉴를 삭제했습니다" /> })
+    } catch (removeError) {
+      setConfirming(false)
+      setError(apiErrorText(removeError))
+    } finally {
+      setPending(false)
+    }
   }
 
   // 이미 나가 있던 번역을 내리는 것. 이 화면에는 누락 경고가 없지만(메뉴는 장소
@@ -205,7 +215,12 @@ function MenuEditForm() {
 
       {editing && (
         <div className={styles.dangerZone}>
-          <ActionButton size="medium" variant="criticalSolid" onClick={() => setConfirming(true)}>
+          <ActionButton
+            size="medium"
+            variant="criticalSolid"
+            disabled={pending}
+            onClick={() => setConfirming(true)}
+          >
             이 메뉴 삭제
           </ActionButton>
         </div>
@@ -225,7 +240,7 @@ function MenuEditForm() {
 
       <div className={styles.footer}>
         {error && <Callout tone="critical" description={error} />}
-        <ActionButton size="large" onClick={save}>
+        <ActionButton size="large" loading={pending} onClick={() => void save()}>
           저장
         </ActionButton>
       </div>

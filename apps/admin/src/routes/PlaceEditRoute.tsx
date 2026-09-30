@@ -9,6 +9,8 @@ import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented
 import { SelectContent, SelectItem, SelectRoot, SelectTrigger } from 'seed-design/ui/select'
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/text-field'
+import type { PlaceTextWrite } from '../api/catalog'
+import { apiErrorText } from '../lib/apiErrorText'
 import { useFormFields } from '../lib/useFormFields'
 import { ConfirmDialog, HourField, PhotoPicker, type Hour } from '../ui'
 import { CampusMap } from '../map/CampusMap'
@@ -16,12 +18,11 @@ import { fromSource, toLatLng, type Point } from '../map/campus'
 import { CATEGORIES, categoryById } from '../mocks/categories'
 import { menusByPlace } from '../mocks/menus'
 import {
-  deletePlace,
-  deletePlaceTranslation,
-  draftId,
   placeById,
-  restorePlace,
-  upsertPlace,
+  removePlace,
+  removePlaceTranslation,
+  restorePlaceTranslations,
+  savePlace,
   useStoreVersion,
 } from '../mocks/store'
 import {
@@ -30,15 +31,13 @@ import {
   findTranslation,
   LANGUAGE_CODES,
   type LanguageCode,
-  type Place,
-  type PlaceTranslation,
 } from '../mocks/types'
 import styles from './PlaceEditRoute.module.css'
 
 /*
  * start_hour·end_hour 는 명세상 datetime 이지만 화면은 일차와 시각을 따로 다룬다.
  * 아래 두 함수가 그 사이를 오간다. offset 을 보지 않고 자르므로 값이 KST(+09:00)
- * 라고 가정한다 — 목은 전부 KST 지만 실제 API(#10)가 다른 offset 을 주면 어긋난다.
+ * 라고 가정한다 — 서버는 UTC 로 주지만 캐시에 넣을 때 KST 로 바꿔 둔다(api/catalog.ts).
  */
 const dateOf = (iso: string) => iso.slice(0, 10)
 const hourOf = (iso: string): Hour => ({
@@ -79,11 +78,19 @@ function PlaceEditForm() {
   const editing = params.id ? placeById(Number(params.id)) : undefined
 
   const [lang, setLang] = useState<LanguageCode>('KO')
-  const [categoryId, setCategoryId] = useState<number>(editing?.category_id ?? 2)
+  // 새 장소의 기본 종류는 부스다 — 72곳 중 58곳이 부스다. id 는 서버가 매긴 값이라 code 로 찾는다
+  const [categoryId, setCategoryId] = useState<number>(
+    editing?.category_id ??
+      CATEGORIES.find((category) => category.code === 'BOOTH')?.id ??
+      CATEGORIES[0]?.id ??
+      0,
+  )
   const [point, setPoint] = useState<Point | null>(editing ? { x: editing.x, y: editing.y } : null)
   const [error, setError] = useState<string | null>(null)
   const [confirming, setConfirming] = useState(false)
   const [photos, setPhotos] = useState<string[]>(editing?.place_image_uri ?? [])
+  // 서버를 다녀오는 동안 버튼을 막는다. 두 번 누르면 장소가 두 곳 생긴다
+  const [pending, setPending] = useState(false)
 
   const [date, setDate] = useState<string>(editing ? dateOf(editing.start_hour) : FESTIVAL_DATES[0])
   const [start, setStart] = useState<Hour>(
@@ -102,11 +109,12 @@ function PlaceEditForm() {
   }
   const { values, bind } = useFormFields(initialFields)
 
-  // 메뉴 삭제를 실행취소하면 이 목록이 바로 되돌아와야 한다
+  // 메뉴를 고치고 돌아오면 이 목록이 바로 맞아야 한다
   useStoreVersion()
   const menus = editing ? menusByPlace(editing.id) : []
 
-  const save = () => {
+  const save = async () => {
+    if (pending) return
     // §5.4 의 422 조건을 화면에서 먼저 막는다
     const sequence = Number(values.sequence)
     if (!Number.isInteger(sequence) || sequence < 1)
@@ -130,17 +138,21 @@ function PlaceEditForm() {
     if (half.length > 0)
       return setError(`${half.join('·')} 은 이름과 주최를 둘 다 채우거나 둘 다 비워주세요.`)
 
-    const id = editing?.id ?? draftId()
-    const translations: PlaceTranslation[] = []
+    // 사진 올리기(presigned 업로드)는 아직 붙지 않았다. 새로 고른 사진의 key 는 서버에 없는
+    // 가짜라 저장하면 422 다. 서버에 이미 있는 사진을 두거나 빼는 것은 된다
+    const savedPhotos = new Set(editing?.place_image_uri ?? [])
+    if (photos.some((key) => !savedPhotos.has(key)))
+      return setError('새 사진 올리기는 아직 준비 중입니다. 새로 고른 사진을 빼고 저장해 주세요.')
+
+    // 요청 번역에는 id·place_id 를 싣지 않는다 — 서버가 모르는 필드는 422 다.
+    // 새 장소도 id 없이 보내고 서버가 매긴다
+    const translations: PlaceTextWrite[] = []
     for (const code of LANGUAGE_CODES) {
       const name = values[fieldKey('name', code)].trim()
       // PATCH 본문에서 뺀다 — 다만 빼는 것만으로는 안 지워진다. 원래 있던
       // 언어라면 아래에서 전용 삭제를 부른다 (§5.2)
       if (!name) continue // EN·CHN 은 선택 (§5.2)
-      const existing = editing ? findTranslation(editing.translations, code) : undefined
       translations.push({
-        id: existing?.id ?? draftId(), // 기존 번역의 id 는 유지 (§5.2)
-        place_id: id,
         language_code: code,
         name,
         host_college: values[fieldKey('host', code)].trim(),
@@ -148,74 +160,95 @@ function PlaceEditForm() {
       })
     }
 
-    const place: Place = {
-      id,
-      category_id: categoryId,
-      category_sequence: sequence,
-      x: point.x,
-      y: point.y,
-      start_hour: toIso(date, start),
-      end_hour: toIso(date, end),
-      // 빈 배열은 422 다 (§5.4). 다 지웠으면 null 로 보낸다
-      place_image_uri: photos.length > 0 ? photos : null,
-      translations,
+    // 지우기 전에 원본 문안을 붙잡는다. 실행취소가 PATCH 로 다시 올린다
+    const undo: PlaceTextWrite[] = removing.flatMap((code) => {
+      const t = editing && findTranslation(editing.translations, code)
+      return t
+        ? [
+            {
+              language_code: t.language_code,
+              name: t.name,
+              host_college: t.host_college,
+              description: t.description,
+            },
+          ]
+        : []
+    })
+
+    setError(null)
+    setPending(true)
+    try {
+      const saved = await savePlace(editing?.id ?? null, {
+        category_id: categoryId,
+        category_sequence: sequence,
+        x: point.x,
+        y: point.y,
+        start_hour: toIso(date, start),
+        end_hour: toIso(date, end),
+        // 빈 배열은 422 다 (§5.4). 다 지웠으면 null 로 보낸다
+        place_image_uri: photos.length > 0 ? photos : null,
+        translations,
+      })
+
+      // 두 호출의 순서다 — PATCH 로 남길 언어를 올리고, 지울 언어는 전용 DELETE 로
+      // 따로 부른다 (§5.2). 여기서 실패하면 PATCH 는 이미 반영된 채 화면에 남는다
+      for (const code of removing) await removePlaceTranslation(saved.id, code)
+
+      // 지워진 번역문은 다시 타이핑해야 해서 실수의 대가가 크다. 되돌리기는 PATCH
+      // 한 번이면 된다 — 언어별 upsert 라(§5.2) 지운 언어만 다시 넣는다
+      snackbar.create(
+        undo.length > 0
+          ? {
+              timeout: 6000,
+              render: () => (
+                <Snackbar
+                  message={`${values.name_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
+                  actionLabel="실행취소"
+                  onAction={() => {
+                    restorePlaceTranslations(saved.id, undo).catch((undoError: unknown) =>
+                      snackbar.create({
+                        timeout: 4000,
+                        render: () => (
+                          <Snackbar variant="critical" message={apiErrorText(undoError)} />
+                        ),
+                      }),
+                    )
+                  }}
+                />
+              ),
+            }
+          : {
+              timeout: 3000,
+              render: () => <Snackbar message={`${values.name_KO} 저장했습니다`} />,
+            },
+      )
+      // navigate(-1) 이 아니다 — 이 화면을 새로고침하거나 링크로 바로 열면
+      // 뒤로 갈 곳이 admin 밖이다
+      navigate('/places')
+    } catch (saveError) {
+      setError(apiErrorText(saveError))
+    } finally {
+      setPending(false)
     }
-    // 지우기 전에 원본을 붙잡는다. upsertPlace 가 PLACES 의 항목을 새 객체로
-    // 갈아끼우므로 editing 은 이전 상태를 그대로 들고 있다
-    const undo = removing
-      .map((code) => editing && findTranslation(editing.translations, code))
-      .filter((t): t is PlaceTranslation => Boolean(t))
-
-    const saved = upsertPlace(place)
-
-    // 실제 클라이언트가 보낼 두 호출과 같은 순서다 — PATCH 로 남길 언어를
-    // 올리고, 지울 언어는 전용 DELETE 로 따로 부른다 (§5.2)
-    for (const code of removing) {
-      const rejected = deletePlaceTranslation(saved.id, code)
-      if (rejected) return setError(rejected)
-    }
-
-    // 지워진 번역문은 다시 타이핑해야 해서 실수의 대가가 크다. 되돌리기는
-    // upsertPlace 한 번이면 된다 — 언어별 병합이라(§5.2) 지운 언어만 다시 넣고
-    // 나머지는 건드리지 않는다
-    snackbar.create(
-      undo.length > 0
-        ? {
-            timeout: 6000,
-            render: () => (
-              <Snackbar
-                message={`${values.name_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
-                actionLabel="실행취소"
-                onAction={() => upsertPlace({ ...place, translations: undo })}
-              />
-            ),
-          }
-        : {
-            timeout: 3000,
-            render: () => <Snackbar message={`${values.name_KO} 저장했습니다`} />,
-          },
-    )
-    // navigate(-1) 이 아니다 — 이 화면을 새로고침하거나 링크로 바로 열면
-    // 뒤로 갈 곳이 admin 밖이다
-    navigate('/places')
   }
 
-  const remove = () => {
-    if (!editing) return
-    const removed = deletePlace(editing.id)
-    if (!removed) return
-    navigate('/places')
-    // 확인을 받고 지웠더라도 실행취소는 남긴다. 확인은 실수를, 이쪽은 변심을 받는다
-    snackbar.create({
-      timeout: 6000,
-      render: () => (
-        <Snackbar
-          message={`삭제했습니다 (메뉴 ${removed.menus.length}개 포함)`}
-          actionLabel="실행취소"
-          onAction={() => restorePlace(removed.place, removed.menus)}
-        />
-      ),
-    })
+  // 영구 삭제, 메뉴까지 연쇄라 실행취소를 두지 않는다 (§6). 대신 확인 창이 막는다
+  const remove = async () => {
+    if (!editing || pending) return
+    setPending(true)
+    try {
+      const menuCount = await removePlace(editing.id)
+      navigate('/places')
+      snackbar.create({
+        timeout: 3000,
+        render: () => <Snackbar message={`삭제했습니다 (메뉴 ${menuCount}개 포함)`} />,
+      })
+    } catch (removeError) {
+      setConfirming(false)
+      setError(apiErrorText(removeError))
+    } finally {
+      setPending(false)
+    }
   }
 
   const missing = LANGUAGE_CODES.filter((code) => !values[fieldKey('name', code)].trim())
@@ -385,7 +418,12 @@ function PlaceEditForm() {
       {/* 되돌릴 수 없는 액션이라 저장 옆에 두지 않는다. 일부러 내려와야 닿는 자리다 */}
       {editing && (
         <div className={styles.dangerZone}>
-          <ActionButton size="medium" variant="criticalSolid" onClick={() => setConfirming(true)}>
+          <ActionButton
+            size="medium"
+            variant="criticalSolid"
+            disabled={pending}
+            onClick={() => setConfirming(true)}
+          >
             이 장소 삭제
           </ActionButton>
         </div>
@@ -411,7 +449,7 @@ function PlaceEditForm() {
       {/* 스크롤 위치와 무관하게 닿는 하단 고정 바. 오류도 여기 붙어야 보인다 */}
       <div className={styles.footer}>
         {error && <Callout tone="critical" description={error} />}
-        <ActionButton size="large" onClick={save}>
+        <ActionButton size="large" loading={pending} onClick={() => void save()}>
           저장
         </ActionButton>
       </div>

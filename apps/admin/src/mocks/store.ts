@@ -8,19 +8,47 @@ import {
   updateNotice,
   type NoticeWrite,
 } from '../api/notices'
+import {
+  createCategory,
+  createMenu,
+  createPlace,
+  deleteMenu as apiDeleteMenu,
+  deleteMenuTranslation as apiDeleteMenuTranslation,
+  deletePlace as apiDeletePlace,
+  deletePlaceTranslation as apiDeletePlaceTranslation,
+  fetchCategories,
+  fetchMenus,
+  fetchPlaces,
+  updateMenu,
+  updatePlace,
+  type MenuTextWrite,
+  type MenuWrite,
+  type PlaceTextWrite,
+  type PlaceWrite,
+} from '../api/catalog'
+import { CATEGORIES, CATEGORY_SEED } from './categories'
 import { LOST_ITEMS } from './lostItems'
 import { MENUS } from './menus'
 import { NOTICES } from './notices'
 import { PERFORMANCES } from './performances'
 import { PLACES } from './places'
-import type { LanguageCode, LostItem, Menu, Notice, NoticeType, Performance, Place } from './types'
+import type {
+  Category,
+  LanguageCode,
+  LostItem,
+  Menu,
+  Notice,
+  NoticeType,
+  Performance,
+  Place,
+} from './types'
 
 /**
  * 도메인 데이터의 한 자리. 화면은 여기서 동기로 읽는다.
  *
- * 도메인마다 실제 API 로 하나씩 옮기는 중이다. **공지는 API 캐시**(서버에서 받아 채우고
- * 쓰기는 API 를 부른 뒤 반영), 나머지는 아직 목의 쓰기 흉내다 — SPA 세션 동안만
- * 유지되고 새로고침하면 초기 목으로 돌아간다.
+ * 도메인마다 실제 API 로 하나씩 옮기는 중이다. **공지·카테고리·장소·메뉴는 API 캐시**
+ * (서버에서 받아 채우고 쓰기는 API 를 부른 뒤 반영), 나머지(공연·분실물)는 아직 목의 쓰기
+ * 흉내다 — SPA 세션 동안만 유지되고 새로고침하면 초기 목으로 돌아간다.
  */
 
 let nextId = 100000
@@ -53,137 +81,141 @@ export function useStoreVersion(): number {
   return useSyncExternalStore(subscribe, () => version)
 }
 
+/**
+ * 카테고리·장소·메뉴는 API 캐시다 (공지와 같은 틀). DataGate 가 loadCatalog 로 채우고,
+ * 쓰기는 API 를 부른 뒤 응답으로 배열을 고친다. 화면은 여기서 동기로 읽는다.
+ */
+
+/** 배열을 제자리에서 갈아끼운다 — 다른 모듈이 import 한 참조가 살아 있어야 한다 */
+function replaceAll<T>(target: T[], items: T[]): void {
+  target.splice(0, target.length, ...items)
+}
+
+/**
+ * 카테고리는 고정 5종이라 admin 에 만드는 화면이 없다. 서버에 빠진 코드가 있으면 여기서
+ * 만든다 — 장소는 존재하는 category_id 가 있어야 생긴다. 다 있으면 요청을 안 보낸다.
+ * 만든 순서대로 id 가 매겨져 화면 순서도 CATEGORY_SEED 순서가 된다.
+ */
+async function ensureCategories(existing: Category[]): Promise<Category[]> {
+  const have = new Set(existing.map((c) => c.code))
+  const created: Category[] = []
+  // 차례로 만든다 — 동시에 보내면 id 순서가 SEED 순서와 어긋날 수 있다
+  for (const seed of CATEGORY_SEED) {
+    if (!have.has(seed.code)) created.push(await createCategory(seed))
+  }
+  return [...existing, ...created].sort((a, b) => a.id - b.id)
+}
+
+export async function loadCatalog(): Promise<void> {
+  const categories = await ensureCategories(await fetchCategories())
+  const [places, menus] = await Promise.all([fetchPlaces(), fetchMenus()])
+  replaceAll(CATEGORIES, categories)
+  replaceAll(PLACES, places)
+  replaceAll(MENUS, menus)
+  emit()
+}
+
 export function placeById(id: number): Place | undefined {
   return PLACES.find((p) => p.id === id)
 }
 
-/** §5.2 — 기본 필드 수정과 번역 upsert 를 한 번에. 반환값은 저장된 장소 */
-export function upsertPlace(place: Place): Place {
+function putPlace(place: Place): void {
   const index = PLACES.findIndex((p) => p.id === place.id)
-
-  if (index < 0) {
-    PLACES.push(place)
-    emit()
-    return place
-  }
-
-  // §5.2 — PATCH 는 전달한 언어만 upsert 하고 **전달하지 않은 언어는 그대로 둔다.**
-  // 배열을 통째로 갈아끼우면 화면이 "비우고 저장하면 지워진다" 고 믿게 되는데
-  // 실제 API 는 그렇게 동작하지 않는다. 번역 삭제는 전용 경로만이다
-  // (deletePlaceTranslation). 목에서부터 같은 규칙을 지켜야 그 차이가 드러난다.
-  const translations = [...PLACES[index].translations]
-  for (const next of place.translations) {
-    const at = translations.findIndex((t) => t.language_code === next.language_code)
-    if (at >= 0) translations[at] = next
-    else translations.push(next)
-  }
-  // 응답의 translations 는 language_code ASC = CHN → EN → KO (§5.2)
-  translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
-
-  const updated: Place = { ...place, translations }
-  PLACES[index] = updated
+  if (index < 0) PLACES.push(place)
+  else PLACES[index] = place
   emit()
-  return updated
 }
 
 /**
- * DELETE /places/{place_id}/translations/{language_code} 흉내 (§5.2).
- *
- * 번역을 지우는 유일한 수단이다. PATCH 로는 못 지운다 — 안 보낸 언어는
- * 유지되기 때문이다. 거부 사유를 문자열로 돌려 화면이 그대로 띄운다
- * (공연 reorder 부터 이어온 관례).
+ * id 가 없으면 POST, 있으면 PATCH. PATCH 는 보낸 언어만 upsert 한다 — 비운 언어를
+ * 지우려면 removePlaceTranslation 을 따로 불러야 한다 (§5.2).
  */
-export function deletePlaceTranslation(placeId: number, code: LanguageCode): string | null {
-  // KO 는 모든 기본 리소스에 필요한 번역이라 409 DELETE_CONFLICT 다.
-  // 화면은 KO 필수 검증으로 저장 자체를 먼저 막으므로 여기까지 오지 않지만,
-  // 계약을 코드에 남겨 둔다
-  if (code === 'KO') return '한국어 번역은 지울 수 없습니다.'
-
-  const place = placeById(placeId)
-  if (!place) return '없는 장소입니다.'
-
-  // 기본 리소스나 그 언어 번역이 없으면 404 RESOURCE_NOT_FOUND
-  const at = place.translations.findIndex((t) => t.language_code === code)
-  if (at < 0) return '없는 번역입니다.'
-
-  place.translations.splice(at, 1)
-  emit()
-  return null
+export async function savePlace(id: number | null, body: PlaceWrite): Promise<Place> {
+  const saved = id === null ? await createPlace(body) : await updatePlace(id, body)
+  putPlace(saved)
+  return saved
 }
 
-/** §6 — 장소 삭제는 하위 메뉴와 번역을 연쇄 삭제한다. 지운 것들을 돌려줘 실행취소에 쓴다 */
-export function deletePlace(id: number): { place: Place; menus: Menu[] } | undefined {
-  const index = PLACES.findIndex((p) => p.id === id)
-  if (index < 0) return undefined
-  const [place] = PLACES.splice(index, 1)
-  const menus: Menu[] = []
-  for (let i = MENUS.length - 1; i >= 0; i -= 1) {
-    if (MENUS[i].place_id === id) menus.unshift(...MENUS.splice(i, 1))
+/** 번역을 지우는 유일한 수단. KO 는 서버가 409 로 막는다 */
+export async function removePlaceTranslation(id: number, code: LanguageCode): Promise<void> {
+  await apiDeletePlaceTranslation(id, code)
+  const place = placeById(id)
+  if (!place) return
+  putPlace({ ...place, translations: place.translations.filter((t) => t.language_code !== code) })
+}
+
+/** 번역 삭제 실행취소 — 지운 언어만 PATCH 로 다시 올린다. 언어별 upsert 라 나머지는 그대로다 */
+export async function restorePlaceTranslations(
+  id: number,
+  translations: PlaceTextWrite[],
+): Promise<void> {
+  putPlace(await updatePlace(id, { translations }))
+}
+
+/**
+ * 영구 삭제, 하위 메뉴까지 연쇄 (§6). 캐시에서도 그 장소의 메뉴를 같이 뺀다.
+ * 이미 없는 것(404)은 지워진 것으로 친다 — 다른 운영자가 먼저 지웠을 수 있다.
+ * 지운 메뉴 수를 돌려줘 스낵바에 쓴다.
+ */
+export async function removePlace(id: number): Promise<number> {
+  try {
+    await apiDeletePlace(id)
+  } catch (error) {
+    if (!(isApiError(error) && error.status === 404)) throw error
   }
+  const index = PLACES.findIndex((p) => p.id === id)
+  if (index >= 0) PLACES.splice(index, 1)
+  const before = MENUS.length
+  replaceAll(
+    MENUS,
+    MENUS.filter((m) => m.place_id !== id),
+  )
   emit()
-  return { place, menus }
-}
-
-export function restorePlace(place: Place, menus: Menu[]): void {
-  PLACES.push(place)
-  MENUS.push(...menus)
-  emit()
+  return before - MENUS.length
 }
 
 export function menuById(id: number): Menu | undefined {
   return MENUS.find((m) => m.id === id)
 }
 
-export function upsertMenu(menu: Menu): Menu {
+function putMenu(menu: Menu): void {
   const index = MENUS.findIndex((m) => m.id === menu.id)
-
-  if (index < 0) {
-    MENUS.push(menu)
-    emit()
-    return menu
-  }
-
-  // §5.2 — 전달하지 않은 언어는 그대로 둔다. 장소와 같은 규칙이다
-  // (deleteMenuTranslation 만이 지우는 수단)
-  const translations = [...MENUS[index].translations]
-  for (const next of menu.translations) {
-    const at = translations.findIndex((t) => t.language_code === next.language_code)
-    if (at >= 0) translations[at] = next
-    else translations.push(next)
-  }
-  translations.sort((a, b) => a.language_code.localeCompare(b.language_code))
-
-  const updated: Menu = { ...menu, translations }
-  MENUS[index] = updated
+  if (index < 0) MENUS.push(menu)
+  else MENUS[index] = menu
   emit()
-  return updated
 }
 
-/** DELETE /menus/{menu_id}/translations/{language_code} 흉내 (§5.2) */
-export function deleteMenuTranslation(menuId: number, code: LanguageCode): string | null {
-  if (code === 'KO') return '한국어 번역은 지울 수 없습니다.'
-
-  const menu = menuById(menuId)
-  if (!menu) return '없는 메뉴입니다.'
-
-  const at = menu.translations.findIndex((t) => t.language_code === code)
-  if (at < 0) return '없는 번역입니다.'
-
-  menu.translations.splice(at, 1)
-  emit()
-  return null
+/** 장소와 같은 규칙 — id 없으면 POST, 있으면 PATCH(보낸 언어만 upsert) */
+export async function saveMenu(id: number | null, body: MenuWrite): Promise<Menu> {
+  const saved = id === null ? await createMenu(body) : await updateMenu(id, body)
+  putMenu(saved)
+  return saved
 }
 
-export function deleteMenu(id: number): Menu | undefined {
+export async function removeMenuTranslation(id: number, code: LanguageCode): Promise<void> {
+  await apiDeleteMenuTranslation(id, code)
+  const menu = menuById(id)
+  if (!menu) return
+  putMenu({ ...menu, translations: menu.translations.filter((t) => t.language_code !== code) })
+}
+
+/** 번역 삭제 실행취소 — 장소와 같다 */
+export async function restoreMenuTranslations(
+  id: number,
+  translations: MenuTextWrite[],
+): Promise<void> {
+  putMenu(await updateMenu(id, { translations }))
+}
+
+/** 영구 삭제 (§6). 404 는 지워진 것으로 친다 */
+export async function removeMenu(id: number): Promise<void> {
+  try {
+    await apiDeleteMenu(id)
+  } catch (error) {
+    if (!(isApiError(error) && error.status === 404)) throw error
+  }
   const index = MENUS.findIndex((m) => m.id === id)
-  if (index < 0) return undefined
-  const [menu] = MENUS.splice(index, 1)
-  emit()
-  return menu
-}
-
-export function restoreMenu(menu: Menu): void {
-  MENUS.push(menu)
+  if (index >= 0) MENUS.splice(index, 1)
   emit()
 }
 
