@@ -83,6 +83,10 @@ export const ko = {
       host: '운영',
       hours: '운영 시간',
       location: '위치',
+      menu: '메뉴',
+      photos: '사진',
+      /** {price} 에 자릿수 쉼표 찍은 금액이 들어간다 */
+      price: '{price}원',
     },
     places: {
       BOOTH: '부스',

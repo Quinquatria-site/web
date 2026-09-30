@@ -92,6 +92,9 @@ export const en: Messages = {
       host: 'Host',
       hours: 'Hours',
       location: 'Location',
+      menu: 'Menu',
+      photos: 'Photos',
+      price: '₩{price}',
     },
     places: {
       BOOTH: 'Booth',

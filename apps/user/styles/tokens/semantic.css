@@ -34,6 +34,7 @@
   --color-place-bracelet: var(--magenta);
   --color-place-medi: var(--red);
   --color-place-trash: var(--green);
+  --color-menu-card: var(--beige-peach);
 
   --color-dock: var(--warm-white);
   --color-on-dock: var(--twilight);
