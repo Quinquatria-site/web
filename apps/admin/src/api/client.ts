@@ -1,3 +1,4 @@
+import { recordApiError } from '../lib/errorLog'
 import { apiUrl } from './config'
 import { ApiError, isApiErrorBody, NETWORK_ERROR, type ApiErrorBody } from './errors'
 
@@ -44,6 +45,12 @@ export interface RequestOptions {
   /** 기본 10초. 헬스체크처럼 더 짧게 끊고 싶은 곳이 직접 준다 */
   timeoutMs?: number
   signal?: AbortSignal
+  /**
+   * 실패를 설정 화면의 오류 기록에 남길지. 기본 true.
+   * 헬스체크는 끈다 — 서버가 죽어 있으면 창에 돌아올 때마다 한 줄씩 쌓여 기록이
+   * 그것으로 가득 찬다. 상태는 홈 상태 줄이 이미 말한다.
+   */
+  log?: boolean
 }
 
 const DEFAULT_TIMEOUT_MS = 10_000
@@ -64,7 +71,14 @@ export async function request<T>(
   path: string,
   options: RequestOptions = {},
 ): Promise<T> {
-  const { method = 'GET', body, auth = true, timeoutMs = DEFAULT_TIMEOUT_MS, signal } = options
+  const {
+    method = 'GET',
+    body,
+    auth = true,
+    timeoutMs = DEFAULT_TIMEOUT_MS,
+    signal,
+    log = true,
+  } = options
 
   const headers: Record<string, string> = {}
   if (body !== undefined) headers['Content-Type'] = 'application/json'
@@ -84,14 +98,21 @@ export async function request<T>(
   } catch (cause) {
     // 연결 실패·타임아웃·CORS 차단이 모두 여기로 온다. 브라우저가 이유를
     // 알려주지 않으므로(보안상 의도된 것이다) 셋을 구분하지 않는다
-    throw new ApiError(0, {
+    const errorBody: ApiErrorBody = {
       code: NETWORK_ERROR,
       message: cause instanceof Error ? cause.message : '요청을 보내지 못했습니다.',
       details: [],
-    })
+    }
+    // 호출부가 스스로 취소한 것(화면을 떠남)은 오류가 아니다
+    if (log && !signal?.aborted) recordApiError(method, path, 0, errorBody)
+    throw new ApiError(0, errorBody)
   }
 
-  if (!response.ok) throw new ApiError(response.status, await readErrorBody(response))
+  if (!response.ok) {
+    const errorBody = await readErrorBody(response)
+    if (log) recordApiError(method, path, response.status, errorBody)
+    throw new ApiError(response.status, errorBody)
+  }
   if (response.status === 204) return undefined as T
   return (await response.json()) as T
 }

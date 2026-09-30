@@ -36,7 +36,11 @@ export async function pingHealth(base: string | null): Promise<HealthResult> {
 
   const startedAt = performance.now()
   try {
-    await request<{ message: string }>(base, '/', { auth: false, timeoutMs: HEALTH_TIMEOUT_MS })
+    await request<{ message: string }>(base, '/', {
+      auth: false,
+      timeoutMs: HEALTH_TIMEOUT_MS,
+      log: false,
+    })
     return { state: 'ok', durationMs: Math.round(performance.now() - startedAt) }
   } catch (error) {
     if (!(error instanceof ApiError)) throw error

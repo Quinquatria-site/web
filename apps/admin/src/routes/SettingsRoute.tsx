@@ -1,20 +1,28 @@
 import { ActionButton } from 'seed-design/ui/action-button'
+import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { useAuth } from '../auth/authContext'
+import { clearErrorLog, formatErrorLog, useErrorLog, type ErrorLogEntry } from '../lib/errorLog'
+import { useNow } from '../lib/useNow'
 import styles from './SettingsRoute.module.css'
+
+/** 이 아래로 남으면 경고색. 저장하던 것을 마무리하고 다시 로그인할 여유다 */
+const EXPIRY_WARNING_MS = 30 * 60 * 1000
 
 /**
  * 탭을 차지할 만큼 자주 쓰지 않아 상단바 톱니로 연다.
- * 들어갈 것은 ISR 수동 재검증과 로그아웃 정도다.
  *
  * 한때 여기 "시각 미리보기" 네 줄(1일차 저녁·2일차 아침·다음 날…)이 있었지만,
  * 홈에서 걷어낸 "날마다 다른 화면" 이 목록 모양으로 남아 있는 꼴이었다.
  * 지금은 홈 헤더의 버튼 하나가 그 일을 한다.
  */
 export function SettingsRoute() {
-  const { logout } = useAuth()
+  const { expiresAt, logout } = useAuth()
+  const now = useNow(null)
 
   return (
     <div className={styles.screen}>
+      <Session expiresAt={expiresAt} now={now.getTime()} onRelogin={logout} />
+
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>화면 새로고침</h2>
         <p className={styles.sectionBody}>
@@ -26,11 +34,138 @@ export function SettingsRoute() {
         <p className={styles.sectionBody}>재검증 버튼은 API 연동 시 붙습니다.</p>
       </section>
 
+      <ErrorLog />
+
       <div className={styles.footer}>
         <ActionButton variant="neutralWeak" size="large" onClick={logout}>
           로그아웃
         </ActionButton>
       </div>
     </div>
+  )
+}
+
+/** "3시간 12분". 1분이 안 남으면 그렇게 말한다 — "0분 남음" 은 이미 끝난 것처럼 읽힌다 */
+function remainingLabel(ms: number): string {
+  const minutes = Math.floor(ms / 60_000)
+  if (minutes < 1) return '1분 미만'
+  const hours = Math.floor(minutes / 60)
+  const rest = minutes % 60
+  return hours > 0 ? `${hours}시간 ${rest}분` : `${rest}분`
+}
+
+/**
+ * 로그인이 언제 풀리는지. 토큰은 5시간이면 죽고, 죽은 뒤 첫 저장이 401 을 받으면
+ * 로그인 화면으로 튕겨 입력하던 것이 날아간다. 미리 보고 다시 로그인하게 한다.
+ */
+function Session({
+  expiresAt,
+  now,
+  onRelogin,
+}: {
+  expiresAt: number | null
+  now: number
+  onRelogin: () => void
+}) {
+  if (expiresAt === null) return null
+  const remaining = Math.max(expiresAt - now, 0)
+  const soon = remaining < EXPIRY_WARNING_MS
+  const until = new Date(expiresAt).toLocaleTimeString('ko-KR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  })
+
+  return (
+    <section className={styles.section}>
+      <h2 className={styles.sectionTitle}>로그인</h2>
+      <p className={soon ? `${styles.sessionLine} ${styles.soon}` : styles.sessionLine}>
+        {`${remainingLabel(remaining)} 남음 · ${until}까지`}
+      </p>
+      {soon && (
+        <p className={styles.sectionBody}>
+          곧 로그인이 풀립니다. 저장할 것을 먼저 저장하고 다시 로그인하세요.
+        </p>
+      )}
+      <div>
+        <ActionButton variant="neutralOutline" size="small" onClick={onRelogin}>
+          다시 로그인
+        </ActionButton>
+      </div>
+    </section>
+  )
+}
+
+/**
+ * 폰에는 devtools 가 없어서, 무엇이 실패했는지 화면에서 보고 복사해 보낼 수 있게 한다.
+ * 기록하는 내용은 lib/errorLog.ts 참고 — 요청 본문과 토큰은 남기지 않는다.
+ */
+function ErrorLog() {
+  const entries = useErrorLog()
+  const snackbar = useSnackbarAdapter()
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(formatErrorLog(entries))
+      snackbar.create({ timeout: 3000, render: () => <Snackbar message="복사했습니다" /> })
+    } catch {
+      snackbar.create({
+        timeout: 3000,
+        render: () => <Snackbar variant="critical" message="복사하지 못했습니다" />,
+      })
+    }
+  }
+
+  return (
+    <section className={styles.section}>
+      <div className={styles.logHeader}>
+        <h2 className={styles.sectionTitle}>{`오류 기록 ${entries.length}`}</h2>
+        <div className={styles.logActions}>
+          <ActionButton
+            variant="neutralOutline"
+            size="xsmall"
+            disabled={entries.length === 0}
+            onClick={copy}
+          >
+            복사
+          </ActionButton>
+          <ActionButton
+            variant="neutralOutline"
+            size="xsmall"
+            disabled={entries.length === 0}
+            onClick={clearErrorLog}
+          >
+            지우기
+          </ActionButton>
+        </div>
+      </div>
+      {entries.length === 0 ? (
+        <p className={styles.sectionBody}>이 탭에서 난 오류가 없습니다.</p>
+      ) : (
+        <ol className={styles.log}>
+          {entries.map((entry) => (
+            <LogRow key={entry.id} entry={entry} />
+          ))}
+        </ol>
+      )}
+    </section>
+  )
+}
+
+function LogRow({ entry }: { entry: ErrorLogEntry }) {
+  const time = new Date(entry.at).toLocaleTimeString('ko-KR', { hour12: false })
+  const badge = entry.kind === 'api' ? `${entry.status || '연결 실패'} ${entry.code ?? ''}` : '화면 오류'
+  return (
+    <li className={styles.logRow}>
+      <div className={styles.logLine}>
+        <span className={styles.logTime}>{time}</span>
+        <span className={styles.logBadge}>{badge.trim()}</span>
+      </div>
+      <div className={styles.logTitle}>{entry.title}</div>
+      <div className={styles.logMessage}>{entry.message}</div>
+      {entry.details?.map((detail) => (
+        <div key={detail.field} className={styles.logMessage}>{`${detail.field}: ${detail.reason}`}</div>
+      ))}
+    </li>
   )
 }

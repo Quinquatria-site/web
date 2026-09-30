@@ -5,6 +5,8 @@ export type LoginResult = 'ok' | 'invalid' | 'unavailable'
 
 export interface AuthValue {
   isAuthenticated: boolean
+  /** 토큰 만료 시각(epoch ms). 로그인 전이면 null */
+  expiresAt: number | null
   /** 호출부가 결과에 따라 오류 표시를 정한다 */
   login: (code: string) => Promise<LoginResult>
   logout: () => void
