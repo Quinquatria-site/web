@@ -14,6 +14,7 @@ import {
 import { MapLabels } from './MapLabels'
 import type { MapPlace } from './map-place'
 import { FULL_MARKER_ZOOM, PlaceMarkers } from './PlaceMarkers'
+import { ZoomButtons } from './ZoomButtons'
 import 'leaflet/dist/leaflet.css'
 
 // 이미지 1px 이 화면 2px 까지 커진다. 그 이상은 흐려진다
@@ -192,6 +193,7 @@ export default function CampusMap({
       <PlaceMarkers places={places} selectedId={selectedId} onSelect={onSelect} onClear={onClear} />
       <FocusPlace point={selected} request={focusRequest} bottomInset={bottomInset} />
       <DragWatch onDragChange={onDragChange} />
+      <ZoomButtons />
     </MapContainer>
   )
 }

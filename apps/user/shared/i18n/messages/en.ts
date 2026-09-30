@@ -88,6 +88,8 @@ export const en: Messages = {
     },
   },
   map: {
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
     sheet: {
       host: 'Host',
       hours: 'Hours',

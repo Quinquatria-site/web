@@ -79,6 +79,8 @@ export const ko = {
     },
   },
   map: {
+    zoomIn: '확대',
+    zoomOut: '축소',
     sheet: {
       host: '운영',
       hours: '운영 시간',

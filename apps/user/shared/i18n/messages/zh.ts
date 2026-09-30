@@ -82,6 +82,8 @@ export const zh: Messages = {
     },
   },
   map: {
+    zoomIn: '放大',
+    zoomOut: '缩小',
     sheet: {
       host: '运营',
       hours: '运营时间',
