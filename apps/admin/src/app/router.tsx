@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router'
+import { AlertsRoute } from '../routes/AlertsRoute'
 import { AnalyticsRoute } from '../routes/AnalyticsRoute'
 import { HomeRoute } from '../routes/HomeRoute'
 import { LoginRoute } from '../routes/LoginRoute'
@@ -38,6 +39,12 @@ export const router = createBrowserRouter([
         element: <RequireAuth />,
         children: [
           { index: true, element: <HomeRoute />, handle: { title: '오늘의 운영' } },
+          {
+            // 홈 오류·경고 칩을 누르면 오는 전체 목록
+            path: 'alerts',
+            element: <AlertsRoute />,
+            handle: { title: '확인할 것', back: true, hideTabs: true },
+          },
           { path: 'places', element: <PlacesRoute />, handle: { title: '장소' } },
           {
             path: 'places/map',

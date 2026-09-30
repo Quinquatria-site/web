@@ -3,11 +3,12 @@ import { useNavigate, useSearchParams } from 'react-router'
 import {
   IconBoxFlapLine,
   IconChevronRightLine,
+  IconExclamationmarkCircleFill,
   IconMegaphoneLine,
 } from '@karrotmarket/react-monochrome-icon'
 import { Badge } from '@seed-design/react'
 import { ActionButton } from 'seed-design/ui/action-button'
-import { ActionableCallout } from 'seed-design/ui/callout'
+import { Chip } from 'seed-design/ui/chip'
 import { List, ListButtonItem, ListDivider } from 'seed-design/ui/list'
 import { ListHeader } from 'seed-design/ui/list-header'
 import {
@@ -17,8 +18,8 @@ import {
   kstDateString,
   kstTimeString,
 } from '../lib/festivalTime'
+import { alertSummary, countAlerts, homeAlerts, type HomeAlert } from '../lib/homeAlerts'
 import {
-  latestGeneralBroken,
   latestGeneralNotice,
   liveNow,
   missingByDomain,
@@ -36,12 +37,7 @@ import {
   trafficUnavailableText,
 } from '../lib/trafficStats'
 import { useTraffic } from '../lib/useTraffic'
-import {
-  lostItemsByReturned,
-  noticesByType,
-  performancesByDate,
-  useStoreVersion,
-} from '../mocks/store'
+import { lostItemsByReturned, performancesByDate, useStoreVersion } from '../mocks/store'
 import {
   dateTimeLabel,
   festivalDayLabel,
@@ -94,6 +90,10 @@ import styles from './HomeRoute.module.css'
  * 키를 요구하는데, admin 은 정적 SPA 라 그 키를 넣으면 번들에 그대로 드러난다.
  * 자동 재검증은 백엔드가 저장 뒤 직접 보낸다.
  *
+ * 오류·경고는 칩 하나로 접었다. 한때 Callout 으로 카드보다 먼저 쌓았는데, 많을 때는
+ * 다섯 개가 네 타일을 화면 밖으로 밀어내 인수인계 질문이 뒤로 밀렸다. 칩은 건수만
+ * 말하고, 무엇이 왜 문제인지는 누르면 가는 /alerts 가 맡는다 (lib/homeAlerts).
+ *
  * 맨 아래 "학생 앱 방문" 은 인수인계 질문이 아니라 "학생들이 지금 얼마나
  * 몰려 있나" 에 대한 답이라 네 타일에 끼우지 않고 다른 카드와 같은 한 줄로 둔다.
  * 자세한 것(15분 흐름·페이지·유입 경로)은 누르면 가는 방문 통계 화면이 맡는다.
@@ -113,18 +113,16 @@ export function HomeRoute() {
   const festivalDay = currentFestivalDate(now)
   const nowHhmm = kstTimeString(now)
 
-  const broken = latestGeneralBroken()
   const live = liveNow()
   const byDate = performanceCountByDate()
-  const permanent = noticesByType('PERMANENT')
   const missing = missingByDomain()
   const pending = lostItemsByReturned(false)
   const latestNotice = latestGeneralNotice()
   const performanceTotal = byDate.reduce((sum, row) => sum + row.count, 0)
   const lastDay = FESTIVAL_DATES[FESTIVAL_DATES.length - 1]
 
-  // 오늘 일차가 아닌 공연이 켜져 있으면 실수다. 축제 전·다른 일차·축제 후가
-  // 모두 같은 사고라 한 규칙으로 잡고 문구만 시점에 맞춘다
+  const alerts = homeAlerts(now)
+  // "지금 공연" 타일 배지 색에 쓴다. 판정은 homeAlerts 의 live-misplaced 와 같다
   const liveMisplaced = live !== undefined && live.date !== today
 
   const todayRows = festivalDay ? performancesByDate(festivalDay) : []
@@ -146,50 +144,14 @@ export function HomeRoute() {
       {/* 데이터가 아니라 연결의 상태라 경고 묶음 밖에 둔다. StatusStrip 주석 참고 */}
       <StatusStrip />
 
-      <div className={styles.warnings}>
-        {broken && (
-          <Warning
-            tone="critical"
-            title="가장 최근 일반 공지가 영어·중국어로 열리지 않습니다."
-            description="이전 공지로 대체되지 않고 오류가 납니다."
-            onClick={() => navigate(`/notices/${broken.id}`)}
-          />
-        )}
-        {live && liveMisplaced && (
-          <Warning
-            tone="critical"
-            title={
-              today < FESTIVAL_DATES[0]
-                ? '아직 축제 전인데 공연 중 표시가 켜져 있습니다.'
-                : today > lastDay
-                  ? '축제가 끝났는데 공연 중 표시가 켜져 있습니다.'
-                  : `${festivalDayLabel(live.date)} 공연이 켜져 있습니다.`
-            }
-            description={`${performanceTitle(live)} — 학생 앱에 지금 공연으로 나갑니다.`}
-            onClick={() => navigate(`/performances?date=${live.date}`)}
-          />
-        )}
-        {/* 이미 지나간 일차를 비었다고 말해봐야 할 수 있는 일이 없다 */}
-        {byDate
-          .filter((row) => row.count === 0 && row.date >= today)
-          .map((row) => (
-            <Warning
-              key={row.date}
-              tone="warning"
-              title={`${festivalDayLabel(row.date)} 공연이 아직 없습니다.`}
-              description="라인업이 정해지면 일차별로 넣어주세요."
-              onClick={() => navigate(`/performances?date=${row.date}`)}
-            />
-          ))}
-        {permanent.length === 0 && today <= lastDay && (
-          <Warning
-            tone="warning"
-            title="상시 공지가 없습니다."
-            description="안전 수칙처럼 축제 내내 걸어둘 안내를 올려주세요."
-            onClick={() => navigate('/notices')}
-          />
-        )}
-      </div>
+      {/* 오류·경고는 칩 하나로 접는다. 전부는 누르면 가는 /alerts 가 보여준다 */}
+      <AlertsChip
+        alerts={alerts}
+        onClick={() =>
+          // ?at 을 넘긴다 — 안 넘기면 테스트 시각의 칩과 실제 시각의 목록이 다른 답을 낸다
+          navigate({ pathname: '/alerts', search: at ? `?${searchParams.toString()}` : '' })
+        }
+      />
 
       {/* 인수인계의 네 질문 — 지금 공연, 몇 곳이 열려 있나, 못 돌려준 물건,
           학생에게 안 보이는 항목. 넷 다 전 기간 정의된다 */}
@@ -288,7 +250,7 @@ function liveRowTitle(
   lastDay: string,
 ): string {
   // 축제 밖에서는 live 가 켜져 있어도 카드가 그것을 제목으로 세우지 않는다.
-  // 잔류 플래그는 바로 위 경고가 이미 말했고, 이 카드가 답할 질문은
+  // 잔류 플래그는 위 오류·경고 칩이 이미 말했고, 이 카드가 답할 질문은
   // "지금 공연이 뭔가" 다 — 축제 전에는 없는 게 맞는 답이다
   if (!festivalDay) return today > lastDay ? '공연 일정이 끝났습니다' : '아직 축제 전입니다'
   if (live) return performanceTitle(live)
@@ -387,19 +349,34 @@ function Header({
   )
 }
 
-/** 경고는 카드보다 먼저 온다. 누르면 그 자리로 간다 */
-function Warning({
-  tone,
-  title,
-  description,
-  onClick,
-}: {
-  tone: 'critical' | 'warning'
-  title: string
-  description: string
-  onClick: () => void
-}) {
-  return <ActionableCallout tone={tone} title={title} description={description} onClick={onClick} />
+/**
+ * 오류·경고 요약 칩. 필터가 아니라 다른 화면으로 가는 것이라 Chip.Toggle 이 아니라
+ * Chip.Button 이다.
+ *
+ * 0 건이면 아무것도 그리지 않는다. 문제가 없을 때 늘 켜진 "이상 없음" 은 며칠 지나면
+ * 아무도 안 읽고, 정작 문제가 생겼을 때 칩이 나타나는 변화가 신호가 된다.
+ *
+ * SEED Chip 에는 tone 이 없어 심각도는 앞 아이콘 색으로만 준다. 글자가 이미
+ * "오류/경고" 를 말하므로 색이 유일한 신호는 아니다.
+ */
+function AlertsChip({ alerts, onClick }: { alerts: HomeAlert[]; onClick: () => void }) {
+  if (alerts.length === 0) return null
+  const counts = countAlerts(alerts)
+  return (
+    <div className={styles.alerts}>
+      <Chip.Button variant="outlineStrong" size="medium" onClick={onClick}>
+        <Chip.PrefixIcon
+          className={counts.critical > 0 ? styles.alertsCritical : styles.alertsWarning}
+        >
+          <IconExclamationmarkCircleFill />
+        </Chip.PrefixIcon>
+        <Chip.Label>{alertSummary(counts)}</Chip.Label>
+        <Chip.SuffixIcon>
+          <IconChevronRightLine />
+        </Chip.SuffixIcon>
+      </Chip.Button>
+    </div>
+  )
 }
 
 interface Row {
