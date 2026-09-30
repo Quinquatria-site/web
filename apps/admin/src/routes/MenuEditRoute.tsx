@@ -64,11 +64,6 @@ function MenuEditForm() {
       return setError('가격은 0 이상의 정수(원)여야 합니다.')
     if (!values.name_KO.trim()) return setError('한국어 이름은 필수입니다.')
 
-    // 사진 올리기는 아직 붙지 않았다. 새로 고른 사진의 key 는 서버에 없어 422 다.
-    // 서버에 이미 있는 사진을 두거나 빼는 것은 된다 (장소 편집과 같다)
-    if (photos[0] && photos[0] !== editing?.image_url)
-      return setError('새 사진 올리기는 아직 준비 중입니다. 새로 고른 사진을 빼고 저장해 주세요.')
-
     // 요청 번역에는 id·menu_id 를 싣지 않는다 — 서버가 모르는 필드는 422 다
     const translations: MenuTextWrite[] = []
     for (const code of LANGUAGE_CODES) {
@@ -169,6 +164,7 @@ function MenuEditForm() {
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>사진</h2>
         <PhotoPicker
+          resourceType="MENU_IMAGE"
           value={photos}
           onChange={setPhotos}
           max={1}

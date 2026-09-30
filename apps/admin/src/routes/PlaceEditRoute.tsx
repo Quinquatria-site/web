@@ -138,12 +138,6 @@ function PlaceEditForm() {
     if (half.length > 0)
       return setError(`${half.join('·')} 은 이름과 주최를 둘 다 채우거나 둘 다 비워주세요.`)
 
-    // 사진 올리기(presigned 업로드)는 아직 붙지 않았다. 새로 고른 사진의 key 는 서버에 없는
-    // 가짜라 저장하면 422 다. 서버에 이미 있는 사진을 두거나 빼는 것은 된다
-    const savedPhotos = new Set(editing?.place_image_uri ?? [])
-    if (photos.some((key) => !savedPhotos.has(key)))
-      return setError('새 사진 올리기는 아직 준비 중입니다. 새로 고른 사진을 빼고 저장해 주세요.')
-
     // 요청 번역에는 id·place_id 를 싣지 않는다 — 서버가 모르는 필드는 422 다.
     // 새 장소도 id 없이 보내고 서버가 매긴다
     const translations: PlaceTextWrite[] = []
@@ -344,6 +338,7 @@ function PlaceEditForm() {
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>사진</h2>
         <PhotoPicker
+          resourceType="PLACE_IMAGE"
           value={photos}
           onChange={setPhotos}
           max={PHOTO_MAX}

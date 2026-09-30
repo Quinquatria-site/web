@@ -218,7 +218,13 @@ function LostItemEditForm() {
       */}
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>사진</h2>
-        <PhotoPicker value={photos} onChange={setPhotos} max={1} label="분실물" />
+        <PhotoPicker
+          resourceType="LOST_ITEM_IMAGE"
+          value={photos}
+          onChange={setPhotos}
+          max={1}
+          label="분실물"
+        />
       </div>
 
       {/*
