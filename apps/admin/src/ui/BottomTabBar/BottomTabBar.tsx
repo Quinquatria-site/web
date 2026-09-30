@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react'
+import type { ComponentType, Ref } from 'react'
 import { NavLink } from 'react-router'
 import styles from './BottomTabBar.module.css'
 
@@ -14,12 +14,14 @@ export interface BottomTab {
 
 export interface BottomTabBarProps {
   tabs: BottomTab[]
+  /** SnackbarAvoidOverlap 이 위치를 재려고 꽂는다 */
+  ref?: Ref<HTMLElement>
 }
 
 /** SEED 에 하단 탭이 없어 직접 만든다. */
-export function BottomTabBar({ tabs }: BottomTabBarProps) {
+export function BottomTabBar({ tabs, ref }: BottomTabBarProps) {
   return (
-    <nav className={styles.bar} aria-label="주요 메뉴">
+    <nav ref={ref} className={styles.bar} aria-label="주요 메뉴">
       {tabs.map(({ to, label, icon: Icon, activeIcon: ActiveIcon }) => (
         <NavLink
           key={to}

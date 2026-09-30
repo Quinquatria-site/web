@@ -5,7 +5,7 @@ import { ActionButton } from 'seed-design/ui/action-button'
 import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
 import { List, ListButtonItem } from 'seed-design/ui/list'
 import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented-control'
-import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
+import { Snackbar, SnackbarAvoidOverlap, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { lostItemsByReturned, setReturned, useStoreVersion } from '../mocks/store'
 import { dateTimeLabel, findTranslation, type LostItem } from '../mocks/types'
 import { imageSrc } from '../lib/imageSrc'
@@ -218,13 +218,16 @@ export function LostItemsRoute() {
         )}
       </div>
 
-      {/* 한 손 엄지가 닿는 우하단. 목록을 끝까지 내려도 자리를 지킨다 */}
-      <FloatingActionButton
-        className={styles.fab}
-        icon={<IconPlusLine />}
-        label="분실물 등록"
-        onClick={() => navigate('/lost-items/new')}
-      />
+      {/* 한 손 엄지가 닿는 우하단. 목록을 끝까지 내려도 자리를 지킨다.
+          스낵바가 이 버튼을 덮지 않고 그 위로 뜨게 감싼다 (AppLayout 의 탭바와 같은 이유) */}
+      <SnackbarAvoidOverlap>
+        <FloatingActionButton
+          className={styles.fab}
+          icon={<IconPlusLine />}
+          label="분실물 등록"
+          onClick={() => navigate('/lost-items/new')}
+        />
+      </SnackbarAvoidOverlap>
     </div>
   )
 }

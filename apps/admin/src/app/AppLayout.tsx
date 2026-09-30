@@ -12,7 +12,7 @@ import {
   IconMegaphoneLine,
 } from '@karrotmarket/react-monochrome-icon'
 import { Link, Outlet, useMatches } from 'react-router'
-import { SnackbarProvider } from 'seed-design/ui/snackbar'
+import { SnackbarAvoidOverlap, SnackbarProvider } from 'seed-design/ui/snackbar'
 import { AppBar, BottomTabBar, type BottomTab } from '../ui'
 import styles from './AppLayout.module.css'
 
@@ -76,7 +76,13 @@ export function AppLayout() {
           <main className={styles.body}>
             <Outlet />
           </main>
-          {!bare && !handle?.hideTabs && <BottomTabBar tabs={TABS} />}
+          {/* 스낵바는 화면 맨 아래에 뜨는데 탭바가 거기 있다. 가려서 실행취소를 못 누르고
+              탭도 못 누른다. AvoidOverlap 이 탭바 높이를 재서 그 위로 띄운다 */}
+          {!bare && !handle?.hideTabs && (
+            <SnackbarAvoidOverlap>
+              <BottomTabBar tabs={TABS} />
+            </SnackbarAvoidOverlap>
+          )}
         </div>
       </div>
     </SnackbarProvider>
