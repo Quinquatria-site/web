@@ -56,6 +56,11 @@ export const zh: Messages = {
   },
   schedule: {
     festivalStarted: '庆典开始了！',
+    // 임시 번역: 축제 전 · 밤사이 · 끝 배너
+    festivalBefore: '庆典筹备中...',
+    festivalBreak: '庆典即将再次开始',
+    festivalEnded: '庆典圆满结束',
+    festivalEndedSub: '下次再见！',
     liveNow: '正在演出！',
     liveBadge: '演出中',
     dayTabsLabel: '庆典日期',

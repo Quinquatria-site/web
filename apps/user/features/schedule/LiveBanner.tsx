@@ -3,16 +3,9 @@ import { getMessages } from '@/shared/i18n/messages'
 import type { Performance } from './performance'
 import { performanceAnchorId } from './Timeline'
 
-/** DAY 탭 위 알림 배너. 공연 중이면 그 공연을 띄우고 누르면 타임라인의 그 카드로 옮겨 가며, 없으면 축제 시작 문구를 띄운다 */
-export async function LiveBanner({ performance }: { performance: Performance | null }) {
+/** 공연 중 배너. 그 공연을 띄우고 누르면 타임라인의 그 카드로 옮겨 간다 */
+export async function LiveBanner({ performance }: { performance: Performance }) {
   const { schedule } = getMessages(await getLocale())
-  if (!performance) {
-    return (
-      <p className="flex h-[62px] items-center justify-center rounded-xl border border-border-strong bg-white text-lg leading-[normal] font-bold text-text shadow-[0_2px_8px_rgb(0_0_0/0.08)]">
-        {schedule.festivalStarted}
-      </p>
-    )
-  }
   return (
     <a
       href={`#${performanceAnchorId(performance.id)}`}
