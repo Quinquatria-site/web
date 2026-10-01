@@ -45,9 +45,10 @@ export function LandingTitle({ lag }: { lag: number | null }) {
     : 'invisible'
 
   return (
-    // 기기 폭이 달라도 피그마 390 화면과 같은 비율로 보이도록 모든 치수를 앱 폭의 1/390 배수로 잡는다
+    // 기기 폭이 달라도 피그마 390×844 화면과 같은 비율로 보이도록 모든 치수를 앱 폭의 1/390 배수로 잡는다. 그보다 낮은 화면은 높이 비율로 줄여 오른쪽 위 언어 버튼에 닿지 않게 한다
+    // 높이는 영상(720×1280, cover)이 깔린 배율 --img 로 그림 속 y 106 에 둔다. 폭 기준이면 낮은 화면에서 동상이 올라와 창끝에 겹친다
     <div
-      className={`${cinzel.variable} absolute inset-x-0 top-[calc(83*var(--u))] flex flex-col items-center font-cinzel [--u:calc(100cqw/390)]`}
+      className={`${cinzel.variable} absolute inset-x-0 top-[calc(50cqh-534*var(--img))] flex flex-col items-center font-cinzel [--img:max(100cqw/720,100cqh/1280)] [--u:min(100cqw/390,100cqh/844)]`}
       style={{ '--title-lag': `${lag ?? 0}s` } as CSSProperties}
     >
       <h1 className={`w-[calc(319.231*var(--u))] mask-title-reveal ${reveal}`}>
