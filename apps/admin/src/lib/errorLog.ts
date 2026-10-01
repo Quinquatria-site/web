@@ -33,6 +33,14 @@ export interface ErrorLogEntry {
   details?: ErrorLogDetail[]
 }
 
+/** 상단 오류 알림을 누르면 `/settings#error-log` 로 간다. 설정 화면의 섹션 id 다 */
+export const ERROR_LOG_HASH = 'error-log'
+
+/** 그때 함께 넘기는 router state. 알림이 가리킨 항목을 잠깐 강조한다 */
+export interface ErrorLogNavState {
+  highlight: number
+}
+
 const STORAGE_KEY = 'quinquatria-admin-error-log'
 const MAX_ENTRIES = 50
 
@@ -49,6 +57,9 @@ function readStored(): ErrorLogEntry[] {
 let entries: ErrorLogEntry[] = readStored()
 let nextId = entries.reduce((max, entry) => Math.max(max, entry.id), 0) + 1
 const listeners = new Set<() => void>()
+const newListeners = new Set<(entry: ErrorLogEntry) => void>()
+/** 화면이 스스로 알린 기록. 상단 알림은 이것을 건너뛴다 */
+const surfaced = new Set<number>()
 
 function commit(next: ErrorLogEntry[]): void {
   entries = next
@@ -60,11 +71,13 @@ function commit(next: ErrorLogEntry[]): void {
   for (const listener of listeners) listener()
 }
 
-function push(entry: Omit<ErrorLogEntry, 'id' | 'at'>): void {
+function push(entry: Omit<ErrorLogEntry, 'id' | 'at'>): number {
   const full: ErrorLogEntry = { ...entry, id: nextId, at: Date.now() }
   nextId += 1
   // 최신이 앞이다. 설정 화면이 그대로 그린다
   commit([full, ...entries].slice(0, MAX_ENTRIES))
+  for (const listener of newListeners) listener(full)
+  return full.id
 }
 
 export function recordApiError(
@@ -72,8 +85,8 @@ export function recordApiError(
   path: string,
   status: number,
   body: { code: string; message: string; details?: ErrorLogDetail[] },
-): void {
-  push({
+): number {
+  return push({
     kind: 'api',
     title: `${method} ${path}`,
     status,
@@ -85,6 +98,41 @@ export function recordApiError(
 
 export function recordAppError(message: string, where: string): void {
   push({ kind: 'app', title: where, message })
+}
+
+/**
+ * 화면이 이 기록을 직접 띄웠다고 표시한다. 저장 실패처럼 폼 아래·스낵바로 이미
+ * 알린 오류에 상단 알림까지 겹치지 않게 한다. apiErrorText 가 부른다.
+ */
+export function markErrorSurfaced(id: number): void {
+  surfaced.add(id)
+}
+
+/** 지금까지 쌓인 마지막 id. markErrorsSurfacedAfter 와 짝이다 */
+export function lastErrorId(): number {
+  return nextId - 1
+}
+
+/**
+ * `afterId` 뒤로 쌓인 기록을 모두 화면이 알린 것으로 표시한다. 요청 여러 개를 한꺼번에
+ * 보내고 실패를 한 문장으로 말하는 곳(DataGate)이 쓴다 — apiErrorText 는 첫 실패만
+ * 표시하므로 나머지가 상단 알림으로 새어 나간다.
+ */
+export function markErrorsSurfacedAfter(afterId: number): void {
+  for (const entry of entries) if (entry.id > afterId) surfaced.add(entry.id)
+}
+
+export function isErrorSurfaced(id: number): boolean {
+  return surfaced.has(id)
+}
+
+/**
+ * 이번 화면에서 **새로** 쌓인 기록만 알린다. sessionStorage 에서 되살린 지난 기록은
+ * 오지 않는다 — 새로고침할 때마다 알림이 뜨면 안 된다. 상단 알림이 쓴다.
+ */
+export function subscribeNewErrors(listener: (entry: ErrorLogEntry) => void): () => void {
+  newListeners.add(listener)
+  return () => newListeners.delete(listener)
 }
 
 export function clearErrorLog(): void {
@@ -121,13 +169,18 @@ export function formatErrorLog(list: ErrorLogEntry[]): string {
  */
 export function installGlobalErrorHandlers(): void {
   window.addEventListener('error', (event) => {
-    const where = event.filename ? `${event.filename.split('/').pop()}:${event.lineno}` : '알 수 없음'
+    const where = event.filename
+      ? `${event.filename.split('/').pop()}:${event.lineno}`
+      : '알 수 없음'
     recordAppError(event.message || String(event.error), where)
   })
   window.addEventListener('unhandledrejection', (event) => {
     const reason: unknown = event.reason
     // API 오류는 client 가 이미 남겼다. 여기서 또 남기면 한 건이 두 줄이 된다
     if (reason instanceof Error && reason.name === 'ApiError') return
-    recordAppError(reason instanceof Error ? reason.message : String(reason), '처리되지 않은 Promise')
+    recordAppError(
+      reason instanceof Error ? reason.message : String(reason),
+      '처리되지 않은 Promise',
+    )
   })
 }

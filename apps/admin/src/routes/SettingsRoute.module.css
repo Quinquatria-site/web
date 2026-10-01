@@ -82,6 +82,18 @@
   border-bottom: 0;
 }
 
+/* 상단 오류 알림을 눌러 왔을 때 그 항목. 잠깐 칠했다가 바랜다 */
+.highlighted {
+  animation: highlight-fade 2s ease-out;
+}
+
+@keyframes highlight-fade {
+  from,
+  30% {
+    background: var(--seed-color-bg-critical-weak);
+  }
+}
+
 .logLine {
   display: flex;
   gap: var(--seed-dimension-x2);

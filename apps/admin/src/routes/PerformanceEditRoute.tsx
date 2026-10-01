@@ -179,14 +179,13 @@ function PerformanceEditForm() {
                   actionLabel="실행취소"
                   onAction={() => {
                     // 언어별 upsert 라(§5.2) 지운 언어만 다시 넣고 나머지는 그대로다
-                    restorePerformanceTranslations(saved.id, undo).catch((undoError: unknown) =>
+                    restorePerformanceTranslations(saved.id, undo).catch((undoError: unknown) => {
+                      const message = apiErrorText(undoError)
                       snackbar.create({
                         timeout: 4000,
-                        render: () => (
-                          <Snackbar variant="critical" message={apiErrorText(undoError)} />
-                        ),
-                      }),
-                    )
+                        render: () => <Snackbar variant="critical" message={message} />,
+                      })
+                    })
                   }}
                 />
               ),

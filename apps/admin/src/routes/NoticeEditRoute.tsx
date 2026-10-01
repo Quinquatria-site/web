@@ -157,13 +157,13 @@ function NoticeEditForm() {
                   actionLabel="실행취소"
                   onAction={() => {
                     saveNotice(saved.id, { type: saved.type, translations: undo }).catch(
-                      (undoError: unknown) =>
+                      (undoError: unknown) => {
+                        const message = apiErrorText(undoError)
                         snackbar.create({
                           timeout: 4000,
-                          render: () => (
-                            <Snackbar variant="critical" message={apiErrorText(undoError)} />
-                          ),
-                        }),
+                          render: () => <Snackbar variant="critical" message={message} />,
+                        })
+                      },
                     )
                   }}
                 />

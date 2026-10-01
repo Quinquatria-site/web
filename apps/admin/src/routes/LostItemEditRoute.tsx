@@ -146,14 +146,13 @@ function LostItemEditForm() {
                   message={`${values.title_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
                   actionLabel="실행취소"
                   onAction={() => {
-                    saveLostItem(saved.id, { translations: undo }).catch((undoError: unknown) =>
+                    saveLostItem(saved.id, { translations: undo }).catch((undoError: unknown) => {
+                      const message = apiErrorText(undoError)
                       snackbar.create({
                         timeout: 4000,
-                        render: () => (
-                          <Snackbar variant="critical" message={apiErrorText(undoError)} />
-                        ),
-                      }),
-                    )
+                        render: () => <Snackbar variant="critical" message={message} />,
+                      })
+                    })
                   }}
                 />
               ),

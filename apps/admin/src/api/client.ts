@@ -104,14 +104,14 @@ export async function request<T>(
       details: [],
     }
     // 호출부가 스스로 취소한 것(화면을 떠남)은 오류가 아니다
-    if (log && !signal?.aborted) recordApiError(method, path, 0, errorBody)
-    throw new ApiError(0, errorBody)
+    const logId = log && !signal?.aborted ? recordApiError(method, path, 0, errorBody) : undefined
+    throw new ApiError(0, errorBody, logId)
   }
 
   if (!response.ok) {
     const errorBody = await readErrorBody(response)
-    if (log) recordApiError(method, path, response.status, errorBody)
-    throw new ApiError(response.status, errorBody)
+    const logId = log ? recordApiError(method, path, response.status, errorBody) : undefined
+    throw new ApiError(response.status, errorBody, logId)
   }
   if (response.status === 204) return undefined as T
   return (await response.json()) as T

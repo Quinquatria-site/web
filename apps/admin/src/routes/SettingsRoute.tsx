@@ -1,7 +1,16 @@
+import { useEffect, useRef } from 'react'
+import { useLocation } from 'react-router'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { Snackbar, useSnackbarAdapter } from 'seed-design/ui/snackbar'
 import { useAuth } from '../auth/authContext'
-import { clearErrorLog, formatErrorLog, useErrorLog, type ErrorLogEntry } from '../lib/errorLog'
+import {
+  clearErrorLog,
+  ERROR_LOG_HASH,
+  formatErrorLog,
+  useErrorLog,
+  type ErrorLogEntry,
+  type ErrorLogNavState,
+} from '../lib/errorLog'
 import { useNow } from '../lib/useNow'
 import styles from './SettingsRoute.module.css'
 
@@ -103,6 +112,16 @@ function Session({
 function ErrorLog() {
   const entries = useErrorLog()
   const snackbar = useSnackbarAdapter()
+  const location = useLocation()
+  const sectionRef = useRef<HTMLElement>(null)
+  const highlight = (location.state as ErrorLogNavState | null)?.highlight
+
+  // 실제로 스크롤되는 곳이 문서가 아니라 셸의 .body 라 브라우저가 해시로 찾아가 주지 않는다.
+  // location.key 를 보는 것은 설정 화면에 있는 채로 알림을 또 눌렀을 때도 다시 내려가게 하려는 것이다
+  useEffect(() => {
+    if (location.hash !== `#${ERROR_LOG_HASH}`) return
+    sectionRef.current?.scrollIntoView({ block: 'start' })
+  }, [location.hash, location.key])
 
   const copy = async () => {
     try {
@@ -117,7 +136,7 @@ function ErrorLog() {
   }
 
   return (
-    <section className={styles.section}>
+    <section id={ERROR_LOG_HASH} ref={sectionRef} className={styles.section}>
       <div className={styles.logHeader}>
         <h2 className={styles.sectionTitle}>{`오류 기록 ${entries.length}`}</h2>
         <div className={styles.logActions}>
@@ -144,7 +163,7 @@ function ErrorLog() {
       ) : (
         <ol className={styles.log}>
           {entries.map((entry) => (
-            <LogRow key={entry.id} entry={entry} />
+            <LogRow key={entry.id} entry={entry} highlighted={entry.id === highlight} />
           ))}
         </ol>
       )}
@@ -152,11 +171,12 @@ function ErrorLog() {
   )
 }
 
-function LogRow({ entry }: { entry: ErrorLogEntry }) {
+function LogRow({ entry, highlighted }: { entry: ErrorLogEntry; highlighted: boolean }) {
   const time = new Date(entry.at).toLocaleTimeString('ko-KR', { hour12: false })
-  const badge = entry.kind === 'api' ? `${entry.status || '연결 실패'} ${entry.code ?? ''}` : '화면 오류'
+  const badge =
+    entry.kind === 'api' ? `${entry.status || '연결 실패'} ${entry.code ?? ''}` : '화면 오류'
   return (
-    <li className={styles.logRow}>
+    <li className={highlighted ? `${styles.logRow} ${styles.highlighted}` : styles.logRow}>
       <div className={styles.logLine}>
         <span className={styles.logTime}>{time}</span>
         <span className={styles.logBadge}>{badge.trim()}</span>
@@ -164,7 +184,10 @@ function LogRow({ entry }: { entry: ErrorLogEntry }) {
       <div className={styles.logTitle}>{entry.title}</div>
       <div className={styles.logMessage}>{entry.message}</div>
       {entry.details?.map((detail) => (
-        <div key={detail.field} className={styles.logMessage}>{`${detail.field}: ${detail.reason}`}</div>
+        <div
+          key={detail.field}
+          className={styles.logMessage}
+        >{`${detail.field}: ${detail.reason}`}</div>
       ))}
     </li>
   )

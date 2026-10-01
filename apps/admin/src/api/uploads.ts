@@ -68,8 +68,7 @@ function s3Error(status: number): ApiError {
     details: [],
   }
   // 경로 대신 이름을 남긴다 — presigned URL 의 query 에는 서명이 들어 있다
-  recordApiError('PUT', 'S3 업로드', status, body)
-  return new ApiError(status, body)
+  return new ApiError(status, body, recordApiError('PUT', 'S3 업로드', status, body))
 }
 
 /**

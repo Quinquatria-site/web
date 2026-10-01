@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Outlet } from 'react-router'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { apiErrorText } from '../lib/apiErrorText'
+import { lastErrorId, markErrorsSurfacedAfter } from '../lib/errorLog'
 import { loadCatalog, loadLostItems, loadNotices, loadPerformances } from '../mocks/store'
 import styles from './DataGate.module.css'
 
@@ -38,14 +39,25 @@ export function DataGate() {
     if (!force && now - lastRunAt.current < REFRESH_INTERVAL_MS) return null
     lastRunAt.current = now
 
-    try {
-      await Promise.all([loadNotices(), loadCatalog(), loadPerformances(), loadLostItems()])
+    const before = lastErrorId()
+    // all 이 아니라 allSettled 다. 첫 실패에서 바로 돌아오면 나머지 요청의 실패가
+    // 오류 화면을 띄운 뒤에 기록되어 상단 알림으로 따로 뜬다
+    const results = await Promise.allSettled([
+      loadNotices(),
+      loadCatalog(),
+      loadPerformances(),
+      loadLostItems(),
+    ])
+    const failure = results.find((result) => result.status === 'rejected')
+    if (!failure) {
       loaded.current = true
       return { kind: 'ready' }
-    } catch (error) {
-      // 한 번 받은 뒤의 실패는 화면을 막지 않는다
-      return loaded.current ? null : { kind: 'error', message: apiErrorText(error) }
     }
+    // 한 번 받은 뒤의 실패는 화면을 막지 않는다. 오류 기록과 상단 알림이 알린다
+    if (loaded.current) return null
+    // 오류 화면이 이번 실패를 한 문장으로 모두 말한다
+    markErrorsSurfacedAfter(before)
+    return { kind: 'error', message: apiErrorText(failure.reason) }
   }, [])
 
   const apply = useCallback((next: GateState | null) => {

@@ -194,9 +194,10 @@ export function PerformancesRoute() {
         ),
       })
     } catch (liveError) {
+      const message = apiErrorText(liveError)
       snackbar.create({
         timeout: 4000,
-        render: () => <Snackbar variant="critical" message={apiErrorText(liveError)} />,
+        render: () => <Snackbar variant="critical" message={message} />,
       })
     } finally {
       setLiveBusy(null)

@@ -124,11 +124,14 @@ export function LostItemsRoute() {
   })
 
   /** 반환·되돌리기가 서버에서 실패하면 행은 그대로 두고 까닭을 띄운다 */
-  const showError = (error: unknown) =>
+  const showError = (error: unknown) => {
+    // render 안에서 부르지 않는다 — apiErrorText 주석 참고
+    const message = apiErrorText(error)
     snackbar.create({
       timeout: 4000,
-      render: () => <Snackbar variant="critical" message={apiErrorText(error)} />,
+      render: () => <Snackbar variant="critical" message={message} />,
     })
+  }
 
   const changeReturned = async (item: LostItem, next: boolean) => {
     try {
