@@ -1,6 +1,6 @@
 'use client'
 
-import { CRS } from 'leaflet'
+import { CRS, type Map as LeafletMap } from 'leaflet'
 import { useEffect, useRef } from 'react'
 import { ImageOverlay, MapContainer, useMap, useMapEvents } from 'react-leaflet'
 import {
@@ -89,6 +89,37 @@ function TrackpadPinchZoom() {
     }
     container.addEventListener('wheel', handleWheel, { capture: true, passive: false })
     return () => container.removeEventListener('wheel', handleWheel, { capture: true })
+  }, [map])
+
+  return null
+}
+
+// Leaflet 내부 메서드. 공개 API 가 없어 1.9.4 기준으로 쓴다 — 올릴 때 이름·동작을 다시 확인한다
+type ZoomTransitionMap = LeafletMap & { _onZoomTransitionEnd: () => void }
+
+// 핀치는 손을 뗄 때 배율이 이미 맞아 있는데도 Leaflet 이 확대 전환을 다시 걸어 250ms 동안 끌기를 막아서, 핀치 끝 전환만 바로 끝낸다
+function PinchZoomRelease() {
+  const map = useMap()
+
+  useEffect(() => {
+    const container = map.getContainer()
+    let pinching = false
+    // 두 손가락이 닿았던 터치만 핀치로 본다. 한 손가락으로 새로 닿으면 두 번 탭 확대처럼 애니메이션이 필요한 경로라 푼다
+    const handleTouchStart = (event: TouchEvent) => {
+      pinching = event.touches.length >= 2
+    }
+    const handleZoomAnim = () => {
+      if (!pinching) return
+      pinching = false
+      // 전환을 거는 Leaflet 터치 처리가 다 끝난 뒤에 끝내야 다른 레이어의 zoomanim 처리를 건너뛰지 않는다
+      queueMicrotask(() => (map as ZoomTransitionMap)._onZoomTransitionEnd())
+    }
+    container.addEventListener('touchstart', handleTouchStart, { capture: true, passive: true })
+    map.on('zoomanim', handleZoomAnim)
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart, { capture: true })
+      map.off('zoomanim', handleZoomAnim)
+    }
   }, [map])
 
   return null
@@ -235,6 +266,7 @@ export default function CampusMap({
       <MapLabels />
       <FitCampus topInset={topInset} bottomInset={selected ? bottomInset : 0} />
       <TrackpadPinchZoom />
+      <PinchZoomRelease />
       <PlaceMarkers places={places} selectedId={selectedId} onSelect={onSelect} onClear={onClear} />
       <FocusPlace
         point={selected}
