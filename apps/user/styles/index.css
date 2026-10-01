@@ -6,6 +6,7 @@
 @import './layout.css';
 @import '../features/home/landing/landing-scroll-cue.css';
 @import '../features/home/landing/landing-title.css';
+@import '../features/home/landing/language-switcher.css';
 @import '../features/schedule/day-tabs.css';
 @import '../features/schedule/performance-card.css';
 @import '../features/schedule/live-badge.css';
