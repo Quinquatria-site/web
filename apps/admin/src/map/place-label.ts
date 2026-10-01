@@ -38,12 +38,12 @@ export function sequenceHint(code: PlaceCode, sequence: number): string {
   if (!SECTION_CODES.has(code)) {
     return `${PLACE_NAMES[code]} 마커에는 번호 대신 아이콘이 보입니다. 이 값은 ${PLACE_NAMES[code]} 안에서의 순서로만 씁니다.`
   }
-  const rule =
-    '백의 자리는 구역(1→A, 2→B …), 끝 두 자리는 번호입니다. 101 은 지도 마커에 A1 로 보입니다.'
+  // 규칙을 말로 풀면 "백의 자리가 구역…" 이 되어 한 번에 안 읽힌다. 예시가 더 빠르다
+  const rule = '지도 마커에 101 → A1, 201 → B1, 112 → A12 로 보입니다.'
   if (!Number.isInteger(sequence) || sequence < 1) return rule
   // 100 미만은 구역이 없고, 끝 두 자리가 00 이면 번호가 0 이라 마커 글자가 어긋난다
   if (sequence < 100 || sequence % 100 === 0) {
-    return `${rule} 지금 값 ${sequence} 은 구역이나 번호가 비어 마커가 이상하게 보입니다.`
+    return `${rule} 지금 값 ${sequence} 은 마커가 이상하게 보입니다.`
   }
-  return `${rule} 지금 값은 ${placeLabel(code, sequence)} 로 보입니다.`
+  return `${rule} 지금 값: ${sequence} → ${placeLabel(code, sequence)}`
 }
