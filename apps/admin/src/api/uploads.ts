@@ -78,8 +78,8 @@ function s3Error(status: number): ApiError {
  * 412 는 같은 key 가 이미 있다는 뜻이라(서버가 UUID 로 정하니 거의 없다) 새 주소를 받아
  * 한 번만 다시 올린다. 403 은 만료·헤더 불일치라 다시 해도 같으니 바로 실패다.
  *
- * 올린 파일은 이 세션 동안 브라우저 미리보기(object URL)로 보인다. 저장된 사진을 다시
- * 보려면 CloudFront 주소가 필요하다 — lib/imageSrc.ts 참고.
+ * 올린 파일은 이 세션 동안 브라우저 미리보기(object URL)로 보인다. 새로고침한 뒤에는
+ * 버킷 주소로 받는다 — lib/imageSrc.ts 참고.
  */
 export async function uploadImage(file: File, resourceType: ImageResourceType): Promise<string> {
   for (let attempt = 0; attempt < 2; attempt += 1) {
