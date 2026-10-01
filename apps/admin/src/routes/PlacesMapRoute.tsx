@@ -6,12 +6,13 @@ import { CampusMap } from '../map/CampusMap'
 import { CATEGORY_COLORS } from '../map/category-colors'
 import { PLACE_NAMES } from '../map/place-label'
 import { PlaceMarker } from '../map/PlaceMarker'
+import { imageSrc } from '../lib/imageSrc'
 import { detailOf } from '../lib/placeText'
 import { categoryById } from '../mocks/categories'
 import { menusByPlace } from '../mocks/menus'
 import { PLACES } from '../mocks/places'
 import { placeById, useStoreVersion } from '../mocks/store'
-import { findTranslation, type Place } from '../mocks/types'
+import { findTranslation, type Menu, type Place } from '../mocks/types'
 import { BottomSheet, BottomSheetDescription, BottomSheetTitle, LangBadge, PhotoStrip } from '../ui'
 import styles from './PlacesMapRoute.module.css'
 
@@ -24,12 +25,31 @@ const PLACE_SHEET_PEEK = 197
 /** 메뉴가 없는 게 정상인 카테고리. "메뉴 0개" 는 잘못을 알리는 것처럼 읽힌다 */
 const MENULESS = new Set(['MEDI', 'BRACELET'])
 
+// 메뉴 한 줄. user MenuCard 처럼 왼쪽 사진, 이름·설명, 오른쪽 가격
+function MenuCard({ menu }: { menu: Menu }) {
+  const text = findTranslation(menu.translations, 'KO')
+  const name = text?.name ?? `메뉴 ${menu.id}`
+
+  return (
+    <li className={styles.menu}>
+      <div className={styles.menuPhoto}>
+        {menu.image_url && <img src={imageSrc(menu.image_url)} alt={name} loading="lazy" />}
+      </div>
+      <div className={styles.menuText}>
+        <p className={styles.menuName}>{name}</p>
+        {text?.description && <p className={styles.menuDescription}>{text.description}</p>}
+      </div>
+      <p className={styles.menuPrice}>{menu.price.toLocaleString()}원</p>
+    </li>
+  )
+}
+
 // 1단계에는 이름·종류·뱃지·편집 버튼만 두고, 끌어 올리면 설명·메뉴·사진이 이어진다
 function PlaceSheetBody({ place }: { place: Place }) {
   const navigate = useNavigate()
   const code = categoryById(place.category_id)?.code ?? 'BOOTH'
   const description = findTranslation(place.translations, 'KO')?.description
-  const menuCount = menusByPlace(place.id).length
+  const menus = menusByPlace(place.id)
 
   return (
     <>
@@ -52,13 +72,27 @@ function PlaceSheetBody({ place }: { place: Place }) {
         편집하기
       </ActionButton>
       {description && <p className={styles.description}>{description}</p>}
-      {!MENULESS.has(code) && <p className={styles.meta}>메뉴 {menuCount}개</p>}
-      <PhotoStrip
-        className={styles.photos}
-        uris={place.place_image_uri}
-        label={placeName(place)}
-        size="small"
-      />
+      {!MENULESS.has(code) && (
+        <section className={styles.section}>
+          <h3 className={styles.sectionTitle}>메뉴</h3>
+          {menus.length > 0 ? (
+            <ul className={styles.menus}>
+              {menus.map((menu) => (
+                <MenuCard key={menu.id} menu={menu} />
+              ))}
+            </ul>
+          ) : (
+            // user 시트에서는 메뉴 칸이 통째로 빠지니, 운영자에게는 비었다고 알린다
+            <p className={styles.meta}>등록된 메뉴가 없습니다</p>
+          )}
+        </section>
+      )}
+      {place.place_image_uri && place.place_image_uri.length > 0 && (
+        <section className={styles.section}>
+          <h3 className={styles.sectionTitle}>사진</h3>
+          <PhotoStrip uris={place.place_image_uri} label={placeName(place)} size="small" />
+        </section>
+      )}
     </>
   )
 }
