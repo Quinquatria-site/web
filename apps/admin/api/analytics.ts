@@ -143,13 +143,16 @@ function kstDate(ms: number): string {
 
 const iso = (ms: number) => new Date(ms).toISOString()
 
+/** Cloudflare RUM 의 pageLoadTime 은 마이크로초다. 응답은 ms 로 맞춘다 */
+const toMs = (us: number | null) => (us === null ? null : Math.round(us / 1000))
+
 /** 표본이 없으면 Cloudflare 는 행을 주지 않거나 0 을 준다. 둘 다 "모름" 으로 */
 function quantiles(rows: PerfRow[]): Quantiles {
   const row = rows[0]
   if (!row || row.count === 0) return { p50: null, p75: null, samples: 0 }
   return {
-    p50: row.quantiles.pageLoadTimeP50,
-    p75: row.quantiles.pageLoadTimeP75,
+    p50: toMs(row.quantiles.pageLoadTimeP50),
+    p75: toMs(row.quantiles.pageLoadTimeP75),
     samples: row.count,
   }
 }
