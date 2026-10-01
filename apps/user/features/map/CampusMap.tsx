@@ -146,6 +146,43 @@ function FocusPlace({
   return null
 }
 
+// 두 번 탭은 확대라서, 한 번 탭은 두 번째 탭이 오지 않을 만큼 기다렸다가 알린다. 모바일 브라우저의 두 번 탭 판정(약 300ms)에 맞춘다
+const DOUBLE_TAP_WAIT_MS = 300
+
+// 지도 빈 곳 한 번 탭을 알린다. 마커 누름은 지도로 번지지 않아 여기엔 빈 곳만 온다
+function EmptyTap({ onTap, cancelKey }: { onTap: () => void; cancelKey: number }) {
+  const map = useMap()
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const onTapRef = useRef(onTap)
+  useEffect(() => {
+    onTapRef.current = onTap
+  })
+  useMapEvents({
+    click: () => {
+      clearTimeout(timerRef.current)
+      timerRef.current = setTimeout(() => onTapRef.current(), DOUBLE_TAP_WAIT_MS)
+    },
+    dblclick: () => clearTimeout(timerRef.current),
+  })
+  // 기다리는 사이 마커를 고르면, 늦게 온 빈 곳 탭이 방금 고른 장소를 풀지 않게 버린다
+  useEffect(() => clearTimeout(timerRef.current), [cancelKey])
+  useEffect(() => () => clearTimeout(timerRef.current), [])
+
+  // 키보드로도 같은 일을 하게 지도 칸에 포커스가 있을 때 Enter·Space 를 받는다. 마커에서 올라온 키는 마커 몫이다
+  useEffect(() => {
+    const container = map.getContainer()
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.target !== container || (event.key !== 'Enter' && event.key !== ' ')) return
+      event.preventDefault()
+      onTapRef.current()
+    }
+    container.addEventListener('keydown', handleKeyDown)
+    return () => container.removeEventListener('keydown', handleKeyDown)
+  }, [map])
+
+  return null
+}
+
 // 손으로 지도를 끄는 동안을 알린다. 시트가 그동안 아래로 비켜 지도를 가리지 않는다
 function DragWatch({ onDragChange }: { onDragChange: (dragging: boolean) => void }) {
   useMapEvents({
@@ -165,6 +202,7 @@ export default function CampusMap({
   topInset,
   bottomInset,
   onDragChange,
+  onEmptyTap,
 }: {
   places: MapPlace[]
   selectedId: number | null
@@ -177,6 +215,7 @@ export default function CampusMap({
   /** 장소를 고른 동안 아래를 가리는 높이. 고른 장소를 이만큼 위로 비켜 둔다 */
   bottomInset: number
   onDragChange: (dragging: boolean) => void
+  onEmptyTap: () => void
 }) {
   const selected = places.find((place) => place.id === selectedId) ?? null
 
@@ -204,6 +243,7 @@ export default function CampusMap({
         bottomInset={bottomInset}
       />
       <DragWatch onDragChange={onDragChange} />
+      <EmptyTap onTap={onEmptyTap} cancelKey={focusRequest} />
       <ZoomButtons />
     </MapContainer>
   )

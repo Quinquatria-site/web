@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { dockStowStore } from '@/shared/dock/dock-stow-store'
 import type { MapPlace, PlaceCode } from './map-place'
 import { PlaceFilter } from './PlaceFilter'
 import { PLACE_SHEET_PEEK, PlaceSheet } from './PlaceSheet'
@@ -30,11 +31,25 @@ export function MapView({ places }: { places: MapPlace[] }) {
     () => (filter.size ? places.filter((place) => filter.has(place.code)) : places),
     [places, filter],
   )
+  // 빈 곳을 탭해 칩·확대 버튼·도크를 걷어 낸 상태. 지도만 넓게 본다
+  const [chromeHidden, setChromeHidden] = useState(false)
   const select = useCallback((id: number) => {
     setSelectedId(id)
     setFocusRequest((n) => n + 1)
+    // 장소를 고르면 둘러보기가 끝난 것으로 보고 걷어 낸 것들을 되돌린다
+    setChromeHidden(false)
   }, [])
   const clearSelection = useCallback(() => setSelectedId(null), [])
+  // 빈 곳 탭은 고른 장소가 있으면 고름만 풀고, 없으면 걷어 내기를 켜고 끈다
+  const handleEmptyTap = () => {
+    if (selectedId !== null) clearSelection()
+    else setChromeHidden((hidden) => !hidden)
+  }
+  useEffect(() => {
+    dockStowStore.set(chromeHidden)
+  }, [chromeHidden])
+  // 다른 탭으로 떠나면 도크를 되돌린다
+  useEffect(() => () => dockStowStore.set(false), [])
   // 시트는 1단계 높이에 홈 인디케이터 여백을 더해 올라와서, 지도도 그만큼 비켜야 한다
   const safeProbeRef = useRef<HTMLDivElement>(null)
   const [safeBottom, setSafeBottom] = useState(0)
@@ -57,7 +72,10 @@ export function MapView({ places }: { places: MapPlace[] }) {
     <>
       <div ref={safeProbeRef} aria-hidden className="absolute pb-[env(safe-area-inset-bottom)]" />
       {/* 배경은 이미지 가장자리 색(경계 숨김), 도크 여백은 되돌려 바닥까지 채우고, isolate 로 Leaflet z-index(400~1000)를 가둬 도크를 위에 둔다 */}
-      <div className="relative isolate bg-[#fefaf2] -mb-(--dock-space) h-[calc(100dvh-env(safe-area-inset-top)-var(--spacing)*19)]">
+      <div
+        data-chrome={chromeHidden ? 'hidden' : undefined}
+        className="relative isolate bg-[#fefaf2] -mb-(--dock-space) h-[calc(100dvh-env(safe-area-inset-top)-var(--spacing)*19)]"
+      >
         <CampusMap
           places={visiblePlaces}
           selectedId={selectedId}
@@ -67,11 +85,12 @@ export function MapView({ places }: { places: MapPlace[] }) {
           topInset={filterHeight}
           bottomInset={PLACE_SHEET_PEEK + safeBottom}
           onDragChange={setDragging}
+          onEmptyTap={handleEmptyTap}
         />
         {/* Leaflet 판(400~1000) 위에 띄운다. 칩 사이 빈 곳은 지도를 끌 수 있게 누름을 흘려보낸다 */}
         <div
           ref={filterRef}
-          className="pointer-events-none absolute inset-x-0 top-0 z-[1000] px-[17px] pt-3"
+          className="pointer-events-none absolute inset-x-0 top-0 z-[1000] px-[17px] pt-3 transition-[translate,opacity,visibility] duration-300 ease-out in-data-[chrome=hidden]:invisible in-data-[chrome=hidden]:-translate-y-full in-data-[chrome=hidden]:opacity-0"
         >
           <PlaceFilter selected={filter} onToggle={toggleFilter} onReset={resetFilter} />
         </div>

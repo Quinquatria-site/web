@@ -8,7 +8,7 @@ import {
 } from 'leaflet'
 import type { StaticImageData } from 'next/image'
 import { memo, useEffect, useMemo, useRef } from 'react'
-import { Marker, useMap, useMapEvents } from 'react-leaflet'
+import { Marker, useMap } from 'react-leaflet'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import braceletIcon from './images/bracelet.svg'
@@ -125,7 +125,7 @@ function MarkerZoomLevel() {
   return null
 }
 
-/** 지도 위 장소 마커들. 선택은 바텀 시트와 맞추도록 부모가 들고, 여기선 누름·빈 곳 클릭만 알린다 */
+/** 지도 위 장소 마커들. 선택은 바텀 시트와 맞추도록 부모가 들고, 여기선 누름과 고른 장소가 목록에서 빠진 것만 알린다 */
 export function PlaceMarkers({
   places,
   selectedId,
@@ -138,9 +138,6 @@ export function PlaceMarkers({
   onClear: () => void
 }) {
   const names = getMessages(useLocale()).map.places
-  // 마커 클릭은 지도로 번지지 않아서 여기엔 빈 곳 클릭만 온다
-  useMapEvents({ click: onClear })
-
   // 필터 등으로 선택된 장소가 목록에서 빠지면 선택도 푼다. 두면 다시 나타날 때 누르지 않았는데 링이 켜져 있다
   const selectedGone = selectedId !== null && !places.some((place) => place.id === selectedId)
   useEffect(() => {

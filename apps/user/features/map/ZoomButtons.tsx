@@ -39,8 +39,8 @@ export function ZoomButtons() {
   return (
     <div
       ref={ref}
-      // Leaflet 판(400~1000) 위에 둔다
-      className="absolute right-[27px] bottom-[calc(var(--dock-space)-4px)] z-[1000] flex w-[43px] flex-col divide-y divide-map-control-border overflow-hidden rounded-xl border border-map-control-border bg-bg shadow-[0_1px_4px_var(--color-map-control-border)]"
+      // Leaflet 판(400~1000) 위에 두고, 걷어 낼 때는 오른쪽 밖으로 빠진다
+      className="absolute right-[27px] bottom-[calc(var(--dock-space)-4px)] z-[1000] transition-[translate,opacity,visibility] duration-300 ease-out in-data-[chrome=hidden]:invisible in-data-[chrome=hidden]:translate-x-[calc(100%+27px)] in-data-[chrome=hidden]:opacity-0 flex w-[43px] flex-col divide-y divide-map-control-border overflow-hidden rounded-xl border border-map-control-border bg-bg shadow-[0_1px_4px_var(--color-map-control-border)]"
     >
       <button
         type="button"
