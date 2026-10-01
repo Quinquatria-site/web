@@ -4,8 +4,7 @@
  * Customer 와 Backoffice 는 별도 FastAPI 앱이라 origin 이 다르고 경로 규칙만
  * 같다 (§2.1). 그래서 base 를 두 개 둔다.
  *
- * API 두 주소는 기본값이 있어 비지 않는다. ASSET_BASE 만 비어 있을 수 있고,
- * 값이 없으면 `null` — 호출부는 그것을 오류가 아니라 "아직 주소를 모른다" 로 다룬다.
+ * 세 주소 모두 기본값이 있어 비지 않는다. 환경변수는 다른 곳에 붙여볼 때 덮어쓴다.
  */
 
 /** 끝 슬래시를 떼어 보관한다. `${base}${path}` 가 늘 슬래시 하나로 이어지게 */
@@ -23,13 +22,17 @@ function readBase(raw: string | undefined): string | null {
  */
 const DEFAULT_BACKOFFICE_BASE = 'https://port-0-backend-mue6mvu2bebbfe1e.sel3.cloudtype.app'
 const DEFAULT_CUSTOMER_BASE = 'https://port-0-backendcustomer-mue6mvu2bebbfe1e.sel3.cloudtype.app'
+/** 이미지 버킷. 공개 읽기라 key 를 붙이면 바로 열린다. CloudFront 로 옮기면 환경변수로 덮어쓴다 */
+const DEFAULT_ASSET_BASE =
+  'https://quinquatria-544611252443-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com'
 
 export const BACKOFFICE_BASE =
   readBase(import.meta.env.VITE_BACKOFFICE_API_BASE) ?? DEFAULT_BACKOFFICE_BASE
-export const CUSTOMER_BASE = readBase(import.meta.env.VITE_CUSTOMER_API_BASE) ?? DEFAULT_CUSTOMER_BASE
+export const CUSTOMER_BASE =
+  readBase(import.meta.env.VITE_CUSTOMER_API_BASE) ?? DEFAULT_CUSTOMER_BASE
 
-/** 이미지 key 앞에 붙는 CloudFront origin. `lib/imageSrc.ts` 가 쓴다 */
-export const ASSET_BASE = readBase(import.meta.env.VITE_ASSET_BASE)
+/** 이미지 key 앞에 붙는 origin. `lib/imageSrc.ts` 가 쓴다 */
+export const ASSET_BASE = readBase(import.meta.env.VITE_ASSET_BASE) ?? DEFAULT_ASSET_BASE
 
 export const API_V1 = '/api/v1'
 
