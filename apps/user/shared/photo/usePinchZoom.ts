@@ -26,8 +26,10 @@ const DOUBLE_TAP_GAP = 40
 // 이만큼(px) 내리거나 이 속도(px/s)로 튕기면 닫는다
 const DISMISS_DISTANCE = 120
 const DISMISS_VELOCITY = 800
-// 휠을 이만큼 아래로 굴리면 닫는다. 트랙패드 관성이 한 번에 넘지 않게 넉넉히 둔다
-const WHEEL_DISMISS = 120
+// 휠을 이만큼(px) 굴리면 닫는다. 마우스 한 칸(보통 100)이면 바로 닫히고 트랙패드는 조금 밀어야 닫힌다
+const WHEEL_DISMISS = 60
+// deltaMode 가 줄·쪽 단위로 오는 브라우저(Firefox 등)를 px 로 맞춘다
+const WHEEL_LINE = 16
 // 가장자리 너머로 끌면 이 비율로만 따라와 고무줄처럼 버틴다
 const RUBBER = 0.35
 // 손을 뗀 속도로 이만큼(초) 더 미끄러진 자리에서 멈춘다
@@ -327,15 +329,23 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, onDismiss:
         return
       }
 
-      // 확대하지 않은 채 아래로 굴리면 사진을 내려 닫는다. 잠깐 멈추면 쌓인 양을 비운다
-      wheelDown = Math.max(0, wheelDown + event.deltaY)
+      // 확대하지 않은 채 굴리면 사진이 아래로 미끄러지며 닫힌다. 트랙패드 자연 스크롤은 방향이 반대라 양만 본다
+      const delta =
+        event.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? event.deltaY * WHEEL_LINE
+          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? event.deltaY * stageSize().height
+            : event.deltaY
+      wheelDown += Math.abs(delta)
       clearTimeout(wheelTimer)
+      // 조금 굴리다 멈추면 쌓인 양을 비우고 제자리로 돌아온다
       wheelTimer = setTimeout(() => {
         wheelDown = 0
         if (!closing.current) animateTo(1, 0, 0)
       }, 200)
       const progress = clamp(wheelDown / WHEEL_DISMISS, 0, 1)
-      y.set(wheelDown * 0.5)
+      y.set(wheelDown)
+      scale.set(1 - progress * 0.1)
       dismiss.set(progress * 0.5)
       if (wheelDown >= WHEEL_DISMISS) {
         clearTimeout(wheelTimer)

@@ -10,6 +10,9 @@ import { useLocale } from '@/shared/i18n/useLocale'
 import { assetUrl } from './asset-url'
 import { usePinchZoom } from './usePinchZoom'
 
+// 뷰어가 앱 기둥 폭이라 그만큼만 받는다
+const VIEWER_SIZES = '(max-width: 480px) 100vw, 480px'
+
 const FADE = { duration: 0.2, ease: 'easeOut' } as const
 
 interface ViewerProps {
@@ -67,8 +70,8 @@ function ViewerPanel({ src, alt, sizes, onClose }: ViewerProps & { onClose: () =
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={FADE}
-          // 지도 위 버튼(z-1000)보다 위에 떠야 한다
-          className="fixed inset-0 z-[1100]"
+          // 지도 위 버튼(z-1000)보다 위에 뜨고, PC 에서도 앱 기둥(480) 밖으로 넘치지 않는다
+          className="fixed inset-0 z-[1100] mx-auto max-w-(--app-max-width)"
         >
           <motion.div style={{ opacity: backdropOpacity }} className="size-full bg-black" />
         </motion.div>
@@ -79,7 +82,7 @@ function ViewerPanel({ src, alt, sizes, onClose }: ViewerProps & { onClose: () =
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={FADE}
-          className="fixed inset-0 z-[1100] outline-none"
+          className="fixed inset-0 z-[1100] mx-auto max-w-(--app-max-width) outline-none"
         >
           <Dialog.Title className="sr-only">{alt}</Dialog.Title>
           <Dialog.Description className="sr-only">{photoViewer.hint}</Dialog.Description>
@@ -110,7 +113,7 @@ function ViewerPanel({ src, alt, sizes, onClose }: ViewerProps & { onClose: () =
                   src={url}
                   alt={alt}
                   fill
-                  sizes="100vw"
+                  sizes={VIEWER_SIZES}
                   draggable={false}
                   onLoad={(event) =>
                     setNaturalSize({
@@ -128,7 +131,7 @@ function ViewerPanel({ src, alt, sizes, onClose }: ViewerProps & { onClose: () =
             // 사진 위에서도 X 가 보이게 위쪽만 어둡게 깐다. 띠는 손짓을 막지 않고 버튼만 눌린다
             className="pointer-events-none absolute inset-x-0 top-0 bg-linear-to-b from-black/50 to-transparent pt-[env(safe-area-inset-top)]"
           >
-            <div className="mx-auto flex h-16 max-w-(--app-max-width) items-center justify-end px-3">
+            <div className="flex h-16 items-center justify-end px-3">
               <Dialog.Close
                 aria-label={photoViewer.close}
                 className="pointer-events-auto flex size-11 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm"
