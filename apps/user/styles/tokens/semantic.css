@@ -26,6 +26,17 @@
   --color-performance-special: var(--beige-coral);
   --color-performance-artist: var(--beige-rose);
 
+  /* 장소 카테고리 색. 뒷부분은 CATEGORY_CODES 소문자. photo·trash 는 서버 코드가 정해지면 맞춘다 */
+  --color-place-booth: var(--twilight);
+  --color-place-pub: var(--brick);
+  --color-place-foodtruck: var(--sunlight);
+  --color-place-photo: var(--blue);
+  --color-place-bracelet: var(--magenta);
+  --color-place-medi: var(--red);
+  --color-place-trash: var(--green);
+  --color-menu-card: var(--beige-peach);
+  --color-map-control-border: var(--brick);
+
   --color-dock: var(--warm-white);
   --color-on-dock: var(--twilight);
   --color-dock-border: var(--brick);

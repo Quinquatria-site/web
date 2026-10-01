@@ -1,12 +1,13 @@
 'use client'
 
 import { AnimatePresence, motion } from 'motion/react'
-import { useEffect, type CSSProperties } from 'react'
+import { useEffect, useSyncExternalStore, type CSSProperties } from 'react'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { DOCK_TABS } from './dock-mode'
 import { BAR_COLLAPSE, DOCK_POP, PRESS_SCALE } from './dock-motion'
 import { DockButton } from './DockButton'
+import { dockStowStore } from './dock-stow-store'
 import { DockTabs } from './DockTabs'
 import { useDockMode } from './useDockMode'
 import { usePreviousMode } from './usePreviousMode'
@@ -17,6 +18,7 @@ export function Dock() {
   const mode = useDockMode()
   const from = usePreviousMode(mode)
   const hidden = mode === 'hidden'
+  const stowed = useSyncExternalStore(dockStowStore.subscribe, dockStowStore.get, () => false)
 
   useEffect(() => {
     // 본문 끝 여백이 CSS 만으로 모드를 따라가게 html 에 적는다
@@ -27,12 +29,13 @@ export function Dock() {
     <motion.nav
       aria-label={getMessages(locale).dock.label}
       initial={false}
-      animate={{ scale: hidden ? 0 : 1, opacity: hidden ? 0 : 1 }}
+      // 내려 둘 때는 모양은 그대로 두고 화면 아래로만 미끄러진다
+      animate={{ scale: hidden ? 0 : 1, opacity: hidden ? 0 : 1, y: stowed ? '200%' : 0 }}
       // 원은 도크 자체가 버튼이라 도크를 줄이고, 탭바는 탭마다 따로 줄인다
       whileTap={mode === 'tabs' ? undefined : { scale: PRESS_SCALE }}
       // 탭바에서 숨을 때는 원으로 다 접힌 뒤에 사라진다
       transition={{ ...DOCK_POP, delay: hidden && from === 'tabs' ? BAR_COLLAPSE : 0 }}
-      inert={hidden}
+      inert={hidden || stowed}
       style={
         {
           // 원은 오른쪽 아래에 두고 탭바만 가운데로 옮긴다
