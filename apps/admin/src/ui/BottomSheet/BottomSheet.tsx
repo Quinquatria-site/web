@@ -37,7 +37,9 @@ const SLIDE = { type: 'spring', bounce: 0, duration: 0.35 } as const
 // 손을 뗀 속도로 이만큼(초) 더 미끄러진 자리에서 가장 가까운 단계에 붙인다
 const PROJECTION = 0.2
 
-interface SheetProps {
+export interface BottomSheetProps {
+  open: boolean
+  /** 닫히는 모든 경로(X·ESC·끌어내리기·바깥 누르기·뒤로 가기)가 여기로 모인다 */
   onClose: () => void
   /** 지도를 움직이는 동안처럼 닫지 않고 잠깐 아래로 숨긴다 */
   hidden?: boolean
@@ -46,7 +48,7 @@ interface SheetProps {
   children: ReactNode
 }
 
-export type BottomSheetProps = SheetProps & { open: boolean }
+type SheetPanelProps = Omit<BottomSheetProps, 'open'>
 
 /**
  * 두 단계로 올라오는 시트. 1단계는 뒤 화면을 막지 않고, 2단계는 화면을 덮어 닫아야 뒤를
@@ -69,7 +71,7 @@ export function BottomSheet({ open, ...props }: BottomSheetProps) {
   )
 }
 
-function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetProps) {
+function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetPanelProps) {
   const hasPeek = peekHeight !== undefined
   const [step, setStep] = useState<Step>(hasPeek ? 'peek' : 'full')
   const [height, setHeight] = useState(0)
