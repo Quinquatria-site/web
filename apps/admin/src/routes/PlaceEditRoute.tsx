@@ -229,14 +229,13 @@ function PlaceEditForm() {
                   message={`${values.name_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
                   actionLabel="실행취소"
                   onAction={() => {
-                    restorePlaceTranslations(saved.id, undo).catch((undoError: unknown) =>
+                    restorePlaceTranslations(saved.id, undo).catch((undoError: unknown) => {
+                      const message = apiErrorText(undoError)
                       snackbar.create({
                         timeout: 4000,
-                        render: () => (
-                          <Snackbar variant="critical" message={apiErrorText(undoError)} />
-                        ),
-                      }),
-                    )
+                        render: () => <Snackbar variant="critical" message={message} />,
+                      })
+                    })
                   }}
                 />
               ),

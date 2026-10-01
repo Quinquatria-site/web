@@ -11,9 +11,10 @@ import {
   IconMegaphoneFill,
   IconMegaphoneLine,
 } from '@karrotmarket/react-monochrome-icon'
-import { Link, Outlet, useMatches } from 'react-router'
+import { Link, Outlet, useLocation, useMatches, useNavigate } from 'react-router'
 import { SnackbarAvoidOverlap, SnackbarProvider } from 'seed-design/ui/snackbar'
-import { AppBar, BottomTabBar, type BottomTab } from '../ui'
+import { ERROR_LOG_HASH, type ErrorLogNavState } from '../lib/errorLog'
+import { AppBar, BottomTabBar, ErrorBanner, type BottomTab } from '../ui'
 import styles from './AppLayout.module.css'
 
 /** 전체 화면 오버레이가 포털로 붙는 곳. PhotoViewer 가 쓴다 */
@@ -44,6 +45,8 @@ export interface RouteHandle {
  */
 export function AppLayout() {
   const matches = useMatches()
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
   const handle = [...matches]
     .reverse()
     .map((match) => match.handle as RouteHandle | undefined)
@@ -57,6 +60,9 @@ export function AppLayout() {
   )
 
   const bare = handle?.bare ?? false
+  // 로그인 화면에서는 눌러도 갈 곳이 없고(설정은 로그인 뒤다), 설정 화면은 이미
+  // 오류 기록을 보고 있다
+  const bannerEnabled = !bare && pathname !== '/settings'
 
   return (
     <SnackbarProvider>
@@ -64,6 +70,13 @@ export function AppLayout() {
           position: fixed 의 기준이 그 조상이 되어 화면 전체를 덮지 못한다 */}
       <div id={PORTAL_HOST_ID} className={styles.page}>
         <div className={styles.viewport}>
+          <ErrorBanner
+            enabled={bannerEnabled}
+            onOpen={(entry) => {
+              const state: ErrorLogNavState = { highlight: entry.id }
+              navigate(`/settings#${ERROR_LOG_HASH}`, { state })
+            }}
+          />
           {!bare && (
             <AppBar
               title={handle?.title ?? ''}

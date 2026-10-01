@@ -24,6 +24,8 @@
 /* 폰 화면처럼 높이가 고정된다. 여기는 스크롤하지 않는다 —
    상단바와 탭바를 제자리에 두고 가운데 .body 만 스크롤한다. */
 .viewport {
+  /* 오류 알림(ErrorBanner)이 이 기둥을 기준으로 뜬다 */
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;

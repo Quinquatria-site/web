@@ -40,13 +40,16 @@ export class ApiError extends Error {
   readonly status: number
   readonly code: string
   readonly details: ApiErrorDetail[]
+  /** 오류 기록의 항목 id. 기록하지 않은 요청(헬스체크)이면 없다 */
+  readonly logId?: number
 
-  constructor(status: number, body: ApiErrorBody) {
+  constructor(status: number, body: ApiErrorBody, logId?: number) {
     super(`${status} ${body.code}: ${body.message}`)
     this.name = 'ApiError'
     this.status = status
     this.code = body.code
     this.details = body.details
+    this.logId = logId
   }
 }
 
