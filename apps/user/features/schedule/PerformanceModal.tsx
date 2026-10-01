@@ -5,6 +5,7 @@ import Image from 'next/image'
 import type { PerformanceType } from '@quen/schema/entities/performance'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
+import { assetUrl } from '@/shared/photo/asset-url'
 import placeholderImage from './images/performance-placeholder.png'
 import type { Performance } from './performance'
 
@@ -32,23 +33,41 @@ function ModalHeader({ type }: { type: PerformanceType }) {
   )
 }
 
+// 팀 이미지. 없으면 시안의 아테나 그림을 흐리게 띄운다
+function ModalImage({ imageUri, title }: { imageUri: string | null; title: string }) {
+  if (imageUri) {
+    return (
+      <div className="relative h-[159px] overflow-hidden rounded-xl bg-placeholder">
+        {/* 모달 최대 폭 308px 에서 좌우 패딩을 뺀 폭 */}
+        <Image src={assetUrl(imageUri)} alt={title} fill sizes="282px" className="object-cover" />
+      </div>
+    )
+  }
+  return (
+    <div
+      aria-hidden
+      className="flex h-[159px] items-center justify-center rounded-xl bg-placeholder"
+    >
+      {/* 시안처럼 가운데를 오른쪽으로 치우쳐 잘라 창끝까지 보인다 */}
+      <Image
+        src={placeholderImage}
+        alt=""
+        sizes="156px"
+        className="h-[132px] w-[156px] object-cover object-[65%_50%] opacity-50"
+      />
+    </div>
+  )
+}
+
 // 팀 이미지 · 이름 · 소개
-function ModalContent({ title, description }: Pick<Performance, 'title' | 'description'>) {
+function ModalContent({
+  image_uri,
+  title,
+  description,
+}: Pick<Performance, 'image_uri' | 'title' | 'description'>) {
   return (
     <div className="mt-3 flex flex-col gap-4">
-      {/* 임시: image_uri 는 key 라 이미지 주소가 정해지기 전까지 시안의 아테나 그림을 흐리게 띄운다 */}
-      <div
-        aria-hidden
-        className="flex h-[159px] items-center justify-center rounded-xl bg-placeholder"
-      >
-        {/* 시안처럼 가운데를 오른쪽으로 치우쳐 잘라 창끝까지 보인다 */}
-        <Image
-          src={placeholderImage}
-          alt=""
-          sizes="156px"
-          className="h-[132px] w-[156px] object-cover object-[65%_50%] opacity-50"
-        />
-      </div>
+      <ModalImage imageUri={image_uri} title={title} />
       <div className="flex flex-col gap-2 px-2">
         <Dialog.Title className="text-2xl leading-[normal] font-bold">{title}</Dialog.Title>
         <Dialog.Description className="text-sm leading-[1.18] whitespace-pre-line">
@@ -67,7 +86,11 @@ export function PerformanceModal({ performance }: { performance: Performance }) 
       {/* 소개가 길거나 글자를 키워도 닫기 버튼까지 닿게 화면 안에서 스크롤한다 */}
       <Dialog.Content className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-48px)] w-[calc(100%-48px)] max-w-[308px] -translate-1/2 overflow-y-auto rounded-2xl bg-bg p-[13px] pb-6">
         <ModalHeader type={performance.type} />
-        <ModalContent title={performance.title} description={performance.description} />
+        <ModalContent
+          image_uri={performance.image_uri}
+          title={performance.title}
+          description={performance.description}
+        />
       </Dialog.Content>
     </Dialog.Portal>
   )
