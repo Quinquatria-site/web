@@ -13,7 +13,7 @@ import { apiErrorText } from '../lib/apiErrorText'
 import { useFormFields } from '../lib/useFormFields'
 import { ConfirmDialog, HourField, PhotoPicker, type Hour } from '../ui'
 import { CampusMap } from '../map/CampusMap'
-import type { Point } from '../map/campus'
+import { MAP_HEIGHT, MAP_WIDTH, type Point } from '../map/campus'
 import { PlaceMarker } from '../map/PlaceMarker'
 import { CATEGORIES, categoryById } from '../mocks/categories'
 import { menusByPlace } from '../mocks/menus'
@@ -44,6 +44,13 @@ const hourOf = (iso: string): Hour => ({
   hour: Number(iso.slice(11, 13)),
   minute: Number(iso.slice(14, 16)),
 })
+
+/** 입력칸 글자를 지도 좌표로. 범위 밖이거나 숫자가 아니면 null. 지도 클릭과 같게 소수 1자리로 맞춘다 */
+function parseCoord(text: string, max: number): number | null {
+  const value = Number(text.trim())
+  if (text.trim() === '' || !Number.isFinite(value) || value < 0 || value > max) return null
+  return Math.round(value * 10) / 10
+}
 /** 일차 + 시각 → 명세의 ISO 8601(+09:00) (§2.2) */
 const toIso = (date: string, { hour, minute }: Hour) =>
   `${date}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00+09:00`
@@ -86,6 +93,11 @@ function PlaceEditForm() {
       0,
   )
   const [point, setPoint] = useState<Point | null>(editing ? { x: editing.x, y: editing.y } : null)
+  // 좌표 입력칸 글자. 지도를 누르면 채워지고, 직접 고치면 범위 안 숫자일 때만 point 가 된다
+  const [coordText, setCoordText] = useState({
+    x: editing ? String(editing.x) : '',
+    y: editing ? String(editing.y) : '',
+  })
   const [error, setError] = useState<string | null>(null)
   const [confirming, setConfirming] = useState(false)
   const [photos, setPhotos] = useState<string[]>(editing?.place_image_uri ?? [])
@@ -113,13 +125,30 @@ function PlaceEditForm() {
   useStoreVersion()
   const menus = editing ? menusByPlace(editing.id) : []
 
+  const pickPoint = (picked: Point) => {
+    setPoint(picked)
+    setCoordText({ x: String(picked.x), y: String(picked.y) })
+  }
+
+  const typeCoord = (axis: 'x' | 'y', text: string) => {
+    const next = { ...coordText, [axis]: text }
+    setCoordText(next)
+    const x = parseCoord(next.x, MAP_WIDTH)
+    const y = parseCoord(next.y, MAP_HEIGHT)
+    // 둘 다 맞아야 위치로 친다. 하나라도 틀리면 지도 핀을 내려 저장 검사가 막게 한다
+    setPoint(x !== null && y !== null ? { x, y } : null)
+  }
+
   const save = async () => {
     if (pending) return
     // §5.4 의 422 조건을 화면에서 먼저 막는다
     const sequence = Number(values.sequence)
     if (!Number.isInteger(sequence) || sequence < 1)
       return setError('표시 순서는 1 이상의 정수여야 합니다.')
-    if (!point) return setError('지도에서 위치를 찍어주세요.')
+    if (!point)
+      return setError(
+        `지도에서 위치를 찍거나 x(0~${MAP_WIDTH})·y(0~${MAP_HEIGHT}) 를 숫자로 입력해주세요.`,
+      )
     // 같은 값은 명세가 허용한다 (§5.4)
     if (minutesOf(end) < minutesOf(start)) return setError('종료가 시작보다 빨라요.')
     // 설명은 선택이다 (§5.4 PlaceTranslation)
@@ -313,17 +342,32 @@ function PlaceEditForm() {
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>위치</h2>
         <p className={styles.hint}>
-          지도를 누르면 그 자리가 좌표로 들어갑니다.{' '}
-          {point ? (
-            <span className={styles.coord}>
-              x {point.x} · y {point.y}
-            </span>
-          ) : (
-            '아직 위치가 없습니다.'
-          )}
+          지도를 누르거나 좌표를 직접 입력합니다. 왼쪽 아래가 0, 오른쪽·위로 커집니다.
         </p>
+        <div className={styles.coords}>
+          <TextField
+            label="x"
+            description={`0 ~ ${MAP_WIDTH}`}
+            value={coordText.x}
+            onValueChange={({ value }) => typeCoord('x', value)}
+            invalid={coordText.x !== '' && parseCoord(coordText.x, MAP_WIDTH) === null}
+            errorMessage={`0 ~ ${MAP_WIDTH} 숫자`}
+          >
+            <TextFieldInput inputMode="decimal" placeholder="예: 380" />
+          </TextField>
+          <TextField
+            label="y"
+            description={`0 ~ ${MAP_HEIGHT}`}
+            value={coordText.y}
+            onValueChange={({ value }) => typeCoord('y', value)}
+            invalid={coordText.y !== '' && parseCoord(coordText.y, MAP_HEIGHT) === null}
+            errorMessage={`0 ~ ${MAP_HEIGHT} 숫자`}
+          >
+            <TextFieldInput inputMode="decimal" placeholder="예: 680" />
+          </TextField>
+        </div>
         <div className={styles.picker}>
-          <CampusMap onPick={setPoint}>
+          <CampusMap onPick={pickPoint}>
             {point && (
               <PlaceMarker
                 point={point}

@@ -3,6 +3,22 @@
  * Leaflet 이 HTML 문자열로 그려서 클래스는 markers.tsx·labels.tsx 가 이 모듈에서 꺼내 넣는다.
  */
 
+/* 지도 칸. user MapView 의 바탕색이다. leaflet.css 가 뒤에 실려 #ddd 가 이기지 않게 같은 클래스를 함께 건다 */
+.container:global(.leaflet-container) {
+  background: #fefaf2;
+}
+
+/*
+ * leaflet.css 가 지도 칸 글꼴을 Helvetica Neue 로 덮어서 마커·이름표에 앱 글꼴을 다시 건다.
+ * 굵기는 700 이다 — user 는 600 을 적지만 Pretendard 를 500·700 두 굵기만 실어 실제로는
+ * 700 으로 그려진다. admin 은 가변 폰트라 600 을 적으면 정말 600 이 되어 더 가늘다.
+ */
+.marker,
+.label {
+  font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
+  font-weight: 700;
+}
+
 /* Leaflet 마커 뿌리. 크기 0 이라 안쪽을 가운데 맞춤으로 띄운다 */
 .root {
   background: none;
@@ -14,7 +30,7 @@
   position: absolute;
   width: 20px;
   height: 20px;
-  transform: translate(-50%, -50%);
+  translate: -50% -50%;
 }
 
 :global([data-markers='full']) .marker {
@@ -43,6 +59,16 @@
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.root:focus-visible {
+  outline: none;
+}
+
+/* 키보드로 마커에 오면 글자색 테두리를 띄운다 (user 의 group-focus-visible:outline-2) */
+.root:focus-visible .circle {
+  outline: 2px solid #574a53;
+  outline-offset: 2px;
+}
+
 .circle {
   position: absolute;
   inset: 0;
@@ -52,7 +78,6 @@
   background: var(--place-color);
   color: #fbf4ed;
   font-size: 17px;
-  font-weight: 600;
   line-height: 1;
 }
 
@@ -65,12 +90,16 @@
   display: contents;
 }
 
-/* 이름표. 글자 크기는 LabelScale 이 지도 칸에 다는 --label-size 를 따른다 */
+/*
+ * 이름표. 글자 크기는 LabelScale 이 지도 칸에 다는 --label-size 를 따른다.
+ * 가운데 맞춤은 transform 이 아니라 translate 속성이어야 한다 — CSS 는 translate → rotate →
+ * transform 순서로 적용해서, transform 으로 옮기면 기울인 이름표가 회전된 축으로 밀려 어긋난다.
+ * user 의 Tailwind -translate-1/2 도 translate 속성이다
+ */
 .label {
   position: absolute;
-  transform: translate(-50%, -50%);
+  translate: -50% -50%;
   font-size: var(--label-size);
-  font-weight: 600;
   line-height: 1.25;
   letter-spacing: 0.04em;
   white-space: pre;
@@ -90,4 +119,44 @@
   .ring {
     scale: 1;
   }
+}
+
+/* 확대·축소 버튼. user ZoomButtons 와 같은 크기·색(accent·brick·warm-white)이다 */
+.zoom {
+  position: absolute;
+  right: 27px;
+  bottom: 16px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  width: 43px;
+  overflow: hidden;
+  background: #fbf4ed;
+  border: 1px solid #c37555;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px #c37555;
+}
+
+.zoomButton {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 40px;
+  padding: 0;
+  color: #b85b56;
+  font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
+  font-size: 32px;
+  line-height: 1;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.zoomButton + .zoomButton {
+  border-top: 1px solid #c37555;
+}
+
+.zoomButton:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
