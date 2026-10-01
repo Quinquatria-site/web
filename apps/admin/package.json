@@ -13,11 +13,13 @@
   "dependencies": {
     "@karrotmarket/react-monochrome-icon": "^1.26.0",
     "@quen/schema": "workspace:*",
+    "@radix-ui/react-dialog": "^1.1.23",
     "@seed-design/css": "^2.6.1",
     "@seed-design/react": "^2.4.1",
     "@seed-design/react-pagination": "^1.0.0",
     "clsx": "^2.1.1",
     "leaflet": "^1.9.4",
+    "motion": "^13.4.4",
     "pretendard": "^1.3.9",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

@@ -8,7 +8,7 @@ import {
 } from '@/shared/bottom-sheet/BottomSheet'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
-import { Photo } from '@/shared/photo/Photo'
+import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
 import { formatPrice } from './format-price'
 import { PHOTO_SIZES, PRICE_TEXT } from './GoodsCard'
 import type { Goods } from './goods'
@@ -41,7 +41,7 @@ export function GoodsSheet({ goods }: { goods: Goods[] }) {
             return (
               <li key={g.id} className="flex flex-col gap-2">
                 <div className="aspect-square overflow-hidden rounded-lg">
-                  <Photo src={g.image.src} alt={item.name} sizes={PHOTO_SIZES} />
+                  <ZoomablePhoto src={g.image.src} alt={item.name} sizes={PHOTO_SIZES} />
                 </div>
                 <div className="flex flex-col text-text">
                   <p className="leading-[normal] font-semibold">{item.name}</p>

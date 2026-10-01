@@ -5,6 +5,12 @@ export const zh: Messages = {
   bottomSheet: {
     close: '关闭',
   },
+  photoViewer: {
+    open: '查看{name}大图',
+    close: '关闭',
+    hint: '双指张开可放大，向下滑动或点击照片外部即可关闭。',
+    swipeHint: '左右滑动可查看其他照片。',
+  },
   dock: {
     label: '主菜单',
     back: '返回',

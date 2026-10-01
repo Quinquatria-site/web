@@ -1,4 +1,4 @@
-import { Photo } from '@/shared/photo/Photo'
+import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
 
 /** 굿즈 카드의 테두리·그림자. 뒤에 겹친 빈 카드도 같은 모양을 쓴다 */
 export const CARD_FRAME =
@@ -25,7 +25,7 @@ export function GoodsCard({
   return (
     <article className={`${CARD_FRAME} flex flex-col items-center gap-2 px-[18px] pt-[18px] pb-6`}>
       <div className="aspect-square w-full overflow-hidden rounded-xl">
-        <Photo src={image} alt={name} sizes={PHOTO_SIZES} />
+        <ZoomablePhoto src={image} alt={name} sizes={PHOTO_SIZES} />
       </div>
       <div className="flex flex-col items-center gap-1 text-center text-text">
         <h2 className="text-[28px] leading-[normal] font-semibold">{name}</h2>

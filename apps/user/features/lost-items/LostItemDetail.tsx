@@ -1,4 +1,4 @@
-import { Photo } from '@/shared/photo/Photo'
+import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
 import type { LostItem } from './lost-item'
 import { ReturnedBadge } from './ReturnedBadge'
 
@@ -15,7 +15,11 @@ export function LostItemDetail({
   return (
     <article className="flex flex-col gap-5 px-5 pt-[18px]">
       <div className="aspect-[350/282] overflow-hidden rounded-xl">
-        <Photo src={item.image_url} alt={item.title} sizes="(max-width: 480px) 100vw, 480px" />
+        <ZoomablePhoto
+          src={item.image_url}
+          alt={item.title}
+          sizes="(max-width: 480px) 100vw, 480px"
+        />
       </div>
       <div className="flex flex-col gap-3 px-2 text-secondary">
         <div className="flex flex-col gap-2">
