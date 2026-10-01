@@ -49,7 +49,7 @@ export const en: Messages = {
     noticeDetail: 'Notice',
     lostItems: 'Lost & Found',
     lostItemDetail: 'Lost Item',
-    goods: 'Goods',
+    goods: 'Quinquatria Goods',
   },
   notices: {
     important: 'Important',
@@ -128,6 +128,29 @@ export const en: Messages = {
       languageCenter: 'Language\nCenter',
       internationalHall: 'Intl. Hall',
       graduateSchool: 'Graduate\nSchool',
+    },
+  },
+  // 임시 번역: 굿즈 탭
+  goods: {
+    introTitle: '2026 QUINQUATRIA',
+    introSubtitle: 'Meet the official goods!',
+    salesLocation: 'See where to buy',
+    viewAll: 'View all goods',
+    sheetDescription: 'Official 2026 Quinquatria goods',
+    previous: 'Previous item',
+    next: 'Next item',
+    items: {
+      soccer: { name: 'Soccer Jersey', description: 'Signature soccer jersey with stars' },
+      baseball: { name: 'Baseball Jersey', description: 'Signature baseball jersey with stars' },
+      soccerCrop: {
+        name: 'Soccer Jersey (Crop)',
+        description: 'Signature soccer jersey with stars',
+      },
+      rugby: { name: 'Rugby Jersey', description: 'Signature rugby jersey with stars' },
+      baseballBoo: {
+        name: 'Baseball Jersey (BOO ver.)',
+        description: 'Signature baseball jersey with BOO',
+      },
     },
   },
 }
