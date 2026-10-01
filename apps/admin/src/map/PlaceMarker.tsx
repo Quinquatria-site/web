@@ -6,14 +6,15 @@ import {
 } from 'leaflet'
 import { useEffect, useMemo, useRef, type ReactNode } from 'react'
 import { Marker, useMap } from 'react-leaflet'
-import type { CategoryCode } from '../mocks/types'
 import { toLatLng, type Point } from './campus'
 import { CATEGORY_COLORS } from './category-colors'
 import styles from './CampusMap.module.css'
 import braceletIcon from './icons/bracelet.svg'
 import foodtruckIcon from './icons/foodtruck.svg'
 import mediIcon from './icons/medi.svg'
-import { placeLabel } from './place-label'
+import photoIcon from './icons/photo.svg'
+import trashIcon from './icons/trash.svg'
+import { PLACE_NAMES, placeLabel, type PlaceCode } from './place-label'
 
 /** 이 배율부터 점이 글자·아이콘 든 마커로 커진다. user 앱과 같은 값 */
 export const FULL_MARKER_ZOOM = -1
@@ -22,23 +23,16 @@ export const FULL_MARKER_ZOOM = -1
 const SELECTED_Z_OFFSET = 1000
 
 // 구역 번호 대신 아이콘을 보여 주는 카테고리. user 앱과 같은 그림이다
-const PLACE_ICONS: Partial<Record<CategoryCode, string>> = {
+const PLACE_ICONS: Partial<Record<PlaceCode, string>> = {
   FOODTRUCK: foodtruckIcon,
   MEDI: mediIcon,
   BRACELET: braceletIcon,
-}
-
-// 마커 이름. user messages/ko.ts 의 map.places 와 같다. 스크린리더가 "부스 A1" 처럼 읽는다
-const PLACE_NAMES: Record<CategoryCode, string> = {
-  BOOTH: '부스',
-  PUB: '주점',
-  FOODTRUCK: '푸드트럭',
-  MEDI: '의무실',
-  BRACELET: '입장 팔찌',
+  PHOTO: photoIcon,
+  TRASH: trashIcon,
 }
 
 // Leaflet 이 문자열로 받아 그리므로 HTML 로 만든다. 모양은 user 앱 PlaceMarkers 의 markerHtml 과 같다
-function markerHtml(code: CategoryCode, label: string | null) {
+function markerHtml(code: PlaceCode, label: string | null) {
   const icon = PLACE_ICONS[code]
   const content = icon ? `<img src="${icon}" alt="" draggable="false" />` : (label ?? '')
   return `<span class="${styles.marker}" style="--place-color:${CATEGORY_COLORS[code]}">
@@ -75,7 +69,7 @@ export function PlaceMarker({
   children,
 }: {
   point: Point
-  code: CategoryCode
+  code: PlaceCode
   sequence: number
   selected?: boolean
   onSelect?: () => void
