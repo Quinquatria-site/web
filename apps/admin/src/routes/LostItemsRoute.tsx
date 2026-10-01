@@ -6,6 +6,7 @@ import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
 import { List, ListButtonItem } from 'seed-design/ui/list'
 import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented-control'
 import { Snackbar, SnackbarAvoidOverlap, useSnackbarAdapter } from 'seed-design/ui/snackbar'
+import { apiErrorText } from '../lib/apiErrorText'
 import { lostItemsByReturned, setReturned, useStoreVersion } from '../mocks/store'
 import { dateTimeLabel, findTranslation, type LostItem } from '../mocks/types'
 import { imageSrc } from '../lib/imageSrc'
@@ -27,7 +28,7 @@ function locationOf(item: LostItem): string {
  * alt 를 비우는 이유는 바로 옆 title 이 같은 것을 말하기 때문이다. 채우면
  * 스크린리더가 한 행에서 물건 이름을 두 번 읽는다.
  *
- * image_url 은 화면이 필수로 막지만 타입은 nullable 이다 (§5.8 · 목 데이터).
+ * image_url 은 화면이 필수로 막지만 타입은 nullable 이다 (§5.8).
  * null 이면 imageSrc 를 부르지 않는다 — 빈 key 를 해시해 엉뚱한 사진을 보여주면
  * 사진이 있는 것처럼 읽힌다.
  */
@@ -99,7 +100,7 @@ export function LostItemsRoute() {
   // 저장·삭제·실행취소·반환 처리가 이 목록에 바로 반영되게 한다
   useStoreVersion()
 
-  // 메모하지 않는다. LOST_ITEMS 는 목 스토어가 제자리에서 바꾸는 배열이라
+  // 메모하지 않는다. LOST_ITEMS 는 스토어 캐시가 제자리에서 바꾸는 배열이라
   // 의존성으로 적을 것이 없고, 수십 건 정렬은 렌더마다 해도 싸다.
   // 보지 않는 쪽도 계산하는 것은 세그먼트에 건수를 띄우기 위해서다 — 숫자가
   // 있어야 두 탭이 같은 집합을 나눈 것으로 읽힌다
@@ -122,8 +123,21 @@ export function LostItemsRoute() {
     gen: 0,
   })
 
-  const changeReturned = (item: LostItem, next: boolean) => {
-    setReturned(item.id, next)
+  /** 반환·되돌리기가 서버에서 실패하면 행은 그대로 두고 까닭을 띄운다 */
+  const showError = (error: unknown) =>
+    snackbar.create({
+      timeout: 4000,
+      render: () => <Snackbar variant="critical" message={apiErrorText(error)} />,
+    })
+
+  const changeReturned = async (item: LostItem, next: boolean) => {
+    try {
+      // 서버가 받아야 행이 반대 세그먼트로 옮겨진다. 실패한 건은 묶음에 넣지 않는다
+      await setReturned(item.id, next)
+    } catch (error) {
+      showError(error)
+      return
+    }
 
     const current = batch.current
     if (current.next !== next) current.ids = []
@@ -155,8 +169,8 @@ export function LostItemsRoute() {
           message={message}
           actionLabel="실행취소"
           onAction={() => {
-            for (const id of ids) setReturned(id, !next)
             batch.current.ids = []
+            Promise.all(ids.map((id) => setReturned(id, !next))).catch(showError)
           }}
         />
       ),
@@ -206,7 +220,7 @@ export function LostItemsRoute() {
                     size="small"
                     variant={returned ? 'neutralWeak' : 'neutralOutline'}
                     aria-label={`${titleOf(item)} ${returned ? '미반환으로 되돌리기' : '반환 처리'}`}
-                    onClick={() => changeReturned(item, !returned)}
+                    onClick={() => void changeReturned(item, !returned)}
                   >
                     {returned ? '되돌리기' : '반환'}
                   </ActionButton>

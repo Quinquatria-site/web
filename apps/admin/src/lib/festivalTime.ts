@@ -20,7 +20,6 @@ const KST_OFFSET_MS = 9 * 60 * 60 * 1000
 /**
  * Date → KST 기준 "YYYY-MM-DD".
  *
- * store.ts 의 nowKst 와 같은 관례지만 그쪽은 export 가 아니라 여기 다시 쓴다.
  * 축제 일자가 KST 로 적힌 값이라 비교 기준도 KST 여야 한다.
  */
 export function kstDateString(now: Date): string {
