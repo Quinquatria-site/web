@@ -7,7 +7,7 @@ import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { assetUrl } from '@/shared/photo/asset-url'
 import placeholderImage from './images/performance-placeholder.png'
-import type { Performance } from './performance'
+import { MODAL_IMAGE_SIZES, type Performance } from './performance'
 
 // 타임라인 카드와 같은 종류별 색
 const CHIP_BG: Record<PerformanceType, string> = {
@@ -38,8 +38,13 @@ function ModalImage({ imageUri, title }: { imageUri: string | null; title: strin
   if (imageUri) {
     return (
       <div className="relative h-[159px] overflow-hidden rounded-xl bg-placeholder">
-        {/* 모달 최대 폭 308px 에서 좌우 패딩을 뺀 폭 */}
-        <Image src={assetUrl(imageUri)} alt={title} fill sizes="282px" className="object-cover" />
+        <Image
+          src={assetUrl(imageUri)}
+          alt={title}
+          fill
+          sizes={MODAL_IMAGE_SIZES}
+          className="object-cover"
+        />
       </div>
     )
   }

@@ -1,5 +1,6 @@
 import { FESTIVAL_DAYS, groupByFestivalDay } from '@/features/schedule/festival-days'
 import { getPerformances } from '@/features/schedule/get-performances'
+import { PerformanceImagePreload } from '@/features/schedule/PerformanceImagePreload'
 import { ScheduleBanner } from '@/features/schedule/ScheduleBanner'
 import { ScheduleBoard } from '@/features/schedule/ScheduleBoard'
 import { Timeline, performanceAnchorId } from '@/features/schedule/Timeline'
@@ -18,6 +19,7 @@ export default async function SchedulePage() {
 
   return (
     <>
+      <PerformanceImagePreload performances={performances} />
       <PageHeader title={pages.schedule} />
       <ScheduleBoard
         banner={<ScheduleBanner live={live} />}
