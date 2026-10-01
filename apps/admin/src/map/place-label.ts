@@ -29,3 +29,21 @@ export function placeLabel(code: PlaceCode, sequence: number): string | null {
   const section = String.fromCharCode(64 + Math.floor(sequence / 100))
   return `${section}${sequence % 100}`
 }
+
+/**
+ * 장소 편집의 "표시 순서" 아래 설명. placeLabel 규칙을 운영자 말로 풀고, 지금 넣은 값이
+ * 지도 마커에 어떻게 찍히는지 바로 보여 준다.
+ */
+export function sequenceHint(code: PlaceCode, sequence: number): string {
+  if (!SECTION_CODES.has(code)) {
+    return `${PLACE_NAMES[code]} 마커에는 번호 대신 아이콘이 보입니다. 이 값은 ${PLACE_NAMES[code]} 안에서의 순서로만 씁니다.`
+  }
+  const rule =
+    '백의 자리는 구역(1→A, 2→B …), 끝 두 자리는 번호입니다. 101 은 지도 마커에 A1 로 보입니다.'
+  if (!Number.isInteger(sequence) || sequence < 1) return rule
+  // 100 미만은 구역이 없고, 끝 두 자리가 00 이면 번호가 0 이라 마커 글자가 어긋난다
+  if (sequence < 100 || sequence % 100 === 0) {
+    return `${rule} 지금 값 ${sequence} 은 구역이나 번호가 비어 마커가 이상하게 보입니다.`
+  }
+  return `${rule} 지금 값은 ${placeLabel(code, sequence)} 로 보입니다.`
+}

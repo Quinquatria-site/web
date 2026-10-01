@@ -15,6 +15,7 @@ import { ConfirmDialog, HourField, PhotoPicker, type Hour } from '../ui'
 import { CampusMap } from '../map/CampusMap'
 import { MAP_HEIGHT, MAP_WIDTH, type Point } from '../map/campus'
 import { PlaceMarker } from '../map/PlaceMarker'
+import { sequenceHint } from '../map/place-label'
 import { CATEGORIES, categoryById } from '../mocks/categories'
 import { menusByPlace } from '../mocks/menus'
 import {
@@ -311,7 +312,10 @@ function PlaceEditForm() {
 
         <TextField
           label="표시 순서"
-          description={`${findTranslation(categoryById(categoryId)?.translations ?? [], 'KO')?.name ?? ''} 안에서의 자리 번호`}
+          description={sequenceHint(
+            categoryById(categoryId)?.code ?? 'BOOTH',
+            Number(values.sequence),
+          )}
           {...bind('sequence')}
         >
           <TextFieldInput inputMode="numeric" placeholder="1" />
