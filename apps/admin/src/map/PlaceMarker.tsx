@@ -14,7 +14,7 @@ import foodtruckIcon from './icons/foodtruck.svg'
 import mediIcon from './icons/medi.svg'
 import photoIcon from './icons/photo.svg'
 import trashIcon from './icons/trash.svg'
-import { placeLabel, type PlaceCode } from './place-label'
+import { PLACE_NAMES, placeLabel, type PlaceCode } from './place-label'
 
 /** 이 배율부터 점이 글자·아이콘 든 마커로 커진다. user 앱과 같은 값 */
 export const FULL_MARKER_ZOOM = -1
@@ -29,17 +29,6 @@ const PLACE_ICONS: Partial<Record<PlaceCode, string>> = {
   BRACELET: braceletIcon,
   PHOTO: photoIcon,
   TRASH: trashIcon,
-}
-
-// 마커 이름. user messages/ko.ts 의 map.places 와 같다. 스크린리더가 "부스 A1" 처럼 읽는다
-const PLACE_NAMES: Record<PlaceCode, string> = {
-  BOOTH: '부스',
-  PUB: '주점',
-  FOODTRUCK: '푸드트럭',
-  MEDI: '의무실',
-  BRACELET: '입장 팔찌',
-  PHOTO: '포토부스',
-  TRASH: '쓰레기통',
 }
 
 // Leaflet 이 문자열로 받아 그리므로 HTML 로 만든다. 모양은 user 앱 PlaceMarkers 의 markerHtml 과 같다
