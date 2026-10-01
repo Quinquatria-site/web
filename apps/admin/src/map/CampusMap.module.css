@@ -1,0 +1,93 @@
+/*
+ * 장소 마커·이름표 모양. user 앱 features/map 의 PlaceMarkers·MapLabels 와 같은 치수다.
+ * Leaflet 이 HTML 문자열로 그려서 클래스는 markers.tsx·labels.tsx 가 이 모듈에서 꺼내 넣는다.
+ */
+
+/* Leaflet 마커 뿌리. 크기 0 이라 안쪽을 가운데 맞춤으로 띄운다 */
+.root {
+  background: none;
+  border: none;
+}
+
+/* 점(20) ↔ 전체(42). 지도 칸의 data-markers 를 MarkerZoomLevel 이 단다 */
+.marker {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+}
+
+:global([data-markers='full']) .marker {
+  width: 42px;
+  height: 42px;
+}
+
+/* 선택 링. 고유 색 52%, 마커 크기에 비례해 둘러싼다 */
+.ring {
+  position: absolute;
+  inset: -23.8%;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--place-color) 52%, transparent);
+  opacity: 0;
+  scale: 0.68;
+  transition:
+    scale 120ms ease-out,
+    opacity 120ms ease-out;
+  pointer-events: none;
+}
+
+.root[data-selected] .ring {
+  opacity: 1;
+  scale: 1;
+  transition-duration: 220ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.circle {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 9999px;
+  background: var(--place-color);
+  color: #fbf4ed;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* 점일 때는 글자·아이콘을 숨긴다 */
+.content {
+  display: none;
+}
+
+:global([data-markers='full']) .content {
+  display: contents;
+}
+
+/* 이름표. 글자 크기는 LabelScale 이 지도 칸에 다는 --label-size 를 따른다 */
+.label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: var(--label-size);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+  white-space: pre;
+  text-align: center;
+  pointer-events: none;
+}
+
+.light {
+  color: #fbf4ed;
+}
+
+.dark {
+  color: #574a53;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring {
+    scale: 1;
+  }
+}

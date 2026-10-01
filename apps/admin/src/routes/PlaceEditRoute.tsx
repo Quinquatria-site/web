@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
-import { CircleMarker } from 'react-leaflet'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { Callout } from 'seed-design/ui/callout'
 import { List, ListButtonItem } from 'seed-design/ui/list'
@@ -14,7 +13,8 @@ import { apiErrorText } from '../lib/apiErrorText'
 import { useFormFields } from '../lib/useFormFields'
 import { ConfirmDialog, HourField, PhotoPicker, type Hour } from '../ui'
 import { CampusMap } from '../map/CampusMap'
-import { fromSource, toLatLng, type Point } from '../map/campus'
+import type { Point } from '../map/campus'
+import { PlaceMarker } from '../map/PlaceMarker'
 import { CATEGORIES, categoryById } from '../mocks/categories'
 import { menusByPlace } from '../mocks/menus'
 import {
@@ -325,10 +325,11 @@ function PlaceEditForm() {
         <div className={styles.picker}>
           <CampusMap onPick={setPoint}>
             {point && (
-              <CircleMarker
-                center={toLatLng(fromSource(point))}
-                radius={9}
-                pathOptions={{ color: '#FFFFFF', weight: 2, fillColor: '#002D56', fillOpacity: 1 }}
+              <PlaceMarker
+                point={point}
+                code={categoryById(categoryId)?.code ?? 'BOOTH'}
+                sequence={Number(values.sequence) || 0}
+                selected
               />
             )}
           </CampusMap>

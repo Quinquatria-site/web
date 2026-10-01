@@ -1,71 +1,36 @@
-import type { LatLngBoundsExpression, LatLngTuple } from 'leaflet'
+import type { LatLngBoundsLiteral, LatLngTuple } from 'leaflet'
 
-export const IMAGE_URL = '/campus-map.webp'
-export const IMAGE_WIDTH = 1402
-export const IMAGE_HEIGHT = 1122
+/*
+ * user 앱 features/map/map-coords.ts 와 같은 좌표 계약이다. admin 이 저장한 장소 x·y 를
+ * user 지도가 그대로 읽으므로 두 파일의 값이 달라지면 학생 지도에 장소가 엉뚱하게 찍힌다.
+ * 한쪽을 바꾸면 다른 쪽도 같이 바꾼다.
+ */
 
+/** 좌표 기준 크기. 지도 이미지(public/campus-map.webp) 픽셀과 같다 */
+export const MAP_WIDTH = 1399
+export const MAP_HEIGHT = 1124
+
+/** 지도 이미지 주소. user 앱과 같은 파일이다 */
+export const MAP_IMAGE_URL = '/campus-map.webp'
+
+/** 왼쪽 아래가 0,0 이고 위·오른쪽으로 커지는 지도 좌표. 서버 장소의 x·y 가 이것이다 */
 export type Point = { x: number; y: number }
-export type Rect = Point & { width: number; height: number }
 
-// 데이터는 이미지처럼 좌상단 원점이고, Leaflet 은 좌하단 원점이라 y 를 뒤집는다.
-export function toLatLng({ x, y }: Point): LatLngTuple {
-  return [IMAGE_HEIGHT - y, x]
-}
-
-export type ZoneId = 'A' | 'B' | 'C' | 'D'
-
-/** 구역 사각형도 부스와 같은 배치 도면 좌표계다. */
-export const ZONES: { id: ZoneId; rect: Rect }[] = [
-  { id: 'A', rect: { x: 73, y: 44, width: 92, height: 61 } },
-  { id: 'B', rect: { x: 59, y: 118, width: 67, height: 120 } },
-  { id: 'C', rect: { x: 127, y: 100, width: 136, height: 24 } },
-  { id: 'D', rect: { x: 253, y: 56, width: 64, height: 45 } },
+/** 이미지 전체 범위. Leaflet 은 [y, x] 순서다 */
+export const MAP_BOUNDS: LatLngBoundsLiteral = [
+  [0, 0],
+  [MAP_HEIGHT, MAP_WIDTH],
 ]
 
-export function toBounds({ x, y, width, height }: Rect): LatLngBoundsExpression {
-  return [toLatLng({ x, y: y + height }), toLatLng({ x: x + width, y })]
+/** 지도 좌표를 Leaflet 위치로. CRS.Simple 도 왼쪽 아래 원점이라 뒤집지 않고 순서만 바꾼다 */
+export function toLatLng({ x, y }: Point): LatLngTuple {
+  return [y, x]
 }
 
-export const IMAGE_BOUNDS = toBounds({ x: 0, y: 0, width: IMAGE_WIDTH, height: IMAGE_HEIGHT })
+/** 소수 첫째 자리까지, 이미지 범위 안으로 */
+const snap = (value: number, max: number) => Math.round(Math.min(Math.max(value, 0), max) * 10) / 10
 
-/**
- * 부스 좌표는 390 × 329 배치 도면 기준이고 지도 이미지는 1402 × 1122 다.
- * 두 그림의 여백이 달라서 배율만으로는 안 맞는다. 화면을 보며 아래 네 값을 맞춘다.
- */
-export const SOURCE_WIDTH = 390
-export const SOURCE_HEIGHT = 329
-
-export const FIT = {
-  scaleX: IMAGE_WIDTH / SOURCE_WIDTH,
-  scaleY: IMAGE_HEIGHT / SOURCE_HEIGHT,
-  offsetX: 0,
-  offsetY: 0,
-}
-
-export function fromSource({ x, y }: Point): Point {
-  return { x: x * FIT.scaleX + FIT.offsetX, y: y * FIT.scaleY + FIT.offsetY }
-}
-
-export function boundsFromSource({ x, y, width, height }: Rect): LatLngBoundsExpression {
-  const start = fromSource({ x, y })
-  const end = fromSource({ x: x + width, y: y + height })
-  return toBounds({
-    x: start.x,
-    y: start.y,
-    width: end.x - start.x,
-    height: end.y - start.y,
-  })
-}
-
-/* ── 여기부터 admin 전용 추가 ──
-   위쪽은 user 앱(mock/design-system)의 campus.ts 그대로다. 두 앱이 같은 좌표
-   계약을 쓰도록 원본을 유지하고, admin 에 필요한 역변환만 아래에 더한다. */
-
-/** Leaflet 클릭 지점(latlng) → 배치 도면(390×329) 좌표. CoordinatePicker 가 쓴다. */
-export function toSource(latlng: { lat: number; lng: number }): Point {
-  const image = { x: latlng.lng, y: IMAGE_HEIGHT - latlng.lat }
-  return {
-    x: (image.x - FIT.offsetX) / FIT.scaleX,
-    y: (image.y - FIT.offsetY) / FIT.scaleY,
-  }
+/** Leaflet 클릭 지점 → 저장할 지도 좌표. 이미지 여백을 눌러도 범위 밖 좌표가 나가지 않게 가둔다 */
+export function fromLatLng({ lat, lng }: { lat: number; lng: number }): Point {
+  return { x: snap(lng, MAP_WIDTH), y: snap(lat, MAP_HEIGHT) }
 }

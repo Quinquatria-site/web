@@ -1,11 +1,11 @@
 import { useCallback, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
-import { CircleMarker, Tooltip } from 'react-leaflet'
+import { Tooltip } from 'react-leaflet'
 import type { Map as LeafletMap } from 'leaflet'
 import { useNavigate } from 'react-router'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { CampusMap } from '../map/CampusMap'
-import { fromSource, toLatLng } from '../map/campus'
-import { CATEGORY_COLORS } from '../map/category-colors'
+import { toLatLng } from '../map/campus'
+import { PlaceMarker } from '../map/PlaceMarker'
 import { detailOf } from '../lib/placeText'
 import { categoryById } from '../mocks/categories'
 import { menusByPlace } from '../mocks/menus'
@@ -57,9 +57,8 @@ function PlaceSheetBody({ place }: { place: Place }) {
 }
 
 /**
- * 전체 지도. 목 장소를 카테고리 색 원 마커로 보여주고, 누르면 시트로 정보를 편다.
- * 마커 아이콘 이미지 대신 CircleMarker(SVG)를 쓴다 — leaflet 기본 아이콘의
- * 번들 경로 문제를 피하고, 색만으로 카테고리를 구분하기에 충분하다.
+ * 전체 지도. 장소를 user 지도와 같은 마커(카테고리 색·구역 글자·아이콘)로 보여주고,
+ * 누르면 시트로 정보를 편다. 운영자가 학생 화면과 같은 모양으로 위치를 확인한다.
  */
 export function PlacesMapRoute() {
   const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -120,7 +119,7 @@ export function PlacesMapRoute() {
       return
     }
     // 줌은 그대로 둔다. 운영자가 맞춰둔 배율을 건드리지 않는다
-    map.setView(toLatLng(fromSource({ x: place.x, y: place.y })), map.getZoom(), {
+    map.setView(toLatLng(place), map.getZoom(), {
       animate: true,
     })
   }, [map, inset, selectedId])
@@ -136,25 +135,18 @@ export function PlacesMapRoute() {
           const code = categoryById(place.category_id)?.code ?? 'BOOTH'
           const active = place.id === selectedId
           return (
-            <CircleMarker
+            <PlaceMarker
               key={place.id}
-              center={toLatLng(fromSource({ x: place.x, y: place.y }))}
-              radius={active ? 12 : 9}
-              pathOptions={{
-                color: '#FFFFFF',
-                weight: active ? 3 : 2,
-                fillColor: CATEGORY_COLORS[code],
-                fillOpacity: 0.95,
-                // Path 는 기본으로 지도까지 클릭을 올려보낸다. 끊지 않으면 시트가
-                // 열리자마자 배경 클릭으로 닫힌다
-                bubblingMouseEvents: false,
-              }}
-              eventHandlers={{ click: () => setSelectedId(place.id) }}
+              point={place}
+              code={code}
+              sequence={place.category_sequence}
+              selected={active}
+              onSelect={() => setSelectedId(place.id)}
             >
-              <Tooltip direction="top" offset={[0, -8]}>
+              <Tooltip direction="top" offset={[0, -12]}>
                 {placeName(place)} · {place.category_sequence}
               </Tooltip>
-            </CircleMarker>
+            </PlaceMarker>
           )
         })}
       </CampusMap>
