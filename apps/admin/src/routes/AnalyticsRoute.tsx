@@ -22,14 +22,14 @@ import {
 } from '../lib/trafficStats'
 import { useTraffic } from '../lib/useTraffic'
 import { festivalDateLabel, festivalDayLabel, FESTIVAL_DATES } from '../mocks/types'
-import { BarSeries, CongestionBadge, Meter, MeterGroup } from '../ui'
+import { CongestionBadge, Meter, MeterGroup, TimeChart } from '../ui'
 import styles from './AnalyticsRoute.module.css'
 
 /** 함수 응답이 CDN 에 1분 캐시되므로 그보다 잦게 불러도 숫자가 안 바뀐다 */
 const POLL_MS = 60_000
 
 const SLOT_MINUTES = 15
-/** 눈금은 3시간마다. 폰 폭에 00·03·…·21 여덟 개가 겹치지 않고 들어간다 */
+/** 눈금은 3시간마다. 폰 폭에 00·03·…·24 아홉 개가 겹치지 않고 들어간다 */
 const TICK_EVERY = (3 * 60) / SLOT_MINUTES
 
 /**
@@ -66,8 +66,6 @@ export function AnalyticsRoute() {
   const todayPeak = Math.max(...series)
   const todayPeakSlot = series.indexOf(todayPeak)
   const nowSlot = slotOf(now)
-  const recentSlot =
-    kstDateString(current.recentAt) === traffic.today ? slotOf(current.recentAt) : undefined
 
   // 조회 기간은 useTraffic 이 정한다 (지금은 축제 전 며칠을 임시로 포함)
   const days = dailyTotals(traffic.buckets, rangeDates(traffic.range.from, traffic.range.to))
@@ -84,7 +82,8 @@ export function AnalyticsRoute() {
           <span className={styles.level}>{CONGESTION_LABEL[current.level]}</span>
           <CongestionBadge level={current.level} />
         </div>
-        <p className={styles.line}>{congestionLine(current, traffic.today)}</p>
+        <p className={styles.line}>{`최근 15분 조회 ${formatCount(current.recent)}회`}</p>
+        <p className={styles.line}>{peakLine(current, traffic.today)}</p>
         {slow && (
           <div className={styles.callout}>
             <Callout
@@ -100,18 +99,20 @@ export function AnalyticsRoute() {
       </Card>
 
       <Card title="오늘 15분 흐름" count={`조회 ${formatCount(sum(series))}`}>
-        <BarSeries
+        <TimeChart
           values={series}
+          futureFrom={nowSlot + 1}
+          timeOf={slotTime}
           tickEvery={TICK_EVERY}
           tickLabel={(slot) => String((slot * SLOT_MINUTES) / 60).padStart(2, '0')}
-          highlight={recentSlot}
-          futureFrom={nowSlot + 1}
+          valueName="조회"
+          summary={
+            todayPeak > 0
+              ? `오늘 15분마다의 조회. 가장 붐빈 시간 ${slotTime(todayPeakSlot)}, ${formatCount(todayPeak)}회`
+              : '오늘은 아직 조회가 없습니다.'
+          }
         />
-        <p className={styles.line}>
-          {todayPeak > 0
-            ? `가장 붐빈 시간 ${slotTime(todayPeakSlot)} · 15분 조회 ${formatCount(todayPeak)}`
-            : '오늘은 아직 조회가 없습니다.'}
-        </p>
+        {todayPeak === 0 && <p className={styles.line}>오늘은 아직 조회가 없습니다.</p>}
       </Card>
 
       <Card
@@ -227,14 +228,15 @@ function Fact({ label, value }: { label: string; value: string }) {
   )
 }
 
-function congestionLine(current: ReturnType<typeof congestion>, today: string): string {
-  const recent = `${kstTimeString(current.recentAt)}부터 15분 조회 ${formatCount(current.recent)}`
-  if (current.level === 'unknown' || !current.peakAt || current.ratio === null) {
-    return `${recent} · 가장 붐빈 15분이 20회를 넘으면 판정합니다`
-  }
+/**
+ * 혼잡도 판정의 기준이 된 최고치 한 줄. 판정은 최근 15분이 이 최고치의 몇 % 인가로 하지만,
+ * 비율은 운영자가 바로 읽기 어려워 기준 값만 보여 준다. 기준이 아직 없으면 그렇다고만 말한다
+ */
+function peakLine(current: ReturnType<typeof congestion>, today: string): string {
+  if (current.level === 'unknown' || !current.peakAt) return '조회가 더 쌓이면 판정합니다'
   const peakDate = kstDateString(current.peakAt)
   const peakDay = peakDate === today ? '오늘' : dayLabel(peakDate)
-  return `${recent} · 최고 ${peakDay} ${kstTimeString(current.peakAt)} ${formatCount(current.peak)}회의 ${Math.round(current.ratio * 100)}%`
+  return `가장 붐볐던 때 ${peakDay} ${kstTimeString(current.peakAt)} · ${formatCount(current.peak)}회`
 }
 
 /** 축제일은 "1일차 (10/7)", 그 밖의 날은 "9/30" */
