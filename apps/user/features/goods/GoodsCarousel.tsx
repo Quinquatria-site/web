@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { formatPrice } from './format-price'
-import { pickExitEffect, type ExitPlan } from './exit-effects'
 import { CARD_FRAME, GoodsCard } from './GoodsCard'
 import { GoodsSwipeCard } from './GoodsSwipeCard'
 import type { Goods } from './goods'
@@ -33,15 +32,11 @@ export function GoodsCarousel({ goods }: { goods: Goods[] }) {
   const { goods: text } = getMessages(locale)
   const reduced = useReducedMotion()
   const [index, setIndex] = useState(0)
-  // 넘긴 방향과 떠나는 카드의 효과. 새 카드는 넘긴 쪽에서 들어오고 옛 카드는 반대로 사라진다
-  const [plan, setPlan] = useState<ExitPlan>({ effect: 'fling', direction: 1, reduced: false })
+  // 넘긴 방향(1 다음, -1 이전). 새 카드는 그쪽에서 들어오고 옛 카드는 반대로 빠진다
+  const [direction, setDirection] = useState<1 | -1>(1)
 
   const go = (step: 1 | -1) => {
-    setPlan((prev) => ({
-      effect: pickExitEffect(prev.effect),
-      direction: step,
-      reduced: Boolean(reduced),
-    }))
+    setDirection(step)
     setIndex((i) => (i + step + goods.length) % goods.length)
   }
 
@@ -60,12 +55,9 @@ export function GoodsCarousel({ goods }: { goods: Goods[] }) {
         {/* 뒤에 비스듬히 겹친 빈 카드 두 장. 더미처럼 보이게 하는 꾸밈이다 */}
         <div aria-hidden className={`${CARD_FRAME} absolute inset-0 -rotate-3`} />
         <div aria-hidden className={`${CARD_FRAME} absolute inset-0 rotate-3`} />
-        <AnimatePresence mode="popLayout" initial={false} custom={plan}>
-          <GoodsSwipeCard
-            key={current.id}
-            enterFrom={plan.direction * shift}
-            onDragEnd={handleDragEnd}
-          >
+        {/* AnimatePresence 의 custom 은 떠나는 카드만 받아서, 들어오는 카드에는 shift 로 따로 준다 */}
+        <AnimatePresence mode="popLayout" initial={false} custom={direction * shift}>
+          <GoodsSwipeCard key={current.id} shift={direction * shift} onDragEnd={handleDragEnd}>
             <GoodsCard
               image={current.image.src}
               name={item.name}
