@@ -15,9 +15,12 @@ const VARIANTS: Variants = {
 /** 앞에 보이는 굿즈 카드 한 장. 좌우로 밀 수 있고, 넘기면 옆으로 미끄러지며 바뀐다 */
 export function GoodsSwipeCard({
   ref,
+  shift,
   onDragEnd,
   children,
 }: {
+  /** 넘긴 쪽 거리(px). 다음이면 오른쪽(+), 이전이면 왼쪽(-) */
+  shift: number
   onDragEnd: (event: unknown, info: PanInfo) => void
   children: ReactNode
   /** AnimatePresence popLayout 이 떠나는 카드를 레이아웃에서 빼려면 바깥 요소를 잡아야 한다 */
@@ -28,6 +31,7 @@ export function GoodsSwipeCard({
   return (
     <motion.div
       ref={ref}
+      custom={shift}
       variants={VARIANTS}
       initial="enter"
       animate="center"

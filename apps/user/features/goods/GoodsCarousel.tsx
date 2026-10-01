@@ -55,9 +55,9 @@ export function GoodsCarousel({ goods }: { goods: Goods[] }) {
         {/* 뒤에 비스듬히 겹친 빈 카드 두 장. 더미처럼 보이게 하는 꾸밈이다 */}
         <div aria-hidden className={`${CARD_FRAME} absolute inset-0 -rotate-3`} />
         <div aria-hidden className={`${CARD_FRAME} absolute inset-0 rotate-3`} />
-        {/* custom 은 떠나는 카드에도 최신 값으로 전해져 연달아 넘겨도 방향이 맞는다 */}
+        {/* AnimatePresence 의 custom 은 떠나는 카드만 받아서, 들어오는 카드에는 shift 로 따로 준다 */}
         <AnimatePresence mode="popLayout" initial={false} custom={direction * shift}>
-          <GoodsSwipeCard key={current.id} onDragEnd={handleDragEnd}>
+          <GoodsSwipeCard key={current.id} shift={direction * shift} onDragEnd={handleDragEnd}>
             <GoodsCard
               image={current.image.src}
               name={item.name}
