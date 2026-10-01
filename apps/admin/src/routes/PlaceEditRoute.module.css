@@ -57,10 +57,10 @@
   border-radius: var(--seed-radius-r3);
 }
 
-.coord {
-  font-family: ui-monospace, monospace;
-  font-size: var(--seed-font-size-t3);
-  color: var(--seed-color-fg-neutral);
+.coords {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--seed-dimension-x3);
 }
 
 /* 삭제. 저장에서 멀리 떼어 놓고 위아래로 숨 쉴 공간을 준다 */

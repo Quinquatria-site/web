@@ -1,4 +1,9 @@
-import { divIcon, type LeafletEvent, type Marker as LeafletMarker } from 'leaflet'
+import {
+  divIcon,
+  type LeafletEvent,
+  type LeafletKeyboardEvent,
+  type Marker as LeafletMarker,
+} from 'leaflet'
 import { useEffect, useMemo, useRef, type ReactNode } from 'react'
 import { Marker, useMap } from 'react-leaflet'
 import type { CategoryCode } from '../mocks/types'
@@ -21,6 +26,15 @@ const PLACE_ICONS: Partial<Record<CategoryCode, string>> = {
   FOODTRUCK: foodtruckIcon,
   MEDI: mediIcon,
   BRACELET: braceletIcon,
+}
+
+// 마커 이름. user messages/ko.ts 의 map.places 와 같다. 스크린리더가 "부스 A1" 처럼 읽는다
+const PLACE_NAMES: Record<CategoryCode, string> = {
+  BOOTH: '부스',
+  PUB: '주점',
+  FOODTRUCK: '푸드트럭',
+  MEDI: '의무실',
+  BRACELET: '입장 팔찌',
 }
 
 // Leaflet 이 문자열로 받아 그리므로 HTML 로 만든다. 모양은 user 앱 PlaceMarkers 의 markerHtml 과 같다
@@ -69,8 +83,10 @@ export function PlaceMarker({
   children?: ReactNode
 }) {
   const markerRef = useRef<LeafletMarker>(null)
-  const selectedRef = useRef(selected)
   const label = placeLabel(code, sequence)
+  const name = label ? `${PLACE_NAMES[code]} ${label}` : PLACE_NAMES[code]
+  // add 핸들러가 다시 만들어지지 않게 최신 선택·이름은 ref 로 읽는다
+  const stateRef = useRef({ selected, name })
 
   // 아이콘을 다시 만들면 Leaflet 이 안을 갈아 끼워 링 전환이 끊기므로 모양 값이 바뀔 때만 만든다
   const icon = useMemo(
@@ -79,16 +95,19 @@ export function PlaceMarker({
   )
   const position = useMemo(() => toLatLng(point), [point])
 
-  // 선택 표시는 Leaflet 뿌리 요소의 속성이라, 레이어가 다시 붙어 요소가 새로 생기면 add 때도 단다
+  // Leaflet 뿌리 요소가 role=button 이라 이름·눌림 상태를 여기에 단다. 레이어가 다시 붙으면 요소가 새로 생겨 add 때도 부른다
   const sync = (marker: LeafletMarker | null) => {
-    marker?.getElement()?.toggleAttribute('data-selected', selectedRef.current)
-    marker?.setZIndexOffset(selectedRef.current ? SELECTED_Z_OFFSET : 0)
+    const element = marker?.getElement()
+    element?.toggleAttribute('data-selected', stateRef.current.selected)
+    element?.setAttribute('aria-pressed', String(stateRef.current.selected))
+    element?.setAttribute('aria-label', stateRef.current.name)
+    marker?.setZIndexOffset(stateRef.current.selected ? SELECTED_Z_OFFSET : 0)
   }
 
   useEffect(() => {
-    selectedRef.current = selected
+    stateRef.current = { selected, name }
     sync(markerRef.current)
-  }, [selected])
+  }, [selected, name])
 
   return (
     <Marker
@@ -100,6 +119,12 @@ export function PlaceMarker({
         // 마커 클릭이 지도까지 올라가면 마커를 눌러 연 시트가 배경 클릭으로 바로 닫힌다
         click: (event) => {
           event.originalEvent.stopPropagation()
+          onSelect?.()
+        },
+        // Leaflet 은 마커에 포커스와 role=button 만 주고 Enter·Space 를 클릭으로 바꿔 주지 않는다
+        keydown: ({ originalEvent }: LeafletKeyboardEvent) => {
+          if (originalEvent.key !== 'Enter' && originalEvent.key !== ' ') return
+          originalEvent.preventDefault()
           onSelect?.()
         },
         add: ({ target }: LeafletEvent) => sync(target as LeafletMarker),
