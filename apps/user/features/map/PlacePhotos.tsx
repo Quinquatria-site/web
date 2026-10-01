@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Photo } from '@/shared/photo/Photo'
+import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
 
 /** 장소 사진. 여러 장이면 옆으로 넘기고 오른쪽 아래에 몇 번째인지 적는다. 없으면 빈 사진 자리 하나 */
 export function PlacePhotos({ images, alt }: { images: string[] | null; alt: string }) {
@@ -22,10 +22,12 @@ export function PlacePhotos({ images, alt }: { images: string[] | null; alt: str
       >
         {photos.map((src, i) => (
           <li key={src ?? i} className="size-full shrink-0 snap-center">
-            <Photo
+            <ZoomablePhoto
               src={src}
-              alt={photos.length > 1 ? `${alt} ${i + 1}` : alt}
+              alt={alt}
               sizes="(max-width: 480px) 90vw, 432px"
+              // 뷰어에서도 옆으로 넘겨 이 장소의 다른 사진을 본다
+              gallery={images?.length ? { photos: images, index: i } : undefined}
             />
           </li>
         ))}

@@ -12,7 +12,7 @@ import {
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
-import { useCloseOnBack } from './useCloseOnBack'
+import { useCloseOnBack } from '@/shared/history/useCloseOnBack'
 
 /** 시트 제목. 스크린리더가 시트 이름으로 읽으니 안에 꼭 하나 둔다 */
 export const BottomSheetTitle = Dialog.Title
