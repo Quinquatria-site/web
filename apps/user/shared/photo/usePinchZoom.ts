@@ -116,6 +116,16 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     }
   }
 
+  // 지금 배율·위치로 그려진 사진 위를 눌렀는지. 원본 크기를 모르면 화면 전체를 사진으로 본다
+  const onPhoto = (point: Point) => {
+    const size = fitted()
+    const s = scale.get()
+    return (
+      Math.abs(point.x - x.get()) <= (size.width * s) / 2 &&
+      Math.abs(point.y - y.get()) <= (size.height * s) / 2
+    )
+  }
+
   const stopAll = () => {
     x.stop()
     y.stop()
@@ -327,6 +337,11 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     }
 
     if (event.type !== 'pointercancel' && t && !t.moved && event.timeStamp - t.time < TAP_MS) {
+      // 확대했든 아니든 사진 밖 빈 배경을 누르면 닫는다
+      if (!onPhoto(point)) {
+        closing.current = true
+        return optionsRef.current.onDismiss()
+      }
       const last = lastTap.current
       if (
         last &&
