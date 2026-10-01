@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+@import './tokens/color.css';
+@import './breakpoints.css';
+
+@theme inline {
+  --color-bg: var(--warm-white);
+  --color-text: var(--dark);
+  --color-text-muted: var(--mauve-gray);
+  --font-sans: var(--pretendard), system-ui, sans-serif;
+}
+
+:root {
+  --app-max-width: 480px;
+}
