@@ -55,10 +55,10 @@ export function LandingHero() {
 
   return (
     // dvh 는 모바일 주소창이 오갈 때마다 높이가 바뀌어 그림이 확대·축소되고 아래가 밀려, 잰 높이가 들어오기 전엔 svh 로 둔다
-    // 제목이 앱 폭 비율로 크기를 잡도록 컨테이너로 둔다
+    // 제목이 앱 폭 비율로 크기를, 영상이 깔린 자리로 높이를 잡도록 폭·높이를 다 재는 컨테이너로 둔다
     <section
       ref={sectionRef}
-      className="@container relative h-(--locked-vh,100svh) overflow-hidden"
+      className="relative h-(--locked-vh,100svh) overflow-hidden [container-type:size]"
     >
       {/* muted·playsInline 이 없으면 iOS 가 자동재생을 막거나 전체화면으로 연다 */}
       <video
