@@ -16,14 +16,32 @@
   min-height: 0;
 }
 
-.title {
-  /* 오른쪽 위 닫기 버튼과 겹치지 않게 비운다 */
+/* 이름과 카테고리 칩. 오른쪽 위 닫기 버튼과 겹치지 않게 비운다 */
+.heading {
+  display: flex;
+  gap: 10px;
+  align-items: center;
   padding-right: var(--seed-dimension-x8);
+}
+
+.title {
+  min-width: 0;
   margin: 0;
   font-size: var(--seed-font-size-t6);
   font-weight: var(--seed-font-weight-bold);
   line-height: var(--seed-line-height-t6);
   color: var(--seed-color-fg-neutral);
+}
+
+/* 치수는 user PlaceSheet 의 PlaceBadge 와 같다. 글자색은 user text-inverse(웜화이트) */
+.category {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: var(--seed-font-weight-bold);
+  line-height: normal;
+  color: #fbf4ed;
+  border-radius: 12px;
 }
 
 /* 사진이 있을 때만 그려지므로 여백도 여기 붙는다 */

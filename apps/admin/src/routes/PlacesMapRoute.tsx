@@ -3,6 +3,8 @@ import { Tooltip } from 'react-leaflet'
 import { useNavigate } from 'react-router'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { CampusMap } from '../map/CampusMap'
+import { CATEGORY_COLORS } from '../map/category-colors'
+import { PLACE_NAMES } from '../map/place-label'
 import { PlaceMarker } from '../map/PlaceMarker'
 import { detailOf } from '../lib/placeText'
 import { categoryById } from '../mocks/categories'
@@ -31,7 +33,13 @@ function PlaceSheetBody({ place }: { place: Place }) {
 
   return (
     <>
-      <BottomSheetTitle className={styles.title}>{placeName(place)}</BottomSheetTitle>
+      <div className={styles.heading}>
+        <BottomSheetTitle className={styles.title}>{placeName(place)}</BottomSheetTitle>
+        {/* 이름 옆 카테고리 칩. user 시트처럼 마커와 같은 고유 색을 깐다 */}
+        <span className={styles.category} style={{ background: CATEGORY_COLORS[code] }}>
+          {PLACE_NAMES[code]}
+        </span>
+      </div>
       <BottomSheetDescription className={styles.detail}>{detailOf(place)}</BottomSheetDescription>
       <div className={styles.badges}>
         <LangBadge translations={place.translations} />
