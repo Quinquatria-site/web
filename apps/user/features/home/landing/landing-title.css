@@ -8,7 +8,7 @@
   /* 랜딩 로고가 가운데에서 양 끝으로 2초 동안 드러난다. --title-lag 만큼 이미 지난 것으로 치고 시작한다. 2초는 TITLE_REVEAL_SECONDS 와 맞춘다 */
   --animate-title-reveal: title-reveal 2s cubic-bezier(0.4, 0, 0.2, 1)
     calc(var(--title-lag, 0s) * -1) both;
-  /* HUFS·날짜는 로고가 거의 펼쳐진 1.4초 뒤에 나타난다. 동작 줄이기에서는 로고도 이것만 쓴다 */
+  /* 날짜는 로고가 거의 펼쳐진 1.4초 뒤에 나타난다. 동작 줄이기에서는 로고도 이것만 쓴다 */
   --animate-title-fade: title-fade 0.6s ease-out
     calc(var(--title-fade-delay, 0s) - var(--title-lag, 0s)) both;
 

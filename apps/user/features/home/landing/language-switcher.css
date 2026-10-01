@@ -1,0 +1,10 @@
+@theme {
+  /* 언어 선택 지구본 경선이 6초마다 좌우로 뒤집혀 지구본이 자전하는 것처럼 보인다 */
+  --animate-globe-spin: globe-spin 6s linear infinite;
+
+  @keyframes globe-spin {
+    50% {
+      transform: scaleX(-1);
+    }
+  }
+}
