@@ -5,7 +5,7 @@ import Image from 'next/image'
 import type { PerformanceType } from '@quen/schema/entities/performance'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
-import { assetUrl } from '@/shared/photo/asset-url'
+import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
 import placeholderImage from './images/performance-placeholder.png'
 import { MODAL_IMAGE_SIZES, type Performance } from './performance'
 
@@ -37,14 +37,9 @@ function ModalHeader({ type }: { type: PerformanceType }) {
 function ModalImage({ imageUri, title }: { imageUri: string | null; title: string }) {
   if (imageUri) {
     return (
-      <div className="relative h-[159px] overflow-hidden rounded-xl bg-placeholder">
-        <Image
-          src={assetUrl(imageUri)}
-          alt={title}
-          fill
-          sizes={MODAL_IMAGE_SIZES}
-          className="object-cover"
-        />
+      // 미리 받아 둔 사진을 그대로 쓰도록 sizes 는 시간표의 미리 받기와 같다
+      <div className="h-[159px] overflow-hidden rounded-xl">
+        <ZoomablePhoto src={imageUri} alt={title} sizes={MODAL_IMAGE_SIZES} />
       </div>
     )
   }
