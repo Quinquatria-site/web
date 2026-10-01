@@ -3,6 +3,12 @@ export const ko = {
   bottomSheet: {
     close: '닫기',
   },
+  photoViewer: {
+    /** {name} 에 사진 이름이 들어간다 */
+    open: '{name} 사진 크게 보기',
+    close: '닫기',
+    hint: '두 손가락으로 벌려 확대하고, 아래로 내리면 닫혀요.',
+  },
   dock: {
     label: '메인 메뉴',
     back: '뒤로 가기',

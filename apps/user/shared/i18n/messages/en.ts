@@ -5,6 +5,11 @@ export const en: Messages = {
   bottomSheet: {
     close: 'Close',
   },
+  photoViewer: {
+    open: 'View {name} photo full screen',
+    close: 'Close',
+    hint: 'Pinch to zoom. Swipe down to close.',
+  },
   dock: {
     label: 'Main menu',
     back: 'Go back',
