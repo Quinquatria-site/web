@@ -9,27 +9,38 @@ import { PhotoViewer } from './PhotoViewer'
 // 누른 뒤 이만큼(px) 넘게 움직였으면 넘기기·스크롤로 보고 뷰어를 열지 않는다
 const TAP_SLOP = 10
 
-/** 누르면 화면 가득 띄워 확대해 볼 수 있는 Photo. 사진이 없으면 그냥 빈 사진 자리다 */
+/** 누르면 화면 가득 띄워 확대해 볼 수 있는 Photo. gallery 를 주면 뷰어에서 옆 사진으로 넘겨 본다. 사진이 없으면 그냥 빈 사진 자리다 */
 export function ZoomablePhoto({
   src,
   alt,
   sizes,
+  gallery,
 }: {
   src: string | null
   alt: string
   sizes: string
+  /** 함께 넘겨 볼 사진들과 그중 이 사진의 자리. alt 는 사진 묶음 이름이 되고 뒤에 몇 번째인지 붙는다 */
+  gallery?: { photos: string[]; index: number }
 }) {
   const { photoViewer } = getMessages(useLocale())
   const [open, setOpen] = useState(false)
   const down = useRef<{ x: number; y: number } | null>(null)
+  const name = gallery && gallery.photos.length > 1 ? `${alt} ${gallery.index + 1}` : alt
 
-  if (!src) return <Photo src={null} alt={alt} sizes={sizes} />
+  if (!src) return <Photo src={null} alt={name} sizes={sizes} />
 
   return (
-    <PhotoViewer open={open} onOpenChange={setOpen} src={src} alt={alt} sizes={sizes}>
+    <PhotoViewer
+      open={open}
+      onOpenChange={setOpen}
+      photos={gallery?.photos ?? [src]}
+      index={gallery?.index ?? 0}
+      alt={alt}
+      sizes={sizes}
+    >
       <button
         type="button"
-        aria-label={photoViewer.open.replace('{name}', alt)}
+        aria-label={photoViewer.open.replace('{name}', name)}
         onPointerDown={(event) => {
           down.current = { x: event.clientX, y: event.clientY }
         }}
@@ -42,7 +53,7 @@ export function ZoomablePhoto({
         }}
         className="block size-full cursor-zoom-in"
       >
-        <Photo src={src} alt={alt} sizes={sizes} />
+        <Photo src={src} alt={name} sizes={sizes} />
       </button>
     </PhotoViewer>
   )
