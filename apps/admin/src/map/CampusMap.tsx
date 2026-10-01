@@ -1,37 +1,25 @@
 import { CRS, type Map as LeafletMap } from 'leaflet'
 import { useEffect, type ReactNode } from 'react'
-import { ImageOverlay, MapContainer, Rectangle, Tooltip, useMap, useMapEvents } from 'react-leaflet'
-import {
-  boundsFromSource,
-  IMAGE_BOUNDS,
-  IMAGE_URL,
-  SOURCE_HEIGHT,
-  SOURCE_WIDTH,
-  toSource,
-  ZONES,
-  type Point,
-} from './campus'
+import { ImageOverlay, MapContainer, useMap, useMapEvents } from 'react-leaflet'
+import { CampusLabels } from './CampusLabels'
+import { fromLatLng, MAP_BOUNDS, MAP_IMAGE_URL, type Point } from './campus'
+import { MarkerZoomLevel } from './PlaceMarker'
 import 'leaflet/dist/leaflet.css'
 
 /** 이미지 지도라 위경도가 아니라 픽셀 좌표(CRS.Simple)를 쓴다 */
 function FitToImage() {
   const map = useMap()
   useEffect(() => {
-    map.fitBounds(IMAGE_BOUNDS)
+    map.fitBounds(MAP_BOUNDS)
   }, [map])
   return null
 }
 
-/** 소수 첫째 자리까지, 도면 범위 안으로 */
-const snap = (value: number, max: number) => Math.round(Math.min(Math.max(value, 0), max) * 10) / 10
-
 function PickLayer({ onPick }: { onPick: (point: Point) => void }) {
   useMapEvents({
     click: (event) => {
-      const { x, y } = toSource(event.latlng)
-      // 배치 도면 좌표로 저장한다. user 앱이 같은 좌표계를 읽는다.
-      // 이미지 여백을 눌러도 도면 밖 좌표가 나가지 않게 가둔다
-      onPick({ x: snap(x, SOURCE_WIDTH), y: snap(y, SOURCE_HEIGHT) })
+      // user 앱이 같은 좌표계(이미지 픽셀, 왼쪽 아래 원점)로 읽는다
+      onPick(fromLatLng(event.latlng))
     },
   })
   return null
@@ -40,9 +28,8 @@ function PickLayer({ onPick }: { onPick: (point: Point) => void }) {
 /**
  * 마커가 아닌 빈 곳을 눌렀을 때.
  *
- * 마커(CircleMarker)는 Path 라 기본값이 bubblingMouseEvents: true 다. 그대로
- * 두면 마커 클릭이 여기까지 올라와, 마커를 눌러 연 시트가 같은 클릭으로 바로
- * 닫힌다. 마커 쪽에서 bubblingMouseEvents: false 로 끊어야 한다.
+ * 마커 클릭이 여기까지 올라오면 마커를 눌러 연 시트가 같은 클릭으로 바로 닫힌다.
+ * PlaceMarker 가 클릭을 여기서 끊는다.
  */
 function BackgroundClick({ onClick }: { onClick: () => void }) {
   useMapEvents({ click: onClick })
@@ -52,8 +39,6 @@ function BackgroundClick({ onClick }: { onClick: () => void }) {
 export interface CampusMapProps {
   /** 지도를 누르면 배치 도면 좌표를 돌려준다. 좌표 픽커 모드 */
   onPick?: (point: Point) => void
-  /** 구역 A~D 사각형 표시 */
-  showZones?: boolean
   /** 마커가 아닌 빈 곳 클릭. 시트 닫기에 쓴다 */
   onBackgroundClick?: () => void
   /** 지도 인스턴스를 밖으로 넘긴다. 시트가 덮는 만큼 영역을 줄일 때 쓴다 */
@@ -63,12 +48,11 @@ export interface CampusMapProps {
 }
 
 /**
- * user 앱(mock/design-system)의 campus-map 을 admin 용으로 단순화한 것.
- * 바텀시트·필터 없이 이미지 오버레이 + 마커(children) + 클릭 픽커만 남겼다.
+ * user 앱 features/map 의 캠퍼스 지도를 admin 용으로 줄인 것. 같은 이미지·좌표·이름표·마커
+ * 모양을 쓰고, 바텀시트·필터 없이 마커(children)와 클릭 픽커만 둔다.
  */
 export function CampusMap({
   onPick,
-  showZones = true,
   onBackgroundClick,
   onMapReady,
   children,
@@ -79,8 +63,8 @@ export function CampusMap({
       className={className}
       ref={onMapReady}
       crs={CRS.Simple}
-      bounds={IMAGE_BOUNDS}
-      maxBounds={IMAGE_BOUNDS}
+      bounds={MAP_BOUNDS}
+      maxBounds={MAP_BOUNDS}
       maxBoundsViscosity={1}
       minZoom={-2}
       maxZoom={2}
@@ -89,19 +73,9 @@ export function CampusMap({
       style={{ width: '100%', height: '100%', background: 'var(--seed-color-bg-layer-basement)' }}
     >
       <FitToImage />
-      <ImageOverlay url={IMAGE_URL} bounds={IMAGE_BOUNDS} />
-      {showZones &&
-        ZONES.map((zone) => (
-          <Rectangle
-            key={zone.id}
-            bounds={boundsFromSource(zone.rect)}
-            pathOptions={{ color: '#002D56', weight: 1, dashArray: '6 4', fillOpacity: 0.04 }}
-          >
-            <Tooltip permanent direction="center" opacity={0.75}>
-              {zone.id}
-            </Tooltip>
-          </Rectangle>
-        ))}
+      <ImageOverlay url={MAP_IMAGE_URL} bounds={MAP_BOUNDS} />
+      <CampusLabels />
+      <MarkerZoomLevel />
       {children}
       {onPick && <PickLayer onPick={onPick} />}
       {onBackgroundClick && <BackgroundClick onClick={onBackgroundClick} />}
