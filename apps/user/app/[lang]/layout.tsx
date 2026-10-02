@@ -5,6 +5,7 @@ import { Dock } from '@/shared/dock/Dock'
 import { pretendard } from '@/shared/fonts'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { HTML_LANG, LOCALES } from '@/shared/i18n/locales'
+import { InAppEscape } from '@/shared/in-app/InAppEscape'
 import '@/styles/index.css'
 
 /** 세 언어를 빌드 때 모두 굽는다 */
@@ -44,6 +45,7 @@ export default async function RootLayout({ children }: LayoutProps<'/[lang]'>) {
   return (
     <html lang={HTML_LANG[locale]} className={pretendard.variable}>
       <body className="bg-bg">
+        <InAppEscape />
         {/* 모달이 스크롤을 잠글 때 body 의 좌우 margin 을 padding 으로 바꿔 넣어서, 가운데 정렬은 body 가 아닌 안쪽 기둥에 둔다 */}
         <div className="mx-auto max-w-(--app-max-width)">
           <SunsetBackground />
