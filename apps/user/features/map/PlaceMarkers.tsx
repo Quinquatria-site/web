@@ -45,6 +45,7 @@ const DROP_SCALE = 26 / 42
 
 // Leaflet 이 문자열로 받아 그리므로 JSX 대신 HTML 로 만든다. 크기 0 인 뿌리에 꼬리 끝을 맞춰 끝이 장소 좌표를 찍는다
 // 선택되면 원 가운데에서 두 겹 링(34/44)이 퍼진다. leaflet.css 가 지도 안 svg 에 z-index 200 을 걸어 글자를 덮으니 z-auto! 로 되돌린다. 마커가 촘촘해서 터치 영역을 키우면 이웃을 가로채니 보이는 크기 그대로 둔다
+// 작은·큰 물방울을 한 마커에 두고 뿌리 data-full 로 하나만 보인다. 경계에서 마커를 갈아 끼우면 전부 지우고 다시 만들어 핀치가 끊기고, 작은 쪽은 누름을 지도로 흘린다
 function markerHtml(code: PlaceCode, label: string | null) {
   const icon = PLACE_ICONS[code]
   // leaflet.css 가 마커 안 img 에 width:auto 를 걸어 width 속성이 먹지 않으니 style 로 준다
@@ -52,54 +53,69 @@ function markerHtml(code: PlaceCode, label: string | null) {
     ? `<img src="${icon.src}" style="width:${icon.width * DROP_SCALE}px;height:${icon.height * DROP_SCALE}px" alt="" draggable="false" />`
     : label
   return `<span class="absolute">
-  <svg class="pointer-events-none absolute z-auto! -top-[41px] -left-[22px] size-11 scale-68 opacity-0 transition-[scale,opacity] duration-120 ease-out group-data-selected:scale-100 group-data-selected:opacity-100 group-data-selected:duration-220 group-data-selected:ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:scale-100" viewBox="-36 -36 72 72">
-    <circle r="36" class="${PLACE_FILL[code]}" opacity=".2" />
-    <circle r="28" class="${PLACE_FILL[code]}" opacity=".2" />
+  <svg class="pointer-events-none absolute z-auto! -top-[14px] -left-[5.5px] h-[14px] w-[11px] overflow-visible group-data-full:hidden" viewBox="-21 -21 42 53.5">
+    <path d="${DROP_PATH}" stroke-width="4.5" stroke-miterlimit="10" class="${PLACE_FILL[code]} stroke-white" />
   </svg>
-  <svg class="absolute z-auto! -top-[32px] -left-[13px] h-[32px] w-[26px]" viewBox="-21 -21 42 52">
-    <path d="${DROP_PATH}" class="fill-white" />
-    <path d="${DROP_PATH}" class="${PLACE_TAIL_FILL[code]}" />
-    <circle r="19.5" class="${PLACE_FILL[code]}" />
-    <path d="${DROP_PATH}" fill="none" stroke-width="3" class="stroke-white" />
-  </svg>
-  <span class="absolute -top-[32px] -left-[13px] grid size-[26px] place-items-center rounded-full font-sans text-[10.5px] leading-none font-semibold text-text-inverse outline-offset-2 outline-text group-focus-visible:outline-2">
-    ${content}
+  <span class="absolute hidden group-data-full:block">
+    <svg class="pointer-events-none absolute z-auto! -top-[41px] -left-[22px] size-11 scale-68 opacity-0 transition-[scale,opacity] duration-120 ease-out group-data-selected:scale-100 group-data-selected:opacity-100 group-data-selected:duration-220 group-data-selected:ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:scale-100" viewBox="-36 -36 72 72">
+      <circle r="36" class="${PLACE_FILL[code]}" opacity=".2" />
+      <circle r="28" class="${PLACE_FILL[code]}" opacity=".2" />
+    </svg>
+    <svg class="absolute z-auto! -top-[32px] -left-[13px] h-[32px] w-[26px]" viewBox="-21 -21 42 52">
+      <path d="${DROP_PATH}" class="fill-white" />
+      <path d="${DROP_PATH}" class="${PLACE_TAIL_FILL[code]}" />
+      <circle r="19.5" class="${PLACE_FILL[code]}" />
+      <path d="${DROP_PATH}" fill="none" stroke-width="3" class="stroke-white" />
+    </svg>
+    <span class="absolute -top-[32px] -left-[13px] grid size-[26px] place-items-center rounded-full font-sans text-[10.5px] leading-none font-semibold text-text-inverse outline-offset-2 outline-text group-focus-visible:outline-2">
+      ${content}
+    </span>
   </span>
 </span>`
 }
 
-// 큰 물방울과 같은 모양의 폭 11 짜리. 같은 물방울이라 확대할 때 모양이 이어지고 꼬리 끝이 같은 자리를 찍는다
-function miniMarkerHtml(code: PlaceCode) {
-  return `<svg class="absolute z-auto! -top-[14px] -left-[5.5px] h-[14px] w-[11px] overflow-visible" viewBox="-21 -21 42 53.5">
-  <path d="${DROP_PATH}" stroke-width="4.5" stroke-miterlimit="10" class="${PLACE_FILL[code]} stroke-white" />
-</svg>`
+interface MarkerState {
+  selected: boolean
+  name: string
+  full: boolean
 }
 
 // Leaflet 뿌리 요소가 role=button 이라 이름·눌림 상태를 여기에 단다. 레이어가 다시 붙으면 요소가 새로 생겨 add 때도 부른다
-function syncMarker(marker: LeafletMarker, selected: boolean, name: string) {
+// 작은 물방울일 땐 포커스·읽기에서 빼서 예전처럼 누를 수 없는 점으로 둔다
+function syncMarker(marker: LeafletMarker, { selected, name, full }: MarkerState) {
   const element = marker.getElement()
   element?.toggleAttribute('data-selected', selected)
+  element?.toggleAttribute('data-full', full)
   element?.setAttribute('aria-pressed', String(selected))
   element?.setAttribute('aria-label', name)
-  marker.setZIndexOffset(selected ? SELECTED_Z_OFFSET : 0)
+  element?.setAttribute('tabindex', full ? '0' : '-1')
+  if (full) element?.removeAttribute('aria-hidden')
+  else element?.setAttribute('aria-hidden', 'true')
+  const zIndexOffset = selected ? SELECTED_Z_OFFSET : 0
+  // setZIndexOffset 은 위치까지 다시 써서, 경계에서 73개가 함께 바뀔 때 값이 같으면 건너뛴다
+  if (marker.options.zIndexOffset !== zIndexOffset) marker.setZIndexOffset(zIndexOffset)
 }
 
-/** 장소 마커 하나. 선택되면 바깥에 고유 색 링이 퍼진다 */
+/** 장소 마커 하나. 축소 땐 작은 물방울, 확대하거나 고르면 큰 물방울이고, 선택되면 바깥에 고유 색 링이 퍼진다 */
 const PlaceMarker = memo(function PlaceMarker({
   place,
   name,
   selected,
+  full,
   onSelect,
 }: {
   place: MapPlace
   name: string
   selected: boolean
+  /** 큰 물방울로 보일지 */
+  full: boolean
   onSelect: (id: PlaceId) => void
 }) {
   const { id, code, category_sequence, x, y } = place
+  const map = useMap()
   const markerRef = useRef<LeafletMarker>(null)
-  // add 핸들러가 다시 만들어지지 않게 최신 선택·이름은 ref 로 읽는다
-  const stateRef = useRef({ selected, name })
+  // add 핸들러가 다시 만들어지지 않게 최신 선택·이름·크기는 ref 로 읽는다
+  const stateRef = useRef<MarkerState>({ selected, name, full })
   const label = placeLabel({ code, category_sequence })
 
   // 아이콘을 다시 만들면 Leaflet 이 안을 갈아 끼워 링 전환이 끊기므로, 모양에 쓰는 값이 바뀔 때만 만든다
@@ -114,34 +130,29 @@ const PlaceMarker = memo(function PlaceMarker({
       click: () => onSelect(id),
       // Leaflet 은 마커에 포커스와 role=button 만 주고 Enter·Space 를 클릭으로 바꿔 주지 않는다
       keydown: ({ originalEvent }: LeafletKeyboardEvent) => {
+        // 작은 물방울은 누를 수 없는 점이라 키로도 고르지 않는다
+        if (!stateRef.current.full) return
         if (originalEvent.key !== 'Enter' && originalEvent.key !== ' ') return
         originalEvent.preventDefault()
         onSelect(id)
       },
       add: ({ target }: LeafletEvent) => {
-        syncMarker(target as LeafletMarker, stateRef.current.selected, stateRef.current.name)
+        syncMarker(target as LeafletMarker, stateRef.current)
       },
     }),
     [id, onSelect],
   )
 
   useEffect(() => {
-    stateRef.current = { selected, name }
-    if (markerRef.current) syncMarker(markerRef.current, selected, name)
-  }, [selected, name])
+    stateRef.current = { selected, name, full }
+    if (!markerRef.current) return
+    syncMarker(markerRef.current, stateRef.current)
+    // tabindex 를 빼도 이미 잡힌 포커스는 남아, 작은 물방울이 되면 키보드가 이어지도록 지도 칸으로 옮긴다
+    if (!full && markerRef.current.getElement()?.contains(document.activeElement))
+      map.getContainer().focus({ preventScroll: true })
+  }, [map, selected, name, full])
 
   return <Marker ref={markerRef} position={position} icon={icon} eventHandlers={eventHandlers} />
-})
-
-/** 축소 때 찍는 작은 물방울. 누르거나 포커스할 수 없다 */
-const MiniMarker = memo(function MiniMarker({ place }: { place: MapPlace }) {
-  const { code, x, y } = place
-  const icon = useMemo(
-    () => divIcon({ html: miniMarkerHtml(code), className: '', iconSize: [0, 0] }),
-    [code],
-  )
-  const position = useMemo(() => toLatLng({ x, y }), [x, y])
-  return <Marker position={position} icon={icon} interactive={false} keyboard={false} />
 })
 
 function isFullZoom(map: LeafletMap) {
@@ -200,8 +211,6 @@ export function PlaceMarkers({
               onSelect={onSelect}
             />
           )
-        // 고른 장소는 축소해도 큰 물방울로 남겨 시트가 가리키는 자리를 잃지 않는다
-        if (!full && !selected) return <MiniMarker key={place.id} place={place} />
         const label = placeLabel(place)
         return (
           <PlaceMarker
@@ -209,6 +218,8 @@ export function PlaceMarkers({
             place={place}
             name={label ? `${names[place.code]} ${label}` : names[place.code]}
             selected={selected}
+            // 고른 장소는 축소해도 큰 물방울로 남겨 시트가 가리키는 자리를 잃지 않는다
+            full={full || selected}
             onSelect={onSelect}
           />
         )
