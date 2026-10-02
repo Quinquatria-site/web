@@ -36,7 +36,10 @@
   --color-place-medi: var(--red);
   --color-place-trash: var(--green);
   --color-menu-card: var(--beige-peach);
-  --color-map-control-border: var(--brick);
+  --color-map-control: var(--brown);
+  --color-on-map-control: var(--beige-yellow);
+  --color-map-control-border: var(--beige-yellow);
+  --color-map-control-glow: var(--brick);
 
   --color-dock: var(--brown);
   --color-on-dock: var(--beige-yellow);
