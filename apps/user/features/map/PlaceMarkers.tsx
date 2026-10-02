@@ -40,12 +40,16 @@ const PLACE_ICONS: Partial<Record<PlaceCode, StaticImageData>> = {
 // 원 가운데 (0,0), 반지름 19.5, 끝 (0,28.8) 인 물방울. 흰 테두리 3 을 이 선 가운데에 그려 바깥이 지름 42, 끝이 31 에 온다. 화면에는 지름 26 으로 줄여 그린다
 const DROP_PATH = 'M-14.35 13.2L0 28.8L14.35 13.2A19.5 19.5 0 1 0-14.35 13.2Z'
 
+// 지름 42 기준으로 만든 아이콘을 지름 26 물방울에 맞춰 줄이는 비율
+const DROP_SCALE = 26 / 42
+
 // Leaflet 이 문자열로 받아 그리므로 JSX 대신 HTML 로 만든다. 크기 0 인 뿌리에 꼬리 끝을 맞춰 끝이 장소 좌표를 찍는다
 // 선택되면 원 가운데에서 두 겹 링(34/44)이 퍼진다. leaflet.css 가 지도 안 svg 에 z-index 200 을 걸어 글자를 덮으니 z-auto! 로 되돌린다. 마커가 촘촘해서 터치 영역을 키우면 이웃을 가로채니 보이는 크기 그대로 둔다
 function markerHtml(code: PlaceCode, label: string | null) {
   const icon = PLACE_ICONS[code]
+  // leaflet.css 가 마커 안 img 에 width:auto 를 걸어 width 속성이 먹지 않으니 style 로 준다
   const content = icon
-    ? `<img src="${icon.src}" width="15" height="15" alt="" draggable="false" />`
+    ? `<img src="${icon.src}" style="width:${icon.width * DROP_SCALE}px;height:${icon.height * DROP_SCALE}px" alt="" draggable="false" />`
     : label
   return `<span class="absolute">
   <svg class="pointer-events-none absolute z-auto! -top-[41px] -left-[22px] size-11 scale-68 opacity-0 transition-[scale,opacity] duration-120 ease-out group-data-selected:scale-100 group-data-selected:opacity-100 group-data-selected:duration-220 group-data-selected:ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:scale-100" viewBox="-36 -36 72 72">
