@@ -8,7 +8,7 @@
  * 셋 다 선택이다. 비어 있으면 화면이 "주소 미설정" 으로 다룬다.
  */
 interface ImportMetaEnv {
-  /** Backoffice API origin. 예: `https://example.cloudtype.app` (끝 슬래시 없이) */
+  /** Backoffice API origin. 예: `https://admin-api.example.com` (끝 슬래시 없이) */
   readonly VITE_BACKOFFICE_API_BASE?: string
   /** Customer API origin. admin 은 상태 확인에만 쓴다 */
   readonly VITE_CUSTOMER_API_BASE?: string
