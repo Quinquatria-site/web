@@ -1,30 +1,27 @@
 import Image from 'next/image'
-import { SparkleOrnament } from '@/shared/ornament/SparkleOrnament'
-import { kimjungchulMyungjo } from './fonts'
-import headerSky from './images/header-sky.jpg'
+import { heirOfLight } from '@/shared/fonts/heir-of-light'
+import headerNight from './images/header-night.jpg'
 
-/** 탭 페이지 맨 위 머리. 노을 하늘 위에 별 장식과 페이지 제목을 가운데 둔다 */
+/** 탭 페이지 맨 위 머리. 별자리 선이 걸린 밤하늘 위에 페이지 제목을 가운데 둔다 */
 export function PageHeader({ title }: { title: string }) {
   return (
     <header
-      className={`${kimjungchulMyungjo.variable} relative flex h-19 items-center justify-center overflow-hidden`}
+      className={`${heirOfLight.variable} relative z-10 flex h-19 items-center justify-center drop-shadow-[0_4px_2px_rgb(0_0_0/0.25)]`}
     >
-      <Image
-        src={headerSky}
-        alt=""
-        fill
-        priority
-        sizes="(max-width: 480px) 100vw, 480px"
-        className="object-cover"
-      />
-      <div className="relative flex flex-col items-center drop-shadow-[0_2px_2px_rgb(0_0_0/0.25)]">
-        <div className="-mb-[3px]">
-          <SparkleOrnament axis="horizontal" size="sm" />
-        </div>
-        <h1 className="font-myungjo text-[22px] leading-[normal] tracking-[0.02em] text-text-inverse">
-          {title}
-        </h1>
+      <div className="absolute inset-0 overflow-hidden">
+        <Image
+          src={headerNight}
+          alt=""
+          fill
+          priority
+          sizes="(max-width: 480px) 100vw, 480px"
+          // 별자리 선이 이미지 위쪽에 몰려 있어 위를 기준으로 자른다
+          className="object-cover object-top"
+        />
       </div>
+      <h1 className="relative font-heir text-[22px] leading-[normal] tracking-[0.02em] text-text-inverse">
+        {title}
+      </h1>
     </header>
   )
 }

@@ -48,7 +48,7 @@ export async function Timeline({
   const { slots } = getMessages(await getLocale()).schedule
   const rows = toRows(date, performances)
   return (
-    <ol className="flex flex-col gap-[3px] text-secondary">
+    <ol className="flex flex-col gap-[3px] text-text-inverse">
       {rows.map((row, i) => (
         <li
           key={row.key}
@@ -64,13 +64,14 @@ export async function Timeline({
             )}
             {/* 점 아래 4px 을 띄우고 다음 줄 점 위 4px 까지 잇는다 */}
             {i < rows.length - 1 && (
-              <span className="absolute top-[calc(50%+8px)] h-[27px] w-px bg-border-strong" />
+              <span className="absolute top-[calc(50%+8px)] h-[27px] w-px bg-(--beige-yellow)" />
             )}
           </span>
           {'text' in row ? (
             <span className="truncate pl-1.5 text-base leading-[normal]">{slots[row.text]}</span>
           ) : (
-            <div className="pl-1">
+            // min-w-0 이 없으면 1fr 칸이 긴 공연 이름 폭만큼 늘어나 말줄임 대신 화면 밖으로 밀린다
+            <div className="min-w-0 pl-1">
               <PerformanceCard performance={row.performance} />
             </div>
           )}

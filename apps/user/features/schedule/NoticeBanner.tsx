@@ -7,7 +7,9 @@ export function NoticeBanner({ title, subtitle }: { title: string; subtitle?: st
       <BannerSparkles />
       <span className="relative text-2xl leading-[normal] font-semibold">{title}</span>
       {subtitle && (
-        <span className="relative text-xl leading-[normal] font-medium">{subtitle}</span>
+        <span className="relative text-xl leading-[normal] font-medium text-[#574a53]">
+          {subtitle}
+        </span>
       )}
     </p>
   )

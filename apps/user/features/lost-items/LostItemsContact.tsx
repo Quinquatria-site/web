@@ -15,12 +15,12 @@ export function LostItemsContact({
 }) {
   return (
     <section className="flex flex-col gap-2">
-      <p className="leading-[normal] font-medium text-secondary">{notice}</p>
+      <p className="leading-[normal] text-text-inverse">{notice}</p>
       <div className="flex flex-wrap gap-2">
-        <LinkBadge href={COUNCIL_INSTAGRAM} tone="accent">
+        <LinkBadge href={COUNCIL_INSTAGRAM} tone="glow">
           {instagramLabel}
         </LinkBadge>
-        <LinkBadge href={`tel:${COUNCIL_PHONE}`} tone="accent">
+        <LinkBadge href={`tel:${COUNCIL_PHONE}`} tone="glow">
           {callLabel}
         </LinkBadge>
       </div>

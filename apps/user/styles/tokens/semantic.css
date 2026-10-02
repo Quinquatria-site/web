@@ -23,8 +23,9 @@
   --color-on-accent: var(--warm-white);
 
   --color-performance-student: var(--beige-peach);
-  --color-performance-special: var(--beige-coral);
-  --color-performance-artist: var(--beige-rose);
+  --color-performance-special: var(--marigold);
+  --color-performance-artist: var(--umber);
+  --color-on-performance-artist: var(--warm-white);
 
   /* 장소 카테고리 색. 뒷부분은 CATEGORY_CODES 소문자. photo·trash 는 서버 코드가 정해지면 맞춘다 */
   --color-place-booth: var(--twilight);
@@ -35,11 +36,17 @@
   --color-place-medi: var(--red);
   --color-place-trash: var(--green);
   --color-menu-card: var(--beige-peach);
-  --color-map-control-border: var(--brick);
+  --color-map-control: var(--brown);
+  --color-on-map-control: var(--beige-yellow);
+  --color-map-control-border: var(--beige-yellow);
+  --color-map-control-glow: var(--brick);
 
-  --color-dock: var(--warm-white);
-  --color-on-dock: var(--twilight);
-  --color-dock-border: var(--brick);
-  /* 피그마 선택 표시(#f7d3aa)가 팔레트에 없어 가장 가까운 햇빛 40% 를 웜화이트에 섞는다. 탭 글자 위에 겹쳐 그려서 불투명해야 한다 */
-  --color-dock-selected: color-mix(in srgb, var(--sunlight) 40%, var(--warm-white));
+  --color-sheet-edge: var(--brown);
+  --color-sheet-divider: var(--beige-peach);
+
+  --color-dock: var(--brown);
+  --color-on-dock: var(--beige-yellow);
+  --color-dock-border: var(--beige-yellow);
+  --color-dock-selected: var(--beige-yellow);
+  --color-on-dock-selected: var(--brown);
 }

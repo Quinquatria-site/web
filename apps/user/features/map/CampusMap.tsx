@@ -1,7 +1,7 @@
 'use client'
 
-import { CRS, type Map as LeafletMap } from 'leaflet'
-import { useEffect, useRef } from 'react'
+import { CRS, type Map as LeafletMap, Marker } from 'leaflet'
+import { useEffect, useMemo, useRef } from 'react'
 import { ImageOverlay, MapContainer, useMap, useMapEvents } from 'react-leaflet'
 import {
   MAP_BOUNDS,
@@ -12,8 +12,8 @@ import {
   toLatLng,
 } from './map-coords'
 import { MapLabels } from './MapLabels'
-import type { MapPlace } from './map-place'
-import { FULL_MARKER_ZOOM, PlaceMarkers } from './PlaceMarkers'
+import type { MapPlace, PlaceId } from './map-place'
+import { PlaceMarkers } from './PlaceMarkers'
 import { ZoomButtons } from './ZoomButtons'
 import 'leaflet/dist/leaflet.css'
 
@@ -125,7 +125,10 @@ function PinchZoomRelease() {
   return null
 }
 
-// 고른 장소를 위 칩과 아래 시트 사이 남은 화면 가운데로 옮긴다. 점으로 보이는 배율이면 큰 마커가 보일 때까지 확대한다
+// 장소 주소로 들어와 처음 고른 장소는 큰 물방울이 보이도록 전체 보기의 이 배수까지 확대한다
+const LINK_FOCUS_SCALE = 3
+
+// 고른 장소를 위 칩과 아래 시트 사이 남은 화면 가운데로 옮긴다. 지도에서 누른 장소는 배율을 그대로 두고, 장소 주소로 들어온 첫 장소(request 0)만 확대한다
 function FocusPlace({
   point,
   request,
@@ -164,7 +167,10 @@ function FocusPlace({
     pendingRef.current = undefined
     if (!point) return
     const focus = () => {
-      const zoom = Math.max(map.getZoom(), FULL_MARKER_ZOOM)
+      const zoom =
+        request === 0
+          ? Math.max(map.getZoom(), map.getMinZoom() + Math.log2(LINK_FOCUS_SCALE))
+          : map.getZoom()
       // 칩과 시트 사이 가운데에 오도록, 두 높이 차의 절반만큼 중심을 아래로 잡는다
       const center = map.project(toLatLng(point), zoom).add([0, (bottomInset - topInset) / 2])
       map.setView(map.unproject(center, zoom), zoom)
@@ -223,6 +229,75 @@ function DragWatch({ onDragChange }: { onDragChange: (dragging: boolean) => void
   return null
 }
 
+// 지도는 살짝 커지며 드러나고, 마커는 그 뒤 위쪽부터 차례로 떨어진다. 장소가 많아도 마지막 마커가 늦게 오지 않게 간격 합을 묶는다
+const REVEAL_EASE = 'cubic-bezier(.22,1,.36,1)'
+const MAP_REVEAL_MS = 600
+const MARKER_REVEAL_AT = 550
+const MARKER_REVEAL_MS = 360
+const MARKER_STAGGER_MS = 50
+const MARKER_STAGGER_MAX = 500
+
+// 마커는 HTML 에 실려 와 바로 그려지고 이미지는 뒤늦게 받아져서, 이미지를 다 받을 때까지 지도 판 전체를 숨겨 두었다가 드러낸다
+function MapImage() {
+  const map = useMap()
+  const revealedRef = useRef(false)
+
+  useEffect(() => {
+    map.getPane('mapPane')?.style.setProperty('opacity', '0')
+  }, [map])
+
+  const eventHandlers = useMemo(() => {
+    const reveal = () => {
+      if (revealedRef.current) return
+      revealedRef.current = true
+      const pane = map.getPane('mapPane')
+      if (!pane) return
+      pane.style.removeProperty('opacity')
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+      const { x, y } = map.getSize()
+      // 판 자체는 크기 0 이라 지도 칸 가운데를 기준으로 키운다. scale 속성은 Leaflet 이 끌기에 쓰는 transform 과 따로 논다
+      pane.style.transformOrigin = `${x / 2}px ${y / 2}px`
+      pane.animate(
+        reduce
+          ? [{ opacity: 0 }, { opacity: 1 }]
+          : [
+              { opacity: 0, scale: 0.96 },
+              { opacity: 1, scale: 1 },
+            ],
+        { duration: MAP_REVEAL_MS, easing: REVEAL_EASE },
+      )
+      if (reduce) return
+      const markers: Marker[] = []
+      map.eachLayer((layer) => {
+        if (layer instanceof Marker && layer.options.pane === 'markerPane') markers.push(layer)
+      })
+      markers.sort((a, b) => b.getLatLng().lat - a.getLatLng().lat)
+      const step =
+        markers.length > 1
+          ? Math.min(MARKER_STAGGER_MS, MARKER_STAGGER_MAX / (markers.length - 1))
+          : 0
+      markers.forEach((marker, i) => {
+        marker.getElement()?.firstElementChild?.animate(
+          [
+            { opacity: 0, translate: '0 -14px' },
+            { opacity: 1, translate: '0 0' },
+          ],
+          {
+            duration: MARKER_REVEAL_MS,
+            delay: MARKER_REVEAL_AT + i * step,
+            easing: REVEAL_EASE,
+            fill: 'backwards',
+          },
+        )
+      })
+    }
+    // 받지 못해도 마커는 보여야 해서 실패 때도 드러낸다
+    return { load: reveal, error: reveal }
+  }, [map])
+
+  return <ImageOverlay url={MAP_IMAGE_URL} bounds={MAP_BOUNDS} eventHandlers={eventHandlers} />
+}
+
 /** 캠퍼스 지도. 이미지 한 장을 픽셀 좌표(CRS.Simple)로 깔고 끌기·확대를 받으며, 장소 마커를 올린다 */
 export default function CampusMap({
   places,
@@ -236,8 +311,8 @@ export default function CampusMap({
   onEmptyTap,
 }: {
   places: MapPlace[]
-  selectedId: number | null
-  onSelect: (id: number) => void
+  selectedId: PlaceId | null
+  onSelect: (id: PlaceId) => void
   onClear: () => void
   /** 마커를 누를 때마다 늘어나는 수. 같은 장소를 다시 눌러도 다시 옮긴다 */
   focusRequest: number
@@ -259,10 +334,10 @@ export default function CampusMap({
       zoomSnap={0}
       zoomControl={false}
       attributionControl={false}
-      // 배경은 MapView 가 칠한다. leaflet.css 의 #ddd 가 뒤에 실려 ! 로 지운다
+      // 배경은 페이지의 노을 하늘이 비친다. leaflet.css 의 #ddd 가 뒤에 실려 ! 로 지운다
       className="size-full bg-transparent!"
     >
-      <ImageOverlay url={MAP_IMAGE_URL} bounds={MAP_BOUNDS} />
+      <MapImage />
       <MapLabels />
       <FitCampus topInset={topInset} bottomInset={selected ? bottomInset : 0} />
       <TrackpadPinchZoom />

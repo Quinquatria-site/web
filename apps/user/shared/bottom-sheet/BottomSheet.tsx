@@ -145,7 +145,7 @@ function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetProp
           dragMomentum={false}
           onDragEnd={handleDragEnd}
           onWheel={(event) => step === 'peek' && event.deltaY > 0 && setStep('full')}
-          className="fixed inset-x-0 bottom-0 z-50 mx-auto flex h-[80dvh] max-w-(--app-max-width) flex-col rounded-t-[20px] bg-bg text-text shadow-[0_0_4px_var(--color-accent)]"
+          className="fixed inset-x-0 bottom-0 z-50 mx-auto flex h-[80dvh] max-w-(--app-max-width) flex-col rounded-t-[20px] bg-bg bg-linear-to-b from-bg/20 to-primary/20 text-text shadow-[0_0_4px_var(--color-sheet-edge)]"
         >
           <div
             ref={safeProbeRef}
@@ -157,7 +157,7 @@ function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetProp
             onPointerDown={(event) => dragControls.start(event)}
             className="flex h-[42px] shrink-0 cursor-grab touch-none justify-center pt-3 active:cursor-grabbing"
           >
-            <span className="h-[5px] w-[60px] rounded-full bg-accent" />
+            <span className="h-[5px] w-[60px] rounded-full bg-sheet-edge" />
           </div>
           <Dialog.Close
             aria-label={bottomSheet.close}

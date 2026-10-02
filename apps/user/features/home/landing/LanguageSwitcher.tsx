@@ -7,9 +7,6 @@ import { getMessages } from '@/shared/i18n/messages'
 import { localePath } from '@/shared/i18n/paths'
 import { useLocale } from '@/shared/i18n/useLocale'
 
-// 세 경선이 1/3 주기씩 어긋나 돌아야 지구본이 끊김 없이 도는 것처럼 보인다
-const MERIDIAN_DELAYS = ['[animation-delay:0s]', '[animation-delay:-2s]', '[animation-delay:-4s]']
-
 const ITEM_FADE =
   'translate-x-2.5 opacity-0 transition-[opacity,translate] duration-300 ease-[cubic-bezier(.22,1,.36,1)] group-data-open:translate-x-0 group-data-open:opacity-100 motion-reduce:translate-x-0 motion-reduce:transition-none'
 
@@ -18,7 +15,7 @@ const itemDelay = (open: boolean, order: number) => ({
   transitionDelay: open ? `${120 + order * 30}ms` : '0ms',
 })
 
-/** 홈 랜딩 오른쪽 위 언어 선택. 도는 지구본을 누르면 왼쪽으로 늘어나며 언어가 나오고, 다시 누르거나 바깥·Esc 로 접힌다 */
+/** 홈 랜딩 오른쪽 위 언어 선택. 지구본을 누르면 왼쪽으로 늘어나며 언어가 나오고, 다시 누르거나 바깥·Esc 로 접힌다 */
 export function LanguageSwitcher() {
   const locale = useLocale()
   const label = getMessages(locale).home.languageLabel
@@ -71,16 +68,7 @@ export function LanguageSwitcher() {
         >
           <circle cx="14" cy="14" r="11" />
           <path d="M3.5 10.5h21M3.5 17.5h21" />
-          {MERIDIAN_DELAYS.map((delay) => (
-            <ellipse
-              key={delay}
-              cx="14"
-              cy="14"
-              rx="5"
-              ry="11"
-              className={`origin-center animate-globe-spin [transform-box:fill-box] motion-reduce:animate-none ${delay}`}
-            />
-          ))}
+          <ellipse cx="14" cy="14" rx="5" ry="11" />
         </svg>
       </button>
       {/* 0fr→1fr 로 목록 폭을 열어 지구본이 왼쪽으로 밀려난다. visibility 도 함께 넘겨 접힌 동안 탭·낭독에서 빠진다 */}

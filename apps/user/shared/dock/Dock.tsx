@@ -47,7 +47,7 @@ export function Dock() {
         } as CSSProperties
       }
       // 피그마 테두리는 60 안쪽에 그려져서 바깥으로 두꺼워지는 ring 대신 inset-ring 을 쓴다
-      className="fixed bottom-(--dock-bottom) flex h-(--dock-size) overflow-hidden rounded-full bg-dock/85 p-(--dock-pad) text-on-dock shadow-[0_4px_6px_color-mix(in_srgb,var(--sunlight)_16%,transparent)] inset-ring inset-ring-dock-border transition-[right] duration-300 ease-out"
+      className="fixed bottom-(--dock-bottom) flex h-(--dock-size) overflow-hidden rounded-full bg-dock/80 p-(--dock-pad) text-on-dock shadow-[0_4px_6px_rgb(0_0_0/0.25)] inset-ring inset-ring-dock-border transition-[right] duration-300 ease-out"
     >
       <DockTabs open={mode === 'tabs'} />
       <AnimatePresence initial={false}>

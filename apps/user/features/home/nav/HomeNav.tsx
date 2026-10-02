@@ -16,31 +16,31 @@ const ITEMS: (Omit<HomeNavItem, 'title' | 'description'> & {
     key: 'schedule',
     href: '/schedule',
     image: timetable,
-    imageBox: 'top-0 right-[15px] h-[76px] w-[83px]',
+    imageBox: { right: 15, width: 83 },
   },
   {
     key: 'map',
     href: '/map',
     image: map,
-    imageBox: 'top-0 right-[14px] h-[76px] w-[86px]',
+    imageBox: { right: 14, width: 86 },
   },
   {
     key: 'notices',
     href: '/notices',
     image: notices,
-    imageBox: 'top-0 right-[5.3px] h-[76px] w-[93.7px]',
+    imageBox: { right: 5.3, width: 93.7 },
   },
   {
     key: 'lostItems',
     href: '/lost-items',
     image: lostItems,
-    imageBox: 'top-0 right-[19px] h-[76px] w-[74px]',
+    imageBox: { right: 19, width: 74 },
   },
   {
     key: 'goods',
     href: '/goods',
     image: goods,
-    imageBox: 'top-0 right-[13.3px] h-[76px] w-[83.7px]',
+    imageBox: { right: 13.3, width: 83.7 },
   },
 ]
 

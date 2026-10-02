@@ -4,6 +4,7 @@ import { PerformanceImagePreload } from '@/features/schedule/PerformanceImagePre
 import { ScheduleBanner } from '@/features/schedule/ScheduleBanner'
 import { ScheduleBoard } from '@/features/schedule/ScheduleBoard'
 import { Timeline, performanceAnchorId } from '@/features/schedule/Timeline'
+import { DuskBackground } from '@/shared/background/DuskBackground'
 import { PageHeader } from '@/shared/header/PageHeader'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
@@ -19,6 +20,7 @@ export default async function SchedulePage() {
 
   return (
     <>
+      <DuskBackground />
       <PerformanceImagePreload performances={performances} />
       <PageHeader title={pages.schedule} />
       <ScheduleBoard

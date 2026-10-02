@@ -39,7 +39,7 @@ export const en: Messages = {
         title: 'Lost & Found',
         description: 'Lost items will be posted after the festival.',
       },
-      goods: { title: 'Quinquatria Goods', description: 'Meet the 2026 Quinquatria goods!' },
+      goods: { title: 'QUINQUATRIA Goods', description: 'Meet the 2026 festival goods!' },
     },
     credits: {
       likelion: 'LIKELION HUFS (Seoul)',
@@ -105,6 +105,10 @@ export const en: Messages = {
       menu: 'Menu',
       photos: 'Photos',
       price: '₩{price}',
+    },
+    /** 프론트에 둔 팔찌 수령 영역 */
+    braceletPickup: {
+      name: 'Wristband Pickup',
     },
     places: {
       BOOTH: 'Booth',

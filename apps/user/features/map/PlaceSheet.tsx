@@ -29,7 +29,7 @@ function PlaceBadge({ place }: { place: MapPlace }) {
   )
 }
 
-// 1단계에 보이는 요약과 이어지는 설명. 값이 없는 줄(편의시설의 운영·위치)은 뺀다
+// 1단계에 보이는 요약과 이어지는 설명. 값이 없는 줄(편의시설의 운영·위치, 시간 없는 프론트 장소의 운영 시간)은 뺀다
 function PlaceSummary({ place }: { place: MapPlace }) {
   const { sheet } = getMessages(useLocale()).map
   const label = placeLabel(place)
@@ -38,7 +38,10 @@ function PlaceSummary({ place }: { place: MapPlace }) {
     {
       key: 'hours',
       term: sheet.hours,
-      value: `${formatSeoulTime(place.start_hour)} - ${formatSeoulTime(place.end_hour)}`,
+      // 프론트에 둔 장소는 시간이 정해지지 않으면 비워 둔다
+      value:
+        place.start_hour &&
+        `${formatSeoulTime(place.start_hour)} - ${formatSeoulTime(place.end_hour)}`,
     },
     { key: 'location', term: sheet.location, value: label },
   ].filter((row) => row.value)
@@ -72,7 +75,7 @@ function PlaceSummary({ place }: { place: MapPlace }) {
 function SheetSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <>
-      <hr className="border-[#eaddcd]" />
+      <hr className="border-sheet-divider" />
       <section className="flex flex-col gap-3 px-2">
         <h3 className="text-xl leading-[normal] font-semibold">{title}</h3>
         {children}

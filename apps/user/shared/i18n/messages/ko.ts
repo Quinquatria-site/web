@@ -32,7 +32,7 @@ export const ko = {
       map: { title: '캠퍼스 지도', description: '다양한 부스와 편의시설 위치를 찾아보세요!' },
       notices: { title: '공지사항', description: '축제 관련 주요 소식을 알려드립니다.' },
       lostItems: { title: '분실물 찾기', description: '축제가 끝나면 분실물이 업로드됩니다.' },
-      goods: { title: '퀸쿠아트리아 굿즈', description: '2026 퀸쿠아트리아 굿즈를 만나보세요!' },
+      goods: { title: 'QUINQUATRIA 굿즈', description: '2026 축제 굿즈를 만나보세요!' },
     },
     credits: {
       likelion: '한국외대(서울) 멋쟁이사자처럼',
@@ -98,6 +98,10 @@ export const ko = {
       photos: '사진',
       /** {price} 에 자릿수 쉼표 찍은 금액이 들어간다 */
       price: '{price}원',
+    },
+    /** 프론트에 둔 팔찌 수령 영역 */
+    braceletPickup: {
+      name: '입장 팔찌 수령처',
     },
     places: {
       BOOTH: '부스',

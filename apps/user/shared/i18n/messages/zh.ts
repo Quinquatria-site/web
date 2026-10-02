@@ -33,7 +33,7 @@ export const zh: Messages = {
       map: { title: '校园地图', description: '查找各类摊位和便利设施的位置！' },
       notices: { title: '公告', description: '为您带来庆典相关的重要消息。' },
       lostItems: { title: '失物招领', description: '庆典结束后将上传失物信息。' },
-      goods: { title: 'Quinquatria 周边', description: '来看看2026 Quinquatria周边吧！' },
+      goods: { title: 'QUINQUATRIA 周边', description: '来看看2026庆典周边吧！' },
     },
     credits: {
       likelion: '韩国外国语大学（首尔）LIKELION',
@@ -99,6 +99,10 @@ export const zh: Messages = {
       menu: '菜单',
       photos: '照片',
       price: '{price}韩元',
+    },
+    /** 프론트에 둔 팔찌 수령 영역 */
+    braceletPickup: {
+      name: '入场手环领取处',
     },
     places: {
       BOOTH: '摊位',

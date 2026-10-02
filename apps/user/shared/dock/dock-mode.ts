@@ -11,10 +11,15 @@ export const DOCK_TABS = [
   { id: 'goods', href: '/goods' },
 ] as const
 
+/** 탭으로 치는 경로. 장소를 고른 지도(/map/12)는 시트만 열린 지도라 지도 탭이다 */
+export function tabPath(path: string) {
+  return /^\/map\/\d+$/.test(path) ? '/map' : path
+}
+
 /** 언어를 뺀 경로와 랜딩 통과 여부로 도크 모드를 정한다 */
 export function getDockMode(path: string, pastLanding: boolean): DockMode {
   if (path === '/') return pastLanding ? 'top' : 'hidden'
-  if (DOCK_TABS.some((tab) => tab.href === path)) return 'tabs'
+  if (DOCK_TABS.some((tab) => tab.href === tabPath(path))) return 'tabs'
   // 메인 탭이 아닌 주소는 전부 상세로 보고 뒤로 가기를 준다
   return 'back'
 }

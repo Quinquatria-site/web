@@ -1,5 +1,7 @@
+import Image from 'next/image'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
+import bannerAthena from './images/banner-athena.png'
 import type { Performance } from './performance'
 import { performanceAnchorId } from './Timeline'
 
@@ -9,16 +11,23 @@ export async function LiveBanner({ performance }: { performance: Performance }) 
   return (
     <a
       href={`#${performanceAnchorId(performance.id)}`}
-      className="flex h-[100px] flex-col justify-between rounded-xl border border-(--sunlight) bg-bg-subtle px-3.5 pt-[11px] pb-3 text-text shadow-[0_2px_16px_rgb(249_163_66/0.4)]"
+      className="relative flex h-[100px] flex-col justify-between overflow-clip rounded-xl border border-primary bg-bg bg-linear-to-r from-bg/20 to-primary/20 px-3.5 pt-[11px] pb-3 text-text shadow-[0_2px_16px_rgb(249_163_66/0.4)]"
     >
-      <span className="flex items-center gap-3 text-base leading-[normal] font-semibold">
+      {/* 시안처럼 가운데보다 5px 내려 두고, 오른쪽으로 치우쳐 잘라 창끝까지 보인다 */}
+      <Image
+        src={bannerAthena}
+        alt=""
+        sizes="180px"
+        className="absolute top-[calc(50%+5px)] left-1/2 h-[118px] w-[140px] -translate-1/2 object-cover object-[65%_50%] opacity-30"
+      />
+      <span className="relative flex items-center gap-3 text-base leading-[normal] font-semibold">
         <span
           aria-hidden
-          className="size-2.5 rounded-full bg-secondary shadow-[0_0_4px_3px_var(--sunlight)]"
+          className="size-2.5 rounded-full bg-primary shadow-[0_0_4px_3px_rgb(249_163_66/0.25)]"
         />
         {schedule.liveNow}
       </span>
-      <span className="self-end truncate text-2xl leading-[normal] font-semibold">
+      <span className="relative max-w-full self-end truncate text-2xl leading-[normal] font-semibold">
         {performance.title}
       </span>
     </a>
