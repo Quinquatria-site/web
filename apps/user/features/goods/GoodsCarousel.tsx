@@ -53,7 +53,7 @@ export function GoodsCarousel({ goods }: { goods: Goods[] }) {
       <AnimatePresence mode="popLayout" initial={false} custom={direction * shift}>
         <GoodsSwipeCard key={current.id} shift={direction * shift} onDragEnd={handleDragEnd}>
           <GoodsCard
-            image={current.image.src}
+            image={current.image?.src ?? null}
             name={item.name}
             price={formatPrice(current.price, locale)}
             order={index + 1}

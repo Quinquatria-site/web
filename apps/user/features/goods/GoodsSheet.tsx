@@ -40,7 +40,7 @@ export function GoodsSheet({ goods }: { goods: Goods[] }) {
             const { name } = text.items[g.id]
             return (
               <li key={g.id} className="flex flex-col gap-2">
-                <GoodsPhoto src={g.image.src} name={name} order={i + 1} variant="tile" />
+                <GoodsPhoto src={g.image?.src ?? null} name={name} order={i + 1} variant="tile" />
                 <div className="flex flex-col">
                   <p className="leading-[normal] font-semibold text-text">{name}</p>
                   <p className="leading-[1.288] font-medium text-accent">

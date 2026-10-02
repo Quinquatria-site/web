@@ -30,7 +30,7 @@ export function ZoomablePhoto({
   const down = useRef<{ x: number; y: number } | null>(null)
   const name = gallery && gallery.photos.length > 1 ? `${alt} ${gallery.index + 1}` : alt
 
-  if (!src) return <Photo src={null} alt={name} sizes={sizes} />
+  if (!src) return <Photo src={null} alt={name} sizes={sizes} bare={bare} />
 
   return (
     <PhotoViewer

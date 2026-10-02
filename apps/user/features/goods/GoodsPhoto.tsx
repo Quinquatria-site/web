@@ -28,7 +28,8 @@ export function GoodsPhoto({
   order,
   variant,
 }: {
-  src: string
+  /** 없으면 빈 사진 자리 */
+  src: string | null
   name: string
   /** 1부터 세는 순번. 01. 처럼 두 자리로 적는다 */
   order: number
