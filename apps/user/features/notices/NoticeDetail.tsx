@@ -7,7 +7,7 @@ export function NoticeDetail({ notice }: { notice: Notice }) {
     <article className="flex flex-col px-5 pt-[26px] text-secondary">
       <header className="flex flex-col gap-2 border-b border-[#d3ced2] px-[5px] pb-[22px] wrap-break-word">
         <h2 className="text-xl leading-[normal] font-semibold">{notice.title}</h2>
-        <time dateTime={notice.created_at} className="leading-[1.18] text-text-muted">
+        <time dateTime={notice.created_at} className="leading-[1.18]">
           {formatSeoulTime(notice.created_at, { withDate: true })}
         </time>
       </header>
