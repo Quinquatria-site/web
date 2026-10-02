@@ -64,8 +64,8 @@ export function LandingHero() {
       <video
         ref={videoRef}
         className="absolute inset-0 size-full object-cover"
-        src="/landing-v2.mp4"
-        poster={blocked ? '/landing-v2-end.jpg' : '/landing-v2-start.jpg'}
+        src="/landing-v3.mp4"
+        poster={blocked ? '/landing-v3-end.jpg' : '/landing-v3-start.jpg'}
         autoPlay
         muted
         playsInline

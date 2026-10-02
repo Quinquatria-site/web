@@ -47,7 +47,7 @@ const place = (
   y,
   start_hour: '2026-10-07T13:00:00+09:00',
   end_hour: '2026-10-07T18:00:00+09:00',
-  place_image_uri: id % 2 ? null : ['/landing-v2-end.jpg', '/landing-v2-start.jpg'],
+  place_image_uri: id % 2 ? null : ['/landing-v3-end.jpg', '/landing-v3-start.jpg'],
   name,
   host_college: code === 'BOOTH' || code === 'PUB' ? '영어대학 학생회' : '',
   description:
