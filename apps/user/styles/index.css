@@ -4,7 +4,6 @@
 @import './tokens/font.css';
 @import './breakpoints.css';
 @import './layout.css';
-@import '../shared/background/dusk-background.css';
 @import '../features/home/landing/landing-scroll-cue.css';
 @import '../features/home/landing/landing-title.css';
 @import '../features/home/landing/language-switcher.css';
