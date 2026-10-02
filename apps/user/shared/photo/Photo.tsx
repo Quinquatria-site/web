@@ -3,10 +3,23 @@ import { assetUrl } from './asset-url'
 import athenaEmblem from './images/athena-emblem.png'
 
 /** 사진 자리. 부모를 꽉 채우고, 사진이 없으면 흐린 아테나 문양을 대신 보여 준다. 모서리는 부모가 자른다. src 는 주소나 API 의 S3 key */
-export function Photo({ src, alt, sizes }: { src: string | null; alt: string; sizes: string }) {
+export function Photo({
+  src,
+  alt,
+  sizes,
+  bare = false,
+}: {
+  src: string | null
+  alt: string
+  sizes: string
+  /** 바탕색을 빼 투명한 사진 뒤로 부모 배경이 비치게 한다 */
+  bare?: boolean
+}) {
   return (
     // size 컨테이너이자 fill 의 기준이라 부모 높이(h·size·aspect)가 정해져 있어야 보인다
-    <div className="relative size-full overflow-hidden bg-[#e9e3dd] [container-type:size]">
+    <div
+      className={`relative size-full overflow-hidden [container-type:size] ${bare ? '' : 'bg-[#e9e3dd]'}`}
+    >
       {src ? (
         <Image src={assetUrl(src)} alt={alt} fill sizes={sizes} className="object-cover" />
       ) : (

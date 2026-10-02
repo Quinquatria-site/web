@@ -48,7 +48,7 @@ export const ko = {
     noticeDetail: '공지 상세',
     lostItems: '분실물 찾기',
     lostItemDetail: '분실물 상세',
-    goods: '퀸쿠아트리아 굿즈',
+    goods: 'QUINQUATRIA 굿즈',
   },
   notices: {
     important: '중요',
@@ -136,22 +136,18 @@ export const ko = {
     },
   },
   goods: {
-    introTitle: '2026 QUINQUATRIA',
-    introSubtitle: '공식 굿즈를 만나보세요!',
-    salesLocation: '판매 장소 보러가기',
+    intro: '2026년 축제의\n공식 굿즈를 만나보세요!',
+    salesLocation: '판매장소 보러가기',
     viewAll: '전체 굿즈 보기',
     sheetDescription: '2026 퀸쿠아트리아 공식 굿즈 목록',
     previous: '이전 굿즈',
     next: '다음 굿즈',
     items: {
-      soccer: { name: '축구 유니폼', description: '별이 박힌 시그니처 축구 유니폼' },
-      baseball: { name: '야구 유니폼', description: '별이 박힌 시그니처 야구 유니폼' },
-      soccerCrop: { name: '축구 유니폼 (크롭)', description: '별이 박힌 시그니처 축구 유니폼' },
-      rugby: { name: '럭비 유니폼', description: '별이 박힌 시그니처 럭비 유니폼' },
-      baseballBoo: {
-        name: '야구 유니폼 (BOO ver.)',
-        description: '부가 그려진 시그니처 야구 유니폼',
-      },
+      soccer: { name: '축구 유니폼' },
+      baseball: { name: '야구 유니폼' },
+      soccerCrop: { name: '축구 유니폼 (크롭)' },
+      rugby: { name: '럭비 유니폼' },
+      baseballBoo: { name: '야구 유니폼 (BOO ver.)' },
     },
   },
 }

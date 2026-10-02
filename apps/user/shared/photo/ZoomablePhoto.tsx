@@ -15,12 +15,15 @@ export function ZoomablePhoto({
   alt,
   sizes,
   gallery,
+  bare,
 }: {
   src: string | null
   alt: string
   sizes: string
   /** 함께 넘겨 볼 사진들과 그중 이 사진의 자리. alt 는 사진 묶음 이름이 되고 뒤에 몇 번째인지 붙는다 */
   gallery?: { photos: string[]; index: number }
+  /** 투명한 사진 뒤로 부모 배경이 비치게 한다 */
+  bare?: boolean
 }) {
   const { photoViewer } = getMessages(useLocale())
   const [open, setOpen] = useState(false)
@@ -53,7 +56,7 @@ export function ZoomablePhoto({
         }}
         className="block size-full cursor-zoom-in"
       >
-        <Photo src={src} alt={name} sizes={sizes} />
+        <Photo src={src} alt={name} sizes={sizes} bare={bare} />
       </button>
     </PhotoViewer>
   )
