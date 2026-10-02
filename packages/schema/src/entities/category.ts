@@ -1,5 +1,13 @@
 /** 장소 카테고리 종류 */
-export const CATEGORY_CODES = ['PUB', 'BOOTH', 'FOODTRUCK', 'MEDI', 'BRACELET'] as const
+export const CATEGORY_CODES = [
+  'PUB',
+  'BOOTH',
+  'FOODTRUCK',
+  'MEDI',
+  'BRACELET',
+  'PHOTOBOOTH',
+  'TRASHCAN',
+] as const
 export type CategoryCode = (typeof CATEGORY_CODES)[number]
 
 /** 카테고리의 언어 무관 필드 */

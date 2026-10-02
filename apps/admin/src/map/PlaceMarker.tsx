@@ -13,8 +13,8 @@ import styles from './CampusMap.module.css'
 import braceletIcon from './icons/bracelet.svg'
 import foodtruckIcon from './icons/foodtruck.svg'
 import mediIcon from './icons/medi.svg'
-import photoIcon from './icons/photo.svg'
-import trashIcon from './icons/trash.svg'
+import photoboothIcon from './icons/photobooth.svg'
+import trashcanIcon from './icons/trashcan.svg'
 import { PLACE_NAMES, placeLabel, type PlaceCode } from './place-label'
 
 // 처음 전체 보기의 이 배수보다 확대해야 큰 물방울이 나온다. 그 아래는 작은 물방울만 찍고 누를 수 없다. user 앱과 같은 값
@@ -28,8 +28,8 @@ const PLACE_ICONS: Partial<Record<PlaceCode, string>> = {
   FOODTRUCK: foodtruckIcon,
   MEDI: mediIcon,
   BRACELET: braceletIcon,
-  PHOTO: photoIcon,
-  TRASH: trashIcon,
+  PHOTOBOOTH: photoboothIcon,
+  TRASHCAN: trashcanIcon,
 }
 
 // 원 가운데 (0,0), 반지름 19.5, 끝 (0,28.8) 인 물방울. 흰 테두리 3 을 이 선 가운데에 그려 바깥이 지름 42, 끝이 31 에 온다
