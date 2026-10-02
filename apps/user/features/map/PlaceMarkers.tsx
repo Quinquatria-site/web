@@ -28,6 +28,48 @@ const FULL_MARKER_SCALE = 1.76
 // 선택된 마커를 이웃 위로 올린다
 const SELECTED_Z_OFFSET = 1000
 
+// 손가락이 이만큼 안에서 떨어지면 끌기가 아니라 누름이다. 지도 끌기 판정(10px)과 맞춘다
+const TAP_SLOP_PX = 10
+
+// pointerup 으로 누름을 받은 뒤 같은 누름의 click 이 또 오면 버리는 시간
+const CLICK_AFTER_TAP_MS = 600
+
+function swallowNextClick() {
+  const swallow = (event: MouseEvent) => {
+    event.stopPropagation()
+    event.preventDefault()
+  }
+  addEventListener('click', swallow, { capture: true, once: true })
+  // 크롬이 click 을 삼킨 탭이면 click 이 오지 않으니 다음 누름까지 막지 않게 걷는다
+  setTimeout(() => removeEventListener('click', swallow, { capture: true }), CLICK_AFTER_TAP_MS)
+}
+
+// 크롬 안드로이드는 시트를 세게 던진 직후 첫 탭을 관성 멈춤으로 삼켜 click 을 만들지 않는다. pointerup 으로 받고, click 은 키보드·보조기기 몫으로 남긴다
+function listenTap(element: HTMLElement, onTap: () => void) {
+  let start: { id: number; x: number; y: number } | null = null
+  let lastTapAt = -Infinity
+  element.addEventListener('pointerdown', (event) => {
+    start = event.isPrimary ? { id: event.pointerId, x: event.clientX, y: event.clientY } : null
+  })
+  element.addEventListener('pointercancel', () => {
+    start = null
+  })
+  element.addEventListener('pointerup', (event) => {
+    if (!start || event.pointerId !== start.id) return
+    const moved = Math.hypot(event.clientX - start.x, event.clientY - start.y)
+    start = null
+    if (moved > TAP_SLOP_PX) return
+    lastTapAt = event.timeStamp
+    // 고르면 지도가 그 장소로 옮겨 가, 뒤따라오는 click 이 옮겨 온 빈 곳에 떨어져 방금 고른 장소를 푼다. 이 탭의 click 은 버린다
+    swallowNextClick()
+    onTap()
+  })
+  element.addEventListener('click', (event) => {
+    if (event.timeStamp - lastTapAt < CLICK_AFTER_TAP_MS) return
+    onTap()
+  })
+}
+
 // 구역 번호 대신 아이콘을 보여 주는 카테고리
 const PLACE_ICONS: Partial<Record<PlaceCode, StaticImageData>> = {
   FOODTRUCK: foodtruckIcon,
@@ -127,7 +169,6 @@ const PlaceMarker = memo(function PlaceMarker({
   const position = useMemo(() => toLatLng({ x, y }), [x, y])
   const eventHandlers = useMemo(
     () => ({
-      click: () => onSelect(id),
       // Leaflet 은 마커에 포커스와 role=button 만 주고 Enter·Space 를 클릭으로 바꿔 주지 않는다
       keydown: ({ originalEvent }: LeafletKeyboardEvent) => {
         // 작은 물방울은 누를 수 없는 점이라 키로도 고르지 않는다
@@ -138,6 +179,9 @@ const PlaceMarker = memo(function PlaceMarker({
       },
       add: ({ target }: LeafletEvent) => {
         syncMarker(target as LeafletMarker, stateRef.current)
+        // Leaflet click 대신 직접 받는다. 다시 붙으면 요소가 새로 생겨 그때마다 단다
+        const element = (target as LeafletMarker).getElement()
+        if (element) listenTap(element, () => onSelect(id))
       },
     }),
     [id, onSelect],
