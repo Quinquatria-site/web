@@ -119,6 +119,8 @@ export function PlaceSheet({
       open={place !== null}
       hidden={hidden}
       peekHeight={PLACE_SHEET_PEEK}
+      // 뒤로 가기는 MapView 가 장소 주소(/map/12)로 처리한다
+      closeOnBack={false}
       onClose={onClose}
     >
       {current && <PlaceDetails place={current} />}
