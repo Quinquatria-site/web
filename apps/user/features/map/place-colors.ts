@@ -11,13 +11,24 @@ export const PLACE_BG: Record<PlaceCode, string> = {
   TRASH: 'bg-place-trash',
 }
 
-/** 선택 링 배경. 고유 색 52% */
-export const PLACE_RING_BG: Record<PlaceCode, string> = {
-  BOOTH: 'bg-place-booth/52',
-  PUB: 'bg-place-pub/52',
-  FOODTRUCK: 'bg-place-foodtruck/52',
-  MEDI: 'bg-place-medi/52',
-  BRACELET: 'bg-place-bracelet/52',
-  PHOTO: 'bg-place-photo/52',
-  TRASH: 'bg-place-trash/52',
+/** 물방울 마커 원과 선택 링 채움. 고유 색 */
+export const PLACE_FILL: Record<PlaceCode, string> = {
+  BOOTH: 'fill-place-booth',
+  PUB: 'fill-place-pub',
+  FOODTRUCK: 'fill-place-foodtruck',
+  MEDI: 'fill-place-medi',
+  BRACELET: 'fill-place-bracelet',
+  PHOTO: 'fill-place-photo',
+  TRASH: 'fill-place-trash',
+}
+
+/** 물방울 마커 꼬리 채움. 고유 색 52% */
+export const PLACE_TAIL_FILL: Record<PlaceCode, string> = {
+  BOOTH: 'fill-place-booth/52',
+  PUB: 'fill-place-pub/52',
+  FOODTRUCK: 'fill-place-foodtruck/52',
+  MEDI: 'fill-place-medi/52',
+  BRACELET: 'fill-place-bracelet/52',
+  PHOTO: 'fill-place-photo/52',
+  TRASH: 'fill-place-trash/52',
 }

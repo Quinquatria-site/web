@@ -4,10 +4,11 @@ import {
   divIcon,
   type LeafletEvent,
   type LeafletKeyboardEvent,
+  type Map as LeafletMap,
   type Marker as LeafletMarker,
 } from 'leaflet'
 import type { StaticImageData } from 'next/image'
-import { memo, useEffect, useMemo, useRef } from 'react'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { Marker, useMap } from 'react-leaflet'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
@@ -18,10 +19,10 @@ import photoIcon from './images/photo.svg'
 import trashIcon from './images/trash.svg'
 import { toLatLng } from './map-coords'
 import { type MapPlace, type PlaceCode, placeLabel } from './map-place'
-import { PLACE_BG, PLACE_RING_BG } from './place-colors'
+import { PLACE_FILL, PLACE_TAIL_FILL } from './place-colors'
 
-/** 이 배율부터 점이 글자·아이콘 든 마커로 커진다. 쓰면서 맞춘다 */
-export const FULL_MARKER_ZOOM = -1
+// 처음 전체 보기의 이 배수보다 확대해야 큰 물방울이 나온다. 그 아래는 다닥다닥 붙어도 겹치지 않는 작은 물방울만 찍고 누를 수 없다
+const FULL_MARKER_SCALE = 1.76
 
 // 선택된 마커를 이웃 위로 올린다
 const SELECTED_Z_OFFSET = 1000
@@ -35,18 +36,38 @@ const PLACE_ICONS: Partial<Record<PlaceCode, StaticImageData>> = {
   TRASH: trashIcon,
 }
 
-// Leaflet 이 문자열로 받아 그리므로 JSX 대신 HTML 로 만든다. 크기 0 인 뿌리에 가운데를 맞추고, 링(62/42)은 마커 크기에 비례해 둘러싼다. 점은 촘촘해서 터치 영역을 키우면 이웃 점을 가로채니 보이는 크기 그대로 둔다
+// 원 가운데 (0,0), 반지름 19.5, 끝 (0,28.8) 인 물방울. 흰 테두리 3 을 이 선 가운데에 그려 바깥이 지름 42, 끝이 31 에 온다
+const DROP_PATH = 'M-14.35 13.2L0 28.8L14.35 13.2A19.5 19.5 0 1 0-14.35 13.2Z'
+
+// Leaflet 이 문자열로 받아 그리므로 JSX 대신 HTML 로 만든다. 크기 0 인 뿌리에 꼬리 끝을 맞춰 끝이 장소 좌표를 찍는다
+// 선택되면 원 가운데에서 두 겹 링(56/72)이 퍼진다. leaflet.css 가 지도 안 svg 에 z-index 200 을 걸어 글자를 덮으니 z-auto! 로 되돌린다. 마커가 촘촘해서 터치 영역을 키우면 이웃을 가로채니 보이는 크기 그대로 둔다
 function markerHtml(code: PlaceCode, label: string | null) {
   const icon = PLACE_ICONS[code]
   const content = icon
     ? `<img src="${icon.src}" width="${icon.width}" height="${icon.height}" alt="" draggable="false" />`
     : label
-  return `<span class="absolute size-5 -translate-1/2 in-data-[markers=full]:size-[42px]">
-  <span class="pointer-events-none absolute inset-[-23.8%] rounded-full ${PLACE_RING_BG[code]} scale-68 opacity-0 transition-[scale,opacity] duration-120 ease-out group-data-selected:scale-100 group-data-selected:opacity-100 group-data-selected:duration-220 group-data-selected:ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:scale-100"></span>
-  <span class="absolute inset-0 grid place-items-center rounded-full ${PLACE_BG[code]} font-sans text-[17px] leading-none font-semibold text-text-inverse outline-offset-2 outline-text group-focus-visible:outline-2">
-    <span class="hidden in-data-[markers=full]:contents">${content}</span>
+  return `<span class="absolute">
+  <svg class="pointer-events-none absolute z-auto! -top-[67px] -left-9 size-18 scale-68 opacity-0 transition-[scale,opacity] duration-120 ease-out group-data-selected:scale-100 group-data-selected:opacity-100 group-data-selected:duration-220 group-data-selected:ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:scale-100" viewBox="-36 -36 72 72">
+    <circle r="36" class="${PLACE_FILL[code]}" opacity=".2" />
+    <circle r="28" class="${PLACE_FILL[code]}" opacity=".2" />
+  </svg>
+  <svg class="absolute z-auto! -top-[52px] -left-[21px] h-[52px] w-[42px]" viewBox="-21 -21 42 52">
+    <path d="${DROP_PATH}" class="fill-white" />
+    <path d="${DROP_PATH}" class="${PLACE_TAIL_FILL[code]}" />
+    <circle r="19.5" class="${PLACE_FILL[code]}" />
+    <path d="${DROP_PATH}" fill="none" stroke-width="3" class="stroke-white" />
+  </svg>
+  <span class="absolute -top-[52px] -left-[21px] grid size-[42px] place-items-center rounded-full font-sans text-[17px] leading-none font-semibold text-text-inverse outline-offset-2 outline-text group-focus-visible:outline-2">
+    ${content}
   </span>
 </span>`
+}
+
+// 큰 물방울을 1/4 로 줄인 폭 11 짜리. 같은 물방울이라 확대할 때 모양이 이어지고 꼬리 끝이 같은 자리를 찍는다
+function miniMarkerHtml(code: PlaceCode) {
+  return `<svg class="absolute z-auto! -top-[14px] -left-[5.5px] h-[14px] w-[11px] overflow-visible" viewBox="-21 -21 42 53.5">
+  <path d="${DROP_PATH}" stroke-width="4.5" stroke-miterlimit="10" class="${PLACE_FILL[code]} stroke-white" />
+</svg>`
 }
 
 // Leaflet 뿌리 요소가 role=button 이라 이름·눌림 상태를 여기에 단다. 레이어가 다시 붙으면 요소가 새로 생겨 add 때도 부른다
@@ -107,22 +128,36 @@ const PlaceMarker = memo(function PlaceMarker({
   return <Marker ref={markerRef} position={position} icon={icon} eventHandlers={eventHandlers} />
 })
 
-// 배율에 따라 지도 칸에 data-markers 를 달아 마커가 CSS 만으로 점·전체 모양을 오가게 한다
-function MarkerZoomLevel() {
+/** 축소 때 찍는 작은 물방울. 누르거나 포커스할 수 없다 */
+const MiniMarker = memo(function MiniMarker({ place }: { place: MapPlace }) {
+  const { code, x, y } = place
+  const icon = useMemo(
+    () => divIcon({ html: miniMarkerHtml(code), className: '', iconSize: [0, 0] }),
+    [code],
+  )
+  const position = useMemo(() => toLatLng({ x, y }), [x, y])
+  return <Marker position={position} icon={icon} interactive={false} keyboard={false} />
+})
+
+function isFullZoom(map: LeafletMap) {
+  return map.getZoom() - map.getMinZoom() > Math.log2(FULL_MARKER_SCALE)
+}
+
+// 최소 배율은 화면 폭마다 달라서, 확대 정도를 최소 배율과의 차이로 잰다. 화면 크기가 바뀌면 최소 배율만 바뀌어 zoomlevelschange 도 듣는다
+function useFullZoom() {
   const map = useMap()
+  const [full, setFull] = useState(() => isFullZoom(map))
 
   useEffect(() => {
-    const update = () => {
-      map.getContainer().dataset.markers = map.getZoom() >= FULL_MARKER_ZOOM ? 'full' : 'dot'
-    }
+    const update = () => setFull(isFullZoom(map))
     update()
-    map.on('zoom', update)
+    map.on('zoom zoomlevelschange', update)
     return () => {
-      map.off('zoom', update)
+      map.off('zoom zoomlevelschange', update)
     }
   }, [map])
 
-  return null
+  return full
 }
 
 /** 지도 위 장소 마커들. 선택은 바텀 시트와 맞추도록 부모가 들고, 여기선 누름과 고른 장소가 목록에서 빠진 것만 알린다 */
@@ -138,6 +173,7 @@ export function PlaceMarkers({
   onClear: () => void
 }) {
   const names = getMessages(useLocale()).map.places
+  const full = useFullZoom()
   // 필터 등으로 선택된 장소가 목록에서 빠지면 선택도 푼다. 두면 다시 나타날 때 누르지 않았는데 링이 켜져 있다
   const selectedGone = selectedId !== null && !places.some((place) => place.id === selectedId)
   useEffect(() => {
@@ -146,15 +182,17 @@ export function PlaceMarkers({
 
   return (
     <>
-      <MarkerZoomLevel />
       {places.map((place) => {
+        const selected = place.id === selectedId
+        // 고른 장소는 축소해도 큰 물방울로 남겨 시트가 가리키는 자리를 잃지 않는다
+        if (!full && !selected) return <MiniMarker key={place.id} place={place} />
         const label = placeLabel(place)
         return (
           <PlaceMarker
             key={place.id}
             place={place}
             name={label ? `${names[place.code]} ${label}` : names[place.code]}
-            selected={place.id === selectedId}
+            selected={selected}
             onSelect={onSelect}
           />
         )
