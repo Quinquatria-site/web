@@ -22,7 +22,7 @@ export function GoodsCard({
   price,
   order,
 }: {
-  image: string | null
+  image: string
   name: string
   price: string
   order: number
