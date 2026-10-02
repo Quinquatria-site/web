@@ -12,9 +12,9 @@ export function categoryById(id: number): Category | undefined {
 }
 
 /**
- * 서버에 카테고리 5종(§2.3 CATEGORY.code) 중 빠진 것이 있다.
+ * 서버에 카테고리(§2.3 CATEGORY.code, `CATEGORY_CODES` 전부) 중 빠진 것이 있다.
  *
- * 카테고리는 고정 5종이라 서버가 미리 넣어 두고, Backoffice API 에도 만드는 요청이 없다
+ * 카테고리는 고정 목록이라 서버가 미리 넣어 두고, Backoffice API 에도 만드는 요청이 없다
  * (`POST /categories` 는 405). 그래서 admin 이 채울 수 없고, 장소는 존재하는 category_id
  * 가 있어야 생기므로 화면을 열기 전에 막는다. 문구는 그대로 오류 화면에 뜬다.
  */
