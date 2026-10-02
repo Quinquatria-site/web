@@ -48,14 +48,17 @@ export async function Timeline({
   const { slots } = getMessages(await getLocale()).schedule
   const rows = toRows(date, performances)
   return (
-    <ol className="flex flex-col gap-[3px] text-text-inverse">
+    // --tl 은 360 화면 기준 1px. 좁은 폰에서는 화면 폭만큼 시각·칸·이름을 같이 줄인다
+    <ol className="flex flex-col gap-[3px] text-text-inverse [--tl:min(1px,var(--app-width)/360)]">
       {rows.map((row, i) => (
         <li
           key={row.key}
           id={'performance' in row ? performanceAnchorId(row.performance.id) : undefined}
-          className="grid h-10 scroll-mt-6 grid-cols-[40px_35px_1fr] items-center"
+          className="grid h-10 scroll-mt-6 grid-cols-[calc(40*var(--tl))_calc(35*var(--tl))_1fr] items-center"
         >
-          <span className="pl-0.5 text-xs leading-[normal]">{row.time}</span>
+          <span className="pl-0.5 text-[length:calc(12*var(--tl))] leading-[normal]">
+            {row.time}
+          </span>
           <span className="relative flex h-full items-center justify-center">
             {'text' in row ? (
               <ClockDot start={row.start} end={row.end} />
@@ -68,7 +71,9 @@ export async function Timeline({
             )}
           </span>
           {'text' in row ? (
-            <span className="truncate pl-1.5 text-base leading-[normal]">{slots[row.text]}</span>
+            <span className="truncate pl-1.5 text-[length:calc(16*var(--tl))] leading-[normal]">
+              {slots[row.text]}
+            </span>
           ) : (
             // min-w-0 이 없으면 1fr 칸이 긴 공연 이름 폭만큼 늘어나 말줄임 대신 화면 밖으로 밀린다
             <div className="min-w-0 pl-1">

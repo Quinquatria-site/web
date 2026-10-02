@@ -24,7 +24,7 @@ export function PerformanceCard({ performance }: { performance: Performance }) {
       {/* 누르는 동안 도크와 같은 스프링으로 살짝 줄어 손끝 반응을 준다 */}
       <motion.div whileTap={{ scale: PRESS_SCALE }} transition={DOCK_PRESS}>
         <Dialog.Trigger
-          className={`relative flex h-10 w-full items-center gap-2 rounded-[4px] bg-(--card-bg) pr-[34px] pl-2.5 text-left text-base leading-[normal] font-medium ${CARD_TONE[type]} ${is_live ? 'live-border' : ''}`}
+          className={`relative flex h-10 w-full items-center gap-2 rounded-[4px] bg-(--card-bg) pr-[34px] pl-2.5 text-left text-[length:calc(16*var(--tl,1px))] leading-[normal] font-medium ${CARD_TONE[type]} ${is_live ? 'live-border' : ''}`}
         >
           <span className="truncate">{title}</span>
           {is_live && <LiveBadge />}
