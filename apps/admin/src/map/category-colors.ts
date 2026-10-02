@@ -8,8 +8,8 @@ export const CATEGORY_COLORS: Record<PlaceCode, string> = {
   BOOTH: '#b85b56', // twilight
   PUB: '#c37555', // brick
   FOODTRUCK: '#f9a342', // sunlight
-  PHOTO: '#3f82dd', // blue
+  PHOTOBOOTH: '#3f82dd', // blue
   MEDI: '#e62526', // red
   BRACELET: '#f942cb', // magenta
-  TRASH: '#48ac58', // green
+  TRASHCAN: '#48ac58', // green
 }

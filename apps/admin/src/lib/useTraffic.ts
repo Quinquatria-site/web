@@ -32,10 +32,10 @@ const MIN_INTERVAL_MS = 30_000
 /**
  * TODO(축제 전 임시): 축제 첫날(10/7) 전에 0 으로 되돌린다.
  *
- * **임시.** 축제 전에도 실제 숫자를 보려고 시작 며칠 전부터 조회한다.
+ * **임시.** 축제 전에도 실제 숫자를 보려고 시작 며칠 전(10/2)부터 조회한다.
  * 축제 이틀만 보려면 0 으로 되돌린다. 화면은 range 를 따라가므로 여기만 고치면 된다.
  */
-const PREVIEW_DAYS_BEFORE = 7
+const PREVIEW_DAYS_BEFORE = 5
 
 const DAY_MS = 24 * 60 * 60 * 1000
 const FROM = new Date(Date.parse(`${FESTIVAL_DATES[0]}T00:00:00Z`) - PREVIEW_DAYS_BEFORE * DAY_MS)

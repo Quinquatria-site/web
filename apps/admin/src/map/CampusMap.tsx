@@ -12,7 +12,6 @@ import {
   type Point,
 } from './campus'
 import styles from './CampusMap.module.css'
-import { FULL_MARKER_ZOOM, MarkerZoomLevel } from './PlaceMarker'
 import { ZoomButtons } from './ZoomButtons'
 import 'leaflet/dist/leaflet.css'
 
@@ -97,7 +96,7 @@ function TrackpadPinchZoom() {
   return null
 }
 
-/** 고른 장소를 시트 위 남은 화면 가운데로 옮긴다. 점으로 보이는 배율이면 큰 마커가 보일 때까지 확대한다 */
+/** 고른 장소를 지금 배율 그대로 시트 위 남은 화면 가운데로 옮긴다 */
 function FocusPlace({
   point,
   request,
@@ -134,7 +133,7 @@ function FocusPlace({
     pendingRef.current = undefined
     if (!point) return
     const focus = () => {
-      const zoom = Math.max(map.getZoom(), FULL_MARKER_ZOOM)
+      const zoom = map.getZoom()
       // 시트 위 가운데에 오도록 시트 높이의 절반만큼 중심을 아래로 잡는다
       const center = map.project(toLatLng(point), zoom).add([0, bottomInset / 2])
       map.setView(map.unproject(center, zoom), zoom)
@@ -224,7 +223,6 @@ export function CampusMap({
       <CampusLabels />
       <FitCampus bottomInset={focus ? bottomInset : 0} />
       <TrackpadPinchZoom />
-      <MarkerZoomLevel />
       {children}
       <FocusPlace point={focus} request={focusRequest} bottomInset={bottomInset} />
       {onDragChange && <DragWatch onDragChange={onDragChange} />}

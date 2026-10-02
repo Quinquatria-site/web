@@ -2,10 +2,11 @@ import type { Localized } from '@quen/schema/common/localize'
 import type { CategoryCode } from '@quen/schema/entities/category'
 import type { MenuBase, MenuText } from '@quen/schema/entities/menu'
 import type { PlaceBase, PlaceText } from '@quen/schema/entities/place'
+import { formatSeoulTime } from '@/shared/time/format-seoul-time'
 import type { MapPoint } from './map-coords'
 
-/** 서버 카테고리에 곧 붙을 포토부스·쓰레기통까지 더한 장소 종류. 두 이름은 서버 코드가 정해지면 맞춘다 */
-export type PlaceCode = CategoryCode | 'PHOTO' | 'TRASH'
+/** 지도에 찍는 장소 종류. 서버 카테고리 코드와 같다 */
+export type PlaceCode = CategoryCode
 
 /** 장소에 딸린 메뉴 한 건 */
 export type PlaceMenu = Localized<MenuBase, MenuText>
@@ -43,4 +44,14 @@ export function placeLabel({
   const number = category_sequence % 100
   const suffix = number >= LETTER_FROM ? String.fromCharCode(97 + number - LETTER_FROM) : number
   return `${section}${suffix}`
+}
+
+/** 운영 시간 `15:00 - 22:00`. 끝 시각이 없으면 `15:00 ~`, 시작도 없으면 null */
+export function placeHours({
+  start_hour,
+  end_hour,
+}: Pick<MapPlace, 'start_hour' | 'end_hour'>): string | null {
+  if (!start_hour) return null
+  const start = formatSeoulTime(start_hour)
+  return end_hour ? `${start} - ${formatSeoulTime(end_hour)}` : `${start} ~`
 }

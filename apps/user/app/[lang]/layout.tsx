@@ -18,9 +18,14 @@ export function generateStaticParams() {
  */
 export const dynamicParams = true
 
-/** 학생 앱 공통 문서 메타데이터 */
+/** 공유 카드의 이미지·주소를 절대 주소로 만들 사이트 origin. 없으면 Next 가 Vercel 배포 주소로 채운다 */
+const SITE_URL = process.env.SITE_URL
+
+/** 학생 앱 공통 문서 메타데이터. 하위 페이지의 openGraph 는 이 값을 펼쳐 쓴다 */
 export const metadata: Metadata = {
+  metadataBase: SITE_URL ? new URL(SITE_URL) : undefined,
   title: 'Quinquatria',
+  openGraph: { siteName: 'Quinquatria', type: 'website' },
 }
 
 /** 모바일 뷰포트. cover 여야 노치·홈 바 safe area 값을 받는다 */

@@ -102,6 +102,8 @@ export const ko = {
     /** 프론트에 둔 팔찌 수령 영역 */
     braceletPickup: {
       name: '입장 팔찌 수령처',
+      description:
+        '15:00부터 미네르바 컴플렉스 지하 2층에서 받을 수 있어요. 학생증을 준비해 주세요.',
     },
     places: {
       BOOTH: '부스',
@@ -109,8 +111,8 @@ export const ko = {
       FOODTRUCK: '푸드트럭',
       MEDI: '의무실',
       BRACELET: '입장 팔찌',
-      PHOTO: '포토부스',
-      TRASH: '쓰레기통',
+      PHOTOBOOTH: '포토부스',
+      TRASHCAN: '쓰레기통',
     },
     labels: {
       globalDorm: '국제학사',

@@ -1,7 +1,7 @@
 import type { Metadata, ResolvingMetadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getPlaces } from '@/features/map/get-places'
-import { toPlaceId } from '@/features/map/map-place'
+import { placeHours, toPlaceId } from '@/features/map/map-place'
 import { MapView } from '@/features/map/MapView'
 import { DuskBackground } from '@/shared/background/DuskBackground'
 import { PageHeader } from '@/shared/header/PageHeader'
@@ -27,17 +27,29 @@ async function findPlace(segment: string) {
   return { places, place: places.find((place) => place.id === id) ?? null }
 }
 
-/** 사진이 있는 장소만 OG 이미지를 첫 사진으로 바꾼다. openGraph 는 통째로 덮이니 부모 값을 펼쳐 images 만 갈아 끼운다 */
+/** 공유 카드에 장소 이름·설명·첫 사진을 싣는다. openGraph 는 통째로 덮이니 부모 값을 펼친다 */
 export async function generateMetadata(
   { params }: PageProps<'/[lang]/map/[id]'>,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const found = await findPlace((await params).id)
-  const image = found?.place?.place_image_uri?.[0]
-  if (!found?.place || !image) return {}
+  const { lang, id } = await params
+  const { place } = await findPlace(id)
+  if (!place) return {}
+  // 설명이 없는 서버 장소는 시트 요약줄과 같은 운영 단과대·시간으로 채운다
+  const description =
+    place.description || [place.host_college, placeHours(place)].filter(Boolean).join(' · ')
+  const image = place.place_image_uri?.[0]
   const { openGraph } = await parent
   return {
-    openGraph: { ...openGraph, images: [{ url: assetUrl(image), alt: found.place.name }] },
+    title: place.name,
+    description,
+    openGraph: {
+      ...openGraph,
+      title: place.name,
+      description,
+      url: `/${lang}/map/${place.id}`,
+      ...(image && { images: [{ url: assetUrl(image), alt: place.name }] }),
+    },
   }
 }
 

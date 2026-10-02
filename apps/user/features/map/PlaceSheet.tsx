@@ -8,8 +8,7 @@ import {
 } from '@/shared/bottom-sheet/BottomSheet'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
-import { formatSeoulTime } from '@/shared/time/format-seoul-time'
-import { type MapPlace, placeLabel } from './map-place'
+import { type MapPlace, placeHours, placeLabel } from './map-place'
 import { MenuCard } from './MenuCard'
 import { PLACE_BG } from './place-colors'
 import { PlacePhotos } from './PlacePhotos'
@@ -35,14 +34,7 @@ function PlaceSummary({ place }: { place: MapPlace }) {
   const label = placeLabel(place)
   const rows = [
     { key: 'host', term: sheet.host, value: place.host_college },
-    {
-      key: 'hours',
-      term: sheet.hours,
-      // 프론트에 둔 장소는 시간이 정해지지 않으면 비워 둔다
-      value:
-        place.start_hour &&
-        `${formatSeoulTime(place.start_hour)} - ${formatSeoulTime(place.end_hour)}`,
-    },
+    { key: 'hours', term: sheet.hours, value: placeHours(place) },
     { key: 'location', term: sheet.location, value: label },
   ].filter((row) => row.value)
 

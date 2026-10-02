@@ -7,8 +7,8 @@ export const PLACE_BG: Record<PlaceCode, string> = {
   FOODTRUCK: 'bg-place-foodtruck',
   MEDI: 'bg-place-medi',
   BRACELET: 'bg-place-bracelet',
-  PHOTO: 'bg-place-photo',
-  TRASH: 'bg-place-trash',
+  PHOTOBOOTH: 'bg-place-photobooth',
+  TRASHCAN: 'bg-place-trashcan',
 }
 
 /** 물방울 마커 원과 선택 링 채움. 고유 색 */
@@ -18,8 +18,8 @@ export const PLACE_FILL: Record<PlaceCode, string> = {
   FOODTRUCK: 'fill-place-foodtruck',
   MEDI: 'fill-place-medi',
   BRACELET: 'fill-place-bracelet',
-  PHOTO: 'fill-place-photo',
-  TRASH: 'fill-place-trash',
+  PHOTOBOOTH: 'fill-place-photobooth',
+  TRASHCAN: 'fill-place-trashcan',
 }
 
 /** 물방울 마커 꼬리 채움. 고유 색 52% */
@@ -29,8 +29,8 @@ export const PLACE_TAIL_FILL: Record<PlaceCode, string> = {
   FOODTRUCK: 'fill-place-foodtruck/52',
   MEDI: 'fill-place-medi/52',
   BRACELET: 'fill-place-bracelet/52',
-  PHOTO: 'fill-place-photo/52',
-  TRASH: 'fill-place-trash/52',
+  PHOTOBOOTH: 'fill-place-photobooth/52',
+  TRASHCAN: 'fill-place-trashcan/52',
 }
 
 /** 영역 테두리. 고유 색 */
@@ -40,6 +40,6 @@ export const PLACE_STROKE: Record<PlaceCode, string> = {
   FOODTRUCK: 'stroke-place-foodtruck',
   MEDI: 'stroke-place-medi',
   BRACELET: 'stroke-place-bracelet',
-  PHOTO: 'stroke-place-photo',
-  TRASH: 'stroke-place-trash',
+  PHOTOBOOTH: 'stroke-place-photobooth',
+  TRASHCAN: 'stroke-place-trashcan',
 }
