@@ -1,5 +1,4 @@
 import type { LanguageCode } from '@quen/schema/common/language'
-import type { CategoryCode } from '@quen/schema/entities/category'
 import { toKstIso } from '../lib/kst'
 import type { Category, Menu, Place } from '../mocks/types'
 import { request } from './client'
@@ -16,17 +15,8 @@ import { listAll } from './list'
 
 // ── 카테고리 ──
 
-export interface CategoryWrite {
-  code: CategoryCode
-  translations: { language_code: LanguageCode; name: string }[]
-}
-
 export async function fetchCategories(): Promise<Category[]> {
   return listAll<Category>('/categories')
-}
-
-export async function createCategory(body: CategoryWrite): Promise<Category> {
-  return request<Category>(BACKOFFICE_BASE, '/categories', { method: 'POST', body })
 }
 
 // ── 장소 ──
