@@ -1,8 +1,18 @@
 'use client'
 
-import { CRS, type Map as LeafletMap, Marker } from 'leaflet'
+import {
+  Bounds,
+  CRS,
+  DomUtil,
+  ImageOverlay,
+  type LatLng,
+  type LatLngBounds,
+  type Map as LeafletMap,
+  Marker,
+  type ZoomAnimEvent,
+} from 'leaflet'
 import { useEffect, useMemo, useRef } from 'react'
-import { ImageOverlay, MapContainer, useMap, useMapEvents } from 'react-leaflet'
+import { MapContainer, useMap, useMapEvents } from 'react-leaflet'
 import {
   MAP_BOUNDS,
   MAP_HEIGHT,
@@ -220,12 +230,73 @@ function EmptyTap({ onTap, cancelKey }: { onTap: () => void; cancelKey: number }
   return null
 }
 
-// 손으로 지도를 끄는 동안을 알린다. 시트가 그동안 아래로 비켜 지도를 가리지 않는다
-function DragWatch({ onDragChange }: { onDragChange: (dragging: boolean) => void }) {
-  useMapEvents({
-    dragstart: () => onDragChange(true),
-    dragend: () => onDragChange(false),
+// 손으로 지도를 끄는 동안을 알린다. 끄는 사이 확대가 끼었으면(핀치) 끝날 때 함께 알린다
+function DragWatch({
+  onDragChange,
+}: {
+  onDragChange: (dragging: boolean, zoomed: boolean) => void
+}) {
+  const map = useMap()
+  const onDragChangeRef = useRef(onDragChange)
+  useEffect(() => {
+    onDragChangeRef.current = onDragChange
   })
+
+  useEffect(() => {
+    let dragging = false
+    let zoomed = false
+    const start = () => {
+      dragging = true
+      zoomed = false
+      onDragChangeRef.current(true, false)
+    }
+    const zoom = () => {
+      zoomed = true
+    }
+    const end = () => {
+      if (!dragging) return
+      dragging = false
+      onDragChangeRef.current(false, zoomed)
+    }
+    // 끄는 중 두 번째 손가락이 닿으면 Leaflet 이 dragend 없이 끌기를 끝내서, 손가락이 다 떨어질 때도 끝낸다
+    const release = (event: TouchEvent) => {
+      if (event.touches.length === 0) end()
+    }
+    map.on('dragstart', start)
+    map.on('zoomstart', zoom)
+    map.on('dragend', end)
+    document.addEventListener('touchend', release)
+    document.addEventListener('touchcancel', release)
+    return () => {
+      map.off('dragstart', start)
+      map.off('zoomstart', zoom)
+      map.off('dragend', end)
+      document.removeEventListener('touchend', release)
+      document.removeEventListener('touchcancel', release)
+    }
+  }, [map])
+
+  return null
+}
+
+// Leaflet 내부 끌기 객체. 지도 옵션으로 넘길 길이 없어 1.9.4 기준으로 쓴다 — 올릴 때 이름·동작을 다시 확인한다
+type DraggableMap = LeafletMap & {
+  dragging: { _draggable?: { options: { clickTolerance: number } } }
+}
+
+// 기본 3px 은 마우스 기준이라, 손가락 탭이 조금만 밀려도 끌기가 되어 마커 누름이 버려진다
+const DRAG_TOLERANCE_PX = 10
+
+function widenDragTolerance(map: LeafletMap) {
+  const draggable = (map as DraggableMap).dragging._draggable
+  if (draggable) draggable.options.clickTolerance = DRAG_TOLERANCE_PX
+}
+
+function DragTolerance() {
+  const map = useMap()
+
+  useEffect(() => widenDragTolerance(map), [map])
+
   return null
 }
 
@@ -236,6 +307,43 @@ const MARKER_REVEAL_AT = 550
 const MARKER_REVEAL_MS = 360
 const MARKER_STAGGER_MS = 50
 const MARKER_STAGGER_MAX = 500
+
+// Leaflet 내부 메서드. 공개 API 가 없어 1.9.4 기준으로 쓴다 — 올릴 때 이름·동작을 다시 확인한다
+type NewBoundsMap = LeafletMap & {
+  _latLngBoundsToNewLayerBounds: (bounds: LatLngBounds, zoom: number, center: LatLng) => Bounds
+}
+
+// 기본 ImageOverlay 는 핀치 매 프레임 width·height 를 바꿔 레이아웃과 이미지 다시 그리기가 돈다. 원본 크기로 고정하고 transform 배율로만 키운다
+class ScaledImageOverlay extends ImageOverlay {
+  onAdd(map: LeafletMap) {
+    super.onAdd(map)
+    const image = this.getElement()
+    if (image) {
+      // CRS.Simple 배율 0 에서 좌표 1 이 1px 이라 이미지 원본 크기가 배율 0 크기다
+      image.style.width = `${MAP_WIDTH}px`
+      image.style.height = `${MAP_HEIGHT}px`
+      image.style.transformOrigin = '0 0'
+    }
+    return this
+  }
+
+  // 원래 getEvents 가 이 이름으로 zoom·viewreset 을 묶어 두어 덮어쓴다
+  _reset() {
+    const image = this.getElement()
+    if (!image || !this._map) return
+    const origin = this._map.latLngToLayerPoint(this.getBounds().getNorthWest())
+    DomUtil.setTransform(image, origin, this._map.getZoomScale(this._map.getZoom(), 0))
+  }
+
+  // 버튼·두 번 탭 확대 전환. 원래는 지금 크기 기준 배율이라 배율 0 기준으로 바꾼다
+  _animateZoom({ zoom, center }: ZoomAnimEvent) {
+    const image = this.getElement()
+    if (!image || !this._map) return
+    const map = this._map as NewBoundsMap
+    const { min } = map._latLngBoundsToNewLayerBounds(this.getBounds(), zoom, center)
+    if (min) DomUtil.setTransform(image, min, map.getZoomScale(zoom, 0))
+  }
+}
 
 // 마커는 HTML 에 실려 와 바로 그려지고 이미지는 뒤늦게 받아져서, 이미지를 다 받을 때까지 지도 판 전체를 숨겨 두었다가 드러낸다
 function MapImage() {
@@ -295,7 +403,16 @@ function MapImage() {
     return { load: reveal, error: reveal }
   }, [map])
 
-  return <ImageOverlay url={MAP_IMAGE_URL} bounds={MAP_BOUNDS} eventHandlers={eventHandlers} />
+  useEffect(() => {
+    const layer = new ScaledImageOverlay(MAP_IMAGE_URL, MAP_BOUNDS).on(eventHandlers).addTo(map)
+    // 다시 붙어도 같은 판의 장소 영역 폴리곤을 덮지 않게 맨 아래로 깐다
+    layer.bringToBack()
+    return () => {
+      layer.remove()
+    }
+  }, [map, eventHandlers])
+
+  return null
 }
 
 /** 캠퍼스 지도. 이미지 한 장을 픽셀 좌표(CRS.Simple)로 깔고 끌기·확대를 받으며, 장소 마커를 올린다 */
@@ -320,7 +437,7 @@ export default function CampusMap({
   topInset: number
   /** 장소를 고른 동안 아래를 가리는 높이. 고른 장소를 이만큼 위로 비켜 둔다 */
   bottomInset: number
-  onDragChange: (dragging: boolean) => void
+  onDragChange: (dragging: boolean, zoomed: boolean) => void
   onEmptyTap: () => void
 }) {
   const selected = places.find((place) => place.id === selectedId) ?? null
@@ -350,6 +467,7 @@ export default function CampusMap({
         bottomInset={bottomInset}
       />
       <DragWatch onDragChange={onDragChange} />
+      <DragTolerance />
       <EmptyTap onTap={onEmptyTap} cancelKey={focusRequest} />
       <ZoomButtons />
     </MapContainer>
