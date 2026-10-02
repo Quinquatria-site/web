@@ -2,8 +2,10 @@
 
 import * as Dialog from '@radix-ui/react-dialog'
 import { motion } from 'motion/react'
+import { useState } from 'react'
 import type { PerformanceType } from '@quen/schema/entities/performance'
 import { DOCK_PRESS, PRESS_SCALE } from '@/shared/dock/dock-motion'
+import { useCloseOnBack } from '@/shared/history/useCloseOnBack'
 import { LiveBadge } from './LiveBadge'
 import type { Performance } from './performance'
 import { PerformanceModal } from './PerformanceModal'
@@ -19,8 +21,11 @@ const CARD_TONE: Record<PerformanceType, string> = {
 /** 타임라인의 공연 한 줄. 종류마다 색이 다르고, 공연 중이면 뱃지와 노을빛 테두리가 돌며 누르면 상세가 뜬다 */
 export function PerformanceCard({ performance }: { performance: Performance }) {
   const { type, title, is_live } = performance
+  const [open, setOpen] = useState(false)
+  useCloseOnBack(open, () => setOpen(false))
+
   return (
-    <Dialog.Root>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
       {/* 누르는 동안 도크와 같은 스프링으로 살짝 줄어 손끝 반응을 준다 */}
       <motion.div whileTap={{ scale: PRESS_SCALE }} transition={DOCK_PRESS}>
         <Dialog.Trigger
