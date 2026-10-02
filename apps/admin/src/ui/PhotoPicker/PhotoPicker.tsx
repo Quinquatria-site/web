@@ -2,6 +2,7 @@ import { IconCameraLine, IconXmarkLine } from '@karrotmarket/react-monochrome-ic
 import { useRef, useState } from 'react'
 import type { ImageResourceType } from '@quen/schema/common/image'
 import { uploadImage } from '../../api/uploads'
+import { compressImage } from '../../lib/compressImage'
 import { imageSrc } from '../../lib/imageSrc'
 import { PhotoViewer } from '../PhotoViewer'
 import styles from './PhotoPicker.module.css'
@@ -60,9 +61,16 @@ export function PhotoPicker({ value, onChange, max = 10, label, resourceType }: 
     setError(null)
 
     const picked = [...files]
-    const tooBig = picked.filter((f) => f.size > MAX_BYTES)
     const wrongType = picked.filter((f) => !isAllowed(f))
-    const usable = picked.filter((f) => f.size <= MAX_BYTES && isAllowed(f))
+
+    // 줄이는 것도 몇 초 걸려 올리는 중 표시를 먼저 켠다
+    setUploading(true)
+    // 크기 제한은 줄인 뒤에 본다. 10MB 넘는 폰 사진도 줄이면 올라간다.
+    // 한 장씩 처리한다 — 큰 사진 여러 장을 한꺼번에 풀면 폰 메모리가 모자란다
+    const prepared: File[] = []
+    for (const file of picked.filter(isAllowed)) prepared.push(await compressImage(file))
+    const tooBig = prepared.filter((f) => f.size > MAX_BYTES)
+    const usable = prepared.filter((f) => f.size <= MAX_BYTES)
 
     const reasons: string[] = []
     if (wrongType.length > 0) reasons.push(`JPG·PNG·WEBP 가 아닌 파일 ${wrongType.length}개`)
@@ -70,7 +78,6 @@ export function PhotoPicker({ value, onChange, max = 10, label, resourceType }: 
     if (usable.length > room) reasons.push(`최대 ${max}장까지라 넘치는 ${usable.length - room}개`)
 
     // 하나가 실패해도 나머지는 넣는다. allSettled 도 순서를 보존해 고른 순서가 저장 순서다
-    setUploading(true)
     const results = await Promise.allSettled(
       usable.slice(0, room).map((file) => uploadImage(file, resourceType)),
     )
