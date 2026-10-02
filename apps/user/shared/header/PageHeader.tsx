@@ -1,12 +1,12 @@
 import Image from 'next/image'
-import { kimjungchulMyungjo } from './fonts'
+import { heirOfLight } from './fonts'
 import headerNight from './images/header-night.jpg'
 
 /** 탭 페이지 맨 위 머리. 별자리 선이 걸린 밤하늘 위에 페이지 제목을 가운데 둔다 */
 export function PageHeader({ title }: { title: string }) {
   return (
     <header
-      className={`${kimjungchulMyungjo.variable} relative z-10 flex h-19 items-center justify-center drop-shadow-[0_4px_2px_rgb(0_0_0/0.25)]`}
+      className={`${heirOfLight.variable} relative z-10 flex h-19 items-center justify-center drop-shadow-[0_4px_2px_rgb(0_0_0/0.25)]`}
     >
       <div className="absolute inset-0 overflow-hidden">
         <Image
@@ -19,7 +19,7 @@ export function PageHeader({ title }: { title: string }) {
           className="object-cover object-top"
         />
       </div>
-      <h1 className="relative font-myungjo text-[22px] leading-[normal] tracking-[0.02em] text-text-inverse">
+      <h1 className="relative font-heir text-[22px] leading-[normal] tracking-[0.02em] text-text-inverse">
         {title}
       </h1>
     </header>
