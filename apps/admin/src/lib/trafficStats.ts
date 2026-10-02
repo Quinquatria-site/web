@@ -1,4 +1,4 @@
-import { ANALYTICS_UNCONFIGURED, type ApiError, type Traffic } from '../api'
+import { ANALYTICS_UNCONFIGURED, type ApiError, type Traffic, type VitalRating } from '../api'
 import { kstDateString } from './festivalTime'
 import {
   describeStudentPath,
@@ -134,23 +134,85 @@ export function congestion(buckets: Bucket[], now: Date): Congestion {
   return { ...base, level, ratio }
 }
 
-// ── 로딩 속도 ───────────────────────────────────────────────────────────
+// ── 체감 속도 (Web Vitals) ──────────────────────────────────────────────
 
 /** 최근 30분 표본이 이보다 적으면 몇 명의 느린 폰이 전체를 대표하게 된다 */
 const MIN_RECENT_SAMPLES = 10
-/** 모바일에서 "느리다" 고 느끼기 시작하는 선. 평소보다 느려도 이보다 빠르면 말하지 않는다 */
-const SLOW_P75_MS = 3_000
+/** Google 이 LCP "나쁨" 으로 보는 선. 평소보다 느려도 이보다 빠르면 말하지 않는다 */
+const SLOW_LCP_MS = 4_000
 /** 오늘 전체 대비 이만큼 느려야 "평소보다" 라고 할 수 있다 */
 const SLOW_FACTOR = 1.5
 
 /**
  * 현장 접속이 느린가. 학생 앱은 정적 CDN 이라 서버가 버거워질 일은 거의 없고,
- * 실제로 막히는 것은 사람이 몰린 곳의 모바일 망이다. 그 신호가 로딩 시간이다.
+ * 실제로 막히는 것은 사람이 몰린 곳의 모바일 망이다. 그 신호가 화면이 뜨는 시간(LCP)이다.
  */
-export function slowLoading(performance: Traffic['performance']): boolean {
-  const { recent, today } = performance
-  if (recent.samples < MIN_RECENT_SAMPLES || recent.p75 === null || today.p75 === null) return false
-  return recent.p75 >= SLOW_P75_MS && recent.p75 >= today.p75 * SLOW_FACTOR
+export function slowLoading(vitals: Traffic['vitals']): boolean {
+  const { recent, today } = vitals
+  if (recent.samples < MIN_RECENT_SAMPLES || recent.lcp === null || today.lcp === null) return false
+  return recent.lcp >= SLOW_LCP_MS && recent.lcp >= today.lcp * SLOW_FACTOR
+}
+
+export type VitalGrade = 'good' | 'needsImprovement' | 'poor'
+
+export const VITAL_GRADE_LABEL: Record<VitalGrade, string> = {
+  good: '좋음',
+  needsImprovement: '개선 필요',
+  poor: '나쁨',
+}
+
+/** Google Core Web Vitals 기준. [좋음 상한, 개선 필요 상한] — Cloudflare 의 good·poor 건수와 같은 선이다 */
+const VITAL_LIMITS = {
+  lcp: [2_500, 4_000],
+  inp: [200, 500],
+  cls: [0.1, 0.25],
+} as const
+
+export function vitalGrade(metric: keyof typeof VITAL_LIMITS, value: number): VitalGrade {
+  const [good, poor] = VITAL_LIMITS[metric]
+  return value <= good ? 'good' : value <= poor ? 'needsImprovement' : 'poor'
+}
+
+const ratingTotal = (rating: VitalRating) => rating.good + rating.needsImprovement + rating.poor
+
+/** 페이지별 판정은 표본이 이보다 적으면 보여 주지 않는다. 한두 명의 폰이 비율을 정해 버린다 */
+const MIN_PAGE_SAMPLES = 10
+
+export interface PageSpeed {
+  name: string
+  samples: number
+  /** 0~1 */
+  goodShare: number
+  poorShare: number
+}
+
+/**
+ * 페이지 이름별 LCP 판정 비율. P75 는 경로끼리 더할 수 없어 건수로 묶는다.
+ * 나쁨이 많은 순 — 고칠 곳이 위로 오게. 표본이 적은 페이지와 "기타" 는 뺀다
+ */
+export function pageSpeeds(pages: Traffic['vitals']['pages']): PageSpeed[] {
+  const ratings = new Map<string, VitalRating>()
+  for (const row of pages) {
+    const { page } = describeStudentPath(row.path)
+    if (page === OTHER_PAGE) continue
+    const sum = ratings.get(page) ?? { good: 0, needsImprovement: 0, poor: 0 }
+    sum.good += row.lcpRating.good
+    sum.needsImprovement += row.lcpRating.needsImprovement
+    sum.poor += row.lcpRating.poor
+    ratings.set(page, sum)
+  }
+  return [...ratings]
+    .map(([name, rating]) => {
+      const samples = ratingTotal(rating)
+      return {
+        name,
+        samples,
+        goodShare: samples > 0 ? rating.good / samples : 0,
+        poorShare: samples > 0 ? rating.poor / samples : 0,
+      }
+    })
+    .filter((row) => row.samples >= MIN_PAGE_SAMPLES)
+    .sort((a, b) => b.poorShare - a.poorShare || b.samples - a.samples)
 }
 
 // ── 페이지 · 언어 ───────────────────────────────────────────────────────
@@ -197,6 +259,28 @@ export function localeShares(paths: Traffic['paths']): LocaleShare[] {
     const pageViews = counts.get(locale) ?? 0
     return { locale, pageViews, share: total > 0 ? pageViews / total : 0 }
   })
+}
+
+/** 처음 들어온 페이지 중 따로 보여 줄 개수. 나머지는 "기타" 로 합친다 */
+const TOP_LANDINGS = 8
+
+/**
+ * 처음 들어온 페이지별 방문. 언어는 지우고 상세 번호는 남긴다 — 부스 QR 이
+ * `/map/12` 를 가리키면 "장소 상세 12" 한 줄이 그 QR 로 들어온 사람 수다.
+ * 모달·앱 안 이동은 방문이 아니라 여기에 섞이지 않는다
+ */
+export function landingGroups(landings: Traffic['landings']): NamedCount[] {
+  const counts = new Map<string, number>()
+  for (const row of landings) {
+    const { page, id } = describeStudentPath(row.path)
+    const name = id ? `${page} ${id}` : page
+    counts.set(name, (counts.get(name) ?? 0) + row.visits)
+  }
+  const sorted = sortedCounts(counts)
+  const named = sorted.filter((row) => row.name !== OTHER_PAGE)
+  const other = sorted.find((row) => row.name === OTHER_PAGE)?.count ?? 0
+  const rest = named.slice(TOP_LANDINGS).reduce((sum, row) => sum + row.count, other)
+  return [...named.slice(0, TOP_LANDINGS), ...(rest > 0 ? [{ name: OTHER_PAGE, count: rest }] : [])]
 }
 
 // ── 유입 경로 ───────────────────────────────────────────────────────────
@@ -247,6 +331,9 @@ export const formatCount = (value: number) => value.toLocaleString('ko-KR')
 export function formatSeconds(ms: number | null): string {
   return ms === null ? '—' : `${(ms / 1000).toFixed(1)}초`
 }
+
+/** 0.4 → "40%" */
+export const formatShare = (share: number) => `${Math.round(share * 100)}%`
 
 /**
  * 숫자가 없을 때 카드가 할 말. 홈과 방문 통계 화면이 같은 문장을 쓴다.
