@@ -111,6 +111,12 @@ export function MapView({
     if (selectedId !== null) clearSelection()
     else setChromeHidden((hidden) => !hidden)
   }
+  // 한 손가락으로 끌면 둘러보기로 보고 시트를 닫는다. 끄는 동안은 숨겨 두었다가 끝날 때 닫아, 고른 장소만큼 넓혀 둔 지도 범위가 끄는 도중에 줄어 튀지 않게 한다
+  // 핀치는 고른 장소를 크게 보려는 것이라 시트를 남긴다
+  const handleDragChange = (next: boolean, zoomed: boolean) => {
+    setDragging(next)
+    if (!next && !zoomed && selectedId !== null) clearSelection()
+  }
   useEffect(() => {
     dockStowStore.set(chromeHidden)
   }, [chromeHidden])
@@ -150,7 +156,7 @@ export function MapView({
           focusRequest={focusRequest}
           topInset={filterHeight}
           bottomInset={PLACE_SHEET_PEEK + safeBottom}
-          onDragChange={setDragging}
+          onDragChange={handleDragChange}
           onEmptyTap={handleEmptyTap}
         />
         {/* Leaflet 판(400~1000) 위에 띄운다. 칩 사이 빈 곳은 지도를 끌 수 있게 누름을 흘려보낸다 */}
