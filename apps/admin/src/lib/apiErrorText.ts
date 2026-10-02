@@ -1,4 +1,5 @@
 import { isApiError, NETWORK_ERROR } from '../api'
+import { MissingCategoriesError } from '../mocks/categories'
 import { markErrorSurfaced } from './errorLog'
 
 /**
@@ -14,6 +15,8 @@ import { markErrorSurfaced } from './errorLog'
  */
 export function apiErrorText(error: unknown): string {
   if (isApiError(error) && error.logId !== undefined) markErrorSurfaced(error.logId)
+  // 서버 데이터가 덜 갖춰진 경우. 운영자가 할 일(백엔드 팀에 요청)을 문구가 이미 말한다
+  if (error instanceof MissingCategoriesError) return error.message
   if (!isApiError(error)) return '알 수 없는 오류가 났습니다. 설정 › 오류 기록에서 볼 수 있습니다.'
   if (error.code === NETWORK_ERROR) return '서버에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.'
   if (error.status === 404) return '이미 삭제된 항목입니다. 목록으로 돌아가 다시 확인해 주세요.'

@@ -1,5 +1,4 @@
 import type { LanguageCode } from '@quen/schema/common/language'
-import type { CategoryCode } from '@quen/schema/entities/category'
 import { toKstIso } from '../lib/kst'
 import type { Category, Menu, Place } from '../mocks/types'
 import { request } from './client'
@@ -16,17 +15,8 @@ import { listAll } from './list'
 
 // ── 카테고리 ──
 
-export interface CategoryWrite {
-  code: CategoryCode
-  translations: { language_code: LanguageCode; name: string }[]
-}
-
 export async function fetchCategories(): Promise<Category[]> {
   return listAll<Category>('/categories')
-}
-
-export async function createCategory(body: CategoryWrite): Promise<Category> {
-  return request<Category>(BACKOFFICE_BASE, '/categories', { method: 'POST', body })
 }
 
 // ── 장소 ──
@@ -55,7 +45,11 @@ export interface PlaceWrite {
  * 어긋나 "운영 중" 판정이 전부 틀린다.
  */
 function toPlace(raw: Place): Place {
-  return { ...raw, start_hour: toKstIso(raw.start_hour), end_hour: toKstIso(raw.end_hour) }
+  return {
+    ...raw,
+    start_hour: raw.start_hour && toKstIso(raw.start_hour),
+    end_hour: raw.end_hour && toKstIso(raw.end_hour),
+  }
 }
 
 export async function fetchPlaces(): Promise<Place[]> {

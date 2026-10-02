@@ -23,7 +23,7 @@ const placeName = (place: Place) =>
 const PLACE_SHEET_PEEK = 197
 
 /** 메뉴가 없는 게 정상인 카테고리. "메뉴 0개" 는 잘못을 알리는 것처럼 읽힌다 */
-const MENULESS = new Set(['MEDI', 'BRACELET'])
+const MENULESS = new Set(['MEDI'])
 
 // 메뉴 한 줄. user MenuCard 처럼 왼쪽 사진, 이름·설명, 오른쪽 가격
 function MenuCard({ menu }: { menu: Menu }) {

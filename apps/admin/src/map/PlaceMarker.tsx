@@ -10,7 +10,6 @@ import { Marker, useMap } from 'react-leaflet'
 import { toLatLng, type Point } from './campus'
 import { CATEGORY_COLORS } from './category-colors'
 import styles from './CampusMap.module.css'
-import braceletIcon from './icons/bracelet.svg'
 import foodtruckIcon from './icons/foodtruck.svg'
 import mediIcon from './icons/medi.svg'
 import photoboothIcon from './icons/photobooth.svg'
@@ -27,7 +26,6 @@ const SELECTED_Z_OFFSET = 1000
 const PLACE_ICONS: Partial<Record<PlaceCode, string>> = {
   FOODTRUCK: foodtruckIcon,
   MEDI: mediIcon,
-  BRACELET: braceletIcon,
   PHOTOBOOTH: photoboothIcon,
   TRASHCAN: trashcanIcon,
 }

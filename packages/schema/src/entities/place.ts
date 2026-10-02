@@ -7,10 +7,10 @@ export interface PlaceBase {
   /** 배치 도면 좌표 */
   x: number
   y: number
-  /** 운영 시작 시각. UTC offset 포함 ISO 8601 */
-  start_hour: string
-  /** 운영 종료 시각. UTC offset 포함 ISO 8601 */
-  end_hour: string
+  /** 운영 시작 시각. UTC offset 포함 ISO 8601. 없으면 null */
+  start_hour: string | null
+  /** 운영 종료 시각. UTC offset 포함 ISO 8601. 없으면 null */
+  end_hour: string | null
   /** 순서 있는 이미지 key 목록. 없으면 null */
   place_image_uri: string[] | null
 }
