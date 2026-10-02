@@ -103,6 +103,7 @@ export const zh: Messages = {
     /** 프론트에 둔 팔찌 수령 영역 */
     braceletPickup: {
       name: '入场手环领取处',
+      description: '15:00起可在Minerva Complex地下2层领取，请携带学生证。',
     },
     places: {
       BOOTH: '摊位',

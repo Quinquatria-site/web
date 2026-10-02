@@ -19,18 +19,33 @@ export async function generateStaticParams() {
 /** 빌드 뒤에 올라온 분실물도 첫 요청 때 굽고 캐시한다. 재검증은 이미 있는 페이지만 다시 굽기 때문이다 */
 export const dynamicParams = true
 
-/** 사진이 있는 분실물만 OG 이미지를 그 사진으로 바꾼다. openGraph 는 통째로 덮이니 부모 값을 펼쳐 images 만 갈아 끼운다 */
+/** 공유 카드에 분실물 제목·습득 장소·사진을 싣는다. openGraph 는 통째로 덮이니 부모 값을 펼친다 */
 export async function generateMetadata(
   { params }: PageProps<'/[lang]/lost-items/[id]'>,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const { id } = await params
+  const { lang, id } = await params
   if (!/^[1-9]\d*$/.test(id)) return {}
   const item = await getLostItem(Number(id))
-  if (!item?.image_url) return {}
+  if (!item) return {}
+  const { lostItems } = getMessages(await getLocale())
+  const description = [
+    `${lostItems.foundLocation}: ${item.found_location}`,
+    item.is_returned && lostItems.returned,
+  ]
+    .filter(Boolean)
+    .join(' · ')
   const { openGraph } = await parent
   return {
-    openGraph: { ...openGraph, images: [{ url: assetUrl(item.image_url), alt: item.title }] },
+    title: item.title,
+    description,
+    openGraph: {
+      ...openGraph,
+      title: item.title,
+      description,
+      url: `/${lang}/lost-items/${item.id}`,
+      ...(item.image_url && { images: [{ url: assetUrl(item.image_url), alt: item.title }] }),
+    },
   }
 }
 
