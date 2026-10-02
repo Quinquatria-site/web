@@ -70,7 +70,8 @@ export async function Timeline({
           {'text' in row ? (
             <span className="truncate pl-1.5 text-base leading-[normal]">{slots[row.text]}</span>
           ) : (
-            <div className="pl-1">
+            // min-w-0 이 없으면 1fr 칸이 긴 공연 이름 폭만큼 늘어나 말줄임 대신 화면 밖으로 밀린다
+            <div className="min-w-0 pl-1">
               <PerformanceCard performance={row.performance} />
             </div>
           )}
