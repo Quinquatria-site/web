@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { getNotice, getNotices } from '@/features/notices/get-notices'
 import { NoticeDetail } from '@/features/notices/NoticeDetail'
+import { LightBackground } from '@/shared/background/LightBackground'
 import { PageHeader } from '@/shared/header/PageHeader'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
@@ -25,6 +26,7 @@ export default async function NoticeDetailPage({ params }: PageProps<'/[lang]/no
 
   return (
     <>
+      <LightBackground />
       <PageHeader title={pages.notices} />
       <NoticeDetail notice={notice} />
     </>

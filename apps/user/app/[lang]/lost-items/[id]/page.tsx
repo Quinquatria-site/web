@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { getLostItem, getLostItems } from '@/features/lost-items/get-lost-items'
 import { LostItemDetail } from '@/features/lost-items/LostItemDetail'
+import { LightBackground } from '@/shared/background/LightBackground'
 import { PageHeader } from '@/shared/header/PageHeader'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
@@ -25,6 +26,7 @@ export default async function LostItemDetailPage({ params }: PageProps<'/[lang]/
 
   return (
     <>
+      <LightBackground />
       <PageHeader title={pages.lostItems} />
       <LostItemDetail
         item={item}
