@@ -17,9 +17,13 @@ export type HomeNavItem = {
 
 // 그림 앞에서 글자가 멈추는 간격(px)
 const TEXT_GAP = 8
+// 시안보다 그림을 줄여 좁은 폰·영어에서도 제목이 그림에 닿지 않게 한다. 가운데는 시안 자리에 둔다
+const IMAGE_SCALE = 0.9
 
 /** 홈 바로가기 카드. 왼쪽에 제목·설명, 오른쪽에 그림을 두고 누르면 해당 탭으로 간다 */
 export function HomeNavCard({ href, title, description, image, imageBox }: HomeNavItem) {
+  const imageWidth = imageBox.width * IMAGE_SCALE
+  const imageRight = imageBox.right + (imageBox.width - imageWidth) / 2
   return (
     // 누르는 동안 도크와 같은 스프링으로 살짝 줄어 손끝 반응을 준다
     <motion.div whileTap={{ scale: PRESS_SCALE }} transition={DOCK_PRESS} className="@container">
@@ -29,7 +33,7 @@ export function HomeNavCard({ href, title, description, image, imageBox }: HomeN
         // 피그마처럼 글 묶음을 세로 가운데에서 2.5px 위에 두려고 아래 여백만 5px 준다
         className={`${heirOfLight.variable} relative flex h-[76px] flex-col justify-center gap-0.5 overflow-hidden rounded-xl bg-[#f6ece6] bg-linear-to-r from-[#fbf4ed]/20 to-primary/20 pb-[5px] pl-[22px] text-secondary [--u:min(1px,100cqw/346)]`}
         style={{
-          paddingRight: `calc(${imageBox.width + imageBox.right} * var(--u) + ${TEXT_GAP}px)`,
+          paddingRight: `calc(${imageWidth + imageRight} * var(--u) + ${TEXT_GAP}px)`,
         }}
       >
         <span className="font-heir text-[length:calc(20*var(--u))] leading-[normal] font-bold whitespace-nowrap">
@@ -38,10 +42,11 @@ export function HomeNavCard({ href, title, description, image, imageBox }: HomeN
         {/* 설명은 그림 앞에서 꺾여도 두 줄이 카드 높이 안에 든다 */}
         <span className="text-[length:calc(12*var(--u))] leading-[normal]">{description}</span>
         <span
-          className="absolute top-1/2 h-[calc(76*var(--u))] -translate-y-1/2"
+          className="absolute top-1/2 -translate-y-1/2"
           style={{
-            right: `calc(${imageBox.right} * var(--u))`,
-            width: `calc(${imageBox.width} * var(--u))`,
+            right: `calc(${imageRight} * var(--u))`,
+            width: `calc(${imageWidth} * var(--u))`,
+            height: `calc(${76 * IMAGE_SCALE} * var(--u))`,
           }}
         >
           <Image src={image} alt="" fill sizes="92px" className="object-cover" />

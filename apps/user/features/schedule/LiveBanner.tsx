@@ -27,7 +27,7 @@ export async function LiveBanner({ performance }: { performance: Performance }) 
         />
         {schedule.liveNow}
       </span>
-      <span className="relative max-w-full self-end truncate text-2xl leading-[normal] font-semibold">
+      <span className="relative max-w-full self-end truncate text-lg leading-[normal] font-semibold phone-md:text-[22px] phone-lg:text-2xl">
         {performance.title}
       </span>
     </a>

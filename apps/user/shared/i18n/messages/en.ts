@@ -17,7 +17,7 @@ export const en: Messages = {
     top: 'Back to top',
     tabs: {
       home: 'Home',
-      schedule: 'Program',
+      schedule: 'Events',
       map: 'Map',
       notices: 'Notices',
       lostItems: 'Lost',
