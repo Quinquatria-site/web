@@ -72,7 +72,7 @@ function PlaceSummary({ place }: { place: MapPlace }) {
 function SheetSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <>
-      <hr className="border-[#eaddcd]" />
+      <hr className="border-sheet-divider" />
       <section className="flex flex-col gap-3 px-2">
         <h3 className="text-xl leading-[normal] font-semibold">{title}</h3>
         {children}

@@ -41,6 +41,9 @@
   --color-map-control-border: var(--beige-yellow);
   --color-map-control-glow: var(--brick);
 
+  --color-sheet-edge: var(--brown);
+  --color-sheet-divider: var(--beige-peach);
+
   --color-dock: var(--brown);
   --color-on-dock: var(--beige-yellow);
   --color-dock-border: var(--beige-yellow);
