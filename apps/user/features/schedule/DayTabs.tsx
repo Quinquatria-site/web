@@ -23,7 +23,7 @@ function PillPiece({ atSecond, lag }: { atSecond: boolean; lag: boolean }) {
   return (
     <span
       aria-hidden
-      className={`absolute inset-y-[3px] left-[3px] w-[calc(50%-7px)] rounded-full bg-accent transition-[translate] duration-[425ms] ease-day-spring motion-reduce:transition-none ${atSecond ? 'translate-x-[calc(100%+8px)]' : ''} ${lag ? 'delay-90' : ''}`}
+      className={`absolute inset-y-[3px] left-[3px] w-[calc(50%-7px)] rounded-full bg-(--brown) transition-[translate] duration-[425ms] ease-day-spring motion-reduce:transition-none ${atSecond ? 'translate-x-[calc(100%+8px)]' : ''} ${lag ? 'delay-90' : ''}`}
     />
   )
 }
@@ -36,7 +36,7 @@ export function DayTabs({ value, onChange }: { value: number; onChange: (day: nu
     <div
       role="tablist"
       aria-label={getMessages(locale).schedule.dayTabsLabel}
-      className={`${cinzel.variable} relative grid h-[52px] grid-cols-2 gap-2 rounded-full border border-accent bg-white p-[3px]`}
+      className={`${cinzel.variable} relative grid h-[52px] grid-cols-2 gap-2 rounded-full border border-(--brown) bg-[rgb(87_74_83/0.2)] p-[3px] shadow-[0_4px_6px_rgb(0_0_0/0.25)]`}
     >
       {/* 가는 쪽 장이 먼저, 반대쪽 장이 늦게 출발한다. 폭 대신 transform 만 움직여 레이아웃을 다시 계산하지 않는다 */}
       <PillPiece atSecond={toSecond} lag={toSecond} />
@@ -54,14 +54,8 @@ export function DayTabs({ value, onChange }: { value: number; onChange: (day: nu
             onClick={() => onChange(i)}
             className="relative flex items-center justify-center gap-1 leading-[normal]"
           >
-            <span
-              className={`font-cinzel text-xl font-bold transition-colors duration-300 ${selected ? 'text-on-accent' : 'text-text'}`}
-            >
-              DAY {i + 1}
-            </span>
-            <span
-              className={`text-xs font-medium transition-colors duration-300 ${selected ? 'text-on-accent/75' : 'text-text-muted'}`}
-            >
+            <span className="font-cinzel text-xl font-bold text-text-inverse">DAY {i + 1}</span>
+            <span className="text-xs font-medium text-[#dbdbdb]">
               {weekday(locale, date)}
             </span>
           </button>

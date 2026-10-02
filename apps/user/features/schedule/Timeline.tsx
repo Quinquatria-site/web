@@ -48,7 +48,7 @@ export async function Timeline({
   const { slots } = getMessages(await getLocale()).schedule
   const rows = toRows(date, performances)
   return (
-    <ol className="flex flex-col gap-[3px] text-secondary">
+    <ol className="flex flex-col gap-[3px] text-text-inverse">
       {rows.map((row, i) => (
         <li
           key={row.key}
@@ -64,7 +64,7 @@ export async function Timeline({
             )}
             {/* 점 아래 4px 을 띄우고 다음 줄 점 위 4px 까지 잇는다 */}
             {i < rows.length - 1 && (
-              <span className="absolute top-[calc(50%+8px)] h-[27px] w-px bg-border-strong" />
+              <span className="absolute top-[calc(50%+8px)] h-[27px] w-px bg-(--beige-yellow)" />
             )}
           </span>
           {'text' in row ? (

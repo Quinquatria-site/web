@@ -10,10 +10,10 @@ import placeholderImage from './images/performance-placeholder.png'
 import { MODAL_IMAGE_SIZES, type Performance } from './performance'
 
 // 타임라인 카드와 같은 종류별 색
-const CHIP_BG: Record<PerformanceType, string> = {
+const CHIP_TONE: Record<PerformanceType, string> = {
   STUDENT: 'bg-performance-student',
   SPECIAL: 'bg-performance-special',
-  ARTIST: 'bg-performance-artist',
+  ARTIST: 'bg-performance-artist text-on-performance-artist',
 }
 
 // 공연 종류 칩과 닫기 버튼
@@ -21,7 +21,9 @@ function ModalHeader({ type }: { type: PerformanceType }) {
   const { schedule } = getMessages(useLocale())
   return (
     <div className="flex items-center justify-between">
-      <span className={`rounded-xl px-2 py-1 text-xs leading-[normal] ${CHIP_BG[type]}`}>
+      <span
+        className={`rounded-xl px-2 py-1 text-xs leading-[normal] font-semibold ${CHIP_TONE[type]}`}
+      >
         {schedule.performanceTypes[type]}
       </span>
       <Dialog.Close aria-label={schedule.close} className="-m-2 p-2">
@@ -69,7 +71,7 @@ function ModalContent({
     <div className="mt-3 flex flex-col gap-4">
       <ModalImage imageUri={image_uri} title={title} />
       <div className="flex flex-col gap-2 px-2">
-        <Dialog.Title className="text-2xl leading-[normal] font-bold">{title}</Dialog.Title>
+        <Dialog.Title className="text-2xl leading-[normal] font-semibold">{title}</Dialog.Title>
         <Dialog.Description className="text-sm leading-[1.18] whitespace-pre-line">
           {description}
         </Dialog.Description>
@@ -82,9 +84,9 @@ function ModalContent({
 export function PerformanceModal({ performance }: { performance: Performance }) {
   return (
     <Dialog.Portal>
-      <Dialog.Overlay className="fixed inset-0 z-50 bg-black/40" />
+      <Dialog.Overlay className="fixed inset-0 z-50 bg-black/60" />
       {/* 소개가 길거나 글자를 키워도 닫기 버튼까지 닿게 화면 안에서 스크롤한다 */}
-      <Dialog.Content className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-48px)] w-[calc(100%-48px)] max-w-[308px] -translate-1/2 overflow-y-auto rounded-2xl bg-bg p-[13px] pb-6">
+      <Dialog.Content className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-48px)] w-[calc(100%-48px)] max-w-[308px] -translate-1/2 overflow-y-auto rounded-2xl bg-bg bg-linear-to-b from-bg/20 to-primary/20 p-[13px] pb-6 text-text shadow-[0_4px_8px_rgb(0_0_0/0.25)]">
         <ModalHeader type={performance.type} />
         <ModalContent
           image_uri={performance.image_uri}

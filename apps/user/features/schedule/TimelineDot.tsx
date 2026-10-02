@@ -6,7 +6,7 @@ export function TimelineDot({ active }: { active: boolean }) {
         <span className="absolute inset-0 animate-dot-ping rounded-full bg-(--sunlight) opacity-70 motion-reduce:animate-none" />
       )}
       <span
-        className={`absolute inset-0 rounded-full bg-secondary ${active ? 'shadow-[0_0_4px_3px_var(--sunlight)]' : ''}`}
+        className={`absolute inset-0 rounded-full bg-text-inverse ${active ? 'shadow-[0_0_4px_3px_var(--sunlight)]' : ''}`}
       />
     </span>
   )
