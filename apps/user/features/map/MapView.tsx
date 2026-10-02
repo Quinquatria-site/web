@@ -3,6 +3,8 @@
 import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { dockStowStore } from '@/shared/dock/dock-stow-store'
+import { localePath } from '@/shared/i18n/paths'
+import { useLocale } from '@/shared/i18n/useLocale'
 import type { MapPlace, PlaceCode } from './map-place'
 import { PlaceFilter } from './PlaceFilter'
 import { PLACE_SHEET_PEEK, PlaceSheet } from './PlaceSheet'
@@ -11,8 +13,15 @@ import { PLACE_SHEET_PEEK, PlaceSheet } from './PlaceSheet'
 const CampusMap = dynamic(() => import('./CampusMap'), { ssr: false })
 
 /** 머리 아래 남은 화면을 지도로 채운다. 도크는 지도 위에 떠 있고, 고른 장소와 그 시트는 여기서 들고 있다 */
-export function MapView({ places }: { places: MapPlace[] }) {
-  const [selectedId, setSelectedId] = useState<number | null>(null)
+export function MapView({
+  places,
+  initialPlaceId = null,
+}: {
+  places: MapPlace[]
+  /** 장소 주소(/map/12)로 들어왔을 때 처음부터 고를 장소 */
+  initialPlaceId?: number | null
+}) {
+  const [selectedId, setSelectedId] = useState<number | null>(initialPlaceId)
   const [focusRequest, setFocusRequest] = useState(0)
   const [dragging, setDragging] = useState(false)
   // 비어 있으면 전체
@@ -33,13 +42,46 @@ export function MapView({ places }: { places: MapPlace[] }) {
   )
   // 빈 곳을 탭해 칩·확대 버튼·도크를 걷어 낸 상태. 지도만 넓게 본다
   const [chromeHidden, setChromeHidden] = useState(false)
-  const select = useCallback((id: number) => {
-    setSelectedId(id)
-    setFocusRequest((n) => n + 1)
-    // 장소를 고르면 둘러보기가 끝난 것으로 보고 걷어 낸 것들을 되돌린다
-    setChromeHidden(false)
+  // 고른 장소를 주소(/map/12)에 담아 그대로 복사해 홍보할 수 있게 한다. 페이지를 옮기지 않고 주소만 바꾼다
+  const mapPath = localePath(useLocale(), '/map')
+  // 지도에서 시트를 열며 쌓은 기록이 있는지. 있으면 닫을 때 그 기록을 되돌려, 뒤로 가기가 시트만 닫게 한다
+  const pushedRef = useRef(false)
+  const select = useCallback(
+    (id: number) => {
+      setSelectedId(id)
+      setFocusRequest((n) => n + 1)
+      // 장소를 고르면 둘러보기가 끝난 것으로 보고 걷어 낸 것들을 되돌린다
+      setChromeHidden(false)
+      const url = `${mapPath}/${id}`
+      if (location.pathname === url) return
+      // 시트가 열린 채 다른 장소를 고르면 기록을 더 쌓지 않고 갈아 끼워, 뒤로 가기 한 번에 시트가 닫힌다
+      if (location.pathname === mapPath) {
+        history.pushState(null, '', url)
+        pushedRef.current = true
+      } else history.replaceState(null, '', url)
+    },
+    [mapPath],
+  )
+  const clearSelection = useCallback(() => {
+    setSelectedId(null)
+    if (location.pathname === mapPath) return
+    if (pushedRef.current) {
+      pushedRef.current = false
+      history.back()
+      // 링크로 바로 들어왔으면 되돌릴 기록이 없어, 뒤로 가기가 사이트를 떠나지 않게 주소만 지도로 바꾼다
+    } else history.replaceState(null, '', mapPath)
+  }, [mapPath])
+  // 뒤로·앞으로 가기로 주소가 바뀌면 고른 장소를 주소에 맞춘다
+  useEffect(() => {
+    const handlePopState = () => {
+      pushedRef.current = false
+      const match = location.pathname.match(/\/map\/(\d+)$/)
+      setSelectedId(match ? Number(match[1]) : null)
+      if (match) setFocusRequest((n) => n + 1)
+    }
+    addEventListener('popstate', handlePopState)
+    return () => removeEventListener('popstate', handlePopState)
   }, [])
-  const clearSelection = useCallback(() => setSelectedId(null), [])
   // 빈 곳 탭은 고른 장소가 있으면 고름만 풀고, 없으면 걷어 내기를 켜고 끈다
   const handleEmptyTap = () => {
     if (selectedId !== null) clearSelection()
