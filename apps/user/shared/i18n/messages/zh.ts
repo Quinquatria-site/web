@@ -100,6 +100,10 @@ export const zh: Messages = {
       photos: '照片',
       price: '{price}韩元',
     },
+    /** 프론트에 둔 팔찌 수령 영역 */
+    braceletPickup: {
+      name: '入场手环领取处',
+    },
     places: {
       BOOTH: '摊位',
       PUB: '酒馆',

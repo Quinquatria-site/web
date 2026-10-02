@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { dockStowStore } from '@/shared/dock/dock-stow-store'
 import { localePath } from '@/shared/i18n/paths'
 import { useLocale } from '@/shared/i18n/useLocale'
-import type { MapPlace, PlaceCode } from './map-place'
+import { type MapPlace, type PlaceCode, type PlaceId, toPlaceId } from './map-place'
 import { PlaceFilter } from './PlaceFilter'
 import { PLACE_SHEET_PEEK, PlaceSheet } from './PlaceSheet'
 
@@ -19,9 +19,9 @@ export function MapView({
 }: {
   places: MapPlace[]
   /** 장소 주소(/map/12)로 들어왔을 때 처음부터 고를 장소 */
-  initialPlaceId?: number | null
+  initialPlaceId?: PlaceId | null
 }) {
-  const [selectedId, setSelectedId] = useState<number | null>(initialPlaceId)
+  const [selectedId, setSelectedId] = useState<PlaceId | null>(initialPlaceId)
   const [focusRequest, setFocusRequest] = useState(0)
   const [dragging, setDragging] = useState(false)
   // 비어 있으면 전체
@@ -47,7 +47,7 @@ export function MapView({
   // 지도에서 시트를 열며 쌓은 기록이 있는지. 있으면 닫을 때 그 기록을 되돌려, 뒤로 가기가 시트만 닫게 한다
   const pushedRef = useRef(false)
   const select = useCallback(
-    (id: number) => {
+    (id: PlaceId) => {
       setSelectedId(id)
       setFocusRequest((n) => n + 1)
       // 장소를 고르면 둘러보기가 끝난 것으로 보고 걷어 낸 것들을 되돌린다
@@ -75,8 +75,8 @@ export function MapView({
   useEffect(() => {
     const handlePopState = () => {
       pushedRef.current = false
-      const match = location.pathname.match(/\/map\/(\d+)$/)
-      setSelectedId(match ? Number(match[1]) : null)
+      const match = location.pathname.match(/\/map\/([^/]+)$/)
+      setSelectedId(match ? toPlaceId(decodeURIComponent(match[1])) : null)
       if (match) setFocusRequest((n) => n + 1)
     }
     addEventListener('popstate', handlePopState)

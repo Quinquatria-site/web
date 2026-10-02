@@ -32,3 +32,14 @@ export const PLACE_TAIL_FILL: Record<PlaceCode, string> = {
   PHOTO: 'fill-place-photo/52',
   TRASH: 'fill-place-trash/52',
 }
+
+/** 영역 테두리. 고유 색 */
+export const PLACE_STROKE: Record<PlaceCode, string> = {
+  BOOTH: 'stroke-place-booth',
+  PUB: 'stroke-place-pub',
+  FOODTRUCK: 'stroke-place-foodtruck',
+  MEDI: 'stroke-place-medi',
+  BRACELET: 'stroke-place-bracelet',
+  PHOTO: 'stroke-place-photo',
+  TRASH: 'stroke-place-trash',
+}

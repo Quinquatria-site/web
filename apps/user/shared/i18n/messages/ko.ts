@@ -99,6 +99,10 @@ export const ko = {
       /** {price} 에 자릿수 쉼표 찍은 금액이 들어간다 */
       price: '{price}원',
     },
+    /** 프론트에 둔 팔찌 수령 영역 */
+    braceletPickup: {
+      name: '입장 팔찌 수령처',
+    },
     places: {
       BOOTH: '부스',
       PUB: '주점',

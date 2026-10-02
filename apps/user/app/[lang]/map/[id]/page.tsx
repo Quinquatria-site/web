@@ -1,6 +1,7 @@
 import type { Metadata, ResolvingMetadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getPlaces } from '@/features/map/get-places'
+import { toPlaceId } from '@/features/map/map-place'
 import { MapView } from '@/features/map/MapView'
 import { DuskBackground } from '@/shared/background/DuskBackground'
 import { PageHeader } from '@/shared/header/PageHeader'
@@ -19,11 +20,11 @@ export async function generateStaticParams() {
 /** 빌드 뒤에 올라온 장소도 첫 요청 때 굽고 캐시한다. 재검증은 이미 있는 페이지만 다시 굽기 때문이다 */
 export const dynamicParams = true
 
-// 숫자가 아니거나 목록에 없는 id 는 null. 목록은 지도와 같은 요청이라 캐시에서 나온다
-async function findPlace(id: string) {
-  if (!/^\d+$/.test(id)) return null
+// 목록에 없는 id 는 null. 목록은 지도와 같은 요청이라 캐시에서 나온다
+async function findPlace(segment: string) {
+  const id = toPlaceId(segment)
   const places = await getPlaces()
-  return { places, place: places.find((place) => place.id === Number(id)) ?? null }
+  return { places, place: places.find((place) => place.id === id) ?? null }
 }
 
 /** 사진이 있는 장소만 OG 이미지를 첫 사진으로 바꾼다. openGraph 는 통째로 덮이니 부모 값을 펼쳐 images 만 갈아 끼운다 */

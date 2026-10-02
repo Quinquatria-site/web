@@ -12,7 +12,7 @@ import {
   toLatLng,
 } from './map-coords'
 import { MapLabels } from './MapLabels'
-import type { MapPlace } from './map-place'
+import type { MapPlace, PlaceId } from './map-place'
 import { PlaceMarkers } from './PlaceMarkers'
 import { ZoomButtons } from './ZoomButtons'
 import 'leaflet/dist/leaflet.css'
@@ -311,8 +311,8 @@ export default function CampusMap({
   onEmptyTap,
 }: {
   places: MapPlace[]
-  selectedId: number | null
-  onSelect: (id: number) => void
+  selectedId: PlaceId | null
+  onSelect: (id: PlaceId) => void
   onClear: () => void
   /** 마커를 누를 때마다 늘어나는 수. 같은 장소를 다시 눌러도 다시 옮긴다 */
   focusRequest: number

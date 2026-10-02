@@ -106,6 +106,10 @@ export const en: Messages = {
       photos: 'Photos',
       price: '₩{price}',
     },
+    /** 프론트에 둔 팔찌 수령 영역 */
+    braceletPickup: {
+      name: 'Wristband Pickup',
+    },
     places: {
       BOOTH: 'Booth',
       PUB: 'Pub',

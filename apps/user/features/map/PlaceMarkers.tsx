@@ -18,7 +18,8 @@ import mediIcon from './images/medi.svg'
 import photoIcon from './images/photo.svg'
 import trashIcon from './images/trash.svg'
 import { toLatLng } from './map-coords'
-import { type MapPlace, type PlaceCode, placeLabel } from './map-place'
+import { type MapPlace, type PlaceCode, type PlaceId, placeLabel } from './map-place'
+import { PlaceArea } from './PlaceArea'
 import { PLACE_FILL, PLACE_TAIL_FILL } from './place-colors'
 
 // 처음 전체 보기의 이 배수보다 확대해야 큰 물방울이 나온다. 그 아래는 다닥다닥 붙어도 겹치지 않는 작은 물방울만 찍고 누를 수 없다
@@ -89,7 +90,7 @@ const PlaceMarker = memo(function PlaceMarker({
   place: MapPlace
   name: string
   selected: boolean
-  onSelect: (id: number) => void
+  onSelect: (id: PlaceId) => void
 }) {
   const { id, code, category_sequence, x, y } = place
   const markerRef = useRef<LeafletMarker>(null)
@@ -160,7 +161,7 @@ function useFullZoom() {
   return full
 }
 
-/** 지도 위 장소 마커들. 선택은 바텀 시트와 맞추도록 부모가 들고, 여기선 누름과 고른 장소가 목록에서 빠진 것만 알린다 */
+/** 지도 위 장소 마커들. 영역이 있는 장소는 폴리곤으로 그린다. 선택은 바텀 시트와 맞추도록 부모가 들고, 여기선 누름과 고른 장소가 목록에서 빠진 것만 알린다 */
 export function PlaceMarkers({
   places,
   selectedId,
@@ -168,8 +169,8 @@ export function PlaceMarkers({
   onClear,
 }: {
   places: MapPlace[]
-  selectedId: number | null
-  onSelect: (id: number) => void
+  selectedId: PlaceId | null
+  onSelect: (id: PlaceId) => void
   onClear: () => void
 }) {
   const names = getMessages(useLocale()).map.places
@@ -184,6 +185,17 @@ export function PlaceMarkers({
     <>
       {places.map((place) => {
         const selected = place.id === selectedId
+        // 영역은 축소해도 모양 그대로 보여야 해서 배율과 상관없이 그린다
+        if (place.area)
+          return (
+            <PlaceArea
+              key={place.id}
+              place={place}
+              area={place.area}
+              selected={selected}
+              onSelect={onSelect}
+            />
+          )
         // 고른 장소는 축소해도 큰 물방울로 남겨 시트가 가리키는 자리를 잃지 않는다
         if (!full && !selected) return <MiniMarker key={place.id} place={place} />
         const label = placeLabel(place)

@@ -4,6 +4,8 @@ import type { CategoryBase, CategoryText } from '@quen/schema/entities/category'
 import type { PlaceBase, PlaceText } from '@quen/schema/entities/place'
 import { CACHE_TAGS } from '@/shared/api/cache-tags'
 import { serverApi } from '@/shared/api/server-api'
+import { getLocale } from '@/shared/i18n/get-locale'
+import { getLocalPlaces } from './local-places'
 import type { MapPlace, PlaceCode, PlaceMenu } from './map-place'
 
 type Category = Localized<CategoryBase, CategoryText>
@@ -28,8 +30,14 @@ async function listAll<T>(path: string, tag: string): Promise<T[]> {
   }
 }
 
-/** 페이지 언어의 장소 전체. category_id 를 카테고리 코드로 풀고, 모르는 카테고리는 마커를 정할 수 없어 뺀다. 메뉴가 바뀌어도 places 태그로 재검증된다 */
+/** 페이지 언어의 장소 전체. 서버 장소 뒤에 프론트에 둔 장소를 붙인다 */
 export async function getPlaces(): Promise<MapPlace[]> {
+  const [serverPlaces, locale] = await Promise.all([getServerPlaces(), getLocale()])
+  return [...serverPlaces, ...getLocalPlaces(locale)]
+}
+
+// category_id 를 카테고리 코드로 풀고, 모르는 카테고리는 마커를 정할 수 없어 뺀다. 메뉴가 바뀌어도 places 태그로 재검증된다
+async function getServerPlaces(): Promise<MapPlace[]> {
   // 지도는 두 태그를 다 달고 있어, 백엔드가 카테고리를 바꿔 categories 를 보내도 다시 굽는다
   const [categories, places] = await Promise.all([
     listAll<Category>('/categories', CACHE_TAGS.categories),
