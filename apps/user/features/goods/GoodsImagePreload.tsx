@@ -1,6 +1,6 @@
 import { getImageProps } from 'next/image'
 import { preload } from 'react-dom'
-import { PHOTO_SIZES } from './GoodsCard'
+import { PHOTO_SIZES } from './GoodsPhoto'
 import type { Goods } from './goods'
 
 /** 굿즈 사진을 HTML 머리에서 미리 받게 한다. 넘기거나 시트를 열 때 사진이 비어 보이지 않게 하려는 것 */

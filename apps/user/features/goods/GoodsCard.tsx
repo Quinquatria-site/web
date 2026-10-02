@@ -1,36 +1,49 @@
-import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
+import { heirOfLight } from '@/shared/fonts/heir-of-light'
+import { GlowDot, GlowStar } from '@/shared/ornament/GlowSparkle'
+import { GoodsPhoto } from './GoodsPhoto'
 
-/** 굿즈 카드의 테두리·그림자. 뒤에 겹친 빈 카드도 같은 모양을 쓴다 */
+/** 굿즈 카드의 테두리·그림자·바탕. 뒤에 겹친 빈 카드도 같은 모양을 쓴다 */
 export const CARD_FRAME =
-  'rounded-2xl border border-[#dbc4aa] bg-bg shadow-[0_2px_4px_rgb(0_0_0/0.5)]'
+  'rounded-2xl border border-primary bg-bg bg-linear-to-b from-bg/20 to-primary/20 shadow-[0_2px_16px_rgb(249_163_66/0.4)]'
 
-/** 굿즈 사진 sizes. 카드·시트·미리 받기가 같은 값이어야 같은 최적화 주소를 받아 캐시를 함께 쓴다 */
-export const PHOTO_SIZES = '(max-width: 480px) 80vw, 300px'
+// 피그마 카드(1241:85) 의 이름 양옆 꾸밈요소 자리. 좁은 폰에서 사진이 줄어도 이름 곁에 남게 아래를 기준으로 잰다
+const DOTS = [
+  { size: 'sm', className: 'bottom-[62px] left-11' },
+  { size: 'md', className: 'bottom-14 left-[61px]' },
+  { size: 'md', className: 'bottom-[34px] left-[38px]' },
+  { size: 'md', className: 'bottom-[19px] right-[59px]' },
+  { size: 'sm', className: 'bottom-[37px] right-[50px]' },
+] as const
 
-/** 굿즈 가격 글자색. 시안의 파란 가격 */
-export const PRICE_TEXT = 'text-[#006bc1]'
-
-/** 카드 넘기기의 앞 카드 한 장. 위에 사진, 아래에 이름·가격·설명을 가운데 둔다 */
+/** 카드 넘기기의 앞 카드 한 장. 위에 구름 바탕 사진, 아래에 이름·가격을 가운데 둔다 */
 export function GoodsCard({
   image,
   name,
   price,
-  description,
+  order,
 }: {
   image: string
   name: string
   price: string
-  description: string
+  order: number
 }) {
   return (
-    <article className={`${CARD_FRAME} flex flex-col items-center gap-2 px-[18px] pt-[18px] pb-6`}>
-      <div className="aspect-square w-full overflow-hidden rounded-xl">
-        <ZoomablePhoto src={image} alt={name} sizes={PHOTO_SIZES} />
+    <article
+      className={`${CARD_FRAME} ${heirOfLight.variable} relative flex flex-col items-center gap-[18px] px-[18px] pt-[18px] pb-6`}
+    >
+      <div className="w-full">
+        <GoodsPhoto src={image} name={name} order={order} variant="card" />
       </div>
-      <div className="flex flex-col items-center gap-1 text-center text-text">
-        <h2 className="text-[28px] leading-[normal] font-semibold">{name}</h2>
-        <p className={`text-xl leading-[1.08] font-semibold ${PRICE_TEXT}`}>{price}</p>
-        <p className="leading-[1.288] font-medium">{description}</p>
+      <div aria-hidden className="pointer-events-none">
+        <GlowStar kind="a" className="absolute bottom-[60px] left-[18px]" />
+        <GlowStar kind="b" className="absolute right-[18px] bottom-[13px]" />
+        {DOTS.map(({ size, className }, i) => (
+          <GlowDot key={i} size={size} className={`absolute ${className}`} />
+        ))}
+      </div>
+      <div className="flex flex-col items-center text-center font-heir font-bold">
+        <h2 className="text-2xl leading-[normal] text-text">{name}</h2>
+        <p className="text-xl leading-[1.288] text-accent">{price}</p>
       </div>
     </article>
   )
