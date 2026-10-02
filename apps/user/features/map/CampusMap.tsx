@@ -259,7 +259,7 @@ export default function CampusMap({
       zoomSnap={0}
       zoomControl={false}
       attributionControl={false}
-      // 배경은 MapView 가 칠한다. leaflet.css 의 #ddd 가 뒤에 실려 ! 로 지운다
+      // 배경은 페이지의 노을 하늘이 비친다. leaflet.css 의 #ddd 가 뒤에 실려 ! 로 지운다
       className="size-full bg-transparent!"
     >
       <ImageOverlay url={MAP_IMAGE_URL} bounds={MAP_BOUNDS} />

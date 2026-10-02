@@ -71,10 +71,10 @@ export function MapView({ places }: { places: MapPlace[] }) {
   return (
     <>
       <div ref={safeProbeRef} aria-hidden className="absolute pb-[env(safe-area-inset-bottom)]" />
-      {/* 배경은 이미지 가장자리 색(경계 숨김), 도크 여백은 되돌려 바닥까지 채우고, isolate 로 Leaflet z-index(400~1000)를 가둬 도크를 위에 둔다 */}
+      {/* 배경은 비워 페이지의 노을 하늘이 지도 뒤로 보이게 하고, 도크 여백은 되돌려 바닥까지 채우고, isolate 로 Leaflet z-index(400~1000)를 가둬 도크를 위에 둔다 */}
       <div
         data-chrome={chromeHidden ? 'hidden' : undefined}
-        className="relative isolate bg-[#fefaf2] -mb-(--dock-space) h-[calc(100dvh-env(safe-area-inset-top)-var(--spacing)*19)]"
+        className="relative isolate -mb-(--dock-space) h-[calc(100dvh-env(safe-area-inset-top)-var(--spacing)*19)]"
       >
         <CampusMap
           places={visiblePlaces}
