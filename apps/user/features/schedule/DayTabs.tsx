@@ -12,11 +12,12 @@ export const SCHEDULE_PANEL_ID = 'schedule-panel'
 /** DAY 탭 버튼 id. 일정 영역이 어느 탭의 내용인지 이어 준다 */
 export const dayTabId = (day: number) => `day-tab-${day}`
 
-// 날짜를 서울 기준으로 읽어야 기기 시간대가 달라도 요일이 밀리지 않는다
+// 날짜를 서울 기준으로 읽어야 기기 시간대가 달라도 요일이 밀리지 않는다. 한국어는 시안대로 영문 요일을 쓴다
 const weekday = (locale: Locale, date: string) =>
-  new Intl.DateTimeFormat(HTML_LANG[locale], { weekday: 'short', timeZone: 'Asia/Seoul' }).format(
-    new Date(`${date}T12:00:00+09:00`),
-  )
+  new Intl.DateTimeFormat(locale === 'ko' ? 'en-US' : HTML_LANG[locale], {
+    weekday: 'short',
+    timeZone: 'Asia/Seoul',
+  }).format(new Date(`${date}T12:00:00+09:00`))
 
 // 겹쳐 둔 알약 한 장. lag 면 90ms 늦게 출발해 앞장과 벌어진 만큼 알약이 늘어나 보인다
 function PillPiece({ atSecond, lag }: { atSecond: boolean; lag: boolean }) {
