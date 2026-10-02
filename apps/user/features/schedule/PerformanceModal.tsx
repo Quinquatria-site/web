@@ -85,8 +85,8 @@ export function PerformanceModal({ performance }: { performance: Performance }) 
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="fixed inset-0 z-50 bg-black/60" />
-      {/* 소개가 짧아도 시안 높이(386)는 지키고, 길면 늘다가 화면에 닿으면 안에서 스크롤해 닫기 버튼까지 닿게 한다 */}
-      <Dialog.Content className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-48px)] min-h-[min(386px,calc(100dvh-48px))] w-[calc(100%-48px)] max-w-[308px] -translate-1/2 overflow-y-auto rounded-2xl bg-bg bg-linear-to-b from-bg/20 to-primary/20 p-[13px] pb-6 text-text shadow-[0_4px_8px_rgb(0_0_0/0.25)]">
+      {/* 폭은 기기마다 양옆 24 만 남기고 앱 기둥(480)을 넘지 않는다. 높이는 시안 308×386 비율로 폭을 따르되 화면을 넘지 않고, 소개가 길면 안에서 스크롤한다 */}
+      <Dialog.Content className="fixed top-1/2 left-1/2 z-50 h-[min(calc((var(--app-width)-48px)*386/308),calc(100dvh-48px))] w-[calc(var(--app-width)-48px)] -translate-1/2 overflow-y-auto rounded-2xl bg-bg bg-linear-to-b from-bg/20 to-primary/20 p-[13px] pb-6 text-text shadow-[0_4px_8px_rgb(0_0_0/0.25)]">
         <ModalHeader type={performance.type} />
         <ModalContent
           image_uri={performance.image_uri}
