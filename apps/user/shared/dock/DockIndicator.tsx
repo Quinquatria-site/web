@@ -66,7 +66,7 @@ export function DockIndicator({ index }: { index: number | null }) {
           style={{
             clipPath: `inset(var(--dock-pill-inset) ${pillRight(index)} var(--dock-pill-inset) calc(100% - ${pillRight(index)} - ${PILL_WIDTH}) round 20px)`,
           }}
-          className="pointer-events-none absolute inset-0 z-10 flex justify-end bg-dock-selected p-(--dock-pad) text-on-dock"
+          className="pointer-events-none absolute inset-0 z-10 flex justify-end bg-dock-selected p-(--dock-pad) text-on-dock-selected"
         >
           {DOCK_TABS.map((tab, i) => (
             <span key={tab.href} className={tabBoxClass(i)}>
