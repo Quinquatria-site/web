@@ -47,7 +47,7 @@ export function LanguageSwitcher() {
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) setOpen(false)
       }}
-      className="group absolute top-[22px] right-[19px] flex items-center rounded-[28px] border border-primary-border bg-secondary/20 p-[5px] text-xs leading-[normal] text-primary-border"
+      className="group absolute top-[22px] right-[19px] flex items-center rounded-[28px] border border-primary-border bg-dock/75 p-[5px] text-xs leading-[normal] text-primary-border"
     >
       <button
         ref={buttonRef}
