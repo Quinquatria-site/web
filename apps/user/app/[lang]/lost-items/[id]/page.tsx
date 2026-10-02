@@ -11,6 +11,8 @@ import { assetUrl } from '@/shared/photo/asset-url'
 /** 목록에 있는 분실물 id 로 정적 생성한다. 언어는 레이아웃이 곱한다 */
 export async function generateStaticParams() {
   const items = await getLostItems()
+  // 빈 배열이면 Next 가 다른 언어까지 미리 굽지 않아서, 없는 id 0 을 대신 준다. 0 은 페이지가 API 를 부르기 전에 404 로 보낸다
+  if (items.length === 0) return [{ id: '0' }]
   return items.map(({ id }) => ({ id: String(id) }))
 }
 
@@ -23,7 +25,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const { id } = await params
-  if (!/^\d+$/.test(id)) return {}
+  if (!/^[1-9]\d*$/.test(id)) return {}
   const item = await getLostItem(Number(id))
   if (!item?.image_url) return {}
   const { openGraph } = await parent
@@ -36,8 +38,8 @@ export async function generateMetadata(
 export default async function LostItemDetailPage({ params }: PageProps<'/[lang]/lost-items/[id]'>) {
   const { id } = await params
   const { pages, lostItems } = getMessages(await getLocale())
-  // 숫자가 아닌 주소는 API 가 422 로 답해 500 이 되므로 부르기 전에 걸러 낸다
-  if (!/^\d+$/.test(id)) notFound()
+  // 1 이상 정수가 아닌 주소는 API 가 422 로 답해 500 이 되므로 부르기 전에 걸러 낸다
+  if (!/^[1-9]\d*$/.test(id)) notFound()
   const item = await getLostItem(Number(id))
   if (!item) notFound()
 
