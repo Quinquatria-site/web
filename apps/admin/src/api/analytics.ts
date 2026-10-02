@@ -12,11 +12,22 @@ import { ApiError, isApiErrorBody, NETWORK_ERROR } from './errors'
  * 실행한다. CF_* 는 `.env.local` 에서 읽는다.
  */
 
-/** 로딩 시간 백분위(ms). 표본이 없으면 null */
-export interface LoadQuantiles {
-  p50: number | null
-  p75: number | null
+/** Web Vitals 한 지표의 Google 기준 좋음·개선 필요·나쁨 건수 */
+export interface VitalRating {
+  good: number
+  needsImprovement: number
+  poor: number
+}
+
+/** 체감 속도 요약. 값은 P75 — LCP·INP 는 ms, CLS 는 단위 없음. 표본이 없으면 null */
+export interface VitalsSummary {
   samples: number
+  lcp: number | null
+  inp: number | null
+  cls: number | null
+  lcpRating: VitalRating
+  inpRating: VitalRating
+  clsRating: VitalRating
 }
 
 /**
@@ -34,12 +45,16 @@ export interface Traffic {
   buckets: { start: string; pageViews: number; visits: number }[]
   /** 조회 기간 요청 경로별 조회. `/ko/notices/3` 처럼 원시 경로다 */
   paths: { path: string; pageViews: number }[]
+  /** 조회 기간 요청 경로별 방문 — 사이트에 처음 들어온 페이지. 원시 경로다 */
+  landings: { path: string; visits: number }[]
   /** 조회 기간 외부 유입 host 별 방문. `''` 은 출처 없음 */
   referrers: { host: string; visits: number }[]
-  performance: {
-    today: LoadQuantiles
-    /** 최근 30분 */
-    recent: Omit<LoadQuantiles, 'p50'>
+  vitals: {
+    today: VitalsSummary
+    /** 최근 30분 LCP P75 (ms) */
+    recent: { lcp: number | null; samples: number }
+    /** 조회 기간 요청 경로별 LCP 판정. 원시 경로다 */
+    pages: { path: string; lcpRating: VitalRating }[]
   }
 }
 
@@ -90,7 +105,8 @@ function isTraffic(value: unknown): value is Traffic {
     typeof traffic.today === 'string' &&
     Array.isArray(traffic.buckets) &&
     Array.isArray(traffic.paths) &&
+    Array.isArray(traffic.landings) &&
     Array.isArray(traffic.referrers) &&
-    typeof traffic.performance === 'object'
+    typeof traffic.vitals === 'object'
   )
 }

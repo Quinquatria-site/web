@@ -12,13 +12,18 @@ import {
   DIRECT_REFERRER,
   formatCount,
   formatSeconds,
+  formatShare,
+  landingGroups,
   localeShares,
   pageGroups,
+  pageSpeeds,
   rangeDates,
   referrerGroups,
   slowLoading,
   SLOTS_PER_DAY,
   trafficUnavailableText,
+  VITAL_GRADE_LABEL,
+  vitalGrade,
 } from '../lib/trafficStats'
 import { useTraffic } from '../lib/useTraffic'
 import { festivalDateLabel, festivalDayLabel, FESTIVAL_DATES } from '../mocks/types'
@@ -60,7 +65,7 @@ export function AnalyticsRoute() {
 
   const now = new Date(traffic.generatedAt)
   const current = congestion(traffic.buckets, now)
-  const slow = slowLoading(traffic.performance)
+  const slow = slowLoading(traffic.vitals)
 
   const series = daySeries(traffic.buckets, traffic.today)
   const todayPeak = Math.max(...series)
@@ -72,8 +77,10 @@ export function AnalyticsRoute() {
   const maxDayVisits = Math.max(0, ...days.map((day) => day.visits))
   const pages = pageGroups(traffic.paths)
   const locales = localeShares(traffic.paths)
+  const landings = landingGroups(traffic.landings)
   const referrers = referrerGroups(traffic.referrers)
-  const { today: loadToday, recent: loadRecent } = traffic.performance
+  const { today: vitalsToday, recent: vitalsRecent } = traffic.vitals
+  const speeds = pageSpeeds(traffic.vitals.pages)
 
   return (
     <div className={styles.screen}>
@@ -89,7 +96,7 @@ export function AnalyticsRoute() {
             <Callout
               tone="warning"
               title="현장에서 페이지가 평소보다 느리게 열립니다."
-              description={`최근 30분 P75 ${formatSeconds(loadRecent.p75)} · 오늘 평소 ${formatSeconds(loadToday.p75)}`}
+              description={`최근 30분 화면 표시 P75 ${formatSeconds(vitalsRecent.lcp)} · 오늘 평소 ${formatSeconds(vitalsToday.lcp)}`}
             />
           </div>
         )}
@@ -150,6 +157,27 @@ export function AnalyticsRoute() {
         )}
       </Card>
 
+      <Card title="처음 들어온 페이지">
+        {landings.length === 0 ? (
+          <p className={styles.empty}>이 기간 방문이 아직 없습니다.</p>
+        ) : (
+          <MeterGroup>
+            {landings.map((row) => (
+              <Meter
+                key={row.name}
+                label={row.name}
+                value={row.count}
+                max={Math.max(...landings.map((landing) => landing.count))}
+                valueLabel={`방문 ${formatCount(row.count)}`}
+              />
+            ))}
+          </MeterGroup>
+        )}
+        <p className={styles.note}>
+          밖(QR·링크·검색)에서 들어와 처음 연 페이지입니다. 앱 안 이동·상세 열기는 세지 않습니다.
+        </p>
+      </Card>
+
       <Card title="언어">
         <MeterGroup>
           {locales.map((row) => (
@@ -185,15 +213,40 @@ export function AnalyticsRoute() {
         </p>
       </Card>
 
-      <Card title="로딩 속도">
+      <Card title="체감 속도" count={`오늘 표본 ${formatCount(vitalsToday.samples)}`}>
         <dl className={styles.facts}>
-          <Fact label="오늘 중간값 (P50)" value={formatSeconds(loadToday.p50)} />
-          <Fact label="오늘 느린 쪽 (P75)" value={formatSeconds(loadToday.p75)} />
+          <Fact label="화면이 뜨기까지 (LCP)" value={vitalText('lcp', vitalsToday.lcp)} />
+          <Fact label="누른 뒤 반응까지 (INP)" value={vitalText('inp', vitalsToday.inp)} />
+          <Fact label="화면 밀림 (CLS)" value={vitalText('cls', vitalsToday.cls)} />
           <Fact
-            label="최근 30분 (P75)"
-            value={`${formatSeconds(loadRecent.p75)} · 표본 ${formatCount(loadRecent.samples)}`}
+            label="최근 30분 화면 표시"
+            value={`${formatSeconds(vitalsRecent.lcp)} · 표본 ${formatCount(vitalsRecent.samples)}`}
           />
         </dl>
+        <p className={styles.note}>
+          오늘 느린 쪽 25% 기준(P75)입니다. 좋음·개선 필요·나쁨은 Google Core Web Vitals 기준입니다.
+        </p>
+      </Card>
+
+      <Card title="페이지별 화면 표시">
+        {speeds.length === 0 ? (
+          <p className={styles.empty}>페이지별로 판정할 만큼 표본이 아직 없습니다.</p>
+        ) : (
+          <MeterGroup>
+            {speeds.map((row) => (
+              <Meter
+                key={row.name}
+                label={row.name}
+                value={row.goodShare}
+                max={1}
+                valueLabel={`좋음 ${formatShare(row.goodShare)} · 나쁨 ${formatShare(row.poorShare)} · 표본 ${formatCount(row.samples)}`}
+              />
+            ))}
+          </MeterGroup>
+        )}
+        <p className={styles.note}>
+          화면이 2.5초 안에 뜨면 좋음, 4초를 넘으면 나쁨입니다. 나쁨이 많은 페이지가 위에 옵니다.
+        </p>
       </Card>
 
       <footer className={styles.footer}>
@@ -226,6 +279,14 @@ function Fact({ label, value }: { label: string; value: string }) {
       <dd>{value}</dd>
     </div>
   )
+}
+
+/** "2.1초 · 좋음". 표본이 없으면 "—" */
+function vitalText(metric: 'lcp' | 'inp' | 'cls', value: number | null): string {
+  if (value === null) return '—'
+  const shown =
+    metric === 'lcp' ? formatSeconds(value) : metric === 'inp' ? `${value}ms` : value.toFixed(2)
+  return `${shown} · ${VITAL_GRADE_LABEL[vitalGrade(metric, value)]}`
 }
 
 /**
