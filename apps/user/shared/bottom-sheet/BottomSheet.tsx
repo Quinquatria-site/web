@@ -36,6 +36,8 @@ interface SheetProps {
   peekHeight?: number
   /** 뒤로 가기로 닫는 기록을 시트가 쌓는다. 주소로 기록을 따로 관리하는 곳은 꺼서 두 곳이 함께 되돌리지 않게 한다 */
   closeOnBack?: boolean
+  /** 바뀔 때마다 시트를 지금 단계 자리로 다시 올린다. 열린 채 내용만 바꿀 때 시트가 화면 밖에 남아 있지 않게 한다 */
+  revealKey?: unknown
   children: ReactNode
 }
 
@@ -68,7 +70,7 @@ export function BottomSheet({
   )
 }
 
-function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetProps) {
+function SheetPanel({ onClose, hidden = false, peekHeight, revealKey, children }: SheetProps) {
   const { bottomSheet } = getMessages(useLocale())
   // 닫혀 내려가는 중인 시트는 새로 열린 시트와 겹칠 수 있어 누름을 받지 않는다
   const isPresent = useIsPresent()
@@ -104,7 +106,8 @@ function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetProp
     if (!height) return
     const controls = animate(y, target, SLIDE)
     return () => controls.stop()
-  }, [y, target, height])
+    // revealKey 는 자리가 그대로여도 다시 올리려고 받는다
+  }, [y, target, height, revealKey])
 
   useEffect(() => {
     // 1단계로 내려오면 본문을 맨 위로 돌려 제목이 다시 보이게 한다
@@ -200,21 +203,10 @@ function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetProp
 
   return (
     <>
-      <AnimatePresence>
-        {step === 'full' && !hidden && (
-          // 2단계에서는 드러난 지도를 눌러도 마커가 눌리지 않고 시트가 닫힌다
-          <motion.div
-            aria-hidden
-            onClick={onClose}
-            // 닫히며 흐려지는 동안 지도 누름을 가로채 새로 고른 장소까지 닫지 않게 한다
-            style={{ pointerEvents: isPresent ? 'auto' : 'none' }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50"
-          />
-        )}
-      </AnimatePresence>
+      {/* 2단계에서는 드러난 지도를 눌러도 마커가 눌리지 않고 시트가 닫힌다. 투명한 막이라 흐려지는 퇴장 없이 바로 걷어, 1단계로 내린 직후 누름을 가로채지 않게 한다 */}
+      {step === 'full' && !hidden && isPresent && (
+        <div aria-hidden onClick={onClose} className="fixed inset-0 z-50" />
+      )}
       <Dialog.Content
         forceMount
         asChild
@@ -245,7 +237,8 @@ function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetProp
           />
           <div
             aria-hidden
-            onPointerDown={(event) => dragControls.start(event)}
+            // 1단계는 시트 전체가 이미 끌기를 받아, 여기서 또 시작하면 한 손짓에 끌기가 둘 돌아 세게 던질 때 끝 처리가 엇갈린다
+            onPointerDown={(event) => step === 'full' && dragControls.start(event)}
             className="flex h-[42px] shrink-0 cursor-grab touch-none justify-center pt-3 active:cursor-grabbing"
           >
             <span className="h-[5px] w-[60px] rounded-full bg-sheet-edge" />
