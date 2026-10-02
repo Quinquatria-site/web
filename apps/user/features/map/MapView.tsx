@@ -9,6 +9,11 @@ import { type MapPlace, type PlaceCode, type PlaceId, toPlaceId } from './map-pl
 import { PlaceFilter } from './PlaceFilter'
 import { PLACE_SHEET_PEEK, PlaceSheet } from './PlaceSheet'
 
+// 지도(/map) 위에 쌓은 장소 기록 표시. 뒤로 가기로 돌아왔을 때 되돌릴 기록인지 가린다
+const PLACE_ENTRY_KEY = 'placeOverMap'
+// Next 가 넘긴 객체에 라우터 상태를 덧붙여서 매번 새로 만든다
+const placeEntry = () => ({ [PLACE_ENTRY_KEY]: true })
+
 // Leaflet 은 불러오는 순간 window 를 읽어서 빌드 때 굽지 않고 브라우저에서만 싣는다
 const CampusMap = dynamic(() => import('./CampusMap'), { ssr: false })
 
@@ -56,9 +61,9 @@ export function MapView({
       if (location.pathname === url) return
       // 시트가 열린 채 다른 장소를 고르면 기록을 더 쌓지 않고 갈아 끼워, 뒤로 가기 한 번에 시트가 닫힌다
       if (location.pathname === mapPath) {
-        history.pushState(null, '', url)
+        history.pushState(placeEntry(), '', url)
         pushedRef.current = true
-      } else history.replaceState(null, '', url)
+      } else history.replaceState(pushedRef.current ? placeEntry() : null, '', url)
     },
     [mapPath],
   )
@@ -74,7 +79,8 @@ export function MapView({
   // 뒤로·앞으로 가기로 주소가 바뀌면 고른 장소를 주소에 맞춘다
   useEffect(() => {
     const handlePopState = () => {
-      pushedRef.current = false
+      // 사진 뷰어처럼 위에 겹친 기록만 걷혀 돌아온 경우에도 이 장소 기록을 지도 위에 쌓았는지 기억한다
+      pushedRef.current = history.state?.[PLACE_ENTRY_KEY] === true
       const match = location.pathname.match(/\/map\/([^/]+)$/)
       setSelectedId(match ? toPlaceId(decodeURIComponent(match[1])) : null)
       if (match) setFocusRequest((n) => n + 1)
@@ -82,6 +88,24 @@ export function MapView({
     addEventListener('popstate', handlePopState)
     return () => removeEventListener('popstate', handlePopState)
   }, [])
+  // 장소 주소로 바로 들어오면 아래에 지도 기록을 깔아, 뒤로 가기가 사이트를 떠나지 않고 시트만 닫게 한다
+  useEffect(() => {
+    if (initialPlaceId === null) return
+    // 깔아 둔 뒤 새로고침했으면 아래 지도 기록이 이미 있으니 기억만 되살린다
+    if (history.state?.[PLACE_ENTRY_KEY]) {
+      pushedRef.current = true
+      return
+    }
+    // 같은 커밋의 부모 effect 에서 Next 가 history 를 감싸기 전이라, 다음 틱에 쌓아야 라우터 상태가 붙는다
+    const timer = setTimeout(() => {
+      if (history.state?.[PLACE_ENTRY_KEY]) return
+      const url = location.pathname
+      history.replaceState(null, '', mapPath)
+      history.pushState(placeEntry(), '', url)
+      pushedRef.current = true
+    })
+    return () => clearTimeout(timer)
+  }, [initialPlaceId, mapPath])
   // 빈 곳 탭은 고른 장소가 있으면 고름만 풀고, 없으면 걷어 내기를 켜고 끈다
   const handleEmptyTap = () => {
     if (selectedId !== null) clearSelection()
