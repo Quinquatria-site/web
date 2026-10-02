@@ -18,10 +18,10 @@ function readBase(raw: string | undefined): string | null {
  * 배포 주소를 코드에 둔다. admin 은 정적 SPA 라 환경변수도 결국 번들에 박혀
  * devtools 로 보이니 숨기는 효과가 없고, 운영진 몇 명만 쓰는 화면이라 환경을
  * 갈아끼울 일도 없다. 환경변수는 다른 서버로 붙여볼 때 덮어쓰는 용도로만 남긴다.
- * Cloudtype 임시 배포 (backend docs/DEPLOY_CLOUDTYPE.md).
+ * 정식 도메인 (Backoffice: admin-api, Customer: api).
  */
-const DEFAULT_BACKOFFICE_BASE = 'https://port-0-backend-mue6mvu2bebbfe1e.sel3.cloudtype.app'
-const DEFAULT_CUSTOMER_BASE = 'https://port-0-backendcustomer-mue6mvu2bebbfe1e.sel3.cloudtype.app'
+const DEFAULT_BACKOFFICE_BASE = 'https://admin-api.quinquatria.site'
+const DEFAULT_CUSTOMER_BASE = 'https://api.quinquatria.site'
 /** 이미지 버킷. 공개 읽기라 key 를 붙이면 바로 열린다. CloudFront 로 옮기면 환경변수로 덮어쓴다 */
 const DEFAULT_ASSET_BASE =
   'https://quinquatria-544611252443-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com'
