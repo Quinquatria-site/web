@@ -20,7 +20,7 @@ export function LostItemCard({ item }: { item: LostItem }) {
     <motion.div whileTap={{ scale: PRESS_SCALE }} transition={DOCK_PRESS}>
       <Link
         href={localePath(locale, `/lost-items/${item.id}`)}
-        className="flex h-[164px] flex-col overflow-hidden rounded-xl border border-[#e5bf8f] bg-(--warm-white)"
+        className="flex h-[164px] flex-col overflow-hidden rounded-xl border border-(--beige-yellow) bg-(--warm-white)"
       >
         <div className="relative h-[103px] shrink-0">
           <Photo src={item.image_url} alt={item.title} sizes="(max-width: 480px) 50vw, 240px" />
