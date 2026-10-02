@@ -4,9 +4,8 @@ export const CATEGORY_CODES = [
   'BOOTH',
   'FOODTRUCK',
   'MEDI',
-  'BRACELET',
-  'PHOTOBOOTH',
   'TRASHCAN',
+  'PHOTOBOOTH',
 ] as const
 export type CategoryCode = (typeof CATEGORY_CODES)[number]
 

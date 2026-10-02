@@ -16,7 +16,10 @@ import { hhmm } from './placeText'
  * 사항으로 정리한다.
  */
 export function isOpenAt(place: Place, nowHhmm: string): boolean {
+  // 운영시간은 비어 있을 수 있다. 시작이 없으면 운영 중으로 보지 않고, 끝이 없으면 시작 뒤로 계속 연 것으로 본다
+  if (!place.start_hour) return false
   const start = hhmm(place.start_hour)
+  if (!place.end_hour) return nowHhmm >= start
   const end = hhmm(place.end_hour)
   // 끝이 시작보다 이르거나 같으면 자정을 넘긴 것으로 읽는다. 목에는 없지만
   // 주점 마감이 새벽으로 늘어나면 바로 생기는 모양이다

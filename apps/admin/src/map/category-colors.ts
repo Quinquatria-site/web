@@ -10,6 +10,5 @@ export const CATEGORY_COLORS: Record<PlaceCode, string> = {
   FOODTRUCK: '#f9a342', // sunlight
   PHOTOBOOTH: '#3f82dd', // blue
   MEDI: '#e62526', // red
-  BRACELET: '#f942cb', // magenta
   TRASHCAN: '#48ac58', // green
 }
