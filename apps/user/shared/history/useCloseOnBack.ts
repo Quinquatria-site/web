@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useId, useRef } from 'react'
+import { supportsCloseWatcher, watchClose } from './close-watcher'
 
-/** 열려 있는 동안 방문 기록을 하나 쌓아, 뒤로 가기가 페이지 대신 시트·뷰어를 닫게 한다. 겹쳐 열면 맨 위부터 하나씩 닫힌다 */
+/** 열려 있는 동안 뒤로 가기가 페이지 대신 시트·뷰어를 닫게 한다. CloseWatcher 가 있으면 그것으로, 없으면 방문 기록을 하나 쌓아서. 겹쳐 열면 맨 위부터 하나씩 닫힌다 */
 export function useCloseOnBack(open: boolean, onClose: () => void) {
   const key = useId()
   const onCloseRef = useRef(onClose)
@@ -13,6 +14,8 @@ export function useCloseOnBack(open: boolean, onClose: () => void) {
 
   useEffect(() => {
     if (!open) return
+    // 기록 없이 뒤로 가기를 받을 수 있으면 그쪽을 써서, CloseWatcher 로 닫는 장소 시트 위에 겹쳐도 맨 위부터 닫힌다
+    if (supportsCloseWatcher()) return watchClose(() => onCloseRef.current())
 
     // 주소는 그대로 두고 기록만 쌓는다. Next 가 pushState 를 감싸 라우터 상태를 함께 옮겨 준다
     window.history.pushState({ closeOnBack: key }, '')

@@ -6,6 +6,7 @@ import {
   BottomSheetDescription,
   BottomSheetTitle,
 } from '@/shared/bottom-sheet/BottomSheet'
+import { useCloseWatcher } from '@/shared/history/useCloseWatcher'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { type MapPlace, placeHours, placeLabel } from './map-place'
@@ -113,14 +114,16 @@ export function PlaceSheet({
   const [shown, setShown] = useState(place)
   if (place && place !== shown) setShown(place)
   const current = place ?? shown
+  useCloseWatcher(place !== null, onClose)
 
   return (
     <BottomSheet
       open={place !== null}
       hidden={hidden}
       peekHeight={PLACE_SHEET_PEEK}
-      // 뒤로 가기는 MapView 가 장소 주소(/map/12)로 처리한다
+      // 장소 주소는 기록 없이 갈아 끼우기만 해서, 뒤로 가기는 기록 대신 CloseWatcher 로 받는다
       closeOnBack={false}
+      revealKey={place?.id}
       onClose={onClose}
     >
       {current && <PlaceDetails place={current} />}
