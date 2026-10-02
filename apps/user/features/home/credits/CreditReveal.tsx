@@ -5,14 +5,14 @@ import type { ReactNode } from 'react'
 
 const STAGGER = 0.12
 
-/** 크레딧 묶음이 40% 보이면 안의 줄들을 위에서부터 0.12초 간격으로 한 번 띄운다 */
+/** 크레딧 묶음이 60% 보이면 안의 줄들을 위에서부터 0.12초 간격으로 한 번 띄운다 */
 export function CreditReveal({ className, children }: { className: string; children: ReactNode }) {
   return (
     <motion.div
       className={className}
       initial="hidden"
       whileInView="shown"
-      viewport={{ once: true, amount: 0.4 }}
+      viewport={{ once: true, amount: 0.6 }}
       transition={{ staggerChildren: STAGGER }}
     >
       {children}
