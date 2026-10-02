@@ -16,11 +16,11 @@ const PAGE_SIZE = 100
 const MENU_CODES: ReadonlySet<PlaceCode> = new Set(['BOOTH', 'PUB', 'FOODTRUCK'])
 
 /** 목록을 100건씩 끝까지 받는다. 장소는 백 건을 넘을 수 있다 */
-async function listAll<T>(path: string): Promise<T[]> {
+async function listAll<T>(path: string, tag: string): Promise<T[]> {
   const items: T[] = []
   for (let page = 1; ; page++) {
     const res = await serverApi<Page<T>>(path, {
-      tags: [CACHE_TAGS.places],
+      tags: [tag],
       query: { page: String(page), size: String(PAGE_SIZE) },
     })
     items.push(...res.items)
@@ -30,10 +30,10 @@ async function listAll<T>(path: string): Promise<T[]> {
 
 /** 페이지 언어의 장소 전체. category_id 를 카테고리 코드로 풀고, 모르는 카테고리는 마커를 정할 수 없어 뺀다. 메뉴가 바뀌어도 places 태그로 재검증된다 */
 export async function getPlaces(): Promise<MapPlace[]> {
-  // 카테고리도 장소 화면에만 쓰여 places 태그로 함께 비운다
+  // 지도는 두 태그를 다 달고 있어, 백엔드가 카테고리를 바꿔 categories 를 보내도 다시 굽는다
   const [categories, places] = await Promise.all([
-    listAll<Category>('/categories'),
-    listAll<PlaceItem>('/places'),
+    listAll<Category>('/categories', CACHE_TAGS.categories),
+    listAll<PlaceItem>('/places', CACHE_TAGS.places),
   ])
   const codes = new Map(categories.map(({ id, code }) => [id, code]))
   return Promise.all(
