@@ -4,7 +4,7 @@ import { paperlogy } from '@/shared/fonts/paperlogy'
 
 // primary 는 어두운 크레딧 위 노란 배지, accent 는 밝은 화면 위 적갈색 배지, glow 는 저녁 하늘 위 햇빛 배지
 const TONE = {
-  primary: 'bg-primary text-sm text-black',
+  primary: 'bg-primary bg-linear-to-r from-primary/20 to-white/20 text-sm text-on-primary',
   accent: 'bg-accent text-xs text-on-accent shadow-[0_2px_4px_rgb(0_0_0/0.25)]',
   glow: 'bg-primary bg-linear-to-r from-primary/20 to-white/20 text-xs text-text shadow-[0_2px_4px_rgb(0_0_0/0.25)]',
 }

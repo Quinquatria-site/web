@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { heirOfLight } from './fonts'
+import { heirOfLight } from '@/shared/fonts/heir-of-light'
 import headerNight from './images/header-night.jpg'
 
 /** 탭 페이지 맨 위 머리. 별자리 선이 걸린 밤하늘 위에 페이지 제목을 가운데 둔다 */
