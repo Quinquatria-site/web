@@ -26,8 +26,10 @@ const MAX_DAYS = 31
 /** 페이지는 화면이 이름으로 묶으므로 넉넉히 받는다. 공지·분실물 상세가 id 마다 따로 온다 */
 const PATH_LIMIT = 200
 const REFERRER_LIMIT = 50
+/** 처음 들어온 페이지. 방문은 조회보다 훨씬 적어 경로 수도 적다 */
+const LANDING_LIMIT = 100
 
-/** "지금" 로딩 속도를 볼 창. 15분 칸 둘 — 하나만 보면 표본이 너무 적다 */
+/** "지금" 체감 속도를 볼 창. 15분 칸 둘 — 하나만 보면 표본이 너무 적다 */
 const RECENT_PERF_MS = 30 * 60 * 1000
 
 /** 날짜는 KST 로 자른다. Cloudflare 의 date 는 UTC 라 그대로 쓰면 자정~오전 9시가 전날로 간다 */
@@ -36,10 +38,22 @@ const DAY_MS = 24 * 60 * 60 * 1000
 
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/
 
-interface Quantiles {
-  p50: number | null
-  p75: number | null
+/** Google 기준 좋음·개선 필요·나쁨 건수 */
+interface Rating {
+  good: number
+  needsImprovement: number
+  poor: number
+}
+
+interface VitalsSummary {
   samples: number
+  /** P75. LCP·INP 는 ms, CLS 는 단위 없음. 표본이 없으면 null */
+  lcp: number | null
+  inp: number | null
+  cls: number | null
+  lcpRating: Rating
+  inpRating: Rating
+  clsRating: Rating
 }
 
 interface Traffic {
@@ -48,8 +62,13 @@ interface Traffic {
   generatedAt: string
   buckets: { start: string; pageViews: number; visits: number }[]
   paths: { path: string; pageViews: number }[]
+  landings: { path: string; visits: number }[]
   referrers: { host: string; visits: number }[]
-  performance: { today: Quantiles; recent: Omit<Quantiles, 'p50'> }
+  vitals: {
+    today: VitalsSummary
+    recent: { lcp: number | null; samples: number }
+    pages: { path: string; lcpRating: Rating }[]
+  }
 }
 
 interface BucketRow {
@@ -58,9 +77,26 @@ interface BucketRow {
   dimensions: { datetimeFifteenMinutes: string }
 }
 
-interface PerfRow {
+interface VitalsSum {
+  lcpGood: number
+  lcpNeedsImprovement: number
+  lcpPoor: number
+  inpGood: number
+  inpNeedsImprovement: number
+  inpPoor: number
+  clsGood: number
+  clsNeedsImprovement: number
+  clsPoor: number
+}
+
+interface VitalsRow {
   count: number
-  quantiles: { pageLoadTimeP50: number | null; pageLoadTimeP75: number | null }
+  quantiles: {
+    largestContentfulPaintP75: number
+    interactionToNextPaintP75: number
+    cumulativeLayoutShiftP75: number
+  }
+  sum: VitalsSum
 }
 
 interface GraphQLResponse {
@@ -70,12 +106,17 @@ interface GraphQLResponse {
         rangeBuckets: BucketRow[]
         todayBuckets: BucketRow[]
         paths: { count: number; dimensions: { requestPath: string } }[]
+        landings: { sum: { visits: number }; dimensions: { requestPath: string } }[]
         referrers: {
           sum: { visits: number }
           dimensions: { refererHost: string; requestHost: string }
         }[]
-        perfToday: PerfRow[]
-        perfRecent: PerfRow[]
+        vitalsToday: VitalsRow[]
+        vitalsRecent: { count: number; quantiles: { largestContentfulPaintP75: number } }[]
+        vitalsPages: {
+          sum: Pick<VitalsSum, 'lcpGood' | 'lcpNeedsImprovement' | 'lcpPoor'>
+          dimensions: { requestPath: string }
+        }[]
       }[]
     }
   }
@@ -107,19 +148,37 @@ query (
         filter: { siteTag: $siteTag, datetime_geq: $rangeStart, datetime_lt: $rangeEnd }
         orderBy: [count_DESC]
       ) { count dimensions { requestPath } }
+      landings: rumPageloadEventsAdaptiveGroups(
+        limit: ${LANDING_LIMIT}
+        filter: { siteTag: $siteTag, datetime_geq: $rangeStart, datetime_lt: $rangeEnd }
+        orderBy: [sum_visits_DESC]
+      ) { sum { visits } dimensions { requestPath } }
       referrers: rumPageloadEventsAdaptiveGroups(
         limit: ${REFERRER_LIMIT}
         filter: { siteTag: $siteTag, datetime_geq: $rangeStart, datetime_lt: $rangeEnd }
         orderBy: [sum_visits_DESC]
       ) { sum { visits } dimensions { refererHost requestHost } }
-      perfToday: rumPerformanceEventsAdaptiveGroups(
+      vitalsToday: rumWebVitalsEventsAdaptiveGroups(
         limit: 1
         filter: { siteTag: $siteTag, datetime_geq: $todayStart, datetime_lt: $todayEnd }
-      ) { count quantiles { pageLoadTimeP50 pageLoadTimeP75 } }
-      perfRecent: rumPerformanceEventsAdaptiveGroups(
+      ) {
+        count
+        quantiles { largestContentfulPaintP75 interactionToNextPaintP75 cumulativeLayoutShiftP75 }
+        sum {
+          lcpGood lcpNeedsImprovement lcpPoor
+          inpGood inpNeedsImprovement inpPoor
+          clsGood clsNeedsImprovement clsPoor
+        }
+      }
+      vitalsRecent: rumWebVitalsEventsAdaptiveGroups(
         limit: 1
         filter: { siteTag: $siteTag, datetime_geq: $recentStart, datetime_lt: $todayEnd }
-      ) { count quantiles { pageLoadTimeP50 pageLoadTimeP75 } }
+      ) { count quantiles { largestContentfulPaintP75 } }
+      vitalsPages: rumWebVitalsEventsAdaptiveGroups(
+        limit: ${PATH_LIMIT}
+        filter: { siteTag: $siteTag, datetime_geq: $rangeStart, datetime_lt: $rangeEnd }
+        orderBy: [count_DESC]
+      ) { sum { lcpGood lcpNeedsImprovement lcpPoor } dimensions { requestPath } }
     }
   }
 }`
@@ -143,17 +202,27 @@ function kstDate(ms: number): string {
 
 const iso = (ms: number) => new Date(ms).toISOString()
 
-/** Cloudflare RUM 의 pageLoadTime 은 마이크로초다. 응답은 ms 로 맞춘다 */
-const toMs = (us: number | null) => (us === null ? null : Math.round(us / 1000))
+/** Cloudflare Web Vitals 의 시간은 마이크로초이고, 음수는 "측정 안 됨" 이다. 응답은 ms 로 맞춘다 */
+const toMs = (us: number | undefined) => (us === undefined || us < 0 ? null : Math.round(us / 1000))
+const toScore = (value: number | undefined) => (value === undefined || value < 0 ? null : value)
+
+const rating = (sum: VitalsSum | undefined, key: 'lcp' | 'inp' | 'cls'): Rating => ({
+  good: sum?.[`${key}Good`] ?? 0,
+  needsImprovement: sum?.[`${key}NeedsImprovement`] ?? 0,
+  poor: sum?.[`${key}Poor`] ?? 0,
+})
 
 /** 표본이 없으면 Cloudflare 는 행을 주지 않거나 0 을 준다. 둘 다 "모름" 으로 */
-function quantiles(rows: PerfRow[]): Quantiles {
-  const row = rows[0]
-  if (!row || row.count === 0) return { p50: null, p75: null, samples: 0 }
+function vitalsSummary(rows: VitalsRow[]): VitalsSummary {
+  const row = rows[0]?.count ? rows[0] : undefined
   return {
-    p50: toMs(row.quantiles.pageLoadTimeP50),
-    p75: toMs(row.quantiles.pageLoadTimeP75),
-    samples: row.count,
+    samples: row?.count ?? 0,
+    lcp: toMs(row?.quantiles.largestContentfulPaintP75),
+    inp: toMs(row?.quantiles.interactionToNextPaintP75),
+    cls: toScore(row?.quantiles.cumulativeLayoutShiftP75),
+    lcpRating: rating(row?.sum, 'lcp'),
+    inpRating: rating(row?.sum, 'inp'),
+    clsRating: rating(row?.sum, 'cls'),
   }
 }
 
@@ -227,7 +296,7 @@ export async function GET(request: Request): Promise<Response> {
     )
     .map((row) => ({ host: row.dimensions.refererHost, visits: row.sum.visits }))
 
-  const recent = quantiles(account?.perfRecent ?? [])
+  const recent = account?.vitalsRecent?.[0]
   const traffic: Traffic = {
     range: { from, to },
     today,
@@ -237,10 +306,24 @@ export async function GET(request: Request): Promise<Response> {
       path: row.dimensions.requestPath,
       pageViews: row.count,
     })),
+    // 방문은 다른 사이트(또는 출처 없음)에서 막 들어온 조회에만 붙는다. 그래서 경로별 방문 = 처음 들어온 페이지
+    landings: (account?.landings ?? [])
+      .filter((row) => row.sum.visits > 0)
+      .map((row) => ({ path: row.dimensions.requestPath, visits: row.sum.visits })),
     referrers,
-    performance: {
-      today: quantiles(account?.perfToday ?? []),
-      recent: { p75: recent.p75, samples: recent.samples },
+    vitals: {
+      today: vitalsSummary(account?.vitalsToday ?? []),
+      recent: recent?.count
+        ? { lcp: toMs(recent.quantiles.largestContentfulPaintP75), samples: recent.count }
+        : { lcp: null, samples: 0 },
+      pages: (account?.vitalsPages ?? []).map((row) => ({
+        path: row.dimensions.requestPath,
+        lcpRating: {
+          good: row.sum.lcpGood,
+          needsImprovement: row.sum.lcpNeedsImprovement,
+          poor: row.sum.lcpPoor,
+        },
+      })),
     },
   }
 

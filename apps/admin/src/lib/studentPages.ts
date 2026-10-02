@@ -22,7 +22,7 @@ export const STUDENT_LOCALE_LABEL: Record<StudentLocale, string> = {
 const PAGES: Record<string, readonly [string, string?]> = {
   '': ['홈'],
   schedule: ['축제 일정표'],
-  map: ['지도'],
+  map: ['지도', '장소 상세'],
   notices: ['공지', '공지 상세'],
   'lost-items': ['분실물 찾기', '분실물 상세'],
   goods: ['굿즈'],
@@ -34,15 +34,24 @@ export const OTHER_PAGE = '기타'
  * 경로를 언어와 페이지 이름으로 나눈다. 언어 접두어가 없으면 학생 앱의
  * splitLocale 과 같이 기본 언어(ko)로 본다 — `/` 는 `/ko` 로 리다이렉트된다.
  */
-export function describeStudentPath(path: string): { locale: StudentLocale; page: string } {
+export function describeStudentPath(path: string): {
+  locale: StudentLocale
+  page: string
+  /** 상세 페이지의 글·장소 번호. 상세가 아니면 null */
+  id: string | null
+} {
   const segments = path.split('?')[0].split('/').filter(Boolean)
   const locale = STUDENT_LOCALES.find((code) => code === segments[0])
   const rest = locale ? segments.slice(1) : segments
   const names = PAGES[rest[0] ?? '']
 
   let page = OTHER_PAGE
+  let id: string | null = null
   if (names && rest.length <= 1) page = names[0]
-  else if (names?.[1] && rest.length === 2) page = names[1]
+  else if (names?.[1] && rest.length === 2) {
+    page = names[1]
+    id = rest[1]
+  }
 
-  return { locale: locale ?? 'ko', page }
+  return { locale: locale ?? 'ko', page, id }
 }

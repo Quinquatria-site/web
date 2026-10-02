@@ -474,7 +474,7 @@ function TrafficCard() {
   const detail = [
     `${kstTimeString(current.recentAt)}부터 15분 조회 ${formatCount(current.recent)}`,
     `${kstTimeString(now)} 기준`,
-    slowLoading(traffic.performance) ? '현장 로딩 느림' : null,
+    slowLoading(traffic.vitals) ? '현장 로딩 느림' : null,
   ]
     .filter(Boolean)
     .join(' · ')
