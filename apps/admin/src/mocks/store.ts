@@ -9,7 +9,6 @@ import {
   type NoticeWrite,
 } from '../api/notices'
 import {
-  createCategory,
   createMenu,
   createPlace,
   deleteMenu as apiDeleteMenu,
@@ -46,7 +45,7 @@ import {
   type LostItemPatch,
   type LostItemWrite,
 } from '../api/lostItems'
-import { CATEGORIES, CATEGORY_SEED } from './categories'
+import { assertAllCategories, CATEGORIES } from './categories'
 import { LOST_ITEMS } from './lostItems'
 import { MENUS } from './menus'
 import { NOTICES } from './notices'
@@ -54,7 +53,6 @@ import { PERFORMANCES } from './performances'
 import { PLACES } from './places'
 import {
   FESTIVAL_DATES,
-  type Category,
   type LanguageCode,
   type LostItem,
   type Menu,
@@ -104,23 +102,9 @@ function replaceAll<T>(target: T[], items: T[]): void {
   target.splice(0, target.length, ...items)
 }
 
-/**
- * 카테고리는 고정 5종이라 admin 에 만드는 화면이 없다. 서버에 빠진 코드가 있으면 여기서
- * 만든다 — 장소는 존재하는 category_id 가 있어야 생긴다. 다 있으면 요청을 안 보낸다.
- * 만든 순서대로 id 가 매겨져 화면 순서도 CATEGORY_SEED 순서가 된다.
- */
-async function ensureCategories(existing: Category[]): Promise<Category[]> {
-  const have = new Set(existing.map((c) => c.code))
-  const created: Category[] = []
-  // 차례로 만든다 — 동시에 보내면 id 순서가 SEED 순서와 어긋날 수 있다
-  for (const seed of CATEGORY_SEED) {
-    if (!have.has(seed.code)) created.push(await createCategory(seed))
-  }
-  return [...existing, ...created].sort((a, b) => a.id - b.id)
-}
-
 export async function loadCatalog(): Promise<void> {
-  const categories = await ensureCategories(await fetchCategories())
+  const categories = await fetchCategories()
+  assertAllCategories(categories)
   const [places, menus] = await Promise.all([fetchPlaces(), fetchMenus()])
   replaceAll(CATEGORIES, categories)
   replaceAll(PLACES, places)
