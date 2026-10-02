@@ -33,12 +33,18 @@ interface SheetProps {
   hidden?: boolean
   /** 1단계에서 보이는 높이. 손잡이 줄을 포함하고 홈 인디케이터 여백은 따로 더한다. 안 주면 1단계 없이 끝까지 펼쳐 연다 */
   peekHeight?: number
+  /** 뒤로 가기로 닫는 기록을 시트가 쌓는다. 주소로 기록을 따로 관리하는 곳은 꺼서 두 곳이 함께 되돌리지 않게 한다 */
+  closeOnBack?: boolean
   children: ReactNode
 }
 
 /** 두 단계로 올라오는 시트. 1단계는 뒤 화면을 막지 않고, 2단계는 화면을 덮어 닫아야 뒤를 만질 수 있다. peekHeight 가 없으면 2단계만 있다 */
-export function BottomSheet({ open, ...props }: SheetProps & { open: boolean }) {
-  useCloseOnBack(open, props.onClose)
+export function BottomSheet({
+  open,
+  closeOnBack = true,
+  ...props
+}: SheetProps & { open: boolean }) {
+  useCloseOnBack(open && closeOnBack, props.onClose)
 
   return (
     <Dialog.Root open={open} onOpenChange={(next) => !next && props.onClose()} modal={false}>
@@ -95,8 +101,8 @@ function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetProp
     if (step === 'peek') bodyRef.current?.scrollTo({ top: 0 })
   }, [step])
 
-  const handleDragEnd = (_: unknown, { velocity }: PanInfo) => {
-    const projected = y.get() + velocity.y * PROJECTION
+  const settle = (velocityY: number) => {
+    const projected = y.get() + velocityY * PROJECTION
     // 2단계에서 세게 내려도 한 번에 닫히지 않고 1단계에 멈춘다. 1단계가 없으면 바로 닫힌다
     const stops = !hasPeek ? [0, height] : step === 'full' ? [0, peekY] : [0, peekY, height]
     const nearest = stops.reduce((a, b) =>
@@ -108,6 +114,79 @@ function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetProp
     if (next === step) animate(y, target, SLIDE)
     else setStep(next)
   }
+  const settleRef = useRef(settle)
+  useLayoutEffect(() => {
+    settleRef.current = settle
+  })
+
+  useEffect(() => {
+    const body = bodyRef.current
+    if (step !== 'full' || !body || !height) return
+    let startX = 0
+    let startY = 0
+    let decided = false
+    let originY: number | null = null
+    let originSheetY = 0
+    let samples: { y: number; t: number }[] = []
+
+    // 두 번째 손가락이 닿으면 끌던 시트를 제자리에 붙이고 이 손짓은 끝까지 브라우저에 맡긴다
+    const abandon = () => {
+      if (originY !== null) settleRef.current(0)
+      originY = null
+      decided = true
+    }
+    const onTouchStart = (event: TouchEvent) => {
+      if (event.touches.length > 1) return abandon()
+      startX = event.touches[0].clientX
+      startY = event.touches[0].clientY
+      decided = false
+      originY = null
+      samples = []
+    }
+    // 본문 맨 위에서 아래로 당기면 브라우저 스크롤·당겨서 새로고침 대신 시트가 손가락을 이어받는다
+    const onTouchMove = (event: TouchEvent) => {
+      // 본문 밖에 닿은 두 번째 손가락은 본문 touchstart 로 오지 않아 여기서도 잡는다
+      if (event.touches.length > 1) return abandon()
+      const { clientX, clientY } = event.touches[0]
+      if (originY === null) {
+        // 첫 움직임에서 한 번만 정한다. 가로 손짓(사진 넘기기)·막을 수 없는 손짓은 끝까지 브라우저에 맡긴다
+        if (decided) return
+        decided = true
+        const dy = clientY - startY
+        if (!event.cancelable || body.scrollTop > 0 || dy <= 0 || Math.abs(clientX - startX) > dy)
+          return
+        y.stop()
+        originY = clientY
+        originSheetY = y.get()
+      }
+      event.preventDefault()
+      y.set(Math.min(Math.max(originSheetY + clientY - originY, 0), height))
+      const now = event.timeStamp
+      samples = [...samples.filter((s) => now - s.t < 100), { y: clientY, t: now }]
+    }
+    const onTouchEnd = (event: TouchEvent) => {
+      if (originY === null) return
+      originY = null
+      // 멈췄다 떼면 속도 0 이 되게 뗀 시각 기준으로 최근 기록만 쓴다. 취소된 손짓은 관성 없이 붙인다
+      const recent = samples.filter((s) => event.timeStamp - s.t < 100)
+      const first = recent[0]
+      const last = recent.at(-1)
+      const elapsed = first && last ? last.t - first.t : 0
+      const moving = event.type === 'touchend' && first && last && elapsed > 0
+      settleRef.current(moving ? ((last.y - first.y) / elapsed) * 1000 : 0)
+    }
+
+    body.addEventListener('touchstart', onTouchStart, { passive: true })
+    body.addEventListener('touchmove', onTouchMove, { passive: false })
+    body.addEventListener('touchend', onTouchEnd)
+    body.addEventListener('touchcancel', onTouchEnd)
+    return () => {
+      body.removeEventListener('touchstart', onTouchStart)
+      body.removeEventListener('touchmove', onTouchMove)
+      body.removeEventListener('touchend', onTouchEnd)
+      body.removeEventListener('touchcancel', onTouchEnd)
+    }
+  }, [step, height, y])
 
   return (
     <>
@@ -143,7 +222,7 @@ function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetProp
           dragConstraints={{ top: 0, bottom: height }}
           dragElastic={0}
           dragMomentum={false}
-          onDragEnd={handleDragEnd}
+          onDragEnd={(_, { velocity }: PanInfo) => settle(velocity.y)}
           onWheel={(event) => step === 'peek' && event.deltaY > 0 && setStep('full')}
           className="fixed inset-x-0 bottom-0 z-50 mx-auto flex h-[80dvh] max-w-(--app-max-width) flex-col rounded-t-[20px] bg-bg bg-linear-to-b from-bg/20 to-primary/20 text-text shadow-[0_0_4px_var(--color-sheet-edge)]"
         >
