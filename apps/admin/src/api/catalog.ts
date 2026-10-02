@@ -55,7 +55,11 @@ export interface PlaceWrite {
  * 어긋나 "운영 중" 판정이 전부 틀린다.
  */
 function toPlace(raw: Place): Place {
-  return { ...raw, start_hour: toKstIso(raw.start_hour), end_hour: toKstIso(raw.end_hour) }
+  return {
+    ...raw,
+    start_hour: raw.start_hour && toKstIso(raw.start_hour),
+    end_hour: raw.end_hour && toKstIso(raw.end_hour),
+  }
 }
 
 export async function fetchPlaces(): Promise<Place[]> {

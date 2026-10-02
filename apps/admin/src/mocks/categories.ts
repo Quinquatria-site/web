@@ -53,12 +53,4 @@ export const CATEGORY_SEED: CategoryWrite[] = [
       { language_code: 'CHN', name: '医务室' },
     ],
   },
-  {
-    code: 'BRACELET',
-    translations: [
-      { language_code: 'KO', name: '팔찌 수령소' },
-      { language_code: 'EN', name: 'Bracelet Pickup' },
-      { language_code: 'CHN', name: '手环领取处' },
-    ],
-  },
 ]

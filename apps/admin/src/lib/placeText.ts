@@ -19,7 +19,7 @@ export function detailOf(place: Place): string {
   const college = findTranslation(place.translations, 'KO')?.host_college
   return [
     `${label} ${place.category_sequence}번`,
-    `${hhmm(place.start_hour)}~${hhmm(place.end_hour)}`,
+    place.start_hour && `${hhmm(place.start_hour)}~${place.end_hour ? hhmm(place.end_hour) : ''}`,
     college,
   ]
     .filter(Boolean)

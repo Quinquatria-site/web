@@ -5,8 +5,8 @@ import type { PlaceBase, PlaceText } from '@quen/schema/entities/place'
 import { formatSeoulTime } from '@/shared/time/format-seoul-time'
 import type { MapPoint } from './map-coords'
 
-/** 지도에 찍는 장소 종류. 서버 카테고리 코드와 같다 */
-export type PlaceCode = CategoryCode
+/** 지도에 찍는 장소 종류. 서버 카테고리 코드에 프론트에만 둔 팔찌 수령처를 더한다 */
+export type PlaceCode = CategoryCode | 'BRACELET'
 
 /** 장소에 딸린 메뉴 한 건 */
 export type PlaceMenu = Localized<MenuBase, MenuText>

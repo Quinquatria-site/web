@@ -105,11 +105,16 @@ function PlaceEditForm() {
   // 서버를 다녀오는 동안 버튼을 막는다. 두 번 누르면 장소가 두 곳 생긴다
   const [pending, setPending] = useState(false)
 
-  const [date, setDate] = useState<string>(editing ? dateOf(editing.start_hour) : FESTIVAL_DATES[0])
-  const [start, setStart] = useState<Hour>(
-    editing ? hourOf(editing.start_hour) : { hour: 10, minute: 0 },
+  // 운영시간이 비어 있는 장소는 새 장소와 같은 기본값으로 채워 보여 준다
+  const [date, setDate] = useState<string>(
+    editing?.start_hour ? dateOf(editing.start_hour) : FESTIVAL_DATES[0],
   )
-  const [end, setEnd] = useState<Hour>(editing ? hourOf(editing.end_hour) : { hour: 17, minute: 0 })
+  const [start, setStart] = useState<Hour>(
+    editing?.start_hour ? hourOf(editing.start_hour) : { hour: 10, minute: 0 },
+  )
+  const [end, setEnd] = useState<Hour>(
+    editing?.end_hour ? hourOf(editing.end_hour) : { hour: 17, minute: 0 },
+  )
 
   const initialFields: Record<string, string> = {
     sequence: editing ? String(editing.category_sequence) : '',

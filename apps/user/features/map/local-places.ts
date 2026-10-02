@@ -30,9 +30,9 @@ export function getLocalPlaces(locale: Locale): MapPlace[] {
       name: braceletPickup.name,
       host_college: '',
       description: braceletPickup.description,
-      // 시각만 보여 주니 날짜는 축제 첫날로 둔다. 끝나는 시각이 없어 end_hour 는 비운다
+      // 시각만 보여 주니 날짜는 축제 첫날로 둔다. 끝나는 시각이 없어 end_hour 는 null 이다
       start_hour: '2026-10-07T15:00:00+09:00',
-      end_hour: '',
+      end_hour: null,
       place_image_uri: ['/places/minerva-complex.jpg'],
       menus: [],
       language_code: API_LANGUAGE[locale],
