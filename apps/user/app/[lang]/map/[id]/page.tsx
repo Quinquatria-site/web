@@ -11,6 +11,8 @@ import { assetUrl } from '@/shared/photo/asset-url'
 /** 장소 id 로 정적 생성한다. 언어는 레이아웃이 곱한다 */
 export async function generateStaticParams() {
   const places = await getPlaces()
+  // 빈 배열이면 Next 가 다른 언어까지 미리 굽지 않아서, 없는 id 0 을 대신 준다. 0 은 목록에 없어 404 로 간다
+  if (places.length === 0) return [{ id: '0' }]
   return places.map(({ id }) => ({ id: String(id) }))
 }
 
