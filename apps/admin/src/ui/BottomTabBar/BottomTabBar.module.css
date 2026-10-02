@@ -27,6 +27,8 @@
   text-decoration: none;
 }
 
+/* 색만 바꾸면 구분이 약하다. 아이콘은 채운 변형으로 바뀌고(TSX) 글자는 굵어진다 */
 .active {
+  font-weight: var(--seed-font-weight-bold);
   color: var(--seed-color-fg-brand);
 }

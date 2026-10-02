@@ -1,22 +1,32 @@
 import {
+  IconBoxFlapFill,
   IconBoxFlapLine,
+  IconCalendarFill,
   IconCalendarLine,
   IconGearLine,
+  IconHouseFill,
   IconHouseLine,
+  IconMapFill,
   IconMapLine,
+  IconMegaphoneFill,
   IconMegaphoneLine,
 } from '@karrotmarket/react-monochrome-icon'
-import { Link, Outlet, useMatches } from 'react-router'
-import { AppBar, BottomTabBar, type BottomTab } from '../ui'
+import { Link, Outlet, useLocation, useMatches, useNavigate } from 'react-router'
+import { SnackbarAvoidOverlap, SnackbarProvider } from 'seed-design/ui/snackbar'
+import { ERROR_LOG_HASH, type ErrorLogNavState } from '../lib/errorLog'
+import { AppBar, BottomTabBar, ErrorBanner, type BottomTab } from '../ui'
 import styles from './AppLayout.module.css'
+
+/** 전체 화면 오버레이가 포털로 붙는 곳. PhotoViewer 가 쓴다 */
+export const PORTAL_HOST_ID = 'app-page'
 
 /** 관리 대상 네 도메인에 현황판을 더한 다섯. 폰 탭바는 이 이상 늘리지 않는다. */
 const TABS: BottomTab[] = [
-  { to: '/', label: '홈', icon: IconHouseLine },
-  { to: '/places', label: '장소', icon: IconMapLine },
-  { to: '/performances', label: '공연', icon: IconCalendarLine },
-  { to: '/notices', label: '공지', icon: IconMegaphoneLine },
-  { to: '/lost-items', label: '분실물', icon: IconBoxFlapLine },
+  { to: '/', label: '홈', icon: IconHouseLine, activeIcon: IconHouseFill },
+  { to: '/places', label: '장소', icon: IconMapLine, activeIcon: IconMapFill },
+  { to: '/performances', label: '공연', icon: IconCalendarLine, activeIcon: IconCalendarFill },
+  { to: '/notices', label: '공지', icon: IconMegaphoneLine, activeIcon: IconMegaphoneFill },
+  { to: '/lost-items', label: '분실물', icon: IconBoxFlapLine, activeIcon: IconBoxFlapFill },
 ]
 
 export interface RouteHandle {
@@ -35,6 +45,8 @@ export interface RouteHandle {
  */
 export function AppLayout() {
   const matches = useMatches()
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
   const handle = [...matches]
     .reverse()
     .map((match) => match.handle as RouteHandle | undefined)
@@ -48,24 +60,44 @@ export function AppLayout() {
   )
 
   const bare = handle?.bare ?? false
+  // 로그인 화면에서는 눌러도 갈 곳이 없고(설정은 로그인 뒤다), 설정 화면은 이미
+  // 오류 기록을 보고 있다
+  const bannerEnabled = !bare && pathname !== '/settings'
 
   return (
-    <div className={styles.page}>
-      <div className={styles.viewport}>
-        {!bare && (
-          <AppBar
-            title={handle?.title ?? ''}
-            back={handle?.back}
-            action={handle?.hideTabs ? undefined : settingsAction}
+    <SnackbarProvider>
+      {/* PhotoViewer 가 여기로 포털된다. 시트처럼 transform 을 쓰는 조상 안에서는
+          position: fixed 의 기준이 그 조상이 되어 화면 전체를 덮지 못한다 */}
+      <div id={PORTAL_HOST_ID} className={styles.page}>
+        <div className={styles.viewport}>
+          <ErrorBanner
+            enabled={bannerEnabled}
+            onOpen={(entry) => {
+              const state: ErrorLogNavState = { highlight: entry.id }
+              navigate(`/settings#${ERROR_LOG_HASH}`, { state })
+            }}
           />
-        )}
-        {/* bare 여부와 무관하게 같은 스크롤 컨테이너를 쓴다.
+          {!bare && (
+            <AppBar
+              title={handle?.title ?? ''}
+              back={handle?.back}
+              action={handle?.hideTabs ? undefined : settingsAction}
+            />
+          )}
+          {/* bare 여부와 무관하게 같은 스크롤 컨테이너를 쓴다.
             로그인 화면도 작은 기기에서는 스크롤이 필요하다 */}
-        <main className={styles.body}>
-          <Outlet />
-        </main>
-        {!bare && !handle?.hideTabs && <BottomTabBar tabs={TABS} />}
+          <main className={styles.body}>
+            <Outlet />
+          </main>
+          {/* 스낵바는 화면 맨 아래에 뜨는데 탭바가 거기 있다. 가려서 실행취소를 못 누르고
+              탭도 못 누른다. AvoidOverlap 이 탭바 높이를 재서 그 위로 띄운다 */}
+          {!bare && !handle?.hideTabs && (
+            <SnackbarAvoidOverlap>
+              <BottomTabBar tabs={TABS} />
+            </SnackbarAvoidOverlap>
+          )}
+        </div>
       </div>
-    </div>
+    </SnackbarProvider>
   )
 }

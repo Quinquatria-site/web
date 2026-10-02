@@ -31,3 +31,97 @@
 .footer {
   margin-top: auto;
 }
+
+/* 남은 시간. 본문보다 한 단계 굵게 — 이 섹션이 말하는 것은 이 한 줄이다 */
+.sessionLine {
+  margin: 0;
+  font-size: var(--seed-font-size-t4);
+  font-weight: var(--seed-font-weight-medium);
+  line-height: var(--seed-line-height-t5);
+  color: var(--seed-color-fg-neutral);
+}
+
+.soon {
+  color: var(--seed-color-fg-warning);
+}
+
+.logHeader {
+  display: flex;
+  gap: var(--seed-dimension-x2);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logActions {
+  display: flex;
+  gap: var(--seed-dimension-x1);
+}
+
+/* 작은 창. 오류가 쌓여도 설정 화면 전체를 밀어내지 않게 높이를 가둔다 */
+.log {
+  display: flex;
+  flex-direction: column;
+  max-block-size: 260px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--seed-color-bg-layer-basement);
+  border-radius: var(--seed-radius-r2);
+}
+
+.logRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--seed-dimension-x2) var(--seed-dimension-x3);
+  border-bottom: 1px solid var(--seed-color-stroke-neutral-weak);
+}
+
+.logRow:last-child {
+  border-bottom: 0;
+}
+
+/* 상단 오류 알림을 눌러 왔을 때 그 항목. 잠깐 칠했다가 바랜다 */
+.highlighted {
+  animation: highlight-fade 2s ease-out;
+}
+
+@keyframes highlight-fade {
+  from,
+  30% {
+    background: var(--seed-color-bg-critical-weak);
+  }
+}
+
+.logLine {
+  display: flex;
+  gap: var(--seed-dimension-x2);
+  align-items: baseline;
+}
+
+.logTime {
+  font-size: var(--seed-font-size-t2);
+  font-variant-numeric: tabular-nums;
+  color: var(--seed-color-fg-neutral-subtle);
+}
+
+.logBadge {
+  font-size: var(--seed-font-size-t2);
+  font-weight: var(--seed-font-weight-bold);
+  color: var(--seed-color-fg-critical);
+}
+
+.logTitle {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: var(--seed-font-size-t2);
+  color: var(--seed-color-fg-neutral);
+  overflow-wrap: anywhere;
+}
+
+.logMessage {
+  font-size: var(--seed-font-size-t2);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
+  overflow-wrap: anywhere;
+}

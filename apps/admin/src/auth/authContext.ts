@@ -1,9 +1,14 @@
 import { createContext, use } from 'react'
 
+/** ok: 들어간다. invalid: 코드가 틀렸다. unavailable: 서버에 닿지 못했다 */
+export type LoginResult = 'ok' | 'invalid' | 'unavailable'
+
 export interface AuthValue {
   isAuthenticated: boolean
-  /** 맞으면 true. 호출부가 오류 표시를 정한다 */
-  login: (password: string) => Promise<boolean>
+  /** 토큰 만료 시각(epoch ms). 로그인 전이면 null */
+  expiresAt: number | null
+  /** 호출부가 결과에 따라 오류 표시를 정한다 */
+  login: (code: string) => Promise<LoginResult>
   logout: () => void
 }
 

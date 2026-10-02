@@ -1,0 +1,37 @@
+/* 공지 편집 화면에만 있는 것. 폼의 뼈대(.screen·.section·.footer 등)는
+   PerformanceEditRoute.module.css 를 그대로 쓰고, 여기에는 종류 설명 블록만 둔다. */
+
+/*
+ * 상시/일반이 각각 무엇인지 두 줄로 세운다. 한 문단에 몰아 쓰면 회색 덩어리가
+ * 되어 아무도 안 읽는데, 이 화면에서 가장 잘못 고르기 쉬운 값이 종류다.
+ * 라벨을 왼쪽 열에 세워 세그먼트 버튼과 눈으로 이어지게 한다.
+ */
+.types {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--seed-dimension-x2_5);
+  row-gap: var(--seed-dimension-x1);
+  align-items: baseline;
+}
+
+.typeLabel {
+  font-size: var(--seed-font-size-t2);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral);
+}
+
+.typeText {
+  font-size: var(--seed-font-size-t2);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+/* 등록 시각. 종류 설명과 다른 이야기라 한 줄 띄워 갈라놓는다 */
+.meta {
+  margin: 0;
+  padding-top: var(--seed-dimension-x1);
+  font-size: var(--seed-font-size-t2);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-subtle);
+}

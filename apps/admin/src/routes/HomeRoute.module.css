@@ -1,29 +1,140 @@
+/* 회색 바닥 위에 흰 카드를 얹어 블록마다 경계를 세운다.
+
+   SEED 에는 카드 컴포넌트가 없고 divider 레시피도 없다. 대신 층위를 뜻하는
+   면 토큰 쌍(basement ↔ default)이 있어서 그걸로 만든다. 그림자는 넣지
+   않는다 — SEED 에서 --seed-shadow-* 를 쓰는 레시피는 FAB·menu·select 처럼
+   실제로 떠 있는 것뿐이라, 정적인 카드에 쓰면 관례를 벗어난다.
+
+   카드에 좌우 padding 을 주지 않는 것이 핵심이다. ListHeader·ListItem 이
+   이미 자기 global-gutter(16px)를 갖고 있어서, 카드가 또 주면 거터가 두 겹으로
+   쌓여 제목이 본문보다 안쪽으로 들어간다. 거터를 가진 것은 그대로 두고,
+   없는 것(sectionEmpty)에만 같은 값을 직접 준다.
+
+   맨 위 타일(StatTile)과 바로가기(QuickAction)는 카드가 아니라 제 패딩을 갖는
+   다른 종류다 — 안에 거터를 가진 레시피가 없어서다. 각 컴포넌트 CSS 참고.
+
+   그래서 선은 둘이다 — 카드 밖 16px(헤더·경고·카드 좌변), 카드 안 16px. */
 .screen {
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: var(--seed-dimension-x5);
+  gap: var(--seed-dimension-x3);
   padding: var(--seed-dimension-x4);
+  background: var(--seed-color-bg-layer-basement);
 }
 
-.section {
+/* 국면과 기준 시각. 카드 밖에 둔다 — 화면 전체에 프레임을 씌우는 줄이라
+   한 블록으로 갇히면 오히려 안쪽 정보처럼 읽힌다 */
+.header {
   display: flex;
   flex-direction: column;
-  gap: var(--seed-dimension-x2);
+  gap: var(--seed-dimension-x1);
+  padding-block: var(--seed-dimension-x1);
 }
 
-.sectionTitle {
-  margin: 0;
-  font-size: var(--seed-font-size-t4);
+.headerLine {
+  display: flex;
+  gap: var(--seed-dimension-x2);
+  align-items: center;
+}
+
+.headline {
+  font-size: var(--seed-font-size-t6);
   font-weight: var(--seed-font-weight-bold);
-  line-height: var(--seed-line-height-t5);
+  line-height: var(--seed-line-height-t6);
   color: var(--seed-color-fg-neutral);
 }
 
-.sectionBody {
+.headerDetail {
   margin: 0;
   font-size: var(--seed-font-size-t3);
   font-weight: var(--seed-font-weight-regular);
   line-height: var(--seed-line-height-t4);
   color: var(--seed-color-fg-neutral-muted);
+}
+
+/* 제목·배지 다음 오른쪽 끝. 테스트 시각으로 볼 때만 나타난다 */
+.headerAction {
+  margin-left: auto;
+}
+
+/* 오류·경고 요약 칩. 칩은 inline 이라 줄 전체로 늘어나지 않게 왼쪽에 붙인다.
+   0 건이면 컴포넌트가 아무것도 그리지 않아 빈 칸이 남지 않는다 */
+.alerts {
+  display: flex;
+}
+
+/* 심각도는 칩 바탕색으로 준다. SEED Chip 에 tone 이 없어 outlineStrong 위에 덮어쓴다.
+   레시피가 칩·라벨·아이콘에 각각 색을 박아 두어 클래스를 겹쳐 명시도로 이긴다
+   (눌림은 레시피가 (0,3,0) 이라 세 번).
+   글자는 fg-*-contrast (palette 900) — weak 바탕 위에서 라이트·다크 모두 7:1 이상.
+   포커스 링은 레시피의 stroke-focus-ring 을 그대로 쓴다 */
+.alertsChip.alertsCritical {
+  --alerts-bg: var(--seed-color-bg-critical-weak);
+  --alerts-bg-pressed: var(--seed-color-bg-critical-weak-pressed);
+  --alerts-stroke: var(--seed-color-stroke-critical-weak);
+  --alerts-fg: var(--seed-color-fg-critical-contrast);
+}
+
+.alertsChip.alertsWarning {
+  --alerts-bg: var(--seed-color-bg-warning-weak);
+  --alerts-bg-pressed: var(--seed-color-bg-warning-weak-pressed);
+  --alerts-stroke: var(--seed-color-stroke-warning-weak);
+  --alerts-fg: var(--seed-color-fg-warning-contrast);
+}
+
+.alertsChip.alertsChip {
+  background: var(--alerts-bg);
+  box-shadow: inset 0 0 0 1px var(--alerts-stroke);
+  --seed-icon-color: var(--alerts-fg);
+}
+
+.alertsChip.alertsChip.alertsChip:is(:active, [data-active]) {
+  background: var(--alerts-bg-pressed);
+}
+
+/* 터치 화면에서 hover 가 눌린 채 남지 않게 레시피처럼 hover 가능한 기기에만 */
+@media (hover: hover) {
+  .alertsChip.alertsChip.alertsChip:is(:hover, [data-hover]) {
+    background: var(--alerts-bg-pressed);
+  }
+}
+
+.alertsChip.alertsChip > * {
+  color: var(--alerts-fg);
+}
+
+/* 카드 한 장. 좌우 padding 이 없는 것은 위 주석의 이유다 */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--seed-dimension-x1);
+  padding-block: var(--seed-dimension-x2);
+  background: var(--seed-color-bg-layer-default);
+  border-radius: var(--seed-radius-r3);
+}
+
+/* ListHeader 레시피가 space-between 이라 오른쪽으로 밀려 붙는다 */
+.count {
+  font-size: var(--seed-font-size-t4);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+/* 0 건은 나쁜 소식이 아니라 좋은 소식이라 목록 대신 문장으로 말한다.
+   거터가 없는 요소라 목록과 같은 값을 직접 준다 */
+.sectionEmpty {
+  margin: 0;
+  padding: var(--seed-dimension-x1) var(--seed-dimension-x4) var(--seed-dimension-x2);
+  font-size: var(--seed-font-size-t3);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+/* 행 오른쪽 셰브런. 누를 수 있다는 표시일 뿐이라 조용한 색이다 */
+.chevron {
+  display: inline-flex;
+  color: var(--seed-color-fg-neutral-subtle);
 }

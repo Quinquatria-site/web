@@ -1,0 +1,68 @@
+/* 카드가 아니라 한 줄이다. 홈의 header 와 같은 층위라 면도 모서리도 주지 않고,
+   좌우 여백은 화면 바깥 거터(.screen 의 padding)를 그대로 쓴다.
+
+   좁은 폰에서 두 서버 이름이 한 줄에 안 들어가면 줄바꿈한다 — 가로 스크롤을
+   만들지 않는 것은 홈의 chips 와 같은 규칙이다. */
+.strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--seed-dimension-x1) var(--seed-dimension-x3);
+  align-items: center;
+  font-size: var(--seed-font-size-t2);
+  font-weight: var(--seed-font-weight-regular);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
+}
+
+.item {
+  display: flex;
+  gap: var(--seed-dimension-x1);
+  align-items: center;
+}
+
+/* 점은 상태의 장식이다. 글자가 이미 상태를 말하므로 읽어줄 필요가 없다.
+
+   색을 상태마다 달리 두는 것은 줄을 읽기 전에 훑어보기 위해서다. 다만 색이
+   유일한 신호가 되면 안 되므로(색각 이상·흑백 출력) 글자는 그대로 상태를
+   말한다. 점은 그 글자를 빨리 찾게 해주는 표식이다. */
+.dot {
+  width: 6px;
+  height: 6px;
+  background: var(--seed-color-palette-gray-500);
+  border-radius: 50%;
+}
+
+/* 떠 있고 쓸 만하다 */
+.dotOk {
+  background: var(--seed-color-fg-positive);
+}
+
+/* 응답은 왔는데 오류 상태다. 아예 안 오는 것과 구분해야 어디를 볼지 갈린다 —
+   주황은 서버 탓, 빨강은 연결 탓으로 먼저 의심하게 된다 */
+.dotWarn {
+  background: var(--seed-color-fg-warning);
+}
+
+/* 응답 자체가 없다 */
+.dotBad {
+  background: var(--seed-color-fg-critical);
+}
+
+/* 주소를 안 넣은 상태. 고장이 아니라 아직 모르는 것이라 제일 조용하다 */
+.dotIdle {
+  background: var(--seed-color-fg-neutral-subtle);
+}
+
+.bad {
+  color: var(--seed-color-fg-critical);
+}
+
+/* 확인 시각. 정상일 때만 나오고, 두 서버 뒤로 물러나 앉는다 */
+.time {
+  color: var(--seed-color-fg-neutral-subtle);
+}
+
+/* 문제가 있을 때만 나타나는 버튼. 오른쪽 끝으로 민다 */
+.action {
+  margin-left: auto;
+}

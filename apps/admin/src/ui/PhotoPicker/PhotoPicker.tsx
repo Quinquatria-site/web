@@ -1,0 +1,155 @@
+import { IconCameraLine, IconXmarkLine } from '@karrotmarket/react-monochrome-icon'
+import { useRef, useState } from 'react'
+import type { ImageResourceType } from '@quen/schema/common/image'
+import { uploadImage } from '../../api/uploads'
+import { imageSrc } from '../../lib/imageSrc'
+import { PhotoViewer } from '../PhotoViewer'
+import styles from './PhotoPicker.module.css'
+
+/**
+ * 명세 §4.5 가 정한 업로드 제약이다. 잠정값이었던 5MB · image/* 를 실제 계약으로
+ * 맞췄다.
+ *
+ * 화면에서 먼저 막는 이유는 presigned URL 발급이 size 와 content_type 을 본문에
+ * 싣기 때문이다. 여기서 거르지 않으면 서버까지 갔다가 IMAGE_TOO_LARGE 나
+ * INVALID_IMAGE 로 돌아온다 — 고르자마자 알려주는 편이 낫다.
+ */
+const MAX_BYTES = 10 * 1024 * 1024
+
+/**
+ * 허용 MIME (§4.5). enum 에 있는 셋뿐이라 image/* 로는 넓다 — gif·heic 는
+ * 골라져도 업로드에서 거절당한다.
+ */
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+
+const isAllowed = (file: File) => ALLOWED_TYPES.includes(file.type)
+
+export interface PhotoPickerProps {
+  /** 이미지 S3 key 목록. 고른 순서가 그대로 저장 순서다 */
+  value: string[]
+  onChange: (next: string[]) => void
+  /** 장소는 여러 장, 메뉴는 1 */
+  max?: number
+  /** 접근성 레이블에 쓴다 */
+  label: string
+  /** 어느 리소스의 사진인지. 서버가 key 접두사를 정하고, 저장 때 맞는지 확인한다 */
+  resourceType: ImageResourceType
+}
+
+/**
+ * 사진 고르기. 썸네일 + 삭제 + 추가 타일.
+ *
+ * SEED 의 AttachmentInput 을 쓰지 않는다 — 그 목록 단위가 File 인데, 이미 저장된
+ * 사진은 S3 key 라 File 이 없다. 기존 사진과 새로 고른 사진이 두 목록으로 갈리므로
+ * 목록은 여기서 들고 파일 선택만 숨긴 input 으로 받는다.
+ *
+ * 폼 상태에 File 을 담지 않는다. 고르는 즉시 S3 에 올려 key 로 바꾼다(api/uploads.ts) —
+ * 그래야 명세의 string[] 계약이 화면에서도 그대로 유지된다.
+ */
+export function PhotoPicker({ value, onChange, max = 10, label, resourceType }: PhotoPickerProps) {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [opened, setOpened] = useState<string | null>(null)
+  // 폰에서 10MB 는 몇 초 걸린다. 표시가 없으면 다시 누른다
+  const [uploading, setUploading] = useState(false)
+
+  const room = max - value.length
+
+  const pick = async (files: FileList | null) => {
+    if (!files || files.length === 0) return
+    setError(null)
+
+    const picked = [...files]
+    const tooBig = picked.filter((f) => f.size > MAX_BYTES)
+    const wrongType = picked.filter((f) => !isAllowed(f))
+    const usable = picked.filter((f) => f.size <= MAX_BYTES && isAllowed(f))
+
+    const reasons: string[] = []
+    if (wrongType.length > 0) reasons.push(`JPG·PNG·WEBP 가 아닌 파일 ${wrongType.length}개`)
+    if (tooBig.length > 0) reasons.push(`10MB 가 넘는 파일 ${tooBig.length}개`)
+    if (usable.length > room) reasons.push(`최대 ${max}장까지라 넘치는 ${usable.length - room}개`)
+
+    // 하나가 실패해도 나머지는 넣는다. allSettled 도 순서를 보존해 고른 순서가 저장 순서다
+    setUploading(true)
+    const results = await Promise.allSettled(
+      usable.slice(0, room).map((file) => uploadImage(file, resourceType)),
+    )
+    setUploading(false)
+    const keys = results.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : []))
+    const failed = results.length - keys.length
+    // 실패 사유는 client·uploads 가 설정 › 오류 기록에 남겼다
+    if (failed > 0) reasons.push(`업로드에 실패한 파일 ${failed}개`)
+
+    if (reasons.length > 0) setError(`${reasons.join(', ')}를 빼고 넣었습니다.`)
+    if (keys.length > 0) onChange([...value, ...keys])
+  }
+
+  return (
+    <div className={styles.picker}>
+      <div className={styles.grid}>
+        {value.map((key, index) => (
+          <div key={key} className={styles.thumb}>
+            {/* 삭제 버튼과 형제다 — 버튼 안에 버튼을 넣을 수 없다 */}
+            <button
+              type="button"
+              className={styles.open}
+              aria-label={`${label} 사진 ${index + 1} 크게 보기`}
+              onClick={() => setOpened(key)}
+            >
+              <img
+                className={styles.photo}
+                src={imageSrc(key)}
+                alt={`${label} 사진 ${index + 1}`}
+              />
+            </button>
+            <button
+              type="button"
+              className={styles.remove}
+              aria-label={`${label} 사진 ${index + 1} 삭제`}
+              onClick={() => onChange(value.filter((k) => k !== key))}
+            >
+              <IconXmarkLine width={16} height={16} />
+            </button>
+          </div>
+        ))}
+
+        {room > 0 && (
+          <button
+            type="button"
+            className={styles.add}
+            disabled={uploading}
+            onClick={() => inputRef.current?.click()}
+            aria-label={`${label} 사진 추가`}
+          >
+            <IconCameraLine width={24} height={24} />
+            <span className={styles.addLabel}>
+              {uploading ? '올리는 중…' : `${value.length}/${max}`}
+            </span>
+          </button>
+        )}
+      </div>
+
+      {error && <p className={styles.error}>{error}</p>}
+
+      <PhotoViewer
+        key={opened ?? 'closed'}
+        uri={opened}
+        onClose={() => setOpened(null)}
+        label={label}
+      />
+
+      <input
+        ref={inputRef}
+        className={styles.input}
+        type="file"
+        accept={ALLOWED_TYPES.join(',')}
+        multiple={max > 1}
+        onChange={(event) => {
+          void pick(event.target.files)
+          // 같은 파일을 연달아 고를 수 있게 비운다. 안 비우면 change 가 안 뜬다
+          event.target.value = ''
+        }}
+      />
+    </div>
+  )
+}

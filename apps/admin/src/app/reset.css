@@ -26,3 +26,24 @@ body {
 html {
   background: var(--seed-color-bg-layer-basement);
 }
+
+/* 제목의 브라우저 기본 여백을 지운다.
+
+   SEED 의 ListHeader 는 제목의 여백을 자기 padding 으로 잡는다
+   (list-header 레시피의 padding-block: x2). 그런데 as="h2" 로 렌더되므로
+   브라우저가 주는 h2 { margin-block: 0.83em } 이 그 위에 그대로 남는다.
+   레시피 글자가 t4(14px)라 위아래 각 11.6px 이고, 화면들이 제목을 flex
+   컨테이너 안에 두어 margin collapse 도 일어나지 않는다. 그래서 CSS 에 적은
+   섹션 간격과 실제로 보이는 간격이 달라지고, 제목이 있는 섹션만 커진다.
+
+   위에서 경계한 box-sizing 류의 광범위한 초기화와는 성격이 다르다.
+   SEED 레시피 중 UA 의 제목 margin 에 기대는 것은 없다 — 여백은 전부
+   자기 padding 으로 잡는다. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}

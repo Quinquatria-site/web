@@ -9,6 +9,10 @@ import './app/typography.css'
 import './app/brand-theme.css'
 import { router } from './app/router'
 import { AuthProvider } from './auth/AuthProvider'
+import { installGlobalErrorHandlers } from './lib/errorLog'
+
+// 첫 렌더보다 먼저. 렌더 중 터진 오류도 남기려면 그 전에 걸려 있어야 한다
+installGlobalErrorHandlers()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -1,0 +1,19 @@
+@theme inline {
+  /* 랜딩 화살표 꺾쇠가 위에서 내려오며 나타난다. 지연은 꺾쇠마다 변수로 받고, inline 이어야 :root 에서 0s 로 굳지 않는다 */
+  --animate-cue-in: cue-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) var(--cue-in-delay, 0s) both;
+  /* 랜딩 화살표 꺾쇠 밝기가 1.8초마다 옅어졌다 돌아온다 */
+  --animate-cue-pulse: cue-pulse 1.8s ease-in-out var(--cue-pulse-delay, 0s) infinite;
+
+  @keyframes cue-in {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes cue-pulse {
+    50% {
+      opacity: 0.3;
+    }
+  }
+}

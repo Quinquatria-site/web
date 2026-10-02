@@ -1,22 +1,28 @@
-import type { ComponentType } from 'react'
+import type { ComponentType, Ref } from 'react'
 import { NavLink } from 'react-router'
 import styles from './BottomTabBar.module.css'
+
+type TabIcon = ComponentType<{ width?: number; height?: number }>
 
 export interface BottomTab {
   to: string
   label: string
-  icon: ComponentType<{ width?: number; height?: number }>
+  icon: TabIcon
+  /** 활성일 때 쓰는 채운 변형. 색만으로는 지금 어느 탭인지 잘 안 보인다 */
+  activeIcon: TabIcon
 }
 
 export interface BottomTabBarProps {
   tabs: BottomTab[]
+  /** SnackbarAvoidOverlap 이 위치를 재려고 꽂는다 */
+  ref?: Ref<HTMLElement>
 }
 
 /** SEED 에 하단 탭이 없어 직접 만든다. */
-export function BottomTabBar({ tabs }: BottomTabBarProps) {
+export function BottomTabBar({ tabs, ref }: BottomTabBarProps) {
   return (
-    <nav className={styles.bar} aria-label="주요 메뉴">
-      {tabs.map(({ to, label, icon: Icon }) => (
+    <nav ref={ref} className={styles.bar} aria-label="주요 메뉴">
+      {tabs.map(({ to, label, icon: Icon, activeIcon: ActiveIcon }) => (
         <NavLink
           key={to}
           to={to}
@@ -24,8 +30,14 @@ export function BottomTabBar({ tabs }: BottomTabBarProps) {
           end={to === '/'}
           className={({ isActive }) => (isActive ? `${styles.tab} ${styles.active}` : styles.tab)}
         >
-          <Icon width={24} height={24} />
-          {label}
+          {/* 채움·굵기·색 셋이 함께 바뀐다. 글자를 못 읽는 거리에서도 채워진
+              아이콘만으로 지금 어느 탭인지 알 수 있어야 한다 */}
+          {({ isActive }) => (
+            <>
+              {isActive ? <ActiveIcon width={24} height={24} /> : <Icon width={24} height={24} />}
+              {label}
+            </>
+          )}
         </NavLink>
       ))}
     </nav>

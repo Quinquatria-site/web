@@ -1,14 +1,13 @@
 @import 'tailwindcss';
 @import './tokens/color.css';
+@import './tokens/semantic.css';
+@import './tokens/font.css';
 @import './breakpoints.css';
-
-@theme inline {
-  --color-bg: var(--warm-white);
-  --color-text: var(--dark);
-  --color-text-muted: var(--mauve-gray);
-  --font-sans: var(--pretendard), system-ui, sans-serif;
-}
-
-:root {
-  --app-max-width: 480px;
-}
+@import './layout.css';
+@import '../features/home/landing/landing-scroll-cue.css';
+@import '../features/home/landing/landing-title.css';
+@import '../features/schedule/day-tabs.css';
+@import '../features/schedule/performance-card.css';
+@import '../features/schedule/live-badge.css';
+@import '../features/schedule/timeline.css';
+@import '../features/lost-items/empty-box.css';

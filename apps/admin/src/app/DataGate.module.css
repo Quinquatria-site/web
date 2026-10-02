@@ -1,0 +1,26 @@
+/* 첫 로드 동안과 실패했을 때만 보인다. 화면 가운데 한 덩어리 */
+.center {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--seed-dimension-x3);
+  align-items: center;
+  justify-content: center;
+  padding: var(--seed-dimension-x6) var(--seed-dimension-x4);
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--seed-font-size-t5);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t5);
+  color: var(--seed-color-fg-neutral);
+}
+
+.body {
+  margin: 0;
+  font-size: var(--seed-font-size-t3);
+  line-height: var(--seed-line-height-t4);
+  color: var(--seed-color-fg-neutral-muted);
+}

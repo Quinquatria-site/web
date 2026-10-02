@@ -1,0 +1,85 @@
+/*
+ * 치수는 user 앱 shared/bottom-sheet 와 같다 — 위 모서리 20px, 손잡이 줄 42px(막대 60×5),
+ * 2단계 높이 80%. 색은 admin 화면에 맞춰 SEED 토큰을 쓴다.
+ */
+
+/* 2단계에서 시트 뒤를 덮는 투명한 막. Leaflet 은 컨트롤 페인까지 1000 을 쓰니 그 위로 올린다 */
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1001;
+}
+
+/* 부모가 position: relative 여야 한다. 뷰포트가 아니라 그 상자 바닥에 눕는다 */
+.sheet {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  height: 80%;
+  color: var(--seed-color-fg-neutral);
+  background: var(--seed-color-bg-layer-default);
+  border-radius: 20px 20px 0 0;
+  box-shadow: var(--seed-shadow-s3);
+}
+
+/* 손잡이 줄. 2단계에서는 여기로만 시트를 끈다 */
+.handle {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  height: 42px;
+  padding-top: 12px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.handle:active {
+  cursor: grabbing;
+}
+
+.grip {
+  width: 60px;
+  height: 5px;
+  background: var(--seed-color-palette-gray-400);
+  border-radius: 9999px;
+}
+
+/* 아이콘은 24px 이고, 한 손 엄지로 누르는 자리라 둘레 8px 까지 누름 영역을 넓힌다 */
+.close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  padding: 8px;
+  font-size: 24px;
+  color: var(--seed-color-fg-neutral);
+  cursor: pointer;
+  background: none;
+  border: 0;
+  border-radius: 9999px;
+}
+
+.close:hover {
+  background: var(--seed-color-bg-neutral-weak);
+}
+
+.body {
+  min-height: 0;
+  flex: 1;
+  overscroll-behavior: contain;
+  padding: 0 var(--seed-dimension-x5) var(--seed-dimension-x6);
+}
+
+/* 2단계에서만 본문이 스크롤된다. 1단계에서는 시트째 끌린다 */
+.body[data-step='full'] {
+  overflow-y: auto;
+}
+
+.body[data-step='peek'] {
+  overflow: hidden;
+  touch-action: none;
+}

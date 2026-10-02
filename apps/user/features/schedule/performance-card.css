@@ -1,0 +1,47 @@
+/* 공연 중 카드 테두리. 카드보다 큰 판을 돌리고 안쪽을 카드 색(--card-bg)으로 덮어 2px 만 남긴다 */
+@utility live-border {
+  isolation: isolate;
+  overflow: hidden;
+
+  /* 한 변을 카드 폭 + 높이(40)로 잡아야 어느 각도에서도 카드 대각선을 덮는다 */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -2;
+    width: calc(100% + 40px);
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    background: conic-gradient(
+      var(--sunlight),
+      var(--twilight) 25%,
+      var(--beige-peach) 50%,
+      var(--sunlight) 75%,
+      var(--twilight)
+    );
+    /* translate 로 가운데 맞춘 판을 rotate 속성으로만 돌려 두 값이 겹치지 않게 한다 */
+    animation: live-border-spin 3.2s linear infinite;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    z-index: -1;
+    border-radius: 2px;
+    background: var(--card-bg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      animation: none;
+    }
+  }
+}
+
+@keyframes live-border-spin {
+  to {
+    rotate: 1turn;
+  }
+}

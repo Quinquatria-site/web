@@ -1,0 +1,168 @@
+import type { Messages } from '../messages'
+
+/** 영어 화면 문구. 초안이라 확정 번역이 오면 바꾼다 */
+export const en: Messages = {
+  bottomSheet: {
+    close: 'Close',
+  },
+  photoViewer: {
+    open: 'View {name} photo full screen',
+    close: 'Close',
+    hint: 'Pinch to zoom. Swipe down or tap outside the photo to close.',
+    swipeHint: 'Swipe sideways to see other photos.',
+  },
+  dock: {
+    label: 'Main menu',
+    back: 'Go back',
+    top: 'Back to top',
+    tabs: {
+      home: 'Home',
+      schedule: 'Events',
+      map: 'Map',
+      notices: 'Notices',
+      lostItems: 'Lost',
+      goods: 'Goods',
+    },
+  },
+  home: {
+    languageLabel: 'Choose language',
+    scrollCue: 'Next section',
+    navLabel: 'Shortcuts',
+    nav: {
+      schedule: {
+        title: 'Festival Schedule',
+        description: 'Check the festival schedule and show times!',
+      },
+      map: { title: 'Campus Map', description: 'Find booths and facilities around campus!' },
+      notices: { title: 'Notices', description: 'Key news about the festival.' },
+      lostItems: {
+        title: 'Lost & Found',
+        description: 'Lost items will be posted after the festival.',
+      },
+      goods: { title: 'QUINQUATRIA Goods', description: 'Meet the 2026 festival goods!' },
+    },
+    credits: {
+      likelion: 'LIKELION HUFS (Seoul)',
+      likelionInstagram: 'LIKELION instagram',
+      council: 'HUFS Seoul Campus 60th Student Council ‘Seonmyeong’',
+      councilInstagram: 'Seonmyeong instagram',
+    },
+  },
+  pages: {
+    schedule: 'Festival Schedule',
+    map: 'Campus Map',
+    notices: 'Notices',
+    noticeDetail: 'Notice',
+    lostItems: 'Lost & Found',
+    lostItemDetail: 'Lost Item',
+    goods: 'Quinquatria Goods',
+  },
+  notices: {
+    important: 'Important',
+  },
+  lostItems: {
+    contactNotice: 'For lost item inquiries, contact the Student Council!',
+    councilInstagram: 'Council Instagram',
+    councilCall: 'Call the Council',
+    foundLocation: 'Found at',
+    returned: 'Returned',
+    emptyTitle: 'Lost items will be posted\nafter the festival ends.',
+    emptyHint: 'Please hang tight!',
+  },
+  schedule: {
+    festivalStarted: 'The festival has begun!',
+    // 임시 번역: 축제 전 · 밤사이 · 끝 배너
+    festivalBefore: 'Festival coming soon...',
+    festivalBreak: 'The festival resumes soon',
+    festivalEnded: 'The festival is over',
+    festivalEndedSub: 'See you next time!',
+    liveNow: 'Performing now!',
+    liveBadge: 'Live',
+    dayTabsLabel: 'Festival day',
+    close: 'Close',
+    performanceTypes: {
+      STUDENT: 'Student Performance',
+      SPECIAL: 'Special Performance',
+      ARTIST: 'Artist Performance',
+    },
+    slots: {
+      wristbands: 'HUFS wristband pickup begins',
+      boothsOpen: 'All booths open',
+      studentEntry: 'HUFS audience entry begins',
+      visitorEntry: 'General audience entry begins',
+      dayEnd: 'Day 1 ends',
+    },
+  },
+  map: {
+    filterLabel: 'Place type',
+    filterAll: 'All',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+    sheet: {
+      host: 'Host',
+      hours: 'Hours',
+      location: 'Location',
+      menu: 'Menu',
+      photos: 'Photos',
+      price: '₩{price}',
+    },
+    /** 프론트에 둔 팔찌 수령 영역 */
+    braceletPickup: {
+      name: 'Wristband Pickup',
+      description:
+        'Pick up your wristband at Minerva Complex B2 from 15:00. Please bring your student ID.',
+    },
+    places: {
+      BOOTH: 'Booth',
+      PUB: 'Pub',
+      FOODTRUCK: 'Food Truck',
+      MEDI: 'First Aid',
+      BRACELET: 'Wristband',
+      PHOTOBOOTH: 'Photo Booth',
+      TRASHCAN: 'Trash Can',
+    },
+    labels: {
+      globalDorm: 'Global Dorm',
+      socialScience: 'Social\nSciences',
+      library: 'Library',
+      facultyHall: 'Faculty Hall',
+      cyberHall: 'Cyber Hall',
+      lawHall: 'Law Hall',
+      mainHall: 'Main Hall',
+      historyHall: 'History Hall',
+      lawnPlaza: 'Lawn Plaza',
+      minervaComplex: 'Minerva\nComplex',
+      minervaPark: 'Minerva\nPark',
+      field: 'Field',
+      redSquare: 'Red Square',
+      humanities: 'Humanities',
+      teachingCenter: 'Teaching\nCenter',
+      languageCenter: 'Language\nCenter',
+      internationalHall: 'Intl. Hall',
+      graduateSchool: 'Graduate\nSchool',
+    },
+  },
+  // 임시 번역: 굿즈 탭
+  goods: {
+    introTitle: '2026 QUINQUATRIA',
+    introSubtitle: 'Meet the official goods!',
+    salesLocation: 'See where to buy',
+    viewAll: 'View all goods',
+    sheetDescription: 'Official 2026 Quinquatria goods',
+    previous: 'Previous item',
+    next: 'Next item',
+    items: {
+      soccer: { name: 'Soccer Jersey', description: 'Signature soccer jersey with stars' },
+      baseball: { name: 'Baseball Jersey', description: 'Signature baseball jersey with stars' },
+      soccerCrop: {
+        name: 'Soccer Jersey (Crop)',
+        description: 'Signature soccer jersey with stars',
+      },
+      rugby: { name: 'Rugby Jersey', description: 'Signature rugby jersey with stars' },
+      baseballBoo: {
+        name: 'Baseball Jersey (BOO ver.)',
+        description: 'Signature baseball jersey with BOO',
+      },
+    },
+  },
+}

@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { TextField, TextFieldInput } from 'seed-design/ui/text-field'
-import { useAuth } from '../auth/authContext'
+import { useAuth, type LoginResult } from '../auth/authContext'
 import styles from './LoginRoute.module.css'
 
 /** RequireAuth 가 튕길 때 실어 보낸 경로 */
@@ -15,8 +15,8 @@ export function LoginRoute() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const [password, setPassword] = useState('')
-  const [failed, setFailed] = useState(false)
+  const [code, setCode] = useState('')
+  const [failure, setFailure] = useState<Exclude<LoginResult, 'ok'> | null>(null)
   const [pending, setPending] = useState(false)
 
   // 이미 로그인한 채로 /login 에 오면 홈으로 돌린다
@@ -27,12 +27,13 @@ export function LoginRoute() {
     if (pending) return
 
     setPending(true)
-    const ok = await login(password)
+    const result = await login(code)
     setPending(false)
 
-    if (!ok) {
-      setFailed(true)
-      setPassword('')
+    if (result !== 'ok') {
+      setFailure(result)
+      // 틀린 코드만 지운다. 서버가 안 닿은 것이면 같은 코드로 다시 눌러야 한다
+      if (result === 'invalid') setCode('')
       return
     }
 
@@ -52,22 +53,26 @@ export function LoginRoute() {
           height={336}
         />
         <h1 className={styles.title}>Quinquatria 관리자</h1>
-        <p className={styles.subtitle}>비밀번호를 입력하면 운영 화면으로 들어갑니다.</p>
+        <p className={styles.subtitle}>발급 코드를 입력하면 운영 화면으로 들어갑니다.</p>
       </div>
 
       {/* form 으로 감싸야 폰 키보드의 이동 키로 제출된다 */}
       <form className={styles.form} onSubmit={handleSubmit}>
         <TextField
-          label="비밀번호"
-          invalid={failed}
-          errorMessage="비밀번호가 맞지 않습니다."
-          value={password}
+          label="발급 코드"
+          invalid={failure !== null}
+          errorMessage={
+            failure === 'unavailable'
+              ? '서버에 연결하지 못했습니다. 잠시 후 다시 시도해 주세요.'
+              : '발급 코드가 맞지 않습니다.'
+          }
+          value={code}
           onValueChange={({ value }) => {
-            setPassword(value)
-            setFailed(false)
+            setCode(value)
+            setFailure(null)
           }}
         >
-          <TextFieldInput type="password" autoComplete="current-password" placeholder="비밀번호" />
+          <TextFieldInput type="password" autoComplete="current-password" placeholder="발급 코드" />
         </TextField>
 
         <ActionButton
@@ -76,7 +81,7 @@ export function LoginRoute() {
           variant="neutralWeak"
           size="large"
           loading={pending}
-          disabled={password.length === 0}
+          disabled={code.trim().length === 0}
         >
           들어가기
         </ActionButton>

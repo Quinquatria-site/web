@@ -1,9 +1,17 @@
 import { createBrowserRouter } from 'react-router'
+import { AlertsRoute } from '../routes/AlertsRoute'
+import { AnalyticsRoute } from '../routes/AnalyticsRoute'
 import { HomeRoute } from '../routes/HomeRoute'
 import { LoginRoute } from '../routes/LoginRoute'
+import { LostItemEditRoute } from '../routes/LostItemEditRoute'
 import { LostItemsRoute } from '../routes/LostItemsRoute'
+import { MenuEditRoute } from '../routes/MenuEditRoute'
+import { NoticeEditRoute } from '../routes/NoticeEditRoute'
 import { NoticesRoute } from '../routes/NoticesRoute'
+import { PerformanceEditRoute } from '../routes/PerformanceEditRoute'
 import { PerformancesRoute } from '../routes/PerformancesRoute'
+import { PlaceEditRoute } from '../routes/PlaceEditRoute'
+import { PlacesMapRoute } from '../routes/PlacesMapRoute'
 import { PlacesRoute } from '../routes/PlacesRoute'
 import { SettingsRoute } from '../routes/SettingsRoute'
 import { AppLayout } from './AppLayout'
@@ -31,10 +39,73 @@ export const router = createBrowserRouter([
         element: <RequireAuth />,
         children: [
           { index: true, element: <HomeRoute />, handle: { title: '오늘의 운영' } },
+          {
+            // 홈 오류·경고 칩을 누르면 오는 전체 목록
+            path: 'alerts',
+            element: <AlertsRoute />,
+            handle: { title: '확인할 것', back: true, hideTabs: true },
+          },
           { path: 'places', element: <PlacesRoute />, handle: { title: '장소' } },
+          {
+            path: 'places/map',
+            element: <PlacesMapRoute />,
+            handle: { title: '지도', back: true },
+          },
+          {
+            path: 'places/new',
+            element: <PlaceEditRoute />,
+            handle: { title: '장소 추가', back: true, hideTabs: true },
+          },
+          {
+            path: 'places/:id',
+            element: <PlaceEditRoute />,
+            handle: { title: '장소 편집', back: true, hideTabs: true },
+          },
+          {
+            path: 'places/:id/menus/:menuId',
+            element: <MenuEditRoute />,
+            handle: { title: '메뉴', back: true, hideTabs: true },
+          },
           { path: 'performances', element: <PerformancesRoute />, handle: { title: '공연' } },
+          {
+            path: 'performances/new',
+            element: <PerformanceEditRoute />,
+            handle: { title: '공연 추가', back: true, hideTabs: true },
+          },
+          {
+            path: 'performances/:id',
+            element: <PerformanceEditRoute />,
+            handle: { title: '공연 편집', back: true, hideTabs: true },
+          },
           { path: 'notices', element: <NoticesRoute />, handle: { title: '공지' } },
+          {
+            path: 'notices/new',
+            element: <NoticeEditRoute />,
+            handle: { title: '공지 작성', back: true, hideTabs: true },
+          },
+          {
+            // 이 라우트는 두 상태를 갖는다 — 편집, 그리고 없는 공지 안내.
+            // 상단바는 상태가 아니라 화면을 가리키므로 둘 다에서 맞는 이름을 쓴다
+            path: 'notices/:id',
+            element: <NoticeEditRoute />,
+            handle: { title: '공지', back: true, hideTabs: true },
+          },
           { path: 'lost-items', element: <LostItemsRoute />, handle: { title: '분실물' } },
+          {
+            path: 'lost-items/new',
+            element: <LostItemEditRoute />,
+            handle: { title: '분실물 등록', back: true, hideTabs: true },
+          },
+          {
+            path: 'lost-items/:id',
+            element: <LostItemEditRoute />,
+            handle: { title: '분실물 편집', back: true, hideTabs: true },
+          },
+          {
+            path: 'analytics',
+            element: <AnalyticsRoute />,
+            handle: { title: '방문 통계', back: true, hideTabs: true },
+          },
           {
             path: 'settings',
             element: <SettingsRoute />,
