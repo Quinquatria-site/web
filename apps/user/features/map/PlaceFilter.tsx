@@ -9,10 +9,10 @@ const FILTER_CODES: PlaceCode[] = [
   'BOOTH',
   'PUB',
   'FOODTRUCK',
-  'PHOTO',
+  'PHOTOBOOTH',
   'BRACELET',
   'MEDI',
-  'TRASH',
+  'TRASHCAN',
 ]
 
 function Chip({

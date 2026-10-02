@@ -111,8 +111,8 @@ export const ko = {
       FOODTRUCK: '푸드트럭',
       MEDI: '의무실',
       BRACELET: '입장 팔찌',
-      PHOTO: '포토부스',
-      TRASH: '쓰레기통',
+      PHOTOBOOTH: '포토부스',
+      TRASHCAN: '쓰레기통',
     },
     labels: {
       globalDorm: '국제학사',
