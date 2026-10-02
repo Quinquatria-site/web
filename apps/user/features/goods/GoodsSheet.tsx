@@ -29,12 +29,13 @@ export function GoodsSheet({ goods }: { goods: Goods[] }) {
       </button>
       {/* peekHeight 를 주지 않아 1단계 없이 목록을 바로 펼친다 */}
       <BottomSheet open={open} onClose={() => setOpen(false)}>
-        <BottomSheetTitle className="px-1.5 text-2xl leading-[normal] font-bold">
+        {/* 제목을 위에 붙여 두어, 목록이 X 버튼 바로 밑까지 올라와 잘려 보이지 않고 제목 아래로 사라지게 한다 */}
+        <BottomSheetTitle className="sticky top-0 z-10 -mx-5 bg-bg px-[26px] pb-4 text-2xl leading-[normal] font-bold">
           {text.viewAll}
         </BottomSheetTitle>
         {/* 시안에 설명 줄이 없어 화면에서는 숨기고 스크린리더만 읽는다 */}
         <BottomSheetDescription className="sr-only">{text.sheetDescription}</BottomSheetDescription>
-        <ul className="mt-4 grid grid-cols-2 gap-2 px-1.5">
+        <ul className="grid grid-cols-2 gap-2 px-1.5">
           {goods.map((g, i) => {
             const { name } = text.items[g.id]
             return (
