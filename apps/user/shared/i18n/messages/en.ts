@@ -118,8 +118,8 @@ export const en: Messages = {
       FOODTRUCK: 'Food Truck',
       MEDI: 'First Aid',
       BRACELET: 'Wristband',
-      PHOTO: 'Photo Booth',
-      TRASH: 'Trash Can',
+      PHOTOBOOTH: 'Photo Booth',
+      TRASHCAN: 'Trash Can',
     },
     labels: {
       globalDorm: 'Global Dorm',

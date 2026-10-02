@@ -5,8 +5,8 @@ import type { PlaceBase, PlaceText } from '@quen/schema/entities/place'
 import { formatSeoulTime } from '@/shared/time/format-seoul-time'
 import type { MapPoint } from './map-coords'
 
-/** 서버 카테고리에 곧 붙을 포토부스·쓰레기통까지 더한 장소 종류. 두 이름은 서버 코드가 정해지면 맞춘다 */
-export type PlaceCode = CategoryCode | 'PHOTO' | 'TRASH'
+/** 서버 카테고리에 곧 붙을 포토부스·쓰레기통까지 더한 장소 종류 */
+export type PlaceCode = CategoryCode | 'PHOTOBOOTH' | 'TRASHCAN'
 
 /** 장소에 딸린 메뉴 한 건 */
 export type PlaceMenu = Localized<MenuBase, MenuText>

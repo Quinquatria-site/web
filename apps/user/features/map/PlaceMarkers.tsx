@@ -15,8 +15,8 @@ import { useLocale } from '@/shared/i18n/useLocale'
 import braceletIcon from './images/bracelet.svg'
 import foodtruckIcon from './images/foodtruck.svg'
 import mediIcon from './images/medi.svg'
-import photoIcon from './images/photo.svg'
-import trashIcon from './images/trash.svg'
+import photoboothIcon from './images/photobooth.svg'
+import trashcanIcon from './images/trashcan.svg'
 import { toLatLng } from './map-coords'
 import { type MapPlace, type PlaceCode, type PlaceId, placeLabel } from './map-place'
 import { PlaceArea } from './PlaceArea'
@@ -33,8 +33,8 @@ const PLACE_ICONS: Partial<Record<PlaceCode, StaticImageData>> = {
   FOODTRUCK: foodtruckIcon,
   MEDI: mediIcon,
   BRACELET: braceletIcon,
-  PHOTO: photoIcon,
-  TRASH: trashIcon,
+  PHOTOBOOTH: photoboothIcon,
+  TRASHCAN: trashcanIcon,
 }
 
 // 원 가운데 (0,0), 반지름 19.5, 끝 (0,28.8) 인 물방울. 흰 테두리 3 을 이 선 가운데에 그려 바깥이 지름 42, 끝이 31 에 온다

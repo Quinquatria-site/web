@@ -111,8 +111,8 @@ export const zh: Messages = {
       FOODTRUCK: '餐车',
       MEDI: '医务室',
       BRACELET: '入场手环',
-      PHOTO: '拍照亭',
-      TRASH: '垃圾桶',
+      PHOTOBOOTH: '拍照亭',
+      TRASHCAN: '垃圾桶',
     },
     labels: {
       globalDorm: '国际学舍',
