@@ -109,6 +109,8 @@ export const en: Messages = {
     /** 프론트에 둔 팔찌 수령 영역 */
     braceletPickup: {
       name: 'Wristband Pickup',
+      description:
+        'Pick up your wristband at Minerva Complex B2 from 15:00. Please bring your student ID.',
     },
     places: {
       BOOTH: 'Booth',
