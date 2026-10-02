@@ -144,7 +144,8 @@ export function PlacesMapRoute() {
               selected={place.id === selectedId}
               onSelect={() => select(place.id)}
             >
-              <Tooltip direction="top" offset={[0, -12]}>
+              {/* 물방울 원 위에 띄운다. 꼬리 끝이 좌표라 원 꼭대기가 52px 위다 */}
+              <Tooltip direction="top" offset={[0, -54]}>
                 {placeName(place)} · {place.category_sequence}
               </Tooltip>
             </PlaceMarker>

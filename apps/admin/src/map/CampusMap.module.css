@@ -25,25 +25,29 @@
   border: none;
 }
 
-/* 점(20) ↔ 전체(42). 지도 칸의 data-markers 를 MarkerZoomLevel 이 단다 */
+/* 크기 0 인 뿌리. 안쪽 물방울은 꼬리 끝이 이 점에 오도록 위로 띄운다 */
 .marker {
   position: absolute;
-  width: 20px;
-  height: 20px;
-  translate: -50% -50%;
 }
 
-:global([data-markers='full']) .marker {
-  width: 42px;
-  height: 42px;
-}
-
-/* 선택 링. 고유 색 52%, 마커 크기에 비례해 둘러싼다 */
-.ring {
+/*
+ * leaflet.css 가 지도 안 svg 에 z-index 200 을 걸어 글자를 덮어서 auto 로 되돌린다.
+ * 마커가 촘촘해서 터치 영역을 키우면 이웃을 가로채니 보이는 크기 그대로 둔다
+ */
+.ring,
+.drop,
+.mini {
   position: absolute;
-  inset: -23.8%;
-  border-radius: 9999px;
-  background: color-mix(in srgb, var(--place-color) 52%, transparent);
+  z-index: auto !important;
+}
+
+/* 선택 링. 원 가운데에서 두 겹(56/72)이 퍼진다 */
+.ring {
+  top: -67px;
+  left: -36px;
+  width: 72px;
+  height: 72px;
+  fill: var(--place-color);
   opacity: 0;
   scale: 0.68;
   transition:
@@ -52,11 +56,41 @@
   pointer-events: none;
 }
 
+.ring circle {
+  opacity: 0.2;
+}
+
 .root[data-selected] .ring {
   opacity: 1;
   scale: 1;
   transition-duration: 220ms;
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 흰 테두리 물방울. 원은 고유 색, 꼬리는 52% */
+.drop {
+  top: -52px;
+  left: -21px;
+  width: 42px;
+  height: 52px;
+}
+
+.dropBase {
+  fill: #fff;
+}
+
+.dropTail {
+  fill: color-mix(in srgb, var(--place-color) 52%, transparent);
+}
+
+.dropFill {
+  fill: var(--place-color);
+}
+
+.dropEdge {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
 }
 
 .root:focus-visible {
@@ -69,25 +103,32 @@
   outline-offset: 2px;
 }
 
+/* 물방울 원 위의 글자·아이콘 */
 .circle {
   position: absolute;
-  inset: 0;
+  top: -52px;
+  left: -21px;
   display: grid;
   place-items: center;
+  width: 42px;
+  height: 42px;
   border-radius: 9999px;
-  background: var(--place-color);
   color: #fbf4ed;
   font-size: 17px;
   line-height: 1;
 }
 
-/* 점일 때는 글자·아이콘을 숨긴다 */
-.content {
-  display: none;
-}
-
-:global([data-markers='full']) .content {
-  display: contents;
+/* 축소 때 작은 물방울. 큰 물방울을 1/4 로 줄인 폭 11 */
+.mini {
+  top: -14px;
+  left: -5.5px;
+  width: 11px;
+  height: 14px;
+  overflow: visible;
+  fill: var(--place-color);
+  stroke: #fff;
+  stroke-width: 4.5;
+  stroke-miterlimit: 10;
 }
 
 /*
@@ -121,7 +162,7 @@
   }
 }
 
-/* 확대·축소 버튼. user ZoomButtons 와 같은 크기·색(accent·brick·warm-white)이다 */
+/* 확대·축소 버튼. user ZoomButtons 와 같은 크기·색(brown 80%·beige-yellow·brick 그림자)이다 */
 .zoom {
   position: absolute;
   right: 27px;
@@ -131,8 +172,8 @@
   flex-direction: column;
   width: 43px;
   overflow: hidden;
-  background: #fbf4ed;
-  border: 1px solid #c37555;
+  background: color-mix(in srgb, #7d5452 80%, transparent);
+  border: 1px solid #fdebb8;
   border-radius: 12px;
   box-shadow: 0 1px 4px #c37555;
 }
@@ -143,7 +184,7 @@
   width: 100%;
   height: 40px;
   padding: 0;
-  color: #b85b56;
+  color: #fdebb8;
   font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
   font-size: 32px;
   line-height: 1;
@@ -153,7 +194,7 @@
 }
 
 .zoomButton + .zoomButton {
-  border-top: 1px solid #c37555;
+  border-top: 1px solid #fdebb8;
 }
 
 .zoomButton:disabled {
