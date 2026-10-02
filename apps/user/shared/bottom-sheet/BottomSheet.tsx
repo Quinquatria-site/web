@@ -6,6 +6,7 @@ import {
   AnimatePresence,
   motion,
   useDragControls,
+  useIsPresent,
   useMotionValue,
   type PanInfo,
 } from 'motion/react'
@@ -45,12 +46,19 @@ export function BottomSheet({
   ...props
 }: SheetProps & { open: boolean }) {
   useCloseOnBack(open && closeOnBack, props.onClose)
+  // 닫히며 내려가는 사이 다시 열면 AnimatePresence 가 내려가던 시트를 되살려 화면 밖에 멈춘다. 열 때마다 키를 바꿔 새 시트를 올린다
+  const [session, setSession] = useState(0)
+  const [wasOpen, setWasOpen] = useState(open)
+  if (open !== wasOpen) {
+    setWasOpen(open)
+    if (open) setSession((n) => n + 1)
+  }
 
   return (
     <Dialog.Root open={open} onOpenChange={(next) => !next && props.onClose()} modal={false}>
       <AnimatePresence>
         {open && (
-          <Dialog.Portal forceMount>
+          <Dialog.Portal key={session} forceMount>
             {/* 열릴 때마다 새로 붙어 단계가 1단계로 돌아간다 */}
             <SheetPanel {...props} />
           </Dialog.Portal>
@@ -62,6 +70,8 @@ export function BottomSheet({
 
 function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetProps) {
   const { bottomSheet } = getMessages(useLocale())
+  // 닫혀 내려가는 중인 시트는 새로 열린 시트와 겹칠 수 있어 누름을 받지 않는다
+  const isPresent = useIsPresent()
   const hasPeek = peekHeight !== undefined
   const [step, setStep] = useState<Step>(hasPeek ? 'peek' : 'full')
   const [height, setHeight] = useState(0)
@@ -196,6 +206,8 @@ function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetProp
           <motion.div
             aria-hidden
             onClick={onClose}
+            // 닫히며 흐려지는 동안 지도 누름을 가로채 새로 고른 장소까지 닫지 않게 한다
+            style={{ pointerEvents: isPresent ? 'auto' : 'none' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -214,7 +226,7 @@ function SheetPanel({ onClose, hidden = false, peekHeight, children }: SheetProp
           style={{ y }}
           exit={{ y: height }}
           transition={SLIDE}
-          inert={hidden}
+          inert={hidden || !isPresent}
           drag="y"
           // 1단계는 어디를 밀어도 시트가 움직이고, 2단계는 본문이 스크롤되니 손잡이 줄로만 끈다
           dragListener={step === 'peek'}
