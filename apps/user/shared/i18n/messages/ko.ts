@@ -159,4 +159,15 @@ export const ko = {
       ribbon: { name: '리본' },
     },
   },
+  meta: {
+    siteTitle: '2026 QUINQUATRIA',
+    siteDescription: '10.07(수) - 10.08(목) 한국외대 서울캠퍼스 축제',
+    /** {page} 에 페이지 이름이 들어간다 */
+    pageTitle: '{page} | Quinquatria',
+    /** 공유 카드 제목 머리말. {label} 에 공지·분실물·장소 종류가 들어간다 */
+    tagged: '[{label}] {title}',
+    notice: '공지',
+    lostItem: '분실물',
+    placeFallback: '지도에서 위치와 운영 시간을 확인해 보세요.',
+  },
 }

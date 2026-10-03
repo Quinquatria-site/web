@@ -167,4 +167,13 @@ export const en: Messages = {
       ribbon: { name: 'Ribbon' },
     },
   },
+  meta: {
+    siteTitle: '2026 QUINQUATRIA',
+    siteDescription: 'Oct 7 (Wed) - Oct 8 (Thu), HUFS Seoul Campus Festival',
+    pageTitle: '{page} | Quinquatria',
+    tagged: '[{label}] {title}',
+    notice: 'Notice',
+    lostItem: 'Lost & Found',
+    placeFallback: 'Find the location and opening hours on the map.',
+  },
 }

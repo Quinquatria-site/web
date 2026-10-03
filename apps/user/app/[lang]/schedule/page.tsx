@@ -1,3 +1,4 @@
+import type { ResolvingMetadata } from 'next'
 import { FESTIVAL_DAYS, groupByFestivalDay } from '@/features/schedule/festival-days'
 import { getPerformances } from '@/features/schedule/get-performances'
 import { PerformanceImagePreload } from '@/features/schedule/PerformanceImagePreload'
@@ -8,6 +9,15 @@ import { DuskBackground } from '@/shared/background/DuskBackground'
 import { PageHeader } from '@/shared/header/PageHeader'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
+import { listShareMetadata } from '@/shared/metadata/share-metadata'
+
+/** 공유 카드에 페이지 이름과 소개 문구를 싣는다 */
+export async function generateMetadata(
+  _: PageProps<'/[lang]/schedule'>,
+  parent: ResolvingMetadata,
+) {
+  return listShareMetadata(parent, await getLocale(), 'schedule', '/schedule')
+}
 
 /** 일정표 탭. 배너와 두 날치 타임라인을 미리 그려 두고, 탭만 브라우저에서 고른다 */
 export default async function SchedulePage() {

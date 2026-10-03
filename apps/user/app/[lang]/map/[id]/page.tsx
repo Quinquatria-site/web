@@ -7,7 +7,10 @@ import { DuskBackground } from '@/shared/background/DuskBackground'
 import { PageHeader } from '@/shared/header/PageHeader'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
+import { localePath } from '@/shared/i18n/paths'
+import { oneLine, shareMetadata, taggedTitle } from '@/shared/metadata/share-metadata'
 import { assetUrl } from '@/shared/photo/asset-url'
+import { formatSeoulDay } from '@/shared/time/format-seoul-time'
 
 /** 장소 id 로 정적 생성한다. 언어는 레이아웃이 곱한다 */
 export async function generateStaticParams() {
@@ -27,30 +30,33 @@ async function findPlace(segment: string) {
   return { places, place: places.find((place) => place.id === id) ?? null }
 }
 
-/** 공유 카드에 장소 이름·설명·첫 사진을 싣는다. openGraph 는 통째로 덮이니 부모 값을 펼친다 */
+/** 공유 카드에 `[종류] 이름`, 운영 날짜·시간·단과대·설명, 첫 사진을 싣는다 */
 export async function generateMetadata(
   { params }: PageProps<'/[lang]/map/[id]'>,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const { lang, id } = await params
+  const { id } = await params
   const { place } = await findPlace(id)
   if (!place) return {}
-  // 설명이 없는 서버 장소는 시트 요약줄과 같은 운영 단과대·시간으로 채운다
+  const locale = await getLocale()
+  const { map, meta, pages } = getMessages(locale)
+  const category = map.places[place.code]
+  // 이름이 빈 서버 장소도 주소만 덩그러니 뜨지 않게 지도 페이지 이름으로 채운다
+  const name = place.name || meta.pageTitle.replace('{page}', pages.map)
+  // 이름이 이미 종류를 담으면(의무실·입장 팔찌 수령처) 머리말이 같은 말을 되풀이한다
+  const title = name.includes(category) ? name : taggedTitle(locale, category, name)
+  const hours = placeHours(place)
+  const when = place.start_hour && `${formatSeoulDay(place.start_hour, locale)} ${hours}`
   const description =
-    place.description || [place.host_college, placeHours(place)].filter(Boolean).join(' · ')
+    oneLine([when, place.host_college, place.description].filter(Boolean).join(' · ')) ||
+    meta.placeFallback
   const image = place.place_image_uri?.[0]
-  const { openGraph } = await parent
-  return {
-    title: place.name,
+  return shareMetadata(parent, {
+    title,
     description,
-    openGraph: {
-      ...openGraph,
-      title: place.name,
-      description,
-      url: `/${lang}/map/${place.id}`,
-      ...(image && { images: [{ url: assetUrl(image), alt: place.name }] }),
-    },
-  }
+    path: localePath(locale, `/map/${place.id}`),
+    ...(image && { image: { url: assetUrl(image), alt: name } }),
+  })
 }
 
 /** 장소 하나를 고른 채로 여는 지도. 홍보 링크로 들어오면 그 장소로 확대하고 시트를 연다 */

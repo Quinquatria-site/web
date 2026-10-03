@@ -1,3 +1,4 @@
+import type { ResolvingMetadata } from 'next'
 import { getLostItems } from '@/features/lost-items/get-lost-items'
 import { LostItemGrid } from '@/features/lost-items/LostItemGrid'
 import { LostItemsContact } from '@/features/lost-items/LostItemsContact'
@@ -7,6 +8,15 @@ import { LightBackground } from '@/shared/background/LightBackground'
 import { PageHeader } from '@/shared/header/PageHeader'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
+import { listShareMetadata } from '@/shared/metadata/share-metadata'
+
+/** 공유 카드에 페이지 이름과 소개 문구를 싣는다 */
+export async function generateMetadata(
+  _: PageProps<'/[lang]/lost-items'>,
+  parent: ResolvingMetadata,
+) {
+  return listShareMetadata(parent, await getLocale(), 'lostItems', '/lost-items')
+}
 
 /** 분실물 탭. 문의 안내 아래 카드를 깔고, 올라온 분실물이 없으면 빈 화면을 보여 준다 */
 export default async function LostItemsPage() {
