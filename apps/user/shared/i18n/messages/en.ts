@@ -31,7 +31,7 @@ export const en: Messages = {
     nav: {
       schedule: {
         title: 'Festival Schedule',
-        description: 'Check the festival schedule and show times!',
+        description: 'Check the festival schedule!',
       },
       map: { title: 'Campus Map', description: 'Find booths and facilities around campus!' },
       notices: { title: 'Notices', description: 'Key news about the festival.' },
