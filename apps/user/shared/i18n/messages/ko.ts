@@ -98,6 +98,9 @@ export const ko = {
       photos: '사진',
       /** {price} 에 자릿수 쉼표 찍은 금액이 들어간다 */
       price: '{price}원',
+      copyLink: '링크 복사',
+      /** 복사 뒤 버튼 글자가 잠깐 이 문구로 바뀐다 */
+      linkCopied: '복사했어요',
     },
     /** 프론트에 둔 팔찌 수령 영역 */
     braceletPickup: {

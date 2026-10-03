@@ -11,6 +11,7 @@ import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { type MapPlace, placeHours, placeLabel } from './map-place'
+import { CopyLinkButton } from './CopyLinkButton'
 import { MenuCard } from './MenuCard'
 import { PLACE_BG } from './place-colors'
 import { PlacePhotos } from './PlacePhotos'
@@ -60,6 +61,8 @@ function PlaceSummary({ place }: { place: MapPlace }) {
             ))}
           </dl>
         </BottomSheetDescription>
+        {/* 다른 장소로 바뀌면 복사했어요 글자가 남지 않게 새로 그린다 */}
+        <CopyLinkButton key={place.id} placeId={place.id} />
         {place.description && (
           <p lang={lang} className="leading-[1.4]">
             {place.description}
