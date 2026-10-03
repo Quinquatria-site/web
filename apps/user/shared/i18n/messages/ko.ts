@@ -65,7 +65,7 @@ export const ko = {
   schedule: {
     festivalStarted: '축제가 시작됐습니다!',
     festivalBefore: '축제 준비 중...',
-    festivalBreak: '축제는 곧 다시 시작됩니다',
+    festivalBreak: '축제는 곧\n다시 시작됩니다',
     festivalEnded: '축제가 모두 끝났습니다',
     festivalEndedSub: '다음에 만나요!',
     liveNow: '지금 공연 중!',
@@ -98,6 +98,9 @@ export const ko = {
       photos: '사진',
       /** {price} 에 자릿수 쉼표 찍은 금액이 들어간다 */
       price: '{price}원',
+      copyLink: '링크 복사',
+      /** 복사 뒤 버튼 글자가 잠깐 이 문구로 바뀐다 */
+      linkCopied: '복사했어요',
     },
     /** 프론트에 둔 팔찌 수령 영역 */
     braceletPickup: {
@@ -158,5 +161,16 @@ export const ko = {
       tattooSticker: { name: '타투스티커' },
       ribbon: { name: '리본' },
     },
+  },
+  meta: {
+    siteTitle: '2026 QUINQUATRIA',
+    siteDescription: '10.07(수) - 10.08(목) 한국외대 서울캠퍼스 축제',
+    /** {page} 에 페이지 이름이 들어간다 */
+    pageTitle: '{page} | Quinquatria',
+    /** 공유 카드 제목 머리말. {label} 에 공지·분실물·장소 종류가 들어간다 */
+    tagged: '[{label}] {title}',
+    notice: '공지',
+    lostItem: '분실물',
+    placeFallback: '지도에서 위치와 운영 시간을 확인해 보세요.',
   },
 }

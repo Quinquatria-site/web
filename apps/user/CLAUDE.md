@@ -8,11 +8,13 @@
 
 폭 대응은 `phone-md:`(360 이상) · `phone-lg:`(400 이상)만 쓴다. `sm:` · `md:` 같은 Tailwind 기본 브레이크포인트는 꺼져 있다. 기준값은 `styles/breakpoints.css` 에 두고, 앱 최대 폭(480) 이하로만 정한다 — 넘으면 PC 에서 창은 넓은데 앱은 480 인 상태로 잘못 적용된다. 대부분은 한 벌로 두고, 작은 폰·큰 폰에서 꼭 달라야 하는 곳에만 별칭을 쓴다.
 
+예외로 `pc:`(1024 이상) · `pc-lg:`(1280 이상)는 앱 기둥 **밖** PC 배경(`shared/web-backdrop/`)에만 쓴다. 이 배경 이미지 url 은 `pc:` 미디어 쿼리 안에만 둬서 폰에서는 받지 않게 한다 — `<Image>` 를 `hidden` 으로 숨기면 안 보여도 받는다.
+
 ## 폴더 구조
 
 | 폴더        | 두는 것                                                     |
 | ----------- | ----------------------------------------------------------- |
-| `app/`      | 라우트 파일만. `features`·`shared` 를 가져와 조립한다       |
+| `app/`      | 라우트 파일                                                 |
 | `features/` | 페이지(도메인)별 코드. `features/home/landing` 처럼 쪼갠다  |
 | `shared/`   | 두 곳 이상에서 쓰는 코드. 도크처럼 layout 에 붙는 것도 여기 |
 | `styles/`   | 전역 토큰 · 브레이크포인트 · 레이아웃                       |
@@ -27,7 +29,8 @@
 주소 첫 칸이 언어다: `/ko` · `/en` · `/zh`. `/` 는 `/ko` 로 보낸다. 코드는 `shared/i18n/` 에 있다.
 
 - 페이지는 `app/[lang]/` 안에 만든다. 레이아웃의 `generateStaticParams` 가 세 언어로 한 벌씩 굽는다. 밖에 두면 루트 레이아웃이 없어 빌드가 깨진다.
-- API 는 `serverApi` 로만 부르고 언어를 넘기지 않는다. 지금 그리는 페이지 언어를 `language_code` 로 알아서 붙인다. 번역이 없는 데이터는 API 가 주지 않으니 따로 거르지 않는다.
+- API 는 `serverApi` 로만 부르고 언어를 넘기지 않는다. 지금 그리는 페이지 언어를 `language_code` 로 알아서 붙인다.
+- 번역이 없으면 한국어로 보여 준다. 목록은 `listWithSource`, 한 건은 `oneWithSource`(`shared/api/source-fallback.ts`)로 감싸고 `source` 를 `serverApi` 에 넘긴다. API 는 번역 없는 항목을 목록에서 빼거나(공지·분실물·공연·메뉴) 글자를 null 로 주고(장소), 상세는 404 로 답한다.
 - 화면에 쓰는 글자는 JSX 에 적지 않고 `messages/{ko,en,zh}.ts` 에 넣어 `getMessages(locale)` 로 꺼낸다. `ko.ts` 가 기준이라 다른 언어에 빠진 키는 타입 검사가 막는다.
 - 언어는 서버 컴포넌트에서 `getLocale()`, `'use client'` 에서 `useLocale()` 로 읽는다. 바꿔 쓰면 빌드가 깨진다.
 - 앱 안 링크는 `localePath(locale, '/notices')` 로 만든다. `'/notices'` 를 그대로 쓰면 언어 칸이 빠져 404 다.

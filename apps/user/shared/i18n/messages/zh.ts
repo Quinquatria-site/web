@@ -99,6 +99,8 @@ export const zh: Messages = {
       menu: '菜单',
       photos: '照片',
       price: '{price}韩元',
+      copyLink: '复制链接',
+      linkCopied: '已复制',
     },
     /** 프론트에 둔 팔찌 수령 영역 */
     braceletPickup: {
@@ -159,5 +161,14 @@ export const zh: Messages = {
       tattooSticker: { name: '纹身贴' },
       ribbon: { name: '丝带' },
     },
+  },
+  meta: {
+    siteTitle: '2026 QUINQUATRIA',
+    siteDescription: '10.07(周三) - 10.08(周四) 韩国外国语大学首尔校区庆典',
+    pageTitle: '{page} | Quinquatria',
+    tagged: '[{label}] {title}',
+    notice: '公告',
+    lostItem: '失物招领',
+    placeFallback: '在地图上查看位置和营业时间。',
   },
 }

@@ -3,6 +3,7 @@
 import { motion } from 'motion/react'
 import Link from 'next/link'
 import { DOCK_PRESS, PRESS_SCALE } from '@/shared/dock/dock-motion'
+import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
 import { localePath } from '@/shared/i18n/paths'
 import { useLocale } from '@/shared/i18n/useLocale'
@@ -15,6 +16,7 @@ import { ReturnedBadge } from './ReturnedBadge'
 export function LostItemCard({ item }: { item: LostItem }) {
   const locale = useLocale()
   const { lostItems } = getMessages(locale)
+  const lang = contentLang(item.language_code)
   return (
     // 누르는 동안 도크와 같은 스프링으로 살짝 줄어 손끝 반응을 준다
     <motion.div whileTap={{ scale: PRESS_SCALE }} transition={DOCK_PRESS}>
@@ -30,10 +32,14 @@ export function LostItemCard({ item }: { item: LostItem }) {
         </div>
         <div className="flex flex-1 items-center gap-0.5 pr-1.5 pl-[11px]">
           <div className="flex min-w-0 flex-1 flex-col gap-1 text-secondary">
-            <p className="truncate leading-[normal] font-medium">{item.title}</p>
+            <p lang={lang} className="truncate leading-[normal] font-medium">
+              {item.title}
+            </p>
             <p className="flex gap-1 text-xs leading-[1.18]">
               <span className="shrink-0 text-text-muted">{lostItems.foundLocation}</span>
-              <span className="truncate">{item.found_location}</span>
+              <span lang={lang} className="truncate">
+                {item.found_location}
+              </span>
             </p>
           </div>
           <ChevronRightIcon />

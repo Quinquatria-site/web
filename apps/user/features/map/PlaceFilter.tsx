@@ -29,7 +29,7 @@ function Chip({
       type="button"
       aria-pressed={pressed}
       onClick={onClick}
-      className="pointer-events-auto h-[30px] min-w-[58px] rounded-full border border-accent bg-bg px-2 text-sm leading-none font-semibold whitespace-nowrap text-accent aria-pressed:bg-accent aria-pressed:text-on-accent"
+      className="pointer-events-auto h-[30px] min-w-[58px] rounded-full border border-accent bg-bg px-2 text-sm leading-none font-medium whitespace-nowrap text-accent aria-pressed:bg-accent aria-pressed:font-semibold aria-pressed:text-on-accent"
     >
       {children}
     </button>

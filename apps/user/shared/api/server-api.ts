@@ -1,10 +1,12 @@
 import 'server-only'
 import { getLocale } from '@/shared/i18n/get-locale'
-import { API_LANGUAGE } from '@/shared/i18n/locales'
+import { API_LANGUAGE, SOURCE_LOCALE } from '@/shared/i18n/locales'
 
 type GetOptions = {
   tags: string[]
   query?: Record<string, string>
+  /** 페이지 언어 대신 한국어 원문으로 받는다. 번역이 빠진 항목을 채울 때만 쓴다 */
+  source?: boolean
 }
 
 // 첫 요청이 실패하면 이만큼 더 시도하고, 시도 사이에 이만큼 쉰다
@@ -34,9 +36,9 @@ export class ApiError extends Error {
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /** Customer API GET. 지금 그리는 페이지의 언어로 받고, 5xx·네트워크 오류는 다시 시도하며, 끝내 실패하면 던져서 빈 화면이 배포되지 않게 한다 */
-export async function serverApi<T>(path: string, { tags, query }: GetOptions): Promise<T> {
-  // 호출하는 쪽이 언어를 고르지 않게 해서, 다른 언어 페이지에 한국어 데이터가 섞일 수 없게 한다
-  const language = API_LANGUAGE[await getLocale()]
+export async function serverApi<T>(path: string, { tags, query, source }: GetOptions): Promise<T> {
+  // 호출하는 쪽이 언어를 고르지 않게 해서, 원문으로 채우겠다고 밝힌 곳 말고는 다른 언어가 섞이지 않게 한다
+  const language = API_LANGUAGE[source ? SOURCE_LOCALE : await getLocale()]
   const url = new URL(`/api/v1${path}`, apiBaseUrl())
   url.search = new URLSearchParams({ ...query, language_code: language }).toString()
 

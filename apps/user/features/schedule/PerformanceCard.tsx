@@ -6,6 +6,7 @@ import { useState } from 'react'
 import type { PerformanceType } from '@quen/schema/entities/performance'
 import { DOCK_PRESS, PRESS_SCALE } from '@/shared/dock/dock-motion'
 import { useCloseOnBack } from '@/shared/history/useCloseOnBack'
+import { contentLang } from '@/shared/i18n/locales'
 import { LiveBadge } from './LiveBadge'
 import type { Performance } from './performance'
 import { PerformanceModal } from './PerformanceModal'
@@ -20,7 +21,7 @@ const CARD_TONE: Record<PerformanceType, string> = {
 
 /** 타임라인의 공연 한 줄. 종류마다 색이 다르고, 공연 중이면 뱃지와 노을빛 테두리가 돌며 누르면 상세가 뜬다 */
 export function PerformanceCard({ performance }: { performance: Performance }) {
-  const { type, title, is_live } = performance
+  const { type, title, is_live, language_code } = performance
   const [open, setOpen] = useState(false)
   useCloseOnBack(open, () => setOpen(false))
 
@@ -31,7 +32,9 @@ export function PerformanceCard({ performance }: { performance: Performance }) {
         <Dialog.Trigger
           className={`relative flex h-10 w-full items-center gap-2 rounded-[4px] bg-(--card-bg) pr-[34px] pl-2.5 text-left text-[length:calc(16*var(--tl,1px))] leading-[normal] font-medium ${CARD_TONE[type]} ${is_live ? 'live-border' : ''}`}
         >
-          <span className="truncate">{title}</span>
+          <span lang={contentLang(language_code)} className="truncate">
+            {title}
+          </span>
           {is_live && <LiveBadge />}
           <svg
             aria-hidden

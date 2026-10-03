@@ -3,6 +3,7 @@
 import { motion } from 'motion/react'
 import Link from 'next/link'
 import { DOCK_PRESS, PRESS_SCALE } from '@/shared/dock/dock-motion'
+import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
 import { localePath } from '@/shared/i18n/paths'
 import { useLocale } from '@/shared/i18n/useLocale'
@@ -18,6 +19,7 @@ export function NoticeCard({ notice }: { notice: Notice }) {
   const locale = useLocale()
   const { notices } = getMessages(locale)
   const important = notice.type === 'PERMANENT'
+  const lang = contentLang(notice.language_code)
   return (
     // 누르는 동안 도크와 같은 스프링으로 살짝 줄어 손끝 반응을 준다
     <motion.div whileTap={{ scale: PRESS_SCALE }} transition={DOCK_PRESS}>
@@ -40,9 +42,13 @@ export function NoticeCard({ notice }: { notice: Notice }) {
             </time>
           </p>
           {/* 줄 높이를 고정해야 이모지·한자처럼 다른 글꼴로 그려지는 제목도 카드 높이가 같다 */}
-          <p className="truncate leading-[1.2] font-semibold">{notice.title}</p>
+          <p lang={lang} className="truncate leading-[1.2] font-semibold">
+            {notice.title}
+          </p>
           {/* 본문이 비어도 한 줄 자리를 남겨 제목 위치가 다른 카드와 맞는다 */}
-          <p className="min-h-lh truncate text-xs leading-[1.18]">{notice.content}</p>
+          <p lang={lang} className="min-h-lh truncate text-xs leading-[1.18]">
+            {notice.content}
+          </p>
         </div>
         <ChevronRightIcon />
       </Link>

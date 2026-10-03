@@ -60,11 +60,11 @@ export function LandingTitle({ lag }: { lag: number | null }) {
           className="h-auto w-full"
         />
       </h1>
-      {/* 낮은 기기에서 날짜가 날개·투구 위에 겹쳐도 읽히게 면 없이 글자·선 둘레만 흰 후광을 여러 겹 쌓아 밝힌다 */}
+      {/* 낮은 기기에서 날짜가 날개·투구 위에 겹쳐도 읽히게 면 없이 글자·선 둘레만 갈색 후광을 여러 겹 쌓아 띄운다 */}
       <RuledLine
         text="10.07 - 10.08"
-        className={`text-[calc(12.817*var(--u))] tracking-[calc(0.513*var(--u))] text-[#9a3700] [text-shadow:0_0_calc(2*var(--u))_#fff,0_0_calc(2*var(--u))_#fff,0_0_calc(2*var(--u))_#fff,0_0_calc(6*var(--u))_#fff,0_0_calc(6*var(--u))_#fff,0_0_calc(12*var(--u))_#fff,0_0_calc(12*var(--u))_#fff,0_0_calc(20*var(--u))_#fff] ${fade}`}
-        lineClassName="w-[calc(66.222*var(--u))] to-[#7e2d00] shadow-[0_0_calc(10*var(--u))_#fff,0_0_calc(5*var(--u))_#fff]"
+        className={`text-[calc(12.817*var(--u))] tracking-[calc(0.513*var(--u))] text-[#9a3700] [text-shadow:0_0_calc(2*var(--u))_var(--brick),0_0_calc(2*var(--u))_var(--brick),0_0_calc(2*var(--u))_var(--brick),0_0_calc(6*var(--u))_var(--brick),0_0_calc(6*var(--u))_var(--brick),0_0_calc(12*var(--u))_var(--brick),0_0_calc(12*var(--u))_var(--brick),0_0_calc(20*var(--u))_var(--brick)] ${fade}`}
+        lineClassName="w-[calc(66.222*var(--u))] to-[#7e2d00] shadow-[0_0_calc(10*var(--u))_var(--brick),0_0_calc(5*var(--u))_var(--brick)]"
       />
     </div>
   )

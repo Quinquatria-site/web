@@ -1,3 +1,4 @@
+import { contentLang } from '@/shared/i18n/locales'
 import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
 import type { LostItem } from './lost-item'
 import { ReturnedBadge } from './ReturnedBadge'
@@ -12,6 +13,7 @@ export function LostItemDetail({
   foundLocationLabel: string
   returnedLabel: string
 }) {
+  const lang = contentLang(item.language_code)
   return (
     <article className="flex flex-col gap-5 px-5 pt-[18px]">
       <div className="aspect-[350/282] overflow-hidden rounded-xl">
@@ -21,23 +23,26 @@ export function LostItemDetail({
           sizes="(max-width: 480px) 100vw, 480px"
         />
       </div>
-      <div className="flex flex-col px-2 text-secondary">
-        {/* 공지 상세처럼 이름·습득 장소 아래 구분선을 긋고 설명을 잇는다 */}
-        <div
-          className={`flex flex-col gap-3 ${item.description ? 'border-b border-[#d3ced2] pb-[22px]' : ''}`}
-        >
+      <div className="flex flex-col gap-4 px-2 text-secondary">
+        <div className="flex flex-col gap-3">
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-2xl leading-[normal] font-semibold">{item.title}</h2>
+            <h2 lang={lang} className="text-2xl leading-[normal] font-semibold">
+              {item.title}
+            </h2>
             {item.is_returned && <ReturnedBadge label={returnedLabel} />}
           </div>
-          <p className="flex flex-col gap-1 leading-[1.18]">
-            <span className="text-text-muted">{foundLocationLabel}</span>
-            <span>{item.found_location}</span>
+          <p className="flex gap-3 leading-[1.4]">
+            <span className="shrink-0 text-text-muted">{foundLocationLabel}</span>
+            <span lang={lang} className="min-w-0">
+              {item.found_location}
+            </span>
           </p>
         </div>
         {/* 백오피스에서 넣은 줄바꿈을 그대로 살린다 */}
         {item.description && (
-          <p className="pt-3 leading-[1.4] whitespace-pre-line">{item.description}</p>
+          <p lang={lang} className="leading-[1.4] whitespace-pre-line">
+            {item.description}
+          </p>
         )}
       </div>
     </article>

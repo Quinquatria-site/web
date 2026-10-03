@@ -6,6 +6,8 @@ import { LightBackground } from '@/shared/background/LightBackground'
 import { PageHeader } from '@/shared/header/PageHeader'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
+import { localePath } from '@/shared/i18n/paths'
+import { oneLine, shareMetadata, taggedTitle } from '@/shared/metadata/share-metadata'
 import { assetUrl } from '@/shared/photo/asset-url'
 
 /** 목록에 있는 분실물 id 로 정적 생성한다. 언어는 레이아웃이 곱한다 */
@@ -19,34 +21,33 @@ export async function generateStaticParams() {
 /** 빌드 뒤에 올라온 분실물도 첫 요청 때 굽고 캐시한다. 재검증은 이미 있는 페이지만 다시 굽기 때문이다 */
 export const dynamicParams = true
 
-/** 공유 카드에 분실물 제목·습득 장소·사진을 싣는다. openGraph 는 통째로 덮이니 부모 값을 펼친다 */
+/** 공유 카드에 `[분실물] 제목`, 습득 장소·반환 여부·설명, 사진을 싣는다 */
 export async function generateMetadata(
   { params }: PageProps<'/[lang]/lost-items/[id]'>,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const { lang, id } = await params
+  const { id } = await params
   if (!/^[1-9]\d*$/.test(id)) return {}
   const item = await getLostItem(Number(id))
   if (!item) return {}
-  const { lostItems } = getMessages(await getLocale())
-  const description = [
-    `${lostItems.foundLocation}: ${item.found_location}`,
-    item.is_returned && lostItems.returned,
-  ]
-    .filter(Boolean)
-    .join(' · ')
-  const { openGraph } = await parent
-  return {
-    title: item.title,
+  const locale = await getLocale()
+  const { lostItems, meta } = getMessages(locale)
+  // 설명이 길면 카톡이 뒤를 자르니, 반환 여부를 설명보다 앞에 둬야 잘리지 않는다
+  const description = oneLine(
+    [
+      `${lostItems.foundLocation}: ${item.found_location}`,
+      item.is_returned && lostItems.returned,
+      item.description,
+    ]
+      .filter(Boolean)
+      .join(' · '),
+  )
+  return shareMetadata(parent, {
+    title: taggedTitle(locale, meta.lostItem, item.title),
     description,
-    openGraph: {
-      ...openGraph,
-      title: item.title,
-      description,
-      url: `/${lang}/lost-items/${item.id}`,
-      ...(item.image_url && { images: [{ url: assetUrl(item.image_url), alt: item.title }] }),
-    },
-  }
+    path: localePath(locale, `/lost-items/${item.id}`),
+    ...(item.image_url && { image: { url: assetUrl(item.image_url), alt: item.title } }),
+  })
 }
 
 /** 분실물 상세 */

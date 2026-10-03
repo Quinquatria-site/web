@@ -243,9 +243,10 @@ function SheetPanel({ onClose, hidden = false, peekHeight, revealKey, children }
           >
             <span className="h-[5px] w-[60px] rounded-full bg-sheet-edge" />
           </div>
+          {/* 손잡이 줄(42) 안에 다 들어가야 2단계에서 스크롤된 본문 위에 올라타지 않는다 */}
           <Dialog.Close
             aria-label={bottomSheet.close}
-            className="absolute top-[22px] right-[22px] -m-2 p-2"
+            className="absolute top-[9px] right-[22px] -m-2 p-2"
           >
             <svg aria-hidden viewBox="0 0 24 24" className="size-6 fill-current">
               <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />

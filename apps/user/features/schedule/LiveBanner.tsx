@@ -1,5 +1,7 @@
 import Image from 'next/image'
+import { heirOfLight } from '@/shared/fonts/heir-of-light'
 import { getLocale } from '@/shared/i18n/get-locale'
+import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
 import bannerAthena from './images/banner-athena.png'
 import type { Performance } from './performance'
@@ -11,7 +13,7 @@ export async function LiveBanner({ performance }: { performance: Performance }) 
   return (
     <a
       href={`#${performanceAnchorId(performance.id)}`}
-      className="relative flex h-[100px] flex-col justify-between overflow-clip rounded-xl border border-primary bg-bg bg-linear-to-r from-bg/20 to-primary/20 px-3.5 pt-[11px] pb-3 text-text shadow-[0_2px_16px_rgb(249_163_66/0.4)]"
+      className={`${heirOfLight.variable} relative flex h-[100px] flex-col justify-between overflow-clip rounded-xl border border-primary bg-bg bg-linear-to-r from-bg/20 to-primary/20 px-3.5 pt-[11px] pb-3 font-heir font-bold text-(--brown) shadow-[0_2px_16px_rgb(249_163_66/0.4)]`}
     >
       {/* 시안처럼 가운데보다 5px 내려 두고, 오른쪽으로 치우쳐 잘라 창끝까지 보인다 */}
       <Image
@@ -20,14 +22,17 @@ export async function LiveBanner({ performance }: { performance: Performance }) 
         sizes="180px"
         className="absolute top-[calc(50%+5px)] left-1/2 h-[118px] w-[140px] -translate-1/2 object-cover object-[65%_50%] opacity-30"
       />
-      <span className="relative flex items-center gap-3 text-base leading-[normal] font-semibold">
+      <span className="relative flex items-center gap-3 text-base leading-[normal]">
         <span
           aria-hidden
           className="size-2.5 rounded-full bg-primary shadow-[0_0_4px_3px_rgb(249_163_66/0.25)]"
         />
         {schedule.liveNow}
       </span>
-      <span className="relative max-w-full self-end truncate text-lg leading-[normal] font-semibold phone-md:text-[22px] phone-lg:text-2xl">
+      <span
+        lang={contentLang(performance.language_code)}
+        className="relative max-w-full self-end truncate text-lg leading-[normal] phone-md:text-[22px] phone-lg:text-2xl"
+      >
         {performance.title}
       </span>
     </a>

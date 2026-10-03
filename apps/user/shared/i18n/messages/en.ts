@@ -31,7 +31,7 @@ export const en: Messages = {
     nav: {
       schedule: {
         title: 'Festival Schedule',
-        description: 'Check the festival schedule and show times!',
+        description: 'Check the festival schedule!',
       },
       map: { title: 'Campus Map', description: 'Find booths and facilities around campus!' },
       notices: { title: 'Notices', description: 'Key news about the festival.' },
@@ -105,6 +105,8 @@ export const en: Messages = {
       menu: 'Menu',
       photos: 'Photos',
       price: '₩{price}',
+      copyLink: 'Copy link',
+      linkCopied: 'Copied',
     },
     /** 프론트에 둔 팔찌 수령 영역 */
     braceletPickup: {
@@ -166,5 +168,14 @@ export const en: Messages = {
       tattooSticker: { name: 'Tattoo Sticker' },
       ribbon: { name: 'Ribbon' },
     },
+  },
+  meta: {
+    siteTitle: '2026 QUINQUATRIA',
+    siteDescription: 'Oct 7 (Wed) - Oct 8 (Thu), HUFS Seoul Campus Festival',
+    pageTitle: '{page} | Quinquatria',
+    tagged: '[{label}] {title}',
+    notice: 'Notice',
+    lostItem: 'Lost & Found',
+    placeFallback: 'Find the location and opening hours on the map.',
   },
 }

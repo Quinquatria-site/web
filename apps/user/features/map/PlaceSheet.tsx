@@ -7,9 +7,11 @@ import {
   BottomSheetTitle,
 } from '@/shared/bottom-sheet/BottomSheet'
 import { useCloseWatcher } from '@/shared/history/useCloseWatcher'
+import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { type MapPlace, placeHours, placeLabel } from './map-place'
+import { CopyLinkButton } from './CopyLinkButton'
 import { MenuCard } from './MenuCard'
 import { PLACE_BG } from './place-colors'
 import { PlacePhotos } from './PlacePhotos'
@@ -33,8 +35,9 @@ function PlaceBadge({ place }: { place: MapPlace }) {
 function PlaceSummary({ place }: { place: MapPlace }) {
   const { sheet } = getMessages(useLocale()).map
   const label = placeLabel(place)
+  const lang = contentLang(place.language_code)
   const rows = [
-    { key: 'host', term: sheet.host, value: place.host_college },
+    { key: 'host', term: sheet.host, value: place.host_college, lang },
     { key: 'hours', term: sheet.hours, value: placeHours(place) },
     { key: 'location', term: sheet.location, value: label },
   ].filter((row) => row.value)
@@ -42,7 +45,7 @@ function PlaceSummary({ place }: { place: MapPlace }) {
   return (
     <div className="flex flex-col gap-3 px-2">
       <div className="flex items-center gap-2.5">
-        <BottomSheetTitle className="text-2xl leading-[normal] font-semibold">
+        <BottomSheetTitle lang={lang} className="text-2xl leading-[normal] font-semibold">
           {place.name}
         </BottomSheetTitle>
         <PlaceBadge place={place} />
@@ -53,12 +56,18 @@ function PlaceSummary({ place }: { place: MapPlace }) {
             {rows.map((row) => (
               <div key={row.key} className="flex gap-3">
                 <dt className="text-text-muted">{row.term}</dt>
-                <dd>{row.value}</dd>
+                <dd lang={row.lang}>{row.value}</dd>
               </div>
             ))}
           </dl>
         </BottomSheetDescription>
-        {place.description && <p className="leading-[1.4]">{place.description}</p>}
+        {/* 다른 장소로 바뀌면 복사했어요 글자가 남지 않게 새로 그린다 */}
+        <CopyLinkButton key={place.id} placeId={place.id} />
+        {place.description && (
+          <p lang={lang} className="leading-[1.4]">
+            {place.description}
+          </p>
+        )}
       </div>
     </div>
   )
