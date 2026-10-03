@@ -3,4 +3,8 @@
 
   --breakpoint-phone-md: 360px;
   --breakpoint-phone-lg: 400px;
+
+  /* 앱 기둥 밖 PC 배경 전용. 기둥 안 스타일에는 쓰지 않는다 */
+  --breakpoint-pc: 1024px;
+  --breakpoint-pc-lg: 1280px;
 }
