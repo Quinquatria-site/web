@@ -1,6 +1,6 @@
 'use client'
 
-import { HTML_LANG } from '@/shared/i18n/locales'
+import { contentLang, HTML_LANG } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
@@ -19,7 +19,7 @@ export function MenuCard({ menu }: { menu: PlaceMenu }) {
       <div className="h-full w-[72px] shrink-0 overflow-hidden rounded-lg">
         <ZoomablePhoto src={menu.image_url} alt={menu.name} sizes="72px" />
       </div>
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <div lang={contentLang(menu.language_code)} className="flex min-w-0 flex-1 flex-col gap-0.5">
         <p className="truncate leading-[normal] font-semibold">{menu.name}</p>
         <p className="truncate text-xs leading-[1.18]">{menu.description}</p>
       </div>

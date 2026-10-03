@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { getLocale } from '@/shared/i18n/get-locale'
+import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
 import bannerAthena from './images/banner-athena.png'
 import type { Performance } from './performance'
@@ -27,7 +28,10 @@ export async function LiveBanner({ performance }: { performance: Performance }) 
         />
         {schedule.liveNow}
       </span>
-      <span className="relative max-w-full self-end truncate text-lg leading-[normal] font-semibold phone-md:text-[22px] phone-lg:text-2xl">
+      <span
+        lang={contentLang(performance.language_code)}
+        className="relative max-w-full self-end truncate text-lg leading-[normal] font-semibold phone-md:text-[22px] phone-lg:text-2xl"
+      >
         {performance.title}
       </span>
     </a>

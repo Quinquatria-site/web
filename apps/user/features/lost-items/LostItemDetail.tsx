@@ -1,3 +1,4 @@
+import { contentLang } from '@/shared/i18n/locales'
 import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
 import type { LostItem } from './lost-item'
 import { ReturnedBadge } from './ReturnedBadge'
@@ -12,6 +13,7 @@ export function LostItemDetail({
   foundLocationLabel: string
   returnedLabel: string
 }) {
+  const lang = contentLang(item.language_code)
   return (
     <article className="flex flex-col gap-5 px-5 pt-[18px]">
       <div className="aspect-[350/282] overflow-hidden rounded-xl">
@@ -27,17 +29,21 @@ export function LostItemDetail({
           className={`flex flex-col gap-3 ${item.description ? 'border-b border-[#d3ced2] pb-[22px]' : ''}`}
         >
           <div className="flex flex-wrap items-center gap-2">
-            <h2 className="text-2xl leading-[normal] font-semibold">{item.title}</h2>
+            <h2 lang={lang} className="text-2xl leading-[normal] font-semibold">
+              {item.title}
+            </h2>
             {item.is_returned && <ReturnedBadge label={returnedLabel} />}
           </div>
           <p className="flex flex-col gap-1 leading-[1.18]">
             <span className="text-text-muted">{foundLocationLabel}</span>
-            <span>{item.found_location}</span>
+            <span lang={lang}>{item.found_location}</span>
           </p>
         </div>
         {/* 백오피스에서 넣은 줄바꿈을 그대로 살린다 */}
         {item.description && (
-          <p className="pt-3 leading-[1.4] whitespace-pre-line">{item.description}</p>
+          <p lang={lang} className="pt-3 leading-[1.4] whitespace-pre-line">
+            {item.description}
+          </p>
         )}
       </div>
     </article>

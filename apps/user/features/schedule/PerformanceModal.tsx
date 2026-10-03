@@ -3,6 +3,7 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import Image from 'next/image'
 import type { PerformanceType } from '@quen/schema/entities/performance'
+import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
@@ -66,11 +67,12 @@ function ModalContent({
   image_uri,
   title,
   description,
-}: Pick<Performance, 'image_uri' | 'title' | 'description'>) {
+  language_code,
+}: Pick<Performance, 'image_uri' | 'title' | 'description' | 'language_code'>) {
   return (
     <div className="mt-3 flex flex-col gap-4">
       <ModalImage imageUri={image_uri} title={title} />
-      <div className="flex flex-col gap-2 px-2">
+      <div lang={contentLang(language_code)} className="flex flex-col gap-2 px-2">
         <Dialog.Title className="text-2xl leading-[normal] font-semibold">{title}</Dialog.Title>
         <Dialog.Description className="text-sm leading-[1.18] whitespace-pre-line">
           {description}
@@ -92,6 +94,7 @@ export function PerformanceModal({ performance }: { performance: Performance }) 
           image_uri={performance.image_uri}
           title={performance.title}
           description={performance.description}
+          language_code={performance.language_code}
         />
       </Dialog.Content>
     </Dialog.Portal>

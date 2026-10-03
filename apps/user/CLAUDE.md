@@ -29,7 +29,8 @@
 주소 첫 칸이 언어다: `/ko` · `/en` · `/zh`. `/` 는 `/ko` 로 보낸다. 코드는 `shared/i18n/` 에 있다.
 
 - 페이지는 `app/[lang]/` 안에 만든다. 레이아웃의 `generateStaticParams` 가 세 언어로 한 벌씩 굽는다. 밖에 두면 루트 레이아웃이 없어 빌드가 깨진다.
-- API 는 `serverApi` 로만 부르고 언어를 넘기지 않는다. 지금 그리는 페이지 언어를 `language_code` 로 알아서 붙인다. 번역이 없는 데이터는 API 가 주지 않으니 따로 거르지 않는다.
+- API 는 `serverApi` 로만 부르고 언어를 넘기지 않는다. 지금 그리는 페이지 언어를 `language_code` 로 알아서 붙인다.
+- 번역이 없으면 한국어로 보여 준다. 목록은 `listWithSource`, 한 건은 `oneWithSource`(`shared/api/source-fallback.ts`)로 감싸고 `source` 를 `serverApi` 에 넘긴다. API 는 번역 없는 항목을 목록에서 빼거나(공지·분실물·공연·메뉴) 글자를 null 로 주고(장소), 상세는 404 로 답한다.
 - 화면에 쓰는 글자는 JSX 에 적지 않고 `messages/{ko,en,zh}.ts` 에 넣어 `getMessages(locale)` 로 꺼낸다. `ko.ts` 가 기준이라 다른 언어에 빠진 키는 타입 검사가 막는다.
 - 언어는 서버 컴포넌트에서 `getLocale()`, `'use client'` 에서 `useLocale()` 로 읽는다. 바꿔 쓰면 빌드가 깨진다.
 - 앱 안 링크는 `localePath(locale, '/notices')` 로 만든다. `'/notices'` 를 그대로 쓰면 언어 칸이 빠져 404 다.
