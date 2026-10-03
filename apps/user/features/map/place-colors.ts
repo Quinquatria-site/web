@@ -22,17 +22,6 @@ export const PLACE_FILL: Record<PlaceCode, string> = {
   TRASHCAN: 'fill-place-trashcan',
 }
 
-/** 물방울 마커 꼬리 채움. 고유 색 52% */
-export const PLACE_TAIL_FILL: Record<PlaceCode, string> = {
-  BOOTH: 'fill-place-booth/52',
-  PUB: 'fill-place-pub/52',
-  FOODTRUCK: 'fill-place-foodtruck/52',
-  MEDI: 'fill-place-medi/52',
-  BRACELET: 'fill-place-bracelet/52',
-  PHOTOBOOTH: 'fill-place-photobooth/52',
-  TRASHCAN: 'fill-place-trashcan/52',
-}
-
 /** 영역 테두리. 고유 색 */
 export const PLACE_STROKE: Record<PlaceCode, string> = {
   BOOTH: 'stroke-place-booth',

@@ -20,7 +20,7 @@ import trashcanIcon from './images/trashcan.svg'
 import { toLatLng } from './map-coords'
 import { type MapPlace, type PlaceCode, type PlaceId, placeLabel } from './map-place'
 import { PlaceArea } from './PlaceArea'
-import { PLACE_FILL, PLACE_TAIL_FILL } from './place-colors'
+import { PLACE_FILL } from './place-colors'
 
 // 처음 전체 보기의 이 배수보다 확대해야 큰 물방울이 나온다. 그 아래는 다닥다닥 붙어도 겹치지 않는 작은 물방울만 찍고 누를 수 없다
 const FULL_MARKER_SCALE = 1.76
@@ -104,10 +104,7 @@ function markerHtml(code: PlaceCode, label: string | null) {
       <circle r="28" class="${PLACE_FILL[code]}" opacity=".2" />
     </svg>
     <svg class="absolute z-auto! -top-[32px] -left-[13px] h-[32px] w-[26px]" viewBox="-21 -21 42 52">
-      <path d="${DROP_PATH}" class="fill-white" />
-      <path d="${DROP_PATH}" class="${PLACE_TAIL_FILL[code]}" />
-      <circle r="19.5" class="${PLACE_FILL[code]}" />
-      <path d="${DROP_PATH}" fill="none" stroke-width="3" class="stroke-white" />
+      <path d="${DROP_PATH}" stroke-width="3" class="${PLACE_FILL[code]} stroke-white" />
     </svg>
     <span class="absolute -top-[32px] -left-[13px] grid size-[26px] place-items-center rounded-full font-sans text-[10.5px] leading-none font-semibold text-text-inverse outline-offset-2 outline-text group-focus-visible:outline-2">
       ${content}
