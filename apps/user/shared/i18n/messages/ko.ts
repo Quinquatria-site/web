@@ -65,7 +65,7 @@ export const ko = {
   schedule: {
     festivalStarted: '축제가 시작됐습니다!',
     festivalBefore: '축제 준비 중...',
-    festivalBreak: '축제는 곧 다시 시작됩니다',
+    festivalBreak: '축제는 곧\n다시 시작됩니다',
     festivalEnded: '축제가 모두 끝났습니다',
     festivalEndedSub: '다음에 만나요!',
     liveNow: '지금 공연 중!',
