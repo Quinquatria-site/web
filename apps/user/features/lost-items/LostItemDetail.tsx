@@ -34,9 +34,11 @@ export function LostItemDetail({
             </h2>
             {item.is_returned && <ReturnedBadge label={returnedLabel} />}
           </div>
-          <p className="flex flex-col gap-1 leading-[1.18]">
-            <span className="text-text-muted">{foundLocationLabel}</span>
-            <span lang={lang}>{item.found_location}</span>
+          <p className="flex gap-3 leading-[1.4]">
+            <span className="shrink-0 text-text-muted">{foundLocationLabel}</span>
+            <span lang={lang} className="min-w-0">
+              {item.found_location}
+            </span>
           </p>
         </div>
         {/* 백오피스에서 넣은 줄바꿈을 그대로 살린다 */}
