@@ -118,11 +118,12 @@ function SheetPanel({
   }, [])
 
   useEffect(() => {
-    if (!height) return
+    // 닫혀 내려가는 중에 키보드가 올라와 높이가 바뀌어도 단계 자리로 되돌리지 않는다. 되돌리면 퇴장이 끊겨 시트가 화면에 남는다
+    if (!height || !isPresent) return
     const controls = animate(y, target, SLIDE)
     return () => controls.stop()
     // revealKey 는 자리가 그대로여도 다시 올리려고 받는다
-  }, [y, target, height, revealKey])
+  }, [y, target, height, revealKey, isPresent])
 
   useEffect(() => {
     // 1단계로 내려오면 본문을 맨 위로 돌려 제목이 다시 보이게 한다
