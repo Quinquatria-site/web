@@ -94,7 +94,8 @@ export function SunsetBackground() {
       viewBox="0 0 390 260"
       // 폭은 앱 기둥에 맞춰 늘리고 높이는 화면 비율을 따라 물결이 한 벌로 유지된다
       preserveAspectRatio="none"
-      className="pointer-events-none fixed bottom-0 -z-10 h-[34lvh] w-full max-w-(--app-max-width)"
+      // 지도 검색 키보드가 화면을 줄이면 줄어든 만큼(--keyboard-shift) 내려 도크처럼 제자리에 둔다
+      className="pointer-events-none fixed bottom-[calc(0px-var(--keyboard-shift,0px))] -z-10 h-[34lvh] w-full max-w-(--app-max-width)"
     >
       <defs>
         <filter id="sunset-blur" x="-5%" y="-20%" width="110%" height="140%">
