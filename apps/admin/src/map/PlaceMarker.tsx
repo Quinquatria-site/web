@@ -111,18 +111,21 @@ interface MarkerState {
   selected: boolean
   name: string
   full: boolean
+  /** 누를 수 있는 마커인지. 아니면 늘 포커스·읽기에서 뺀다 */
+  selectable: boolean
 }
 
 // Leaflet 뿌리 요소가 role=button 이라 이름·눌림 상태를 여기에 단다. 레이어가 다시 붙으면 요소가 새로 생겨 add 때도 부른다
-// 작은 물방울일 땐 포커스·읽기에서 빼서 누를 수 없는 점으로 둔다
-function syncMarker(marker: LeafletMarker, { selected, name, full }: MarkerState) {
+// 작은 물방울이거나 누를 수 없는 마커는 포커스·읽기에서 빼서 점으로 둔다
+function syncMarker(marker: LeafletMarker, { selected, name, full, selectable }: MarkerState) {
   const element = marker.getElement()
+  const focusable = full && selectable
   element?.toggleAttribute('data-selected', selected)
   element?.toggleAttribute('data-full', full)
   element?.setAttribute('aria-pressed', String(selected))
   element?.setAttribute('aria-label', name)
-  element?.setAttribute('tabindex', full ? '0' : '-1')
-  if (full) element?.removeAttribute('aria-hidden')
+  element?.setAttribute('tabindex', focusable ? '0' : '-1')
+  if (focusable) element?.removeAttribute('aria-hidden')
   else element?.setAttribute('aria-hidden', 'true')
   const zIndexOffset = selected ? SELECTED_Z_OFFSET : 0
   // setZIndexOffset 은 위치까지 다시 써서, 경계에서 마커가 함께 바뀔 때 값이 같으면 건너뛴다
@@ -159,8 +162,10 @@ interface PlaceMarkerProps {
   id?: number
   /** 없으면 누를 수 없는 마커가 되어 누름이 지도로 간다. 지도 목록에서 그대로 넘기도록 id 를 받는다 */
   onSelect?: (id: number) => void
-  /** 마우스를 올리면 마커 위에 띄울 글 */
+  /** 마우스를 올리면 마커 위에 띄울 글. onSelect 가 없으면 올리기만 받고 누름은 지도로 흘린다 */
   tooltip?: string
+  /** 반투명하게 깐다. 좌표 픽커에서 다른 장소를 참고로 보여 줄 때 */
+  faded?: boolean
 }
 
 /**
@@ -176,6 +181,7 @@ export const PlaceMarker = memo(function PlaceMarker({
   id,
   onSelect,
   tooltip,
+  faded = false,
 }: PlaceMarkerProps) {
   const map = useMap()
   const zoomFull = useFullZoom()
@@ -184,12 +190,18 @@ export const PlaceMarker = memo(function PlaceMarker({
   const label = placeLabel(code, sequence)
   const name = label ? `${PLACE_NAMES[code]} ${label}` : PLACE_NAMES[code]
   // add 핸들러가 다시 만들어지지 않게 최신 선택·이름·크기는 ref 로 읽는다
-  const stateRef = useRef<MarkerState>({ selected, name, full })
+  const selectable = Boolean(onSelect)
+  const stateRef = useRef<MarkerState>({ selected, name, full, selectable })
 
   // 아이콘을 다시 만들면 Leaflet 이 안을 갈아 끼워 링 전환이 끊기므로 모양 값이 바뀔 때만 만든다
   const icon = useMemo(
-    () => divIcon({ html: markerHtml(code, label), className: styles.root, iconSize: [0, 0] }),
-    [code, label],
+    () =>
+      divIcon({
+        html: markerHtml(code, label),
+        className: faded ? `${styles.root} ${styles.faded}` : styles.root,
+        iconSize: [0, 0],
+      }),
+    [code, label, faded],
   )
   // 새 배열·객체를 넘기면 react-leaflet 이 다시 그릴 때마다 setLatLng·이벤트 재등록을 한다
   const { x, y } = point
@@ -215,20 +227,23 @@ export const PlaceMarker = memo(function PlaceMarker({
   )
 
   useEffect(() => {
-    stateRef.current = { selected, name, full }
+    stateRef.current = { selected, name, full, selectable }
     if (!markerRef.current) return
     syncMarker(markerRef.current, stateRef.current)
     // tabindex 를 빼도 이미 잡힌 포커스는 남아, 작은 물방울이 되면 키보드가 이어지도록 지도 칸으로 옮긴다
     if (!full && markerRef.current.getElement()?.contains(document.activeElement))
       map.getContainer().focus({ preventScroll: true })
-  }, [map, selected, name, full])
+  }, [map, selected, name, full, selectable])
 
   return (
     <Marker
       ref={markerRef}
       position={position}
       icon={icon}
-      interactive={Boolean(onSelect)}
+      // 툴팁만 단 마커도 마우스 올리기를 받아야 해서 interactive 로 두고, 누름은 지도로 올려 좌표 픽커가 받게 한다
+      interactive={selectable || Boolean(tooltip)}
+      bubblingMouseEvents={!selectable}
+      keyboard={selectable}
       eventHandlers={eventHandlers}
     >
       {tooltip && (

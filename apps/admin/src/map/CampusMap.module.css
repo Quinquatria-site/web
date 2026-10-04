@@ -116,6 +116,12 @@
   outline-offset: 2px;
 }
 
+/* 좌표 픽커의 다른 장소. 참고로만 깔아 지금 찍는 마커가 늘 진하게 보인다. 누를 수 없어 손가락 모양도 띄우지 않는다 */
+.root.faded {
+  opacity: 0.45;
+  cursor: inherit;
+}
+
 /* 물방울 원 위의 글자·아이콘 */
 .circle {
   position: absolute;

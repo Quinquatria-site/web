@@ -254,14 +254,16 @@ const DOUBLE_TAP_WAIT_MS = 300
 /** 좌표 픽커. 기다리지 않고 바로 찍되, 두 번 탭 확대의 두 번째 탭은 같은 자리라 버린다 */
 function PickLayer({ onPick }: { onPick: (point: Point) => void }) {
   const lastPickRef = useRef(-Infinity)
-  useMapEvents({
+  const map = useMapEvents({
     click: (event) => {
+      // 지도 칸에서 Enter 를 누르면 Leaflet 이 click 으로 바꿔 보내는데, 누른 자리가 없어 찍지 않는다
+      if (!(event.originalEvent instanceof MouseEvent)) return
       const at = event.originalEvent.timeStamp
       const repeat = at - lastPickRef.current < DOUBLE_TAP_WAIT_MS
       lastPickRef.current = at
       if (repeat) return
-      // user 앱이 같은 좌표계(이미지 픽셀, 왼쪽 아래 원점)로 읽는다
-      onPick(fromLatLng(event.latlng))
+      // user 앱이 같은 좌표계(이미지 픽셀, 왼쪽 아래 원점)로 읽는다. 마커에서 올라온 누름은 latlng 가 마커 자리라 누른 자리를 다시 잰다
+      onPick(fromLatLng(map.mouseEventToLatLng(event.originalEvent)))
     },
   })
   return null
