@@ -17,12 +17,12 @@ export interface NoticeTextWrite {
   language_code: LanguageCode
   title: string
   content: string
+  /** 이 언어의 사진. 빈 배열은 422 라 없으면 null. PATCH 에서 빼면 그 언어 사진을 그대로 둔다 */
+  notice_image_uri?: string[] | null
 }
 
 export interface NoticeWrite {
   type: NoticeType
-  /** 빈 배열은 422 다. 사진이 없으면 null */
-  notice_image_uri: string[] | null
   translations: NoticeTextWrite[]
 }
 

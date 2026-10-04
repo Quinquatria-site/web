@@ -86,7 +86,15 @@ function NoticeEditForm() {
 
   // 축제 중 올라오는 공지는 대부분 일반이다. 상시는 축제 전에 몇 건 걸어두고 끝난다
   const [type, setType] = useState<NoticeType>(editing?.type ?? 'GENERAL')
-  const [photos, setPhotos] = useState<string[]>(editing?.notice_image_uri ?? [])
+  // 사진은 언어마다 따로다. 제목·본문처럼 세 언어를 한꺼번에 들고 있어 탭을 옮겨도 남는다
+  const [photos, setPhotos] = useState(() => {
+    const initial = {} as Record<LanguageCode, string[]>
+    for (const code of LANGUAGE_CODES) {
+      const t = editing ? findTranslation(editing.translations, code) : undefined
+      initial[code] = t?.notice_image_uri ?? []
+    }
+    return initial
+  })
   const [lang, setLang] = useState<LanguageCode>('KO')
   const [confirming, setConfirming] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -117,6 +125,15 @@ function NoticeEditForm() {
     if (half.length > 0)
       return setError(`${half.join('·')} 은 제목과 본문을 둘 다 채우거나 둘 다 비워주세요.`)
 
+    // 사진은 번역에 실려 나간다. 글 없이 사진만 넣은 언어는 보낼 자리가 없어 조용히 빠진다
+    const photoOnly = LANGUAGE_CODES.filter(
+      (code) => photos[code].length > 0 && !values[fieldKey('title', code)].trim(),
+    )
+    if (photoOnly.length > 0)
+      return setError(
+        `${photoOnly.join('·')} 은 사진만 있습니다. 제목과 본문도 채우거나 사진을 빼주세요.`,
+      )
+
     // 요청 본문의 번역에는 id·notice_id 를 싣지 않는다 — 서버가 모르는 필드는 422 다.
     // 새 공지도 id 없이 보내고 서버가 매긴다
     const translations: NoticeTextWrite[] = []
@@ -130,24 +147,30 @@ function NoticeEditForm() {
         language_code: code,
         title,
         content: values[fieldKey('content', code)].trim(),
+        // 빈 배열은 422 다. 다 지웠으면 null 로 보낸다
+        notice_image_uri: photos[code].length > 0 ? photos[code] : null,
       })
     }
 
     // 지우기 전에 원본 문안을 붙잡는다. 실행취소가 PATCH 로 다시 올린다
     const undo: NoticeTextWrite[] = removing.flatMap((code) => {
       const t = editing && findTranslation(editing.translations, code)
-      return t ? [{ language_code: t.language_code, title: t.title, content: t.content }] : []
+      return t
+        ? [
+            {
+              language_code: t.language_code,
+              title: t.title,
+              content: t.content,
+              notice_image_uri: t.notice_image_uri,
+            },
+          ]
+        : []
     })
 
     setError(null)
     setPending(true)
     try {
-      const saved = await saveNotice(editing?.id ?? null, {
-        type,
-        // 빈 배열은 422 다. 다 지웠으면 null 로 보낸다
-        notice_image_uri: photos.length > 0 ? photos : null,
-        translations,
-      })
+      const saved = await saveNotice(editing?.id ?? null, { type, translations })
 
       // 두 호출의 순서다 — PATCH 로 남길 언어를 올리고, 지울 언어는 전용 DELETE 로
       // 따로 부른다 (§5.2). 여기서 실패하면 PATCH 는 이미 반영된 채 화면에 남는다
@@ -165,17 +188,15 @@ function NoticeEditForm() {
                   message={`${values.title_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
                   actionLabel="실행취소"
                   onAction={() => {
-                    saveNotice(saved.id, {
-                      type: saved.type,
-                      notice_image_uri: saved.notice_image_uri,
-                      translations: undo,
-                    }).catch((undoError: unknown) => {
-                      const message = apiErrorText(undoError)
-                      snackbar.create({
-                        timeout: 4000,
-                        render: () => <Snackbar variant="critical" message={message} />,
-                      })
-                    })
+                    saveNotice(saved.id, { type: saved.type, translations: undo }).catch(
+                      (undoError: unknown) => {
+                        const message = apiErrorText(undoError)
+                        snackbar.create({
+                          timeout: 4000,
+                          render: () => <Snackbar variant="critical" message={message} />,
+                        })
+                      },
+                    )
                   }}
                 />
               ),
@@ -308,7 +329,7 @@ function NoticeEditForm() {
         {removing.length > 0 && (
           <Callout
             tone="critical"
-            description={`${removing.join('·')} 번역을 삭제합니다. 저장하면 그 언어로 보는 학생에게 이 공지가 사라집니다.`}
+            description={`${removing.join('·')} 번역을 삭제합니다. 그 언어의 사진도 함께 지워지고, 저장하면 그 언어로 보는 학생에게 이 공지가 사라집니다.`}
           />
         )}
         {blank.length > 0 && (
@@ -335,17 +356,27 @@ function NoticeEditForm() {
             placeholder={lang === 'KO' ? '무엇이 언제 어떻게 바뀌는지 적어주세요' : ''}
           />
         </TextField>
-      </div>
 
-      <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>사진</h2>
-        <PhotoPicker
-          resourceType="NOTICE_IMAGE"
-          value={photos}
-          onChange={setPhotos}
-          max={PHOTO_MAX}
-          label={values.title_KO.trim() || '공지'}
-        />
+        {/* 사진도 언어마다 따로라 탭 안에 둔다. 학생 앱은 빈 언어를 한국어 사진으로
+            채우지 않는다 — 다른 언어에는 있는데 이 언어만 비었으면 미리 말해준다.
+            key 로 언어마다 갈아끼워, 올리는 중에 탭을 옮겨도 다른 언어에 섞이지 않게 한다 */}
+        <div className={styles.field}>
+          <span className={styles.fieldLabel}>사진</span>
+          {lang !== 'KO' && photos[lang].length === 0 && photos.KO.length > 0 && (
+            <Callout
+              tone="warning"
+              description={`${lang} 사진이 없습니다. 그 언어로 보는 학생에게는 사진 없이 나갑니다.`}
+            />
+          )}
+          <PhotoPicker
+            key={lang}
+            resourceType="NOTICE_IMAGE"
+            value={photos[lang]}
+            onChange={(next) => setPhotos((prev) => ({ ...prev, [lang]: next }))}
+            max={PHOTO_MAX}
+            label={values[fieldKey('title', lang)].trim() || values.title_KO.trim() || '공지'}
+          />
+        </div>
       </div>
 
       {/* 되돌릴 수 없는 액션이라 저장 옆에 두지 않는다. 일부러 내려와야 닿는 자리다 */}
