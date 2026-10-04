@@ -1,6 +1,8 @@
 :root {
   --app-max-width: 480px;
   --app-width: min(100vw, var(--app-max-width));
+  /* 탭 페이지 맨 위 제목 줄 높이. 지도는 이만큼 빼고 화면을 채운다 */
+  --page-title-height: 48px;
   --dock-size: 60px;
   --dock-inset: 15px;
   --dock-pad: 4px;

@@ -6,6 +6,7 @@ import { MapView } from '@/features/map/MapView'
 import { DuskBackground } from '@/shared/background/DuskBackground'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
+import { PageTitle } from '@/shared/page-title/PageTitle'
 import { localePath } from '@/shared/i18n/paths'
 import { oneLine, shareMetadata, taggedTitle } from '@/shared/metadata/share-metadata'
 import { assetUrl } from '@/shared/photo/asset-url'
@@ -62,10 +63,12 @@ export async function generateMetadata(
 export default async function MapPlacePage({ params }: PageProps<'/[lang]/map/[id]'>) {
   const found = await findPlace((await params).id)
   if (!found?.place) notFound()
+  const { pages } = getMessages(await getLocale())
 
   return (
     <>
       <DuskBackground />
+      <PageTitle title={pages.map} />
       <MapView places={found.places} initialPlaceId={found.place.id} />
     </>
   )

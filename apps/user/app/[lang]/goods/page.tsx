@@ -9,6 +9,7 @@ import { placeLabel } from '@/features/map/map-place'
 import { DuskBackground } from '@/shared/background/DuskBackground'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
+import { PageTitle } from '@/shared/page-title/PageTitle'
 import { localePath } from '@/shared/i18n/paths'
 import { listShareMetadata } from '@/shared/metadata/share-metadata'
 
@@ -23,7 +24,7 @@ export async function generateMetadata(_: PageProps<'/[lang]/goods'>, parent: Re
 /** 굿즈 탭. 소개 아래 굿즈를 한 장씩 넘겨 보고, 전체 목록은 시트로 연다 */
 export default async function GoodsPage() {
   const locale = await getLocale()
-  const { goods } = getMessages(locale)
+  const { pages, goods } = getMessages(locale)
   // 장소를 못 받아도 굿즈 페이지는 API 없이 그릴 수 있으니, 빌드를 멈추지 않고 지도 전체로 보낸다
   const places = await getPlaces().catch(() => [])
   const booth = places.find((place) => placeLabel(place) === SALES_BOOTH_LABEL)
@@ -32,6 +33,7 @@ export default async function GoodsPage() {
     <>
       <GoodsImagePreload goods={GOODS} />
       <DuskBackground />
+      <PageTitle title={pages.goods} />
       <div className="flex flex-col items-center gap-7 px-[18px] pt-5">
         <GoodsIntro
           text={goods.intro}

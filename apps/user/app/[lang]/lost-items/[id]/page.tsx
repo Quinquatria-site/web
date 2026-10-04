@@ -5,6 +5,7 @@ import { LostItemDetail } from '@/features/lost-items/LostItemDetail'
 import { LightBackground } from '@/shared/background/LightBackground'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
+import { PageTitle } from '@/shared/page-title/PageTitle'
 import { localePath } from '@/shared/i18n/paths'
 import { oneLine, shareMetadata, taggedTitle } from '@/shared/metadata/share-metadata'
 import { assetUrl } from '@/shared/photo/asset-url'
@@ -52,7 +53,7 @@ export async function generateMetadata(
 /** 분실물 상세 */
 export default async function LostItemDetailPage({ params }: PageProps<'/[lang]/lost-items/[id]'>) {
   const { id } = await params
-  const { lostItems } = getMessages(await getLocale())
+  const { pages, lostItems } = getMessages(await getLocale())
   // 1 이상 정수가 아닌 주소는 API 가 422 로 답해 500 이 되므로 부르기 전에 걸러 낸다
   if (!/^[1-9]\d*$/.test(id)) notFound()
   const item = await getLostItem(Number(id))
@@ -61,6 +62,7 @@ export default async function LostItemDetailPage({ params }: PageProps<'/[lang]/
   return (
     <>
       <LightBackground />
+      <PageTitle title={pages.lostItems} onLight />
       <LostItemDetail
         item={item}
         foundLocationLabel={lostItems.foundLocation}

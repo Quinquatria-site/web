@@ -5,6 +5,7 @@ import { NoticeDetail } from '@/features/notices/NoticeDetail'
 import { LightBackground } from '@/shared/background/LightBackground'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
+import { PageTitle } from '@/shared/page-title/PageTitle'
 import { localePath } from '@/shared/i18n/paths'
 import { oneLine, shareMetadata, taggedTitle } from '@/shared/metadata/share-metadata'
 
@@ -45,10 +46,12 @@ export default async function NoticeDetailPage({ params }: PageProps<'/[lang]/no
   if (!/^[1-9]\d*$/.test(id)) notFound()
   const notice = await getNotice(Number(id))
   if (!notice) notFound()
+  const { pages } = getMessages(await getLocale())
 
   return (
     <>
       <LightBackground />
+      <PageTitle title={pages.notices} onLight />
       <NoticeDetail notice={notice} />
     </>
   )
