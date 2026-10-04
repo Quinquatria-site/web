@@ -30,7 +30,6 @@ import {
 } from '../mocks/store'
 import {
   FESTIVAL_DATES,
-  festivalDateLabel,
   findTranslation,
   LANGUAGE_CODES,
   type LanguageCode,
@@ -38,11 +37,10 @@ import {
 import styles from './PlaceEditRoute.module.css'
 
 /*
- * start_hour·end_hour 는 명세상 datetime 이지만 화면은 일차와 시각을 따로 다룬다.
- * 아래 두 함수가 그 사이를 오간다. offset 을 보지 않고 자르므로 값이 KST(+09:00)
- * 라고 가정한다 — 서버는 UTC 로 주지만 캐시에 넣을 때 KST 로 바꿔 둔다(api/catalog.ts).
+ * start_hour·end_hour 는 명세상 datetime 이지만 일차는 10/7 로 고정하고 시각만 받는다
+ * — 서버·학생 앱이 날짜를 쓰지 않아서. hourOf·toIso 가 그 사이를 오간다. offset 을
+ * 보지 않고 자르므로 값이 KST(+09:00) 라고 가정한다 — 서버는 UTC 로 주지만 캐시에 넣을 때 KST 로 바꿔 둔다(api/catalog.ts).
  */
-const dateOf = (iso: string) => iso.slice(0, 10)
 const hourOf = (iso: string): Hour => ({
   hour: Number(iso.slice(11, 13)),
   minute: Number(iso.slice(14, 16)),
@@ -110,9 +108,6 @@ function PlaceEditForm() {
   const [showOthers, setShowOthers] = useState(false)
 
   // 운영시간이 비어 있는 장소는 새 장소와 같은 기본값으로 채워 보여 준다
-  const [date, setDate] = useState<string>(
-    editing?.start_hour ? dateOf(editing.start_hour) : FESTIVAL_DATES[0],
-  )
   const [start, setStart] = useState<Hour>(
     editing?.start_hour ? hourOf(editing.start_hour) : { hour: 10, minute: 0 },
   )
@@ -216,8 +211,9 @@ function PlaceEditForm() {
         category_sequence: sequence,
         x: point.x,
         y: point.y,
-        start_hour: toIso(date, start),
-        end_hour: toIso(date, end),
+        // 10/8 로 들어 있던 장소도 저장하면 10/7 로 맞춰진다. 시각은 그대로
+        start_hour: toIso(FESTIVAL_DATES[0], start),
+        end_hour: toIso(FESTIVAL_DATES[0], end),
         // 빈 배열은 422 다 (§5.4). 다 지웠으면 null 로 보낸다
         place_image_uri: photos.length > 0 ? photos : null,
         translations,
@@ -328,18 +324,6 @@ function PlaceEditForm() {
         >
           <TextFieldInput inputMode="numeric" placeholder="1" />
         </TextField>
-
-        {/* 날짜는 사흘 중 하나라 피커를 띄울 것도 없다. 한 번에 보이는 편이 빠르다 */}
-        <div className={styles.field}>
-          <span className={styles.fieldLabel}>운영 일자</span>
-          <SegmentedControl aria-label="운영 일자" value={date} onValueChange={setDate}>
-            {FESTIVAL_DATES.map((value) => (
-              <SegmentedControlItem key={value} value={value}>
-                {festivalDateLabel(value)}
-              </SegmentedControlItem>
-            ))}
-          </SegmentedControl>
-        </div>
 
         <HourField label="운영 시작" value={start} onValueChange={setStart} />
         <HourField
