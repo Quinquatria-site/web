@@ -96,7 +96,7 @@ export function PlaceMarker(props: PlaceMarkerProps) {
 interface PlaceMarkerProps {
   point: Point
   code: PlaceCode
-  sequence: number
+  sequence: number | null
   selected?: boolean
   onSelect?: () => void
   /** 툴팁처럼 마커에 붙일 것 */

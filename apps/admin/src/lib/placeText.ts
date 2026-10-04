@@ -18,7 +18,7 @@ export function detailOf(place: Place): string {
   const label = category ? findTranslation(category.translations, 'KO')?.name : ''
   const college = findTranslation(place.translations, 'KO')?.host_college
   return [
-    `${label} ${place.category_sequence}번`,
+    place.category_sequence === null ? label : `${label} ${place.category_sequence}번`,
     place.start_hour && `${hhmm(place.start_hour)}~${place.end_hour ? hhmm(place.end_hour) : ''}`,
     college,
   ]

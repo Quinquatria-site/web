@@ -63,7 +63,11 @@ function PlaceSummary({ place }: { place: MapPlace }) {
           </dl>
         </BottomSheetDescription>
         {/* 다른 장소로 바뀌면 첫 사진부터 다시 보인다 */}
-        <PlacePhotos key={`photos-${place.id}`} images={place.place_image_uri ?? []} alt={place.name} />
+        <PlacePhotos
+          key={`photos-${place.id}`}
+          images={place.place_image_uri ?? []}
+          alt={place.name ?? ''}
+        />
         {/* 다른 장소로 바뀌면 복사했어요 글자가 남지 않게 새로 그린다 */}
         <CopyLinkButton key={`copy-${place.id}`} placeId={place.id} />
         {/* 백오피스에서 넣은 줄바꿈을 그대로 살리고, 긴 주소는 칸 안에서 끊고 링크로 연다 */}

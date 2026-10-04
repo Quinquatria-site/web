@@ -21,10 +21,10 @@ const LETTER_FROM = 51
 
 /**
  * 마커 글자. category_sequence 백의 자리가 구역(1 → A), 나머지 두 자리가 번호라 101 은 A1, 251 은 Ba 다.
- * user 앱 features/map/map-place.ts 의 placeLabel 과 같은 규칙이다. 구역이 없는 카테고리는 null
+ * user 앱 features/map/map-place.ts 의 placeLabel 과 같은 규칙이다. 구역이 없는 카테고리나 번호가 아직 없으면 null
  */
-export function placeLabel(code: PlaceCode, sequence: number): string | null {
-  if (!SECTION_CODES.has(code)) return null
+export function placeLabel(code: PlaceCode, sequence: number | null): string | null {
+  if (!SECTION_CODES.has(code) || sequence === null) return null
   const section = String.fromCharCode(64 + Math.floor(sequence / 100))
   const number = sequence % 100
   const suffix = number >= LETTER_FROM ? String.fromCharCode(97 + number - LETTER_FROM) : number

@@ -28,16 +28,18 @@ function syncArea(layer: LeafletPolygon, selected: boolean, name: string) {
 /** 점 대신 영역으로 표시하는 장소. 누르면 마커처럼 장소를 고른다 */
 export const PlaceArea = memo(function PlaceArea({
   place,
+  name,
   area,
   selected,
   onSelect,
 }: {
   place: MapPlace
+  name: string
   area: MapPoint[]
   selected: boolean
   onSelect: (id: PlaceId) => void
 }) {
-  const { id, code, name } = place
+  const { id, code } = place
   const layerRef = useRef<LeafletPolygon>(null)
   // add 핸들러가 다시 만들어지지 않게 최신 선택은 ref 로 읽는다
   const selectedRef = useRef(selected)

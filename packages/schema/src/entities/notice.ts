@@ -8,6 +8,8 @@ export interface NoticeBase {
   type: NoticeType
   /** 등록 시각. UTC offset 포함 ISO 8601 */
   created_at: string
+  /** 순서 있는 이미지 key 목록. 없으면 null */
+  notice_image_uri: string[] | null
 }
 
 /** 공지의 번역 필드 */

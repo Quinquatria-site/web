@@ -153,13 +153,15 @@ function sellingCategoryIds(): number[] {
 /** 주점·부스 전체 수. "63곳 중 60곳" 처럼 분모로 쓴다 */
 export function sellingPlaceCount(): number {
   const ids = sellingCategoryIds()
-  return PLACES.filter((p) => ids.includes(p.category_id)).length
+  return PLACES.filter((p) => p.category_id !== null && ids.includes(p.category_id)).length
 }
 
 /** 메뉴가 하나도 없는 주점·부스. 파는 곳인데 살 것이 안 보이는 상태다 */
 export function placesWithoutMenu(): Place[] {
   const ids = sellingCategoryIds()
-  return PLACES.filter((p) => ids.includes(p.category_id) && menusByPlace(p.id).length === 0)
+  return PLACES.filter(
+    (p) => p.category_id !== null && ids.includes(p.category_id) && menusByPlace(p.id).length === 0,
+  )
 }
 
 /** 일차별 공연 수. 0 인 일차가 곧 라인업 미배정이다 */

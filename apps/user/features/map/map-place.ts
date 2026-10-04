@@ -1,4 +1,4 @@
-import type { Localized } from '@quen/schema/common/localize'
+import type { Localized, MaybeLocalized } from '@quen/schema/common/localize'
 import type { CategoryCode } from '@quen/schema/entities/category'
 import type { MenuBase, MenuText } from '@quen/schema/entities/menu'
 import type { PlaceBase, PlaceText } from '@quen/schema/entities/place'
@@ -15,7 +15,7 @@ export type PlaceMenu = Localized<MenuBase, MenuText>
 export type PlaceId = number | string
 
 /** 지도에 찍을 장소 한 건. category_id 는 카테고리 코드로 풀고, 시트에 보일 메뉴를 붙여 둔다 */
-export type MapPlace = Omit<Localized<PlaceBase, PlaceText>, 'id'> & {
+export type MapPlace = Omit<MaybeLocalized<PlaceBase, PlaceText>, 'id'> & {
   id: PlaceId
   code: PlaceCode
   menus: PlaceMenu[]
@@ -34,12 +34,12 @@ const SECTION_CODES: ReadonlySet<PlaceCode> = new Set(['BOOTH', 'PUB'])
 // 끝 두 자리가 이 값부터면 숫자 대신 소문자다. 51 → a
 const LETTER_FROM = 51
 
-/** 마커 글자. category_sequence 백의 자리가 구역(1 → A), 나머지 두 자리가 번호라 101 은 A1, 251 은 Ba 다. 구역이 없는 카테고리는 null */
+/** 마커 글자. category_sequence 백의 자리가 구역(1 → A), 나머지 두 자리가 번호라 101 은 A1, 251 은 Ba 다. 구역이 없는 카테고리나 번호가 아직 없으면 null */
 export function placeLabel({
   code,
   category_sequence,
 }: Pick<MapPlace, 'code' | 'category_sequence'>): string | null {
-  if (!SECTION_CODES.has(code)) return null
+  if (!SECTION_CODES.has(code) || category_sequence === null) return null
   const section = String.fromCharCode(64 + Math.floor(category_sequence / 100))
   const number = category_sequence % 100
   const suffix = number >= LETTER_FROM ? String.fromCharCode(97 + number - LETTER_FROM) : number

@@ -248,6 +248,8 @@ export function PlaceMarkers({
             <PlaceArea
               key={place.id}
               place={place}
+              // 번역이 없어 이름이 null 이면 카테고리 이름으로 읽힌다
+              name={place.name ?? names[place.code]}
               area={place.area}
               selected={selected}
               onSelect={onSelect}
