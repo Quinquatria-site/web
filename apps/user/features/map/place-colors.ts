@@ -9,6 +9,8 @@ export const PLACE_BG: Record<PlaceCode, string> = {
   BRACELET: 'bg-place-bracelet',
   PHOTOBOOTH: 'bg-place-photobooth',
   TRASHCAN: 'bg-place-trashcan',
+  ENTRANCE: 'bg-place-entrance',
+  PROMOTION: 'bg-place-promotion',
 }
 
 /** 물방울 마커 원과 선택 링 채움. 고유 색 */
@@ -20,6 +22,8 @@ export const PLACE_FILL: Record<PlaceCode, string> = {
   BRACELET: 'fill-place-bracelet',
   PHOTOBOOTH: 'fill-place-photobooth',
   TRASHCAN: 'fill-place-trashcan',
+  ENTRANCE: 'fill-place-entrance',
+  PROMOTION: 'fill-place-promotion',
 }
 
 // 학생회가 여는 부스. id 는 DB 마다 달라 마커 글자로 찾는다
@@ -41,4 +45,6 @@ export const PLACE_STROKE: Record<PlaceCode, string> = {
   BRACELET: 'stroke-place-bracelet',
   PHOTOBOOTH: 'stroke-place-photobooth',
   TRASHCAN: 'stroke-place-trashcan',
+  ENTRANCE: 'stroke-place-entrance',
+  PROMOTION: 'stroke-place-promotion',
 }

@@ -13,9 +13,11 @@ import { Marker, useMap } from 'react-leaflet'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import braceletIcon from './images/bracelet.svg'
+import entranceIcon from './images/entrance.svg'
 import foodtruckIcon from './images/foodtruck.svg'
 import mediIcon from './images/medi.svg'
 import photoboothIcon from './images/photobooth.svg'
+import promotionIcon from './images/promotion.svg'
 import trashcanIcon from './images/trashcan.svg'
 import { toLatLng } from './map-coords'
 import { type MapPlace, type PlaceCode, type PlaceId, placeLabel } from './map-place'
@@ -77,6 +79,8 @@ const PLACE_ICONS: Partial<Record<PlaceCode, StaticImageData>> = {
   BRACELET: braceletIcon,
   PHOTOBOOTH: photoboothIcon,
   TRASHCAN: trashcanIcon,
+  ENTRANCE: entranceIcon,
+  PROMOTION: promotionIcon,
 }
 
 // 원 가운데 (0,0), 반지름 19.5, 끝 (0,28.8) 인 물방울. 흰 테두리 3 을 이 선 가운데에 그려 바깥이 지름 42, 끝이 31 에 온다. 화면에는 지름 26 으로 줄여 그린다
@@ -243,7 +247,7 @@ export function PlaceMarkers({
       {places.map((place) => {
         const selected = place.id === selectedId
         // 영역은 축소해도 모양 그대로 보여야 해서 배율과 상관없이 그린다
-        if (place.area)
+        if (place.is_polygon)
           return (
             <PlaceArea
               key={place.id}

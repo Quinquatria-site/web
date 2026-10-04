@@ -119,11 +119,6 @@ export const en: Messages = {
       copyFailed: "Couldn't copy link",
     },
     /** 프론트에 둔 팔찌 수령 영역 */
-    braceletPickup: {
-      name: 'Wristband Pickup',
-      description:
-        'Pick up your wristband at Minerva Complex B2 from 15:00. Please bring your student ID.',
-    },
     places: {
       BOOTH: 'Booth',
       PUB: 'Pub',
@@ -132,6 +127,8 @@ export const en: Messages = {
       BRACELET: 'Wristband',
       PHOTOBOOTH: 'Photo Booth',
       TRASHCAN: 'Trash Can',
+      ENTRANCE: 'Stage Entrance',
+      PROMOTION: 'Promotion',
     },
     labels: {
       globalDorm: 'Global Dorm',

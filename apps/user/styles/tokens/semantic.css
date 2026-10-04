@@ -36,6 +36,8 @@
   --color-place-bracelet: var(--magenta);
   --color-place-medi: var(--red);
   --color-place-trashcan: var(--green);
+  --color-place-entrance: var(--umber);
+  --color-place-promotion: var(--purple);
   /* 학생회 부스 마커. 카테고리는 부스라 위 목록과 따로 둔다 */
   --color-place-council: var(--sky);
   --color-menu-card: var(--beige-peach);

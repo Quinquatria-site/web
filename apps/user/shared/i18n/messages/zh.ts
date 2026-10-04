@@ -113,10 +113,6 @@ export const zh: Messages = {
       copyFailed: '无法复制链接',
     },
     /** 프론트에 둔 팔찌 수령 영역 */
-    braceletPickup: {
-      name: '入场手环领取处',
-      description: '15:00起可在Minerva Complex地下2层领取，请携带学生证。',
-    },
     places: {
       BOOTH: '摊位',
       PUB: '酒馆',
@@ -125,6 +121,8 @@ export const zh: Messages = {
       BRACELET: '入场手环',
       PHOTOBOOTH: '拍照亭',
       TRASHCAN: '垃圾桶',
+      ENTRANCE: '舞台入口',
+      PROMOTION: '推广',
     },
     labels: {
       globalDorm: '国际学舍',
