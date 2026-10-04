@@ -3,12 +3,13 @@ import { notFound } from 'next/navigation'
 import { getPlaces } from '@/features/map/get-places'
 import { placeHours, toPlaceId } from '@/features/map/map-place'
 import { MapView } from '@/features/map/MapView'
+import { placeShareTitle } from '@/features/map/place-share-title'
 import { DuskBackground } from '@/shared/background/DuskBackground'
 import { PageHeader } from '@/shared/header/PageHeader'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
 import { localePath } from '@/shared/i18n/paths'
-import { oneLine, shareMetadata, taggedTitle } from '@/shared/metadata/share-metadata'
+import { oneLine, shareMetadata } from '@/shared/metadata/share-metadata'
 import { assetUrl } from '@/shared/photo/asset-url'
 import { formatSeoulDay } from '@/shared/time/format-seoul-time'
 
@@ -39,12 +40,8 @@ export async function generateMetadata(
   const { place } = await findPlace(id)
   if (!place) return {}
   const locale = await getLocale()
-  const { map, meta, pages } = getMessages(locale)
-  const category = map.places[place.code]
-  // 이름이 빈 서버 장소도 주소만 덩그러니 뜨지 않게 지도 페이지 이름으로 채운다
-  const name = place.name || meta.pageTitle.replace('{page}', pages.map)
-  // 이름이 이미 종류를 담으면(의무실·입장 팔찌 수령처) 머리말이 같은 말을 되풀이한다
-  const title = name.includes(category) ? name : taggedTitle(locale, category, name)
+  const { meta } = getMessages(locale)
+  const title = placeShareTitle(locale, place)
   const hours = placeHours(place)
   const when = place.start_hour && `${formatSeoulDay(place.start_hour, locale)} ${hours}`
   const description =
@@ -55,7 +52,7 @@ export async function generateMetadata(
     title,
     description,
     path: localePath(locale, `/map/${place.id}`),
-    ...(image && { image: { url: assetUrl(image), alt: name } }),
+    ...(image && { image: { url: assetUrl(image), alt: place.name || title } }),
   })
 }
 
