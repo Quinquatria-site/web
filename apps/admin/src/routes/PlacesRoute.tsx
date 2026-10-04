@@ -9,13 +9,43 @@ import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
 import { List, ListButtonItem } from 'seed-design/ui/list'
 import { SnackbarAvoidOverlap } from 'seed-design/ui/snackbar'
 import { detailOf } from '../lib/placeText'
-import { placeLabel } from '../map/place-label'
+import { placeLabel, placeSection } from '../map/place-label'
 import { CATEGORIES, categoryById } from '../mocks/categories'
 import { PLACES } from '../mocks/places'
 import { useStoreVersion } from '../mocks/store'
 import { findTranslation, hasMissingTranslations, type Place } from '../mocks/types'
 import { LangBadge } from '../ui'
 import styles from './PlacesRoute.module.css'
+
+/** 구역 칩·묶음의 "구역 없음" 값. 구역 글자(A·B…)와 겹치지 않는다 */
+const NO_SECTION = 'none'
+
+/** 장소의 구역 칩 값. 카테고리를 못 찾으면 구역도 모르니 "구역 없음"에 둔다 */
+function sectionKeyOf(place: Place): string {
+  const code = categoryById(place.category_id)?.code
+  return (code && placeSection(code, place.category_sequence)) ?? NO_SECTION
+}
+
+function sectionName(key: string): string {
+  return key === NO_SECTION ? '구역 없음' : `${key}구역`
+}
+
+/** 구역 순서. 글자순으로 두고 "구역 없음"은 맨 뒤 — 번호순으로는 100 미만이라 맨 앞에 오지만 예외 장소다 */
+function compareSectionKeys(a: string, b: string): number {
+  if (a === b) return 0
+  if (a === NO_SECTION) return 1
+  if (b === NO_SECTION) return -1
+  return a < b ? -1 : 1
+}
+
+/**
+ * 구역별로 묶는다. 묶음 안은 받은 순서를 그대로 지킨다 — 넘기는 쪽이 번호순으로 정렬해 두면
+ * 묶음 안도 번호순이다. 빈 묶음은 만들지 않는다
+ */
+function groupBySection(places: Place[]): { key: string; places: Place[] }[] {
+  const keys = [...new Set(places.map(sectionKeyOf))].sort(compareSectionKeys)
+  return keys.map((key) => ({ key, places: places.filter((p) => sectionKeyOf(p) === key) }))
+}
 
 /**
  * 줄 앞 번호. 위는 category_sequence, 아래는 지도 마커 글자다.
@@ -83,6 +113,7 @@ function Empty({
 export function PlacesRoute() {
   const navigate = useNavigate()
   const [filter, setFilter] = useState<string>('all')
+  const [section, setSection] = useState<string>('all')
 
   // 누락 필터만 URL 에 싣는다. 홈의 "번역 누락 · 장소" 가 이 화면을 필터가
   // 걸린 채로 열어야 해서다. 카테고리는 홈에서 가리키지 않으므로 state 로 둔다
@@ -103,12 +134,27 @@ export function PlacesRoute() {
   // 카테고리와 번역 누락은 다른 축이라 AND 로 건다 — "부스 중 번역 누락"이 보여야 한다
   const byCategory =
     filter === 'all' ? sorted : sorted.filter((p) => p.category_id === Number(filter))
-  const missingCount = byCategory.filter((p) => hasMissingTranslations(p.translations)).length
+  // 구역 칩은 지금 카테고리에 있는 구역만 띄운다. 없는 구역 칩은 누르면 빈 화면뿐이다
+  const sectionKeys = [...new Set(byCategory.map(sectionKeyOf))].sort(compareSectionKeys)
+  // 구역 글자가 하나도 없으면(푸드트럭·의무실 등) "구역 없음" 하나만 남아 거를 것이 없다. 줄을 감춘다
+  const hasSections = sectionKeys.some((key) => key !== NO_SECTION)
+  // 카테고리를 옮겨 고른 구역이 사라지면 빈 화면만 남는다. 번역 누락 토글처럼 그때는 푼다
+  const activeSection = hasSections && sectionKeys.includes(section) ? section : 'all'
+  // 구역도 카테고리·번역 누락과 다른 축이라 AND 로 건다 — "주점 중 B구역"이 보여야 한다
+  const bySection =
+    activeSection === 'all'
+      ? byCategory
+      : byCategory.filter((p) => sectionKeyOf(p) === activeSection)
+  const missingCount = bySection.filter((p) => hasMissingTranslations(p.translations)).length
   // 카테고리를 옮겨 누락이 0 이 되면 켜둔 토글이 빈 화면만 남긴다. 그때는 푼다
   const showMissingOnly = missingOnly && missingCount > 0
   const places = showMissingOnly
-    ? byCategory.filter((p) => hasMissingTranslations(p.translations))
-    : byCategory
+    ? bySection.filter((p) => hasMissingTranslations(p.translations))
+    : bySection
+  // 구역을 하나로 고르지 않았으면 구역별로 나눠 어디서 A구역이 끝나는지 보이게 한다.
+  // 구역이 없는 카테고리는 "구역 없음" 머리 하나뿐이라 묶지 않는다
+  const groups =
+    hasSections && activeSection === 'all' ? groupBySection(places) : [{ key: null, places }]
 
   return (
     <div className={styles.screen}>
@@ -125,6 +171,24 @@ export function PlacesRoute() {
         </ChipTabsList>
       </ChipTabsRoot>
 
+      {/* 카테고리 칩과 같은 이유로 ChipTabs 다. 현장은 구역 단위로 움직여 구역으로도 거른다 */}
+      {hasSections && (
+        <ChipTabsRoot
+          className={styles.sectionFilters}
+          value={activeSection}
+          onValueChange={setSection}
+        >
+          <ChipTabsList>
+            <ChipTabsTrigger value="all">전체 구역</ChipTabsTrigger>
+            {sectionKeys.map((key) => (
+              <ChipTabsTrigger key={key} value={key}>
+                {key === NO_SECTION ? sectionName(key) : key}
+              </ChipTabsTrigger>
+            ))}
+          </ChipTabsList>
+        </ChipTabsRoot>
+      )}
+
       <div className={styles.actions}>
         {/* 카테고리 탭과 다른 축이라 그 줄에 넣지 않는다. 넣으면 카테고리 선택이 풀려
             "부스 중 번역 누락"을 볼 수 없다. 개수가 곧 남은 작업량이다 */}
@@ -140,29 +204,43 @@ export function PlacesRoute() {
       <div className={styles.list}>
         {places.length === 0 ? (
           <Empty
-            filtered={filter !== 'all'}
+            filtered={filter !== 'all' || activeSection !== 'all'}
             missingOnly={showMissingOnly}
             onReset={() => {
               setFilter('all')
+              setSection('all')
               setMissingOnly(false)
             }}
           />
         ) : (
-          <List>
-            {places.map((place) => (
-              <ListButtonItem
-                key={place.id}
-                // 화면 순번이 아니라 category_sequence 다. 그 아래에 지도·현장에 찍히는 번호(101 → A1)를
-                // 작게 붙여 운영자가 머릿속으로 바꾸지 않게 한다. 전체 보기에서는 카테고리마다
-                // 1 부터 다시 세지만, 바로 아래 detail 이 "주점 1번" 처럼 종류를 같이 말한다
-                prefix={<SeqPrefix place={place} />}
-                title={findTranslation(place.translations, 'KO')?.name ?? `장소 ${place.id}`}
-                detail={detailOf(place)}
-                suffix={<LangBadge translations={place.translations} />}
-                onClick={() => navigate(`/places/${place.id}`)}
-              />
-            ))}
-          </List>
+          // 묶음 머리는 공연 목록의 종류별 묶음 머리(PerformancesRoute .groupTitle)와 같은 모양이다
+          groups.map((group) => (
+            <section
+              key={group.key ?? 'all'}
+              aria-label={group.key === null ? undefined : sectionName(group.key)}
+            >
+              {group.key !== null && (
+                <h2 className={styles.groupTitle}>
+                  {sectionName(group.key)} ({group.places.length})
+                </h2>
+              )}
+              <List>
+                {group.places.map((place) => (
+                  <ListButtonItem
+                    key={place.id}
+                    // 화면 순번이 아니라 category_sequence 다. 그 아래에 지도·현장에 찍히는 번호(101 → A1)를
+                    // 작게 붙여 운영자가 머릿속으로 바꾸지 않게 한다. 전체 보기에서는 카테고리마다
+                    // 1 부터 다시 세지만, 바로 아래 detail 이 "주점 1번" 처럼 종류를 같이 말한다
+                    prefix={<SeqPrefix place={place} />}
+                    title={findTranslation(place.translations, 'KO')?.name ?? `장소 ${place.id}`}
+                    detail={detailOf(place)}
+                    suffix={<LangBadge translations={place.translations} />}
+                    onClick={() => navigate(`/places/${place.id}`)}
+                  />
+                ))}
+              </List>
+            </section>
+          ))
         )}
       </div>
 
