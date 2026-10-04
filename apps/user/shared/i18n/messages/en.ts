@@ -86,10 +86,6 @@ export const en: Messages = {
       ARTIST: 'Artist Performance',
     },
     slots: {
-      wristbands: 'HUFS wristband pickup begins',
-      boothsOpen: 'All booths open',
-      studentEntry: 'HUFS audience entry begins',
-      visitorEntry: 'General audience entry begins',
       dayEnd: 'Day 1 ends',
     },
   },

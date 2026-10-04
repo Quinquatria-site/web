@@ -5,10 +5,13 @@ import { TIMELINE_SLOTS } from './timeline-slots'
 /** 배너가 고르는 축제 시점. 전 · 여는 중 · 밤사이 쉼 · 끝 */
 export type FestivalPhase = 'before' | 'open' | 'break' | 'after'
 
-/** 축제 날마다 [여는 시각, 닫는 시각] ms. 타임라인 첫 칸(팔찌 배부)에 열고 마지막 칸(하루 종료)에 닫는다 */
+// 시각이 적힌 칸만. 아티스트 칸은 시각을 공개하지 않는다
+const SLOT_TIMES = TIMELINE_SLOTS.flatMap((slot) => (slot.time ? [slot.time] : []))
+
+/** 축제 날마다 [여는 시각, 닫는 시각] ms. 타임라인 첫 칸(학생 공연)에 열고 마지막 칸(하루 종료)에 닫는다 */
 export const FESTIVAL_HOURS: [number, number][] = FESTIVAL_DAYS.map(({ date }) => [
-  at(date, TIMELINE_SLOTS[0].time),
-  at(date, TIMELINE_SLOTS[TIMELINE_SLOTS.length - 1].time),
+  at(date, SLOT_TIMES[0]),
+  at(date, SLOT_TIMES[SLOT_TIMES.length - 1]),
 ])
 
 /** 그 순간의 축제 시점 */

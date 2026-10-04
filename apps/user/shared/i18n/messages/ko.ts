@@ -78,10 +78,6 @@ export const ko = {
       ARTIST: '아티스트 공연',
     },
     slots: {
-      wristbands: '외대인 입장팔찌 배부 시작',
-      boothsOpen: '전체 부스 오픈',
-      studentEntry: '외대인 관객 운동장 입장 시작',
-      visitorEntry: '외부인 관객 운동장 입장 시작',
       dayEnd: '축제 첫째날 종료',
     },
   },

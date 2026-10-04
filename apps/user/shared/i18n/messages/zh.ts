@@ -80,10 +80,6 @@ export const zh: Messages = {
       ARTIST: '艺人演出',
     },
     slots: {
-      wristbands: '外大学生入场手环开始发放',
-      boothsOpen: '全部摊位开放',
-      studentEntry: '外大学生观众开始入场',
-      visitorEntry: '校外观众开始入场',
       dayEnd: '庆典第一天结束',
     },
   },
