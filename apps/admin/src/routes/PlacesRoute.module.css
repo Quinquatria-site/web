@@ -14,6 +14,12 @@
   padding-block: var(--seed-dimension-x3);
 }
 
+/* 카테고리 칩 바로 아래 둘째 줄. 위 줄이 이미 아래를 띄우니 위쪽 여백은 뺀다 */
+.sectionFilters {
+  flex-shrink: 0;
+  padding-bottom: var(--seed-dimension-x3);
+}
+
 .actions {
   display: flex;
   flex-shrink: 0;
@@ -34,6 +40,17 @@
      x20 은 SEED 에 없는 토큰이라 선언이 통째로 무시됐다 — 마지막 항목이
      실제로 FAB 에 가려 있었다. 있는 토큰으로 같은 높이를 만든다 */
   padding-bottom: calc(var(--seed-dimension-x16) + var(--seed-dimension-x4));
+}
+
+/* 구역별 묶음 머리. 공연 목록의 종류별 묶음 머리(PerformancesRoute .groupTitle)와 같다.
+   위 여백이 묶음 사이를 띄운다 */
+.groupTitle {
+  margin: 0;
+  padding: var(--seed-dimension-x4) var(--seed-dimension-x4) var(--seed-dimension-x1);
+  font-size: var(--seed-font-size-t3);
+  font-weight: var(--seed-font-weight-bold);
+  line-height: var(--seed-line-height-t3);
+  color: var(--seed-color-fg-neutral-muted);
 }
 
 /* 줄 앞 번호. 공연 목록의 순서 번호(PerformancesRoute .seq)와 같은 모양·크기다 */
