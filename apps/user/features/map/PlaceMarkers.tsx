@@ -20,7 +20,7 @@ import trashcanIcon from './images/trashcan.svg'
 import { toLatLng } from './map-coords'
 import { type MapPlace, type PlaceCode, type PlaceId, placeLabel } from './map-place'
 import { PlaceArea } from './PlaceArea'
-import { PLACE_FILL } from './place-colors'
+import { markerFill } from './place-colors'
 
 // 처음 전체 보기의 이 배수보다 확대해야 큰 물방울이 나온다. 그 아래는 다닥다닥 붙어도 겹치지 않는 작은 물방울만 찍고 누를 수 없다
 const FULL_MARKER_SCALE = 1.76
@@ -90,21 +90,22 @@ const DROP_SCALE = 26 / 42
 // 작은·큰 물방울을 한 마커에 두고 뿌리 data-full 로 하나만 보인다. 경계에서 마커를 갈아 끼우면 전부 지우고 다시 만들어 핀치가 끊기고, 작은 쪽은 누름을 지도로 흘린다
 function markerHtml(code: PlaceCode, label: string | null) {
   const icon = PLACE_ICONS[code]
+  const fill = markerFill(code, label)
   // leaflet.css 가 마커 안 img 에 width:auto 를 걸어 width 속성이 먹지 않으니 style 로 준다
   const content = icon
     ? `<img src="${icon.src}" style="width:${icon.width * DROP_SCALE}px;height:${icon.height * DROP_SCALE}px" alt="" draggable="false" />`
     : label
   return `<span class="absolute">
   <svg class="pointer-events-none absolute z-auto! -top-[14px] -left-[5.5px] h-[14px] w-[11px] overflow-visible group-data-full:hidden" viewBox="-21 -21 42 53.5">
-    <path d="${DROP_PATH}" stroke-width="4.5" stroke-miterlimit="10" class="${PLACE_FILL[code]} stroke-white" />
+    <path d="${DROP_PATH}" stroke-width="4.5" stroke-miterlimit="10" class="${fill} stroke-white" />
   </svg>
   <span class="absolute hidden group-data-full:block">
     <svg class="pointer-events-none absolute z-auto! -top-[41px] -left-[22px] size-11 scale-68 opacity-0 transition-[scale,opacity] duration-120 ease-out group-data-selected:scale-100 group-data-selected:opacity-100 group-data-selected:duration-220 group-data-selected:ease-[cubic-bezier(.22,1,.36,1)] motion-reduce:scale-100" viewBox="-36 -36 72 72">
-      <circle r="36" class="${PLACE_FILL[code]}" opacity=".2" />
-      <circle r="28" class="${PLACE_FILL[code]}" opacity=".2" />
+      <circle r="36" class="${fill}" opacity=".2" />
+      <circle r="28" class="${fill}" opacity=".2" />
     </svg>
     <svg class="absolute z-auto! -top-[32px] -left-[13px] h-[32px] w-[26px]" viewBox="-21 -21 42 52">
-      <path d="${DROP_PATH}" stroke-width="3" class="${PLACE_FILL[code]} stroke-white" />
+      <path d="${DROP_PATH}" stroke-width="3" class="${fill} stroke-white" />
     </svg>
     <span class="absolute -top-[32px] -left-[13px] grid size-[26px] place-items-center rounded-full font-sans text-[10.5px] leading-none font-semibold text-text-inverse outline-offset-2 outline-text group-focus-visible:outline-2">
       ${content}
