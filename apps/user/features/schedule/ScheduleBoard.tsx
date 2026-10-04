@@ -37,7 +37,7 @@ export function ScheduleBoard({
   }
 
   return (
-    <div className="flex flex-col px-[26px] pt-5">
+    <div className="flex flex-col px-[26px] pt-2">
       <div onClick={handleBannerClick} className="mb-[18px]">
         {banner}
       </div>

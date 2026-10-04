@@ -5,7 +5,6 @@ import { motion } from 'motion/react'
 import { useState } from 'react'
 import type { PerformanceType } from '@quen/schema/entities/performance'
 import { DOCK_PRESS, PRESS_SCALE } from '@/shared/dock/dock-motion'
-import { heirOfLight } from '@/shared/fonts/heir-of-light'
 import { useCloseOnBack } from '@/shared/history/useCloseOnBack'
 import { contentLang } from '@/shared/i18n/locales'
 import { LiveBadge } from './LiveBadge'
@@ -20,17 +19,9 @@ const CARD_TONE: Record<PerformanceType, string> = {
     '[--card-bg:var(--color-performance-artist)] text-on-performance-artist [--card-chevron:var(--beige-yellow)]',
 }
 
-/** 타임라인의 공연 한 줄. 종류마다 색이 다르고, 아티스트는 높게 DAY 를 얹으며, 공연 중이면 뱃지와 노을빛 테두리가 돌고 누르면 상세가 뜬다 */
-export function PerformanceCard({
-  performance,
-  day,
-}: {
-  performance: Performance
-  /** FESTIVAL_DAYS 의 자리. 아티스트 카드의 DAY 숫자가 된다 */
-  day: number
-}) {
+/** 타임라인의 공연 한 줄. 종류마다 색이 다르고, 공연 중이면 뱃지와 노을빛 테두리가 돌며 누르면 상세가 뜬다 */
+export function PerformanceCard({ performance }: { performance: Performance }) {
   const { type, title, is_live, language_code } = performance
-  const artist = type === 'ARTIST'
   const [open, setOpen] = useState(false)
   useCloseOnBack(open, () => setOpen(false))
 
@@ -39,22 +30,11 @@ export function PerformanceCard({
       {/* 누르는 동안 도크와 같은 스프링으로 살짝 줄어 손끝 반응을 준다 */}
       <motion.div whileTap={{ scale: PRESS_SCALE }} transition={DOCK_PRESS}>
         <Dialog.Trigger
-          className={`relative flex w-full items-center gap-2 rounded-[4px] bg-(--card-bg) pr-[34px] pl-2.5 text-left text-[length:calc(16*var(--tl,1px))] leading-[normal] ${artist ? `${heirOfLight.variable} h-15 font-semibold` : 'h-10 font-medium'} ${CARD_TONE[type]} ${is_live ? 'live-border' : ''}`}
+          className={`relative flex h-10 w-full items-center gap-2 rounded-[4px] bg-(--card-bg) pr-[34px] pl-2.5 text-left text-[length:calc(16*var(--tl,1px))] leading-[normal] font-medium ${CARD_TONE[type]} ${is_live ? 'live-border' : ''}`}
         >
-          {artist ? (
-            <span className="flex min-w-0 flex-col gap-[3px]">
-              <span className="font-heir text-[length:calc(17*var(--tl,1px))] leading-none font-bold text-(--beige-yellow)">
-                DAY {day + 1}
-              </span>
-              <span lang={contentLang(language_code)} className="truncate">
-                {title}
-              </span>
-            </span>
-          ) : (
-            <span lang={contentLang(language_code)} className="truncate">
-              {title}
-            </span>
-          )}
+          <span lang={contentLang(language_code)} className="truncate">
+            {title}
+          </span>
           {is_live && <LiveBadge />}
           <svg
             aria-hidden

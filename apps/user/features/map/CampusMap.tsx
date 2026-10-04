@@ -24,6 +24,7 @@ import {
 import { MapLabels } from './MapLabels'
 import type { MapPlace, PlaceId } from './map-place'
 import { PlaceMarkers } from './PlaceMarkers'
+import { StageArea } from './StageArea'
 import { ZoomButtons } from './ZoomButtons'
 import 'leaflet/dist/leaflet.css'
 
@@ -455,6 +456,7 @@ export default function CampusMap({
       className="size-full bg-transparent!"
     >
       <MapImage />
+      <StageArea />
       <MapLabels />
       <FitCampus topInset={topInset} bottomInset={selected ? bottomInset : 0} />
       <TrackpadPinchZoom />

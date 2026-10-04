@@ -32,7 +32,10 @@ export default async function SchedulePage() {
     <>
       <DuskBackground />
       <PerformanceImagePreload performances={performances} />
-      <PageTitle title={pages.schedule} />
+      {/* 제목 칸 48 안에서 글자 획이 위로 2 더 떠 있어, 위아래 획 간격을 20 으로 맞추려 위·아래(ScheduleBoard)를 따로 띄운다 */}
+      <div className="pt-1.5">
+        <PageTitle title={pages.schedule} />
+      </div>
       <ScheduleBoard
         banner={<ScheduleBanner live={live} />}
         panels={FESTIVAL_DAYS.map(({ date }, i) => (

@@ -35,7 +35,7 @@ function isQuietShareError(error: unknown) {
   return name === 'AbortError' || name === 'InvalidStateError'
 }
 
-/** 장소 주소를 기기 공유 시트로 보내는 알약 버튼. 공유가 안 되는 브라우저에선 링크를 복사한다 */
+/** 장소 주소를 기기 공유 시트로 보내는 아이콘 버튼. 카테고리 뱃지 높이에 맞춘다. 공유가 안 되는 브라우저에선 링크를 복사한다 */
 export function ShareLinkButton({ place }: { place: MapPlace }) {
   const locale = useLocale()
   const { sheet } = getMessages(locale).map
@@ -104,13 +104,16 @@ export function ShareLinkButton({ place }: { place: MapPlace }) {
       onClick={share}
       disabled={busy}
       aria-busy={busy}
-      className="inline-flex h-[30px] items-center gap-1.5 self-start rounded-full bg-accent pr-3.5 pl-3 text-[13px] leading-[normal] font-semibold text-on-accent shadow-[0_2px_4px_rgb(0_0_0/0.25)]"
+      // 뱃지에 맞춘 23 은 손가락에 작아, 보이지 않는 가장자리로 누르는 범위를 44 까지 넓힌다
+      className="relative inline-flex size-[23px] shrink-0 items-center justify-center rounded-full border border-border bg-white text-text after:absolute after:-inset-[10.5px]"
     >
-      <svg aria-hidden viewBox="0 0 24 24" className="size-4 fill-current">
+      <svg aria-hidden viewBox="0 0 24 24" className="size-3.5 fill-current">
         <path d={icon} />
       </svg>
-      {/* 바뀐 글자를 스크린리더도 읽게 알린다 */}
-      <span aria-live="polite">{label}</span>
+      {/* 글자는 숨겨도 버튼 이름이 되고, 바뀌면 스크린리더가 읽는다 */}
+      <span aria-live="polite" className="sr-only">
+        {label}
+      </span>
     </button>
   )
 }
