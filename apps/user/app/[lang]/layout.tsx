@@ -35,6 +35,8 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
+  // 키보드가 화면을 줄이지 않고 위를 덮게 한다. 줄이면 바닥에 붙은 도크·노을이 딸려 오르고 줄어든 밖은 그려지지 않는다
+  interactiveWidget: 'overlays-content',
 }
 
 /** Cloudflare Web Analytics 토큰. 없으면(로컬·스테이징) 비콘을 싣지 않는다 */
