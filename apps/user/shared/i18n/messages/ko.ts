@@ -16,7 +16,7 @@ export const ko = {
     top: '맨 위로',
     tabs: {
       home: '홈',
-      schedule: '일정표',
+      schedule: '공연',
       map: '지도',
       notices: '공지',
       lostItems: '분실물',
@@ -42,7 +42,7 @@ export const ko = {
     },
   },
   pages: {
-    schedule: '축제 일정표',
+    schedule: '공연 타임라인',
     map: '캠퍼스 지도',
     notices: '공지사항',
     noticeDetail: '공지 상세',
