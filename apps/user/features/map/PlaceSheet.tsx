@@ -20,8 +20,8 @@ import { ShareLinkButton } from './ShareLinkButton'
 /** 시트 1단계 높이. 이름·운영·시간·위치 아래 사진 줄까지 보인다 */
 export const PLACE_SHEET_PEEK = 197 + PLACE_PHOTO_HEIGHT
 
-// 이름 옆 카테고리 뱃지. 마커와 같은 고유 색을 깐다
-function PlaceBadge({ place }: { place: MapPlace }) {
+/** 이름 옆 카테고리 뱃지. 마커와 같은 고유 색을 깐다 */
+export function PlaceBadge({ place }: { place: MapPlace }) {
   const name = getMessages(useLocale()).map.places[place.code]
   return (
     <span
