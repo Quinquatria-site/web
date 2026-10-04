@@ -22,6 +22,8 @@ export type MapPlace = Omit<
   MapPoint & {
     code: PlaceCode
     menus: PlaceMenu[]
+    /** 번역된 장소의 한국어 원문. 다른 언어 페이지에서도 한국어로 찾게 검색에만 쓰고, 원문을 그대로 보이는 장소면 null */
+    source: Pick<MaybeLocalized<PlaceBase, PlaceText>, 'name' | 'host_college'> | null
   } & ({ is_polygon: true; area: MapPoint[] } | { is_polygon: false; area?: undefined })
 
 /** 주소 칸을 장소 id 로. 숫자가 아니면 없는 장소라 null */

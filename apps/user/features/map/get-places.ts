@@ -4,7 +4,7 @@ import type { CategoryBase, CategoryText } from '@quen/schema/entities/category'
 import type { PlaceBase, PlaceText } from '@quen/schema/entities/place'
 import { CACHE_TAGS } from '@/shared/api/cache-tags'
 import { serverApi } from '@/shared/api/server-api'
-import { listWithSource } from '@/shared/api/source-fallback'
+import { listWithSource, pairWithSource } from '@/shared/api/source-fallback'
 import type { MapPoint } from './map-coords'
 import type { MapPlace, PlaceCode, PlaceMenu } from './map-place'
 
@@ -49,15 +49,20 @@ export async function getPlaces(): Promise<MapPlace[]> {
   // 지도는 두 태그를 다 달고 있어, 백엔드가 카테고리를 바꿔 categories 를 보내도 다시 굽는다
   const [categories, places] = await Promise.all([
     listAll<Category>('/categories', CACHE_TAGS.categories),
-    listWithSource((source) => listAll<PlaceItem>('/places', CACHE_TAGS.places, source)),
+    pairWithSource((source) => listAll<PlaceItem>('/places', CACHE_TAGS.places, source)),
   ])
   const codes = new Map(categories.map(({ id, code }) => [id, code]))
   return Promise.all(
-    places.flatMap((item) => {
+    places.flatMap(({ item, source }) => {
       const code = item.category_id === null ? undefined : codes.get(item.category_id)
       const location = placeLocation(item)
       if (!code || !location) return []
-      const place = { ...item, ...location, code }
+      const place = {
+        ...item,
+        ...location,
+        code,
+        source: item === source ? null : { name: source.name, host_college: source.host_college },
+      }
       if (!MENU_CODES.has(code)) return [Promise.resolve({ ...place, menus: [] })]
       const menus = listWithSource((source) =>
         serverApi<{ menus: PlaceMenu[] }>(`/places/${place.id}`, {
