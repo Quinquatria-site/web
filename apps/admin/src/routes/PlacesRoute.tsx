@@ -9,12 +9,28 @@ import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
 import { List, ListButtonItem } from 'seed-design/ui/list'
 import { SnackbarAvoidOverlap } from 'seed-design/ui/snackbar'
 import { detailOf } from '../lib/placeText'
-import { CATEGORIES } from '../mocks/categories'
+import { placeLabel } from '../map/place-label'
+import { CATEGORIES, categoryById } from '../mocks/categories'
 import { PLACES } from '../mocks/places'
 import { useStoreVersion } from '../mocks/store'
-import { findTranslation, hasMissingTranslations } from '../mocks/types'
+import { findTranslation, hasMissingTranslations, type Place } from '../mocks/types'
 import { LangBadge } from '../ui'
 import styles from './PlacesRoute.module.css'
+
+/**
+ * 줄 앞 번호. 위는 category_sequence, 아래는 지도 마커 글자다.
+ * 카테고리를 못 찾으면 아래 줄을 비운다 — 지도처럼 BOOTH 로 짐작하면 목록에 틀린 번호가 뜬다
+ */
+function SeqPrefix({ place }: { place: Place }) {
+  const code = categoryById(place.category_id)?.code
+  const label = code ? placeLabel(code, place.category_sequence) : null
+  return (
+    <span className={styles.seqBox}>
+      <span className={styles.seq}>{place.category_sequence}</span>
+      {label && <span className={styles.seqLabel}>{label}</span>}
+    </span>
+  )
+}
 
 /**
  * 빈 목록. 막다른 길을 만들지 않으려고 나갈 문을 같이 둔다.
@@ -136,10 +152,10 @@ export function PlacesRoute() {
             {places.map((place) => (
               <ListButtonItem
                 key={place.id}
-                // 화면 순번이 아니라 category_sequence 다. 지도에 붙는 구역 번호(A1, A2 …)의
-                // 그 번호라 운영자가 현장 부스와 바로 맞춰 본다. 전체 보기에서는 카테고리마다
+                // 화면 순번이 아니라 category_sequence 다. 그 아래에 지도·현장에 찍히는 번호(101 → A1)를
+                // 작게 붙여 운영자가 머릿속으로 바꾸지 않게 한다. 전체 보기에서는 카테고리마다
                 // 1 부터 다시 세지만, 바로 아래 detail 이 "주점 1번" 처럼 종류를 같이 말한다
-                prefix={<span className={styles.seq}>{place.category_sequence}</span>}
+                prefix={<SeqPrefix place={place} />}
                 title={findTranslation(place.translations, 'KO')?.name ?? `장소 ${place.id}`}
                 detail={detailOf(place)}
                 suffix={<LangBadge translations={place.translations} />}
