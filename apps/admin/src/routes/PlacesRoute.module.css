@@ -42,14 +42,60 @@
   padding-bottom: calc(var(--seed-dimension-x16) + var(--seed-dimension-x4));
 }
 
-/* 구역별 묶음 머리. 공연 목록의 종류별 묶음 머리(PerformancesRoute .groupTitle)와 같다.
-   위 여백이 묶음 사이를 띄운다 */
+/* 구역 색표. 구역별 색은 여기 한 곳에만 둔다 — 묶음 머리와 줄 앞 표시 번호가 같이 쓴다.
+   학생 앱·Figma 에 구역 색이 없어 새로 골랐다. 빨강은 오류(critical)와 헷갈려 뺐다.
+   800 단계는 흰 배경 대비 5.7:1 이상이라 작은 글자에도 AA 를 넘는다.
+   라이트 고정(vite.config.ts colorMode: 'light-only')이라 한 벌만 둔다. 다크를 켜면
+   palette 토큰이 알아서 바뀌지만 대비는 다시 봐야 한다.
+   data-section 이 없으면(구역 없음) 회색이다 */
+.tone {
+  --section-color: var(--seed-color-palette-gray-800);
+}
+
+.tone[data-section='A'] {
+  --section-color: var(--seed-color-palette-blue-800);
+}
+
+.tone[data-section='B'] {
+  --section-color: var(--seed-color-palette-green-800);
+}
+
+.tone[data-section='C'] {
+  --section-color: var(--seed-color-palette-purple-800);
+}
+
+.tone[data-section='D'] {
+  --section-color: var(--seed-color-palette-carrot-800);
+}
+
+/* 구역별 묶음 머리. 공연 목록의 종류별 묶음 머리(PerformancesRoute .groupTitle)에서 왔다.
+   위쪽 굵은 구역 색 선이 묶음 사이를 가른다. 위 여백이 앞 묶음과 띄운다 */
 .groupTitle {
-  margin: 0;
-  padding: var(--seed-dimension-x4) var(--seed-dimension-x4) var(--seed-dimension-x1);
-  font-size: var(--seed-font-size-t3);
+  display: flex;
+  gap: var(--seed-dimension-x1_5);
+  align-items: center;
+  margin: var(--seed-dimension-x3) 0 0;
+  padding: var(--seed-dimension-x3) var(--seed-dimension-x4) var(--seed-dimension-x1);
+  border-top: 3px solid var(--section-color);
+  font-size: var(--seed-font-size-t4);
   font-weight: var(--seed-font-weight-bold);
-  line-height: var(--seed-line-height-t3);
+  line-height: var(--seed-line-height-t4);
+  color: var(--section-color);
+}
+
+/* 첫 묶음은 위에 칩 줄이 있어 더 띄우지 않는다 */
+section:first-child > .groupTitle {
+  margin-top: 0;
+}
+
+/* 묶음 개수. 머리 색을 다투지 않게 중립 회색 알약으로 둔다 */
+.groupCount {
+  padding: 0 var(--seed-dimension-x1_5);
+  border-radius: var(--seed-radius-full);
+  background: var(--seed-color-bg-neutral-weak);
+  font-size: var(--seed-font-size-t2);
+  font-weight: var(--seed-font-weight-medium);
+  line-height: var(--seed-line-height-t2);
   color: var(--seed-color-fg-neutral-muted);
 }
 
@@ -72,11 +118,17 @@
   min-width: var(--seed-dimension-x5);
 }
 
-/* 지도·현장에 찍히는 번호(A1). 숫자보다 한 단계 작고 옅다 */
+/* 지도·현장에 찍히는 번호(A1). 숫자보다 한 단계 작고, 구역 색을 입혀 어느 구역인지 보인다.
+   구역 밖 번호는 .tone 기본값 대신 원래의 옅은 회색이다 */
 .seqLabel {
   font-size: var(--seed-font-size-t1);
+  font-weight: var(--seed-font-weight-medium);
   line-height: var(--seed-line-height-t1);
   color: var(--seed-color-fg-neutral-subtle);
+}
+
+.tone[data-section] > .seqLabel {
+  color: var(--section-color);
 }
 
 .list::-webkit-scrollbar {
