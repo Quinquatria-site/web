@@ -11,4 +11,7 @@ export const CATEGORY_COLORS: Record<PlaceCode, string> = {
   PHOTOBOOTH: '#3f82dd', // blue
   MEDI: '#e62526', // red
   TRASHCAN: '#48ac58', // green
+  ENTRANCE: '#51311d', // umber
+  BRACELET: '#f942cb', // magenta
+  PROMOTION: '#8b5cd6', // purple
 }

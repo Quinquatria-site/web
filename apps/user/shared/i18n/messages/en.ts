@@ -94,6 +94,17 @@ export const en: Messages = {
     filterAll: 'All',
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom out',
+    search: {
+      open: 'Search places',
+      placeholder: 'Department or booth name',
+      clear: 'Clear search',
+      cancel: 'Cancel',
+      results: 'Search results',
+      tip: 'Search by department or booth name.',
+      tipExample: 'e.g. Thai, Student Council',
+      empty: 'No places match “{query}”.',
+      emptyHint: 'Try typing part of the name.',
+    },
     sheet: {
       host: 'Host',
       hours: 'Hours',
@@ -108,11 +119,6 @@ export const en: Messages = {
       copyFailed: "Couldn't copy link",
     },
     /** 프론트에 둔 팔찌 수령 영역 */
-    braceletPickup: {
-      name: 'Wristband Pickup',
-      description:
-        'Pick up your wristband at Minerva Complex B2 from 15:00. Please bring your student ID.',
-    },
     places: {
       BOOTH: 'Booth',
       PUB: 'Pub',
@@ -121,6 +127,8 @@ export const en: Messages = {
       BRACELET: 'Wristband',
       PHOTOBOOTH: 'Photo Booth',
       TRASHCAN: 'Trash Can',
+      ENTRANCE: 'Stage Entrance',
+      PROMOTION: 'Promotion',
     },
     labels: {
       globalDorm: 'Global Dorm',

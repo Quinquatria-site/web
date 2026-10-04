@@ -88,6 +88,17 @@ export const zh: Messages = {
     filterAll: '全部',
     zoomIn: '放大',
     zoomOut: '缩小',
+    search: {
+      open: '搜索场所',
+      placeholder: '院系或摊位名称',
+      clear: '清除搜索',
+      cancel: '取消',
+      results: '搜索结果',
+      tip: '可按院系或摊位名称搜索。',
+      tipExample: '例如：泰国、总学生会',
+      empty: '没有与“{query}”匹配的场所。',
+      emptyHint: '试试只输入名称的一部分。',
+    },
     sheet: {
       host: '运营',
       hours: '运营时间',
@@ -102,10 +113,6 @@ export const zh: Messages = {
       copyFailed: '无法复制链接',
     },
     /** 프론트에 둔 팔찌 수령 영역 */
-    braceletPickup: {
-      name: '入场手环领取处',
-      description: '15:00起可在Minerva Complex地下2层领取，请携带学生证。',
-    },
     places: {
       BOOTH: '摊位',
       PUB: '酒馆',
@@ -114,6 +121,8 @@ export const zh: Messages = {
       BRACELET: '入场手环',
       PHOTOBOOTH: '拍照亭',
       TRASHCAN: '垃圾桶',
+      ENTRANCE: '舞台入口',
+      PROMOTION: '推广',
     },
     labels: {
       globalDorm: '国际学舍',

@@ -87,6 +87,19 @@ export const ko = {
     filterAll: '전체',
     zoomIn: '확대',
     zoomOut: '축소',
+    search: {
+      open: '장소 검색',
+      placeholder: '학과나 부스 이름',
+      clear: '검색어 지우기',
+      cancel: '취소',
+      results: '검색 결과',
+      /** 검색어가 비었을 때 보이는 안내 */
+      tip: '학과 이름이나 부스 이름으로 찾을 수 있어요.',
+      tipExample: '예: 태국, 총학생회',
+      /** {query} 에 친 검색어가 들어간다 */
+      empty: '‘{query}’에 맞는 곳이 없어요.',
+      emptyHint: '이름 일부만 쳐 보세요.',
+    },
     sheet: {
       host: '운영',
       hours: '운영 시간',
@@ -107,11 +120,6 @@ export const ko = {
       copyFailed: '링크를 복사하지 못했어요',
     },
     /** 프론트에 둔 팔찌 수령 영역 */
-    braceletPickup: {
-      name: '입장 팔찌 수령처',
-      description:
-        '15:00부터 미네르바 컴플렉스 지하 2층에서 받을 수 있어요. 학생증을 준비해 주세요.',
-    },
     places: {
       BOOTH: '부스',
       PUB: '주점',
@@ -120,6 +128,8 @@ export const ko = {
       BRACELET: '입장 팔찌',
       PHOTOBOOTH: '포토부스',
       TRASHCAN: '쓰레기통',
+      ENTRANCE: '무대 출입구',
+      PROMOTION: '프로모션',
     },
     labels: {
       globalDorm: '국제학사',

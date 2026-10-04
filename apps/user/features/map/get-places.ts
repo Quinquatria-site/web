@@ -5,8 +5,7 @@ import type { PlaceBase, PlaceText } from '@quen/schema/entities/place'
 import { CACHE_TAGS } from '@/shared/api/cache-tags'
 import { serverApi } from '@/shared/api/server-api'
 import { listWithSource } from '@/shared/api/source-fallback'
-import { getLocale } from '@/shared/i18n/get-locale'
-import { getLocalPlaces } from './local-places'
+import type { MapPoint } from './map-coords'
 import type { MapPlace, PlaceCode, PlaceMenu } from './map-place'
 
 type Category = Localized<CategoryBase, CategoryText>
@@ -32,14 +31,21 @@ async function listAll<T>(path: string, tag: string, source = false): Promise<T[
   }
 }
 
-/** 페이지 언어의 장소 전체, 번역이 없는 장소·메뉴는 한국어로. 서버 장소 뒤에 프론트에 둔 장소를 붙인다 */
-export async function getPlaces(): Promise<MapPlace[]> {
-  const [serverPlaces, locale] = await Promise.all([getServerPlaces(), getLocale()])
-  return [...serverPlaces, ...getLocalPlaces(locale)]
+// 고를 때 화면을 옮길 기준점. 꼭짓점들의 평균이다
+function centerOf(area: MapPoint[]): MapPoint {
+  const sum = area.reduce((acc, { x, y }) => ({ x: acc.x + x, y: acc.y + y }), { x: 0, y: 0 })
+  return { x: sum.x / area.length, y: sum.y / area.length }
 }
 
-// category_id 를 카테고리 코드로 풀고, 카테고리가 없거나 모르는 장소는 마커를 정할 수 없어 뺀다. 메뉴가 바뀌어도 places 태그로 재검증된다
-async function getServerPlaces(): Promise<MapPlace[]> {
+// 구역 장소는 꼭짓점과 그 가운데를, 점 장소는 좌표를 위치로 둔다. 위치를 아직 정하지 않았으면 그릴 자리가 없어 null
+function placeLocation({ is_polygon, x, y, area }: PlaceItem) {
+  if (is_polygon) return area?.length ? { ...centerOf(area), is_polygon, area } : null
+  // 받은 area 는 null 이라 덮어써 둔다
+  return x === null || y === null ? null : { x, y, is_polygon, area: undefined }
+}
+
+/** 페이지 언어의 장소 전체, 번역이 없는 장소·메뉴는 한국어로. category_id 를 카테고리 코드로 풀고, 카테고리나 위치가 없는 장소는 그릴 수 없어 뺀다. 메뉴가 바뀌어도 places 태그로 재검증된다 */
+export async function getPlaces(): Promise<MapPlace[]> {
   // 지도는 두 태그를 다 달고 있어, 백엔드가 카테고리를 바꿔 categories 를 보내도 다시 굽는다
   const [categories, places] = await Promise.all([
     listAll<Category>('/categories', CACHE_TAGS.categories),
@@ -47,17 +53,19 @@ async function getServerPlaces(): Promise<MapPlace[]> {
   ])
   const codes = new Map(categories.map(({ id, code }) => [id, code]))
   return Promise.all(
-    places.flatMap((place) => {
-      const code = place.category_id === null ? undefined : codes.get(place.category_id)
-      if (!code) return []
-      if (!MENU_CODES.has(code)) return [Promise.resolve({ ...place, code, menus: [] })]
+    places.flatMap((item) => {
+      const code = item.category_id === null ? undefined : codes.get(item.category_id)
+      const location = placeLocation(item)
+      if (!code || !location) return []
+      const place = { ...item, ...location, code }
+      if (!MENU_CODES.has(code)) return [Promise.resolve({ ...place, menus: [] })]
       const menus = listWithSource((source) =>
         serverApi<{ menus: PlaceMenu[] }>(`/places/${place.id}`, {
           tags: [CACHE_TAGS.places],
           source,
         }).then((detail) => detail.menus),
       )
-      return [menus.then((items) => ({ ...place, code, menus: items }))]
+      return [menus.then((items) => ({ ...place, menus: items }))]
     }),
   )
 }

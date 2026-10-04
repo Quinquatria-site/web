@@ -43,6 +43,17 @@
   border-radius: var(--seed-radius-r3);
 }
 
+/* 구역 꼭짓점 지우기 버튼 줄 */
+.areaActions {
+  display: flex;
+  gap: var(--seed-dimension-x2);
+}
+
+/* 구역 모드에서는 좌표 입력을 숨긴다. display 가 grid 라 hidden 속성이 지지 않아 직접 끈다 */
+.coords[hidden] {
+  display: none;
+}
+
 .coords {
   display: grid;
   grid-template-columns: 1fr 1fr;

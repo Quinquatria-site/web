@@ -10,7 +10,9 @@ const FILTER_CODES: PlaceCode[] = [
   'PUB',
   'FOODTRUCK',
   'PHOTOBOOTH',
+  'PROMOTION',
   'BRACELET',
+  'ENTRANCE',
   'MEDI',
   'TRASHCAN',
 ]

@@ -5,27 +5,28 @@ import type { PlaceBase, PlaceText } from '@quen/schema/entities/place'
 import { formatSeoulTime } from '@/shared/time/format-seoul-time'
 import type { MapPoint } from './map-coords'
 
-/** 지도에 찍는 장소 종류. 서버 카테고리 코드에 프론트에만 둔 팔찌 수령처를 더한다 */
-export type PlaceCode = CategoryCode | 'BRACELET'
+/** 지도에 찍는 장소 종류. 서버 카테고리 코드와 같다 */
+export type PlaceCode = CategoryCode
 
 /** 장소에 딸린 메뉴 한 건 */
 export type PlaceMenu = Localized<MenuBase, MenuText>
 
-/** 장소 구분값이자 주소 칸(/map/12). 서버 장소는 숫자, 프론트에 둔 장소는 이름이다 */
-export type PlaceId = number | string
+/** 장소 구분값이자 주소 칸(/map/12) */
+export type PlaceId = number
 
-/** 지도에 찍을 장소 한 건. category_id 는 카테고리 코드로 풀고, 시트에 보일 메뉴를 붙여 둔다 */
-export type MapPlace = Omit<MaybeLocalized<PlaceBase, PlaceText>, 'id'> & {
-  id: PlaceId
-  code: PlaceCode
-  menus: PlaceMenu[]
-  /** 점 대신 칠할 영역의 꼭짓점. 있으면 마커 대신 폴리곤으로 그린다 */
-  area?: MapPoint[]
-}
+/** 지도에 찍을 장소 한 건. category_id 는 카테고리 코드로 풀고, 시트에 보일 메뉴를 붙여 둔다. is_polygon 이면 마커 대신 area 로 폴리곤을 그리고, x · y 는 화면을 옮길 기준점이다 */
+export type MapPlace = Omit<
+  MaybeLocalized<PlaceBase, PlaceText>,
+  'x' | 'y' | 'is_polygon' | 'area'
+> &
+  MapPoint & {
+    code: PlaceCode
+    menus: PlaceMenu[]
+  } & ({ is_polygon: true; area: MapPoint[] } | { is_polygon: false; area?: undefined })
 
-/** 주소 칸을 장소 id 로. 숫자만 있으면 서버 장소다 */
-export function toPlaceId(segment: string): PlaceId {
-  return /^\d+$/.test(segment) ? Number(segment) : segment
+/** 주소 칸을 장소 id 로. 숫자가 아니면 없는 장소라 null */
+export function toPlaceId(segment: string): PlaceId | null {
+  return /^\d+$/.test(segment) ? Number(segment) : null
 }
 
 // 구역 번호를 쓰는 카테고리. 나머지는 category_sequence 가 그냥 표시 순서다

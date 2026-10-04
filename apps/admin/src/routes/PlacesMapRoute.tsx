@@ -1,8 +1,10 @@
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { ActionButton } from 'seed-design/ui/action-button'
+import { placeAnchor, placePoint } from '../map/campus'
 import { CampusMap } from '../map/CampusMap'
 import { CATEGORY_COLORS } from '../map/category-colors'
+import { PlaceArea } from '../map/PlaceArea'
 import { PLACE_NAMES } from '../map/place-label'
 import { PlaceMarker } from '../map/PlaceMarker'
 import { imageSrc } from '../lib/imageSrc'
@@ -127,17 +129,33 @@ export function PlacesMapRoute() {
       <CampusMap
         className={styles.map}
         onBackgroundClick={close}
-        focus={selected}
+        focus={selected && placeAnchor(selected)}
         focusRequest={focusRequest}
         bottomInset={PLACE_SHEET_PEEK}
         onDragChange={setDragging}
       >
         {PLACES.map((place) => {
           const code = categoryById(place.category_id)?.code ?? 'BOOTH'
+          if (place.is_polygon)
+            return (
+              place.area && (
+                <PlaceArea
+                  key={place.id}
+                  area={place.area}
+                  code={code}
+                  selected={place.id === selectedId}
+                  id={place.id}
+                  onSelect={select}
+                  tooltip={placeName(place)}
+                />
+              )
+            )
+          const point = placePoint(place)
+          if (!point) return null
           return (
             <PlaceMarker
               key={place.id}
-              point={place}
+              point={point}
               code={code}
               sequence={place.category_sequence}
               selected={place.id === selectedId}

@@ -13,8 +13,10 @@ import type { PlaceTextWrite } from '../api/catalog'
 import { apiErrorText } from '../lib/apiErrorText'
 import { useFormFields } from '../lib/useFormFields'
 import { ConfirmDialog, HourField, PhotoPicker, type Hour } from '../ui'
+import { AreaDraft } from '../map/AreaDraft'
 import { CampusMap } from '../map/CampusMap'
-import { MAP_HEIGHT, MAP_WIDTH, type Point } from '../map/campus'
+import { MAP_HEIGHT, MAP_WIDTH, placePoint, type Point } from '../map/campus'
+import { PlaceArea } from '../map/PlaceArea'
 import { PlaceMarker } from '../map/PlaceMarker'
 import { placeLabel, sequenceHint } from '../map/place-label'
 import { CATEGORIES, categoryById } from '../mocks/categories'
@@ -28,12 +30,7 @@ import {
   savePlace,
   useStoreVersion,
 } from '../mocks/store'
-import {
-  FESTIVAL_DATES,
-  findTranslation,
-  LANGUAGE_CODES,
-  type LanguageCode,
-} from '../mocks/types'
+import { FESTIVAL_DATES, findTranslation, LANGUAGE_CODES, type LanguageCode } from '../mocks/types'
 import styles from './PlaceEditRoute.module.css'
 
 /*
@@ -58,6 +55,12 @@ const toIso = (date: string, { hour, minute }: Hour) =>
 
 /** 같은 일차 안에서 비교한다. 종료가 시작보다 이르면 422 (§5.4) */
 const minutesOf = ({ hour, minute }: Hour) => hour * 60 + minute
+
+/** 구역을 이루는 최소 꼭짓점 수. 서버가 이보다 적으면 422 다 */
+const AREA_MIN_VERTICES = 3
+
+/** 위치를 점 하나로 찍을지, 꼭짓점을 이어 구역으로 그릴지 */
+type Shape = 'point' | 'area'
 
 /** 장소 사진 최대 장수. 백엔드 계약 전의 잠정값이다 (#14) */
 const PHOTO_MAX = 10
@@ -93,11 +96,14 @@ function PlaceEditForm() {
       CATEGORIES[0]?.id ??
       0,
   )
-  const [point, setPoint] = useState<Point | null>(editing ? { x: editing.x, y: editing.y } : null)
+  const [shape, setShape] = useState<Shape>(editing?.is_polygon ? 'area' : 'point')
+  const [point, setPoint] = useState<Point | null>(editing ? placePoint(editing) : null)
+  // 구역 꼭짓점. 지도를 누른 순서대로 이어 그린다
+  const [vertices, setVertices] = useState<Point[]>(editing?.area ?? [])
   // 좌표 입력칸 글자. 지도를 누르면 채워지고, 직접 고치면 범위 안 숫자일 때만 point 가 된다
   const [coordText, setCoordText] = useState({
-    x: editing ? String(editing.x) : '',
-    y: editing ? String(editing.y) : '',
+    x: String(editing?.x ?? ''),
+    y: String(editing?.y ?? ''),
   })
   const [error, setError] = useState<string | null>(null)
   const [confirming, setConfirming] = useState(false)
@@ -131,6 +137,7 @@ function PlaceEditForm() {
   const menus = editing ? menusByPlace(editing.id) : []
 
   const pickPoint = (picked: Point) => {
+    if (shape === 'area') return setVertices((prev) => [...prev, picked])
     setPoint(picked)
     setCoordText({ x: String(picked.x), y: String(picked.y) })
   }
@@ -150,9 +157,21 @@ function PlaceEditForm() {
     const sequence = Number(values.sequence)
     if (!Number.isInteger(sequence) || sequence < 1)
       return setError('표시 순서는 1 이상의 정수여야 합니다.')
-    if (!point)
+    // 안 쓰는 쪽은 null 로 비워 보낸다. 점에서 구역으로 바꾼 장소에 옛 좌표가 남지 않게 한다
+    const location =
+      shape === 'area'
+        ? vertices.length >= AREA_MIN_VERTICES && {
+            is_polygon: true,
+            x: null,
+            y: null,
+            area: vertices,
+          }
+        : point && { is_polygon: false, x: point.x, y: point.y, area: null }
+    if (!location)
       return setError(
-        `지도에서 위치를 찍거나 x(0~${MAP_WIDTH})·y(0~${MAP_HEIGHT}) 를 숫자로 입력해주세요.`,
+        shape === 'area'
+          ? `지도를 눌러 구역 꼭짓점을 ${AREA_MIN_VERTICES}개 이상 찍어주세요.`
+          : `지도에서 위치를 찍거나 x(0~${MAP_WIDTH})·y(0~${MAP_HEIGHT}) 를 숫자로 입력해주세요.`,
       )
     // 같은 값은 명세가 허용한다 (§5.4)
     if (minutesOf(end) < minutesOf(start)) return setError('종료가 시작보다 빨라요.')
@@ -209,8 +228,7 @@ function PlaceEditForm() {
       const saved = await savePlace(editing?.id ?? null, {
         category_id: categoryId,
         category_sequence: sequence,
-        x: point.x,
-        y: point.y,
+        ...location,
         // 10/8 로 들어 있던 장소도 저장하면 10/7 로 맞춰진다. 시각은 그대로
         start_hour: toIso(FESTIVAL_DATES[0], start),
         end_hour: toIso(FESTIVAL_DATES[0], end),
@@ -337,10 +355,45 @@ function PlaceEditForm() {
 
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>위치</h2>
-        <p className={styles.hint}>
-          지도를 누르거나 좌표를 직접 입력합니다. 왼쪽 아래가 0, 오른쪽·위로 커집니다.
-        </p>
-        <div className={styles.coords}>
+        <SegmentedControl
+          aria-label="위치 모양"
+          value={shape}
+          onValueChange={(value) => setShape(value as Shape)}
+        >
+          <SegmentedControlItem value="point">점</SegmentedControlItem>
+          <SegmentedControlItem value="area">구역</SegmentedControlItem>
+        </SegmentedControl>
+        {shape === 'area' ? (
+          <>
+            <p className={styles.hint}>
+              지도를 눌러 구역 꼭짓점을 차례로 찍습니다. {AREA_MIN_VERTICES}개부터 구역이 됩니다.
+              지금 {vertices.length}개.
+            </p>
+            <div className={styles.areaActions}>
+              <ActionButton
+                size="small"
+                variant="neutralWeak"
+                disabled={vertices.length === 0}
+                onClick={() => setVertices((prev) => prev.slice(0, -1))}
+              >
+                마지막 점 지우기
+              </ActionButton>
+              <ActionButton
+                size="small"
+                variant="neutralWeak"
+                disabled={vertices.length === 0}
+                onClick={() => setVertices([])}
+              >
+                모두 지우기
+              </ActionButton>
+            </div>
+          </>
+        ) : (
+          <p className={styles.hint}>
+            지도를 누르거나 좌표를 직접 입력합니다. 왼쪽 아래가 0, 오른쪽·위로 커집니다.
+          </p>
+        )}
+        <div className={styles.coords} hidden={shape === 'area'}>
           <TextField
             label="x"
             description={`0 ~ ${MAP_WIDTH}`}
@@ -371,10 +424,24 @@ function PlaceEditForm() {
                 const code = categoryById(place.category_id)?.code ?? 'BOOTH'
                 const label = placeLabel(code, place.category_sequence)
                 const name = findTranslation(place.translations, 'KO')?.name ?? `장소 ${place.id}`
+                if (place.is_polygon)
+                  return (
+                    place.area && (
+                      <PlaceArea
+                        key={place.id}
+                        area={place.area}
+                        code={code}
+                        tooltip={name}
+                        faded
+                      />
+                    )
+                  )
+                const placeAt = placePoint(place)
+                if (!placeAt) return null
                 return (
                   <PlaceMarker
                     key={place.id}
-                    point={place}
+                    point={placeAt}
                     code={code}
                     sequence={place.category_sequence}
                     tooltip={label ? `${name} · ${label}` : name}
@@ -382,7 +449,10 @@ function PlaceEditForm() {
                   />
                 )
               })}
-            {point && (
+            {shape === 'area' && (
+              <AreaDraft vertices={vertices} code={categoryById(categoryId)?.code ?? 'BOOTH'} />
+            )}
+            {shape === 'point' && point && (
               <PlaceMarker
                 point={point}
                 code={categoryById(categoryId)?.code ?? 'BOOTH'}
