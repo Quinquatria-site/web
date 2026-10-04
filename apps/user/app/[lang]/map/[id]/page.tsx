@@ -5,9 +5,9 @@ import { placeHours, toPlaceId } from '@/features/map/map-place'
 import { MapView } from '@/features/map/MapView'
 import { placeShareTitle } from '@/features/map/place-share-title'
 import { DuskBackground } from '@/shared/background/DuskBackground'
-import { PageHeader } from '@/shared/header/PageHeader'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
+import { PageTitle } from '@/shared/page-title/PageTitle'
 import { localePath } from '@/shared/i18n/paths'
 import { oneLine, shareMetadata } from '@/shared/metadata/share-metadata'
 import { assetUrl } from '@/shared/photo/asset-url'
@@ -65,7 +65,7 @@ export default async function MapPlacePage({ params }: PageProps<'/[lang]/map/[i
   return (
     <>
       <DuskBackground />
-      <PageHeader title={pages.map} />
+      <PageTitle title={pages.map} />
       <MapView places={found.places} initialPlaceId={found.place.id} />
     </>
   )

@@ -1,45 +1,67 @@
 'use client'
 
 import { useState } from 'react'
+import { Photo } from '@/shared/photo/Photo'
 import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
 
-/** 장소 사진. 여러 장이면 옆으로 넘기고 오른쪽 아래에 몇 번째인지 적는다. 없으면 빈 사진 자리 하나 */
-export function PlacePhotos({ images, alt }: { images: string[] | null; alt: string }) {
-  const [index, setIndex] = useState(0)
-  const photos = images?.length ? images : [null]
+/** 사진 줄 높이. 1단계 높이가 이 값에 기대 있다 */
+export const PLACE_PHOTO_HEIGHT = 190
+
+// 비율을 읽기 전의 틀. 대부분 인스타 피드(4:5)로 올라온다
+const FALLBACK_ASPECT = 4 / 5
+
+// 높이는 고정하고 너비를 원본 비율대로 둬서, 세로·가로 사진 모두 잘리지 않는다
+function PlacePhoto({
+  src,
+  alt,
+  gallery,
+}: {
+  src: string
+  alt: string
+  gallery: { photos: string[]; index: number }
+}) {
+  const [aspect, setAspect] = useState(FALLBACK_ASPECT)
+  return (
+    <li style={{ aspectRatio: aspect }} className="h-full shrink-0 overflow-hidden rounded-lg">
+      <ZoomablePhoto
+        src={src}
+        alt={alt}
+        sizes="(max-width: 480px) 90vw, 432px"
+        gallery={gallery}
+        onLoad={({ currentTarget: { naturalWidth, naturalHeight } }) => {
+          if (naturalWidth && naturalHeight) setAspect(naturalWidth / naturalHeight)
+        }}
+      />
+    </li>
+  )
+}
+
+/** 장소 사진 줄. 같은 높이로 이어 붙여 옆으로 밀어 보고, 누르면 크게 본다. 없으면 줄 폭을 채운 빈 사진 자리 */
+export function PlacePhotos({ images, alt }: { images: string[]; alt: string }) {
+  if (!images.length)
+    return (
+      <div style={{ height: PLACE_PHOTO_HEIGHT }} className="overflow-hidden rounded-lg">
+        <Photo src={null} alt={alt} sizes="(max-width: 480px) 90vw, 432px" />
+      </div>
+    )
 
   return (
-    <div className="relative h-[178px] overflow-hidden rounded-lg">
-      {/* 포커스를 받으면 방향키로 옆 사진으로 넘어간다 */}
-      <ul
-        tabIndex={0}
-        aria-label={alt}
-        onScroll={(event) => {
-          const { scrollLeft, clientWidth } = event.currentTarget
-          setIndex(Math.round(scrollLeft / clientWidth))
-        }}
-        className="flex size-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none]"
-      >
-        {photos.map((src, i) => (
-          <li key={src ?? i} className="size-full shrink-0 snap-center">
-            <ZoomablePhoto
-              src={src}
-              alt={alt}
-              sizes="(max-width: 480px) 90vw, 432px"
-              // 뷰어에서도 옆으로 넘겨 이 장소의 다른 사진을 본다
-              gallery={images?.length ? { photos: images, index: i } : undefined}
-            />
-          </li>
-        ))}
-      </ul>
-      {photos.length > 1 && (
-        <span
-          aria-live="polite"
-          className="absolute right-2 bottom-2 rounded-full bg-secondary/60 px-2 py-0.5 text-xs text-on-secondary"
-        >
-          {index + 1} / {photos.length}
-        </span>
-      )}
-    </div>
+    // 포커스를 받으면 방향키로 옆으로 민다. 시트 좌우 여백까지 사진이 흘러가게 여백만큼 바깥으로 늘린다
+    <ul
+      tabIndex={0}
+      aria-label={alt}
+      style={{ height: PLACE_PHOTO_HEIGHT }}
+      className="-mx-7 flex gap-2 overflow-x-auto overscroll-x-contain px-7 [scrollbar-width:none]"
+    >
+      {images.map((src, i) => (
+        <PlacePhoto
+          key={src}
+          src={src}
+          alt={alt}
+          // 뷰어에서도 옆으로 넘겨 이 장소의 다른 사진을 본다
+          gallery={{ photos: images, index: i }}
+        />
+      ))}
+    </ul>
   )
 }

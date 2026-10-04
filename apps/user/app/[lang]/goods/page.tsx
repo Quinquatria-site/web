@@ -7,9 +7,9 @@ import { GoodsSheet } from '@/features/goods/GoodsSheet'
 import { getPlaces } from '@/features/map/get-places'
 import { placeLabel } from '@/features/map/map-place'
 import { DuskBackground } from '@/shared/background/DuskBackground'
-import { PageHeader } from '@/shared/header/PageHeader'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
+import { PageTitle } from '@/shared/page-title/PageTitle'
 import { localePath } from '@/shared/i18n/paths'
 import { listShareMetadata } from '@/shared/metadata/share-metadata'
 
@@ -33,7 +33,7 @@ export default async function GoodsPage() {
     <>
       <GoodsImagePreload goods={GOODS} />
       <DuskBackground />
-      <PageHeader title={pages.goods} />
+      <PageTitle title={pages.goods} />
       <div className="flex flex-col items-center gap-7 px-[18px] pt-5">
         <GoodsIntro
           text={goods.intro}

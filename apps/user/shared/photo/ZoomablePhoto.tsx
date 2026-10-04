@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { type ComponentProps, useRef, useState } from 'react'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { Photo } from './Photo'
@@ -16,6 +16,7 @@ export function ZoomablePhoto({
   sizes,
   gallery,
   bare,
+  onLoad,
 }: {
   src: string | null
   alt: string
@@ -24,6 +25,7 @@ export function ZoomablePhoto({
   gallery?: { photos: string[]; index: number }
   /** 투명한 사진 뒤로 부모 배경이 비치게 한다 */
   bare?: boolean
+  onLoad?: ComponentProps<typeof Photo>['onLoad']
 }) {
   const { photoViewer } = getMessages(useLocale())
   const [open, setOpen] = useState(false)
@@ -56,7 +58,7 @@ export function ZoomablePhoto({
         }}
         className="block size-full cursor-zoom-in"
       >
-        <Photo src={src} alt={name} sizes={sizes} bare={bare} />
+        <Photo src={src} alt={name} sizes={sizes} bare={bare} onLoad={onLoad} />
       </button>
     </PhotoViewer>
   )

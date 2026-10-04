@@ -3,9 +3,9 @@ import { notFound } from 'next/navigation'
 import { getNotice, getNotices } from '@/features/notices/get-notices'
 import { NoticeDetail } from '@/features/notices/NoticeDetail'
 import { LightBackground } from '@/shared/background/LightBackground'
-import { PageHeader } from '@/shared/header/PageHeader'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
+import { PageTitle } from '@/shared/page-title/PageTitle'
 import { localePath } from '@/shared/i18n/paths'
 import { oneLine, shareMetadata, taggedTitle } from '@/shared/metadata/share-metadata'
 
@@ -42,16 +42,16 @@ export async function generateMetadata(
 /** 공지 상세 */
 export default async function NoticeDetailPage({ params }: PageProps<'/[lang]/notices/[id]'>) {
   const { id } = await params
-  const { pages } = getMessages(await getLocale())
   // 1 이상 정수가 아닌 주소는 API 가 422 로 답해 500 이 되므로 부르기 전에 걸러 낸다
   if (!/^[1-9]\d*$/.test(id)) notFound()
   const notice = await getNotice(Number(id))
   if (!notice) notFound()
+  const { pages } = getMessages(await getLocale())
 
   return (
     <>
       <LightBackground />
-      <PageHeader title={pages.notices} />
+      <PageTitle title={pages.notices} onLight />
       <NoticeDetail notice={notice} />
     </>
   )

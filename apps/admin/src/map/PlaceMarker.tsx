@@ -156,7 +156,7 @@ function useFullZoom() {
 interface PlaceMarkerProps {
   point: Point
   code: PlaceCode
-  sequence: number
+  sequence: number | null
   selected?: boolean
   /** onSelect 에 돌려줄 장소 id */
   id?: number

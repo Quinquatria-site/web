@@ -25,8 +25,10 @@ function sectionLetter(sequence: number): string {
  * 장소의 구역(A·B·C…). 구역 번호를 쓰는 카테고리이면서 100 이상일 때만 있다.
  * 100 미만(무대 출입구 11·12 등)은 구역 밖 예외 장소라 null
  */
-export function placeSection(code: PlaceCode, sequence: number): string | null {
-  return SECTION_CODES.has(code) && sequence >= 100 ? sectionLetter(sequence) : null
+export function placeSection(code: PlaceCode, sequence: number | null): string | null {
+  return SECTION_CODES.has(code) && sequence !== null && sequence >= 100
+    ? sectionLetter(sequence)
+    : null
 }
 
 // 끝 두 자리가 이 값부터면 숫자 대신 소문자다. 51 → a
@@ -34,10 +36,10 @@ const LETTER_FROM = 51
 
 /**
  * 마커 글자. category_sequence 백의 자리가 구역(1 → A), 나머지 두 자리가 번호라 101 은 A1, 251 은 Ba 다.
- * user 앱 features/map/map-place.ts 의 placeLabel 과 같은 규칙이다. 구역이 없는 카테고리는 null
+ * user 앱 features/map/map-place.ts 의 placeLabel 과 같은 규칙이다. 구역이 없는 카테고리나 번호가 아직 없으면 null
  */
-export function placeLabel(code: PlaceCode, sequence: number): string | null {
-  if (!SECTION_CODES.has(code)) return null
+export function placeLabel(code: PlaceCode, sequence: number | null): string | null {
+  if (!SECTION_CODES.has(code) || sequence === null) return null
   // placeSection 을 쓰지 않는다. 100 미만도 지금껏 찍던 글자를 그대로 둔다
   const section = sectionLetter(sequence)
   const number = sequence % 100

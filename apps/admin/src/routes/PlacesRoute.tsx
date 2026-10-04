@@ -17,6 +17,12 @@ import { findTranslation, hasMissingTranslations, type Place } from '../mocks/ty
 import { LangBadge } from '../ui'
 import styles from './PlacesRoute.module.css'
 
+// 오름차순 비교. null 은 값이 있는 쪽보다 뒤다
+function nullLast(a: number | null, b: number | null): number {
+  if (a === null || b === null) return (a === null ? 1 : 0) - (b === null ? 1 : 0)
+  return a - b
+}
+
 /** 구역 칩·묶음의 "구역 없음" 값. 구역 글자(A·B…)와 겹치지 않는다 */
 const NO_SECTION = 'none'
 
@@ -133,9 +139,12 @@ export function PlacesRoute() {
 
   // 메모하지 않는다. PLACES 는 목 스토어가 제자리에서 바꾸는 배열이라
   // 의존성으로 적을 것이 없고, 수십 건 정렬은 렌더마다 해도 싸다
+  // 순서·카테고리를 아직 정하지 않은 장소(null)는 뒤로 보낸다
   const sorted = [...PLACES].sort(
     (a, b) =>
-      a.category_sequence - b.category_sequence || a.category_id - b.category_id || a.id - b.id,
+      nullLast(a.category_sequence, b.category_sequence) ||
+      nullLast(a.category_id, b.category_id) ||
+      a.id - b.id,
   )
   // 카테고리와 번역 누락은 다른 축이라 AND 로 건다 — "부스 중 번역 누락"이 보여야 한다
   const byCategory =

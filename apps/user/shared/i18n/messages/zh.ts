@@ -17,7 +17,7 @@ export const zh: Messages = {
     top: '回到顶部',
     tabs: {
       home: '首页',
-      schedule: '日程',
+      schedule: '演出',
       map: '地图',
       notices: '公告',
       lostItems: '失物',
@@ -29,7 +29,7 @@ export const zh: Messages = {
     scrollCue: '下一部分',
     navLabel: '快捷入口',
     nav: {
-      schedule: { title: '庆典日程', description: '查看庆典日程和演出时间！' },
+      schedule: { title: '演出时间表', description: '查看每天的演出顺序！' },
       map: { title: '校园地图', description: '查找各类摊位和便利设施的位置！' },
       notices: { title: '公告', description: '为您带来庆典相关的重要消息。' },
       lostItems: { title: '失物招领', description: '庆典结束后将上传失物信息。' },
@@ -43,7 +43,7 @@ export const zh: Messages = {
     },
   },
   pages: {
-    schedule: '庆典日程',
+    schedule: '演出时间表',
     map: '校园地图',
     notices: '公告',
     noticeDetail: '公告详情',
@@ -80,11 +80,7 @@ export const zh: Messages = {
       ARTIST: '艺人演出',
     },
     slots: {
-      wristbands: '外大学生入场手环开始发放',
-      boothsOpen: '全部摊位开放',
-      studentEntry: '外大学生观众开始入场',
-      visitorEntry: '校外观众开始入场',
-      dayEnd: '庆典第一天结束',
+      dayEnd: ['庆典第一天结束', '庆典第二天结束'],
     },
   },
   map: {
@@ -97,11 +93,12 @@ export const zh: Messages = {
       hours: '运营时间',
       location: '位置',
       menu: '菜单',
-      photos: '照片',
       price: '{price}韩元',
       share: '分享',
       copyLink: '复制链接',
       linkCopied: '已复制',
+      more: '展开',
+      less: '收起',
       copyFailed: '无法复制链接',
     },
     /** 프론트에 둔 팔찌 수령 영역 */

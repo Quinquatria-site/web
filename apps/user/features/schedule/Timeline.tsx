@@ -1,4 +1,5 @@
 import { getLocale } from '@/shared/i18n/get-locale'
+import type { PerformanceType } from '@quen/schema/entities/performance'
 import { getMessages } from '@/shared/i18n/messages'
 import { ClockDot } from './ClockDot'
 import type { Performance } from './performance'
@@ -13,7 +14,9 @@ export const performanceAnchorId = (id: number) => `performance-${id}`
 type TextSlot = Extract<TimelineSlot, { text: string }>
 
 type Row = { key: string; time: string | null } & (
-  { text: TextSlot['text']; start: number; end: number | null } | { performance: Performance }
+  | { text: TextSlot['text']; start: number; end: number | null }
+  | { label: PerformanceType; live: boolean }
+  | { performance: Performance }
 )
 
 // 문구 칸은 다음 칸 시각 전까지 진행 중이다. 공연이 없는 종류는 칸째 숨긴다
@@ -27,25 +30,40 @@ function toRows(date: string, performances: Performance[]): Row[] {
           time: slot.time,
           text: slot.text,
           start: at(date, slot.time),
-          end: next ? at(date, next.time) : null,
+          end: next?.time ? at(date, next.time) : null,
         },
       ]
     }
-    return performances
-      .filter((p) => p.type === slot.performances)
-      .map((p, j) => ({ key: `p${p.id}`, time: j === 0 ? slot.time : null, performance: p }))
+    const group = performances.filter((p) => p.type === slot.performances)
+    const cards: Row[] = group.map((p, j) => ({
+      key: `p${p.id}`,
+      time: j === 0 ? slot.time : null,
+      performance: p,
+    }))
+    if (slot.time || group.length === 0) return cards
+    // 시각을 공개하지 않는 칸은 종류 이름 줄로 대신 알리고, 그 종류가 공연 중이면 점을 켠다
+    const label: Row = {
+      key: `label-${slot.performances}`,
+      time: null,
+      label: slot.performances,
+      live: group.some((p) => p.is_live),
+    }
+    return [label, ...cards]
   })
 }
 
 /** 하루 타임라인. 고정 문구 사이에 종류별 공연을 seq 순으로 끼워 넣고, 진행 중인 줄의 점을 반짝인다 */
 export async function Timeline({
+  day,
   date,
   performances,
 }: {
+  /** FESTIVAL_DAYS 의 자리. 날마다 다른 문구를 고른다 */
+  day: number
   date: string
   performances: Performance[]
 }) {
-  const { slots } = getMessages(await getLocale()).schedule
+  const { slots, performanceTypes } = getMessages(await getLocale()).schedule
   const rows = toRows(date, performances)
   return (
     // --tl 은 360 화면 기준 1px. 좁은 폰에서는 화면 폭만큼 시각·칸·이름을 같이 줄인다
@@ -63,22 +81,22 @@ export async function Timeline({
             {'text' in row ? (
               <ClockDot start={row.start} end={row.end} />
             ) : (
-              <TimelineDot active={row.performance.is_live} />
+              <TimelineDot active={'label' in row ? row.live : row.performance.is_live} />
             )}
             {/* 점 아래 4px 을 띄우고 다음 줄 점 위 4px 까지 잇는다 */}
             {i < rows.length - 1 && (
               <span className="absolute top-[calc(50%+8px)] h-[27px] w-px bg-(--beige-yellow)" />
             )}
           </span>
-          {'text' in row ? (
-            <span className="truncate pl-1.5 text-[length:calc(16*var(--tl))] leading-[normal]">
-              {slots[row.text]}
-            </span>
-          ) : (
+          {'performance' in row ? (
             // min-w-0 이 없으면 1fr 칸이 긴 공연 이름 폭만큼 늘어나 말줄임 대신 화면 밖으로 밀린다
             <div className="min-w-0 pl-1">
               <PerformanceCard performance={row.performance} />
             </div>
+          ) : (
+            <span className="truncate pl-1.5 text-[length:calc(16*var(--tl))] leading-[normal]">
+              {'text' in row ? slots[row.text][day] : performanceTypes[row.label]}
+            </span>
           )}
         </li>
       ))}

@@ -1,4 +1,4 @@
-import type { Localized } from '@quen/schema/common/localize'
+import type { Localized, MaybeLocalized } from '@quen/schema/common/localize'
 import type { Page } from '@quen/schema/common/page'
 import type { CategoryBase, CategoryText } from '@quen/schema/entities/category'
 import type { PlaceBase, PlaceText } from '@quen/schema/entities/place'
@@ -10,7 +10,7 @@ import { getLocalPlaces } from './local-places'
 import type { MapPlace, PlaceCode, PlaceMenu } from './map-place'
 
 type Category = Localized<CategoryBase, CategoryText>
-type PlaceItem = Localized<PlaceBase, PlaceText>
+type PlaceItem = MaybeLocalized<PlaceBase, PlaceText>
 
 // 명세 최대치
 const PAGE_SIZE = 100
@@ -38,7 +38,7 @@ export async function getPlaces(): Promise<MapPlace[]> {
   return [...serverPlaces, ...getLocalPlaces(locale)]
 }
 
-// category_id 를 카테고리 코드로 풀고, 모르는 카테고리는 마커를 정할 수 없어 뺀다. 메뉴가 바뀌어도 places 태그로 재검증된다
+// category_id 를 카테고리 코드로 풀고, 카테고리가 없거나 모르는 장소는 마커를 정할 수 없어 뺀다. 메뉴가 바뀌어도 places 태그로 재검증된다
 async function getServerPlaces(): Promise<MapPlace[]> {
   // 지도는 두 태그를 다 달고 있어, 백엔드가 카테고리를 바꿔 categories 를 보내도 다시 굽는다
   const [categories, places] = await Promise.all([
@@ -48,7 +48,7 @@ async function getServerPlaces(): Promise<MapPlace[]> {
   const codes = new Map(categories.map(({ id, code }) => [id, code]))
   return Promise.all(
     places.flatMap((place) => {
-      const code = codes.get(place.category_id)
+      const code = place.category_id === null ? undefined : codes.get(place.category_id)
       if (!code) return []
       if (!MENU_CODES.has(code)) return [Promise.resolve({ ...place, code, menus: [] })]
       const menus = listWithSource((source) =>

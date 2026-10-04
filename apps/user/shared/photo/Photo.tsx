@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import type { SyntheticEvent } from 'react'
 import { assetUrl } from './asset-url'
 import athenaEmblem from './images/athena-emblem.png'
 
@@ -8,12 +9,15 @@ export function Photo({
   alt,
   sizes,
   bare = false,
+  onLoad,
 }: {
   src: string | null
   alt: string
   sizes: string
   /** 바탕색을 빼 투명한 사진 뒤로 부모 배경이 비치게 한다 */
   bare?: boolean
+  /** 사진을 다 받으면 부른다. 원본 비율을 읽을 때 쓴다 */
+  onLoad?: (event: SyntheticEvent<HTMLImageElement>) => void
 }) {
   return (
     // size 컨테이너이자 fill 의 기준이라 부모 높이(h·size·aspect)가 정해져 있어야 보인다
@@ -21,7 +25,14 @@ export function Photo({
       className={`relative size-full overflow-hidden [container-type:size] ${bare ? '' : 'bg-[#e9e3dd]'}`}
     >
       {src ? (
-        <Image src={assetUrl(src)} alt={alt} fill sizes={sizes} className="object-cover" />
+        <Image
+          src={assetUrl(src)}
+          alt={alt}
+          fill
+          sizes={sizes}
+          onLoad={onLoad}
+          className="object-cover"
+        />
       ) : (
         // 카드 폭 55%·높이 70% 안에 19:16 을 지키며 들어간다. 원본을 틀에 늘려 채워서 object-fit 은 주지 않는다
         <div className="absolute top-1/2 left-1/2 aspect-[19/16] w-[min(55cqw,83.13cqh)] -translate-1/2">

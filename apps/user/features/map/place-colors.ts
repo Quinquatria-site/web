@@ -22,6 +22,16 @@ export const PLACE_FILL: Record<PlaceCode, string> = {
   TRASHCAN: 'fill-place-trashcan',
 }
 
+// 학생회가 여는 부스. id 는 DB 마다 달라 마커 글자로 찾는다
+const COUNCIL_BOOTH_LABELS: ReadonlySet<string> = new Set(['C2', 'C3', 'C4'])
+
+/** 물방울 마커와 선택 링 채움. 학생회 부스만 부스색 대신 하늘색이다 */
+export function markerFill(code: PlaceCode, label: string | null) {
+  return code === 'BOOTH' && label && COUNCIL_BOOTH_LABELS.has(label)
+    ? 'fill-place-council'
+    : PLACE_FILL[code]
+}
+
 /** 영역 테두리. 고유 색 */
 export const PLACE_STROKE: Record<PlaceCode, string> = {
   BOOTH: 'stroke-place-booth',

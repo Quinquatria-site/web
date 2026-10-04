@@ -7,8 +7,9 @@ import { CATEGORY_CODES, type Category, type CategoryCode } from './types'
  */
 export const CATEGORIES: Category[] = []
 
-export function categoryById(id: number): Category | undefined {
-  return CATEGORIES.find((c) => c.id === id)
+/** 카테고리를 아직 고르지 않은 장소(null)는 undefined */
+export function categoryById(id: number | null): Category | undefined {
+  return id === null ? undefined : CATEGORIES.find((c) => c.id === id)
 }
 
 /**

@@ -11,13 +11,14 @@ import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { type MapPlace, placeHours, placeLabel } from './map-place'
+import { LinkedText } from './LinkedText'
 import { MenuCard } from './MenuCard'
 import { PLACE_BG } from './place-colors'
-import { PlacePhotos } from './PlacePhotos'
+import { PLACE_PHOTO_HEIGHT, PlacePhotos } from './PlacePhotos'
 import { ShareLinkButton } from './ShareLinkButton'
 
-/** 시트 1단계 높이(피그마 197). 이름·운영·시간·위치까지 보인다 */
-export const PLACE_SHEET_PEEK = 197
+/** 시트 1단계 높이. 이름·운영·시간·위치 아래 사진 줄까지 보인다 */
+export const PLACE_SHEET_PEEK = 197 + PLACE_PHOTO_HEIGHT
 
 // 이름 옆 카테고리 뱃지. 마커와 같은 고유 색을 깐다
 function PlaceBadge({ place }: { place: MapPlace }) {
@@ -31,7 +32,7 @@ function PlaceBadge({ place }: { place: MapPlace }) {
   )
 }
 
-// 1단계에 보이는 요약과 이어지는 설명. 값이 없는 줄(편의시설의 운영·위치, 시간 없는 프론트 장소의 운영 시간)은 뺀다
+// 1단계에 보이는 이름·운영 정보·사진과 이어지는 링크 복사·설명. 값이 없는 줄(편의시설의 운영·위치, 시간 없는 프론트 장소의 운영 시간)은 뺀다
 function PlaceSummary({ place }: { place: MapPlace }) {
   const { sheet } = getMessages(useLocale()).map
   const label = placeLabel(place)
@@ -61,11 +62,18 @@ function PlaceSummary({ place }: { place: MapPlace }) {
             ))}
           </dl>
         </BottomSheetDescription>
+        {/* 다른 장소로 바뀌면 첫 사진부터 다시 보인다 */}
+        <PlacePhotos
+          key={`photos-${place.id}`}
+          images={place.place_image_uri ?? []}
+          alt={place.name ?? ''}
+        />
         {/* 다른 장소로 바뀌면 복사했어요 글자가 남지 않게 새로 그린다 */}
         <ShareLinkButton key={place.id} place={place} />
+        {/* 백오피스에서 넣은 줄바꿈을 그대로 살리고, 긴 주소는 칸 안에서 끊고 링크로 연다 */}
         {place.description && (
-          <p lang={lang} className="leading-[1.4]">
-            {place.description}
+          <p lang={lang} className="leading-[1.4] whitespace-pre-line wrap-break-word">
+            <LinkedText text={place.description} />
           </p>
         )}
       </div>
@@ -86,7 +94,7 @@ function SheetSection({ title, children }: { title: string; children: ReactNode 
   )
 }
 
-// 시트 본문 전체. 1단계는 요약까지만 보이고, 끌어 올리면 메뉴·사진이 이어진다
+// 시트 본문 전체. 1단계는 사진 줄까지 보이고, 끌어 올리면 설명·메뉴가 이어진다
 function PlaceDetails({ place }: { place: MapPlace }) {
   const { sheet } = getMessages(useLocale()).map
   return (
@@ -101,10 +109,6 @@ function PlaceDetails({ place }: { place: MapPlace }) {
           </ul>
         </SheetSection>
       )}
-      <SheetSection title={sheet.photos}>
-        {/* 다른 장소로 바뀌면 첫 사진부터 다시 보인다 */}
-        <PlacePhotos key={place.id} images={place.place_image_uri} alt={place.name} />
-      </SheetSection>
     </div>
   )
 }

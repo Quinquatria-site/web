@@ -1,9 +1,10 @@
 /** 장소(주점·부스·푸드트럭 등)의 언어 무관 필드 */
 export interface PlaceBase {
   id: number
-  category_id: number
-  /** 카테고리 안 표시 순서 */
-  category_sequence: number
+  /** 아직 정하지 않았으면 null */
+  category_id: number | null
+  /** 카테고리 안 표시 순서. 아직 정하지 않았으면 null */
+  category_sequence: number | null
   /** 배치 도면 좌표 */
   x: number
   y: number

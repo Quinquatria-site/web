@@ -6,9 +6,9 @@ import { ScheduleBanner } from '@/features/schedule/ScheduleBanner'
 import { ScheduleBoard } from '@/features/schedule/ScheduleBoard'
 import { Timeline, performanceAnchorId } from '@/features/schedule/Timeline'
 import { DuskBackground } from '@/shared/background/DuskBackground'
-import { PageHeader } from '@/shared/header/PageHeader'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
+import { PageTitle } from '@/shared/page-title/PageTitle'
 import { listShareMetadata } from '@/shared/metadata/share-metadata'
 
 /** 공유 카드에 페이지 이름과 소개 문구를 싣는다 */
@@ -32,11 +32,11 @@ export default async function SchedulePage() {
     <>
       <DuskBackground />
       <PerformanceImagePreload performances={performances} />
-      <PageHeader title={pages.schedule} />
+      <PageTitle title={pages.schedule} />
       <ScheduleBoard
         banner={<ScheduleBanner live={live} />}
         panels={FESTIVAL_DAYS.map(({ date }, i) => (
-          <Timeline key={date} date={date} performances={byDay[i]} />
+          <Timeline key={date} day={i} date={date} performances={byDay[i]} />
         ))}
         liveDay={liveDay === -1 ? null : liveDay}
         liveAnchor={live && liveDay !== -1 ? performanceAnchorId(live.id) : null}

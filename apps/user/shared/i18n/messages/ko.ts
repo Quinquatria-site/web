@@ -28,7 +28,7 @@ export const ko = {
     scrollCue: '다음 섹션으로',
     navLabel: '바로가기',
     nav: {
-      schedule: { title: '축제 일정표', description: '축제 일정과 공연 시간을 확인해보세요!' },
+      schedule: { title: '공연 타임라인', description: '날짜별 공연 순서를 확인해보세요!' },
       map: { title: '캠퍼스 지도', description: '다양한 부스와 편의시설 위치를 찾아보세요!' },
       notices: { title: '공지사항', description: '축제 관련 주요 소식을 알려드립니다.' },
       lostItems: { title: '분실물 찾기', description: '축제가 끝나면 분실물이 업로드됩니다.' },
@@ -78,11 +78,8 @@ export const ko = {
       ARTIST: '아티스트 공연',
     },
     slots: {
-      wristbands: '외대인 입장팔찌 배부 시작',
-      boothsOpen: '전체 부스 오픈',
-      studentEntry: '외대인 관객 운동장 입장 시작',
-      visitorEntry: '외부인 관객 운동장 입장 시작',
-      dayEnd: '축제 첫째날 종료',
+      /** DAY 순서대로 */
+      dayEnd: ['축제 첫째날 종료', '축제 둘째날 종료'],
     },
   },
   map: {
@@ -95,7 +92,6 @@ export const ko = {
       hours: '운영 시간',
       location: '위치',
       menu: '메뉴',
-      photos: '사진',
       /** {price} 에 자릿수 쉼표 찍은 금액이 들어간다 */
       price: '{price}원',
       /** 공유 시트를 열 수 있는 브라우저의 버튼 글자 */
@@ -104,6 +100,9 @@ export const ko = {
       copyLink: '링크 복사',
       /** 복사 뒤 버튼 글자가 잠깐 이 문구로 바뀐다 */
       linkCopied: '복사했어요',
+      /** 메뉴 설명이 잘렸을 때 끝에 붙어 펼친다 */
+      more: '더보기',
+      less: '접기',
       /** 클립보드가 막혀 복사도 못 했을 때 잠깐 보인다 */
       copyFailed: '링크를 복사하지 못했어요',
     },
