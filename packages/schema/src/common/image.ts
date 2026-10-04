@@ -5,5 +5,6 @@ export const IMAGE_RESOURCE_TYPES = [
   'MENU_IMAGE',
   'PERFORMANCE_IMAGE',
   'LOST_ITEM_IMAGE',
+  'NOTICE_IMAGE',
 ] as const
 export type ImageResourceType = (typeof IMAGE_RESOURCE_TYPES)[number]
