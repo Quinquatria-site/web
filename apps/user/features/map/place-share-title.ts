@@ -3,7 +3,7 @@ import type { Locale } from '@/shared/i18n/locales'
 import { taggedTitle } from '@/shared/metadata/share-metadata'
 import type { MapPlace } from './map-place'
 
-/** 공유 카드와 공유 시트가 함께 쓰는 장소 제목. `[종류] 이름` 꼴이다 */
+/** 장소 공유 카드 제목. `[종류] 이름` 꼴이다 */
 export function placeShareTitle(locale: Locale, place: Pick<MapPlace, 'name' | 'code'>) {
   const { map, meta, pages } = getMessages(locale)
   const category = map.places[place.code]

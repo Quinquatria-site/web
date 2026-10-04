@@ -5,7 +5,6 @@ import { getMessages } from '@/shared/i18n/messages'
 import { localePath } from '@/shared/i18n/paths'
 import { useLocale } from '@/shared/i18n/useLocale'
 import type { MapPlace } from './map-place'
-import { placeShareTitle } from './place-share-title'
 
 // 복사했다·못 했다는 글자를 보여 주는 시간(ms)
 const NOTICE_MS = 2000
@@ -77,7 +76,8 @@ export function ShareLinkButton({ place }: { place: MapPlace }) {
       // 마운트 뒤 감지와 달리 누른 순간에도 다시 본다. 그새 막힌 환경도 복사로 넘긴다
       if (!canShareUrl(url)) return await copy(url)
       try {
-        await navigator.share({ title: placeShareTitle(locale, place), url })
+        // 제목을 같이 넘기면 카톡 등이 "제목 - 주소" 로 붙여 보낸다. 장소 정보는 주소의 공유 카드가 보여 준다
+        await navigator.share({ url })
       } catch (error) {
         // NotAllowed(사용자 동작 아님·권한·iframe)·TypeError(데이터 거부)·그 밖은 복사로 대신한다
         if (!isQuietShareError(error)) await copy(url)
