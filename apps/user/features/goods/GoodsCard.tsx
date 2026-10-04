@@ -41,8 +41,9 @@ export function GoodsCard({
           <GlowDot key={i} size={size} className={`absolute ${className}`} />
         ))}
       </div>
-      <div className="flex flex-col items-center text-center font-heir font-bold">
-        <h2 className="text-2xl leading-[normal] text-text">{name}</h2>
+      {/* 이름 두 줄 자리를 늘 잡아 둬야 넘길 때 카드 높이와 아래 버튼이 튀지 않는다 */}
+      <div className="flex min-h-[calc(2lh+var(--text-xl)*1.288)] flex-col items-center justify-center text-center font-heir text-2xl leading-[normal] font-bold">
+        <h2 className="text-text">{name}</h2>
         <p className="text-xl leading-[1.288] text-accent">{price}</p>
       </div>
     </article>
