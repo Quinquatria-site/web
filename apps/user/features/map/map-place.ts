@@ -55,3 +55,12 @@ export function placeHours({
   const start = formatSeoulTime(start_hour)
   return end_hour ? `${start} - ${formatSeoulTime(end_hour)}` : `${start} ~`
 }
+
+/** 시트 사진 줄에 놓을 사진 key. 장소 사진을 앞에, 사진 있는 메뉴를 메뉴 순서대로 뒤에 두고 같은 사진은 한 번만 넣는다 */
+export function placePhotos({
+  place_image_uri,
+  menus,
+}: Pick<MapPlace, 'place_image_uri' | 'menus'>): string[] {
+  const menuPhotos = menus.flatMap(({ image_url }) => (image_url ? [image_url] : []))
+  return [...new Set([...(place_image_uri ?? []), ...menuPhotos])]
+}
