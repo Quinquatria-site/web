@@ -56,7 +56,7 @@ export const ko = {
   lostItems: {
     contactNotice: '분실물 관련 문의는 총학생회로 연락주세요!',
     councilInstagram: '총학생회 instagram',
-    councilCall: '총학생회 전화하기',
+    councilKakao: '분실물 카카오톡 문의',
     foundLocation: '습득 장소',
     returned: '반환 완료',
     emptyTitle: '분실물은 축제 종료 후\n순차적으로 등록됩니다.',

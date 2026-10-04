@@ -1,17 +1,17 @@
 import { LinkBadge } from '@/shared/link-badge/LinkBadge'
 
 const COUNCIL_INSTAGRAM = 'https://www.instagram.com/hufsstudent/'
-const COUNCIL_PHONE = '010-9411-4793'
+const COUNCIL_KAKAO = 'https://pf.kakao.com/_bwFxjX'
 
-/** 분실물 목록 위 문의 안내. 총학생회 인스타그램으로 가거나 바로 전화를 건다 */
+/** 분실물 목록 위 문의 안내. 총학생회 인스타그램이나 카카오톡 채널로 보낸다 */
 export function LostItemsContact({
   notice,
   instagramLabel,
-  callLabel,
+  kakaoLabel,
 }: {
   notice: string
   instagramLabel: string
-  callLabel: string
+  kakaoLabel: string
 }) {
   return (
     <section className="flex flex-col gap-2">
@@ -20,8 +20,8 @@ export function LostItemsContact({
         <LinkBadge href={COUNCIL_INSTAGRAM} tone="glow">
           {instagramLabel}
         </LinkBadge>
-        <LinkBadge href={`tel:${COUNCIL_PHONE}`} tone="glow">
-          {callLabel}
+        <LinkBadge href={COUNCIL_KAKAO} tone="glow">
+          {kakaoLabel}
         </LinkBadge>
       </div>
     </section>
