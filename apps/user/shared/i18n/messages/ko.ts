@@ -100,6 +100,9 @@ export const ko = {
       copyLink: '링크 복사',
       /** 복사 뒤 버튼 글자가 잠깐 이 문구로 바뀐다 */
       linkCopied: '복사했어요',
+      /** 메뉴 설명이 잘렸을 때 끝에 붙어 펼친다 */
+      more: '더보기',
+      less: '접기',
     },
     /** 프론트에 둔 팔찌 수령 영역 */
     braceletPickup: {

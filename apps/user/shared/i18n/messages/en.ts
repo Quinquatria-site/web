@@ -106,6 +106,8 @@ export const en: Messages = {
       price: '₩{price}',
       copyLink: 'Copy link',
       linkCopied: 'Copied',
+      more: 'More',
+      less: 'Less',
     },
     /** 프론트에 둔 팔찌 수령 영역 */
     braceletPickup: {

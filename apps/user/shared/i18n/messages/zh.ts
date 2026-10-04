@@ -100,6 +100,8 @@ export const zh: Messages = {
       price: '{price}韩元',
       copyLink: '复制链接',
       linkCopied: '已复制',
+      more: '展开',
+      less: '收起',
     },
     /** 프론트에 둔 팔찌 수령 영역 */
     braceletPickup: {
