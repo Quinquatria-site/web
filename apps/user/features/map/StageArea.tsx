@@ -9,7 +9,7 @@ import { localePath } from '@/shared/i18n/paths'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { type MapPoint, toLatLng } from './map-coords'
 
-// 운동장 무대 꼭짓점. 가운데 긴 띠라 이름표(map-labels 의 stage)는 오른쪽 변에 걸쳐 둔다
+// 운동장 무대 꼭짓점. 가운데 긴 띠라 이름표(map-labels 의 stage)는 띠 가운데에 긴 변을 따라 눕힌다
 const STAGE_AREA: MapPoint[] = [
   { x: 900, y: 318 },
   { x: 929, y: 307 },
