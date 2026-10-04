@@ -132,7 +132,7 @@
 }
 
 /*
- * 이름표. 글자 크기는 LabelScale 이 지도 칸에 다는 --label-size 를 따른다.
+ * 이름표. 글자 크기는 LabelScale 이 이름표 pane 에 다는 --label-size 를 따른다.
  * 가운데 맞춤은 transform 이 아니라 translate 속성이어야 한다 — CSS 는 translate → rotate →
  * transform 순서로 적용해서, transform 으로 옮기면 기울인 이름표가 회전된 축으로 밀려 어긋난다.
  * user 의 Tailwind -translate-1/2 도 translate 속성이다
