@@ -54,8 +54,14 @@ function groupBySection(places: Place[]): { key: string; places: Place[] }[] {
 function SeqPrefix({ place }: { place: Place }) {
   const code = categoryById(place.category_id)?.code
   const label = code ? placeLabel(code, place.category_sequence) : null
+  // 머리를 안 봐도, 구역을 하나만 골라 머리가 없어도 구역이 보이게 표시 번호에 구역 색을 입힌다.
+  // 구역 밖(100 미만 등)은 placeLabel 이 글자를 찍어도 구역이 아니라 칠하지 않는다
+  const key = sectionKeyOf(place)
   return (
-    <span className={styles.seqBox}>
+    <span
+      className={`${styles.seqBox} ${styles.tone}`}
+      data-section={key === NO_SECTION ? undefined : key}
+    >
       <span className={styles.seq}>{place.category_sequence}</span>
       {label && <span className={styles.seqLabel}>{label}</span>}
     </span>
@@ -213,15 +219,19 @@ export function PlacesRoute() {
             }}
           />
         ) : (
-          // 묶음 머리는 공연 목록의 종류별 묶음 머리(PerformancesRoute .groupTitle)와 같은 모양이다
+          // 묶음 머리는 공연 목록의 종류별 묶음 머리(PerformancesRoute .groupTitle)에서 왔다.
+          // 구역끼리 섞여 보이지 않게 구역 색 구분선·글자를 더했다 (색표는 CSS .tone)
           groups.map((group) => (
             <section
               key={group.key ?? 'all'}
+              className={styles.tone}
+              data-section={group.key ?? undefined}
               aria-label={group.key === null ? undefined : sectionName(group.key)}
             >
               {group.key !== null && (
                 <h2 className={styles.groupTitle}>
-                  {sectionName(group.key)} ({group.places.length})
+                  {sectionName(group.key)}
+                  <span className={styles.groupCount}>{group.places.length}</span>
                 </h2>
               )}
               <List>
