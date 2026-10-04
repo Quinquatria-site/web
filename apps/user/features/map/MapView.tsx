@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { dockStowStore } from '@/shared/dock/dock-stow-store'
 import { localePath } from '@/shared/i18n/paths'
@@ -88,8 +88,13 @@ export function MapView({
   const searchOpenerRef = useRef<HTMLElement | null>(null)
   // 검색창이 검색 막대 누름 안에서 그려져야 iOS 가 키보드를 올려서, 다음 그리기를 기다리지 않고 바로 그린다
   const keyboard = useKeyboardLock()
+  // 검색 중 지도 판 높이. 칸은 줄어든 화면을 따라 줄여 페이지가 길어지지(iOS 가 스크롤해 검색창을 밀어내지) 않게 하고, 판만 원래 높이로 두어 아래가 잘린다
+  const mapAreaRef = useRef<HTMLDivElement>(null)
+  const [frozenMapHeight, setFrozenMapHeight] = useState<number | null>(null)
   const openSearch = () => {
     // 키보드가 뜨기 전 높이로 잠가 지도·도크가 딸려 올라오지 않고 키보드가 덮게 한다
+    // 키보드가 내려가는 중에 다시 열면 줄어든 칸을 재지 않게 잠긴 동안은 처음 잰 값을 쓴다
+    if (!keyboard.locked) setFrozenMapHeight(mapAreaRef.current?.offsetHeight ?? null)
     keyboard.lock()
     clearSelection()
     setListOpen(false)
@@ -164,15 +169,17 @@ export function MapView({
       <div
         data-chrome={chromeHidden ? 'hidden' : undefined}
         data-searching={searching || undefined}
-        style={
-          keyboard.lockedHeight === null
-            ? undefined
-            : ({ '--map-locked-h': `${keyboard.lockedHeight}px` } as CSSProperties)
-        }
-        className="relative isolate -mb-(--dock-space) h-[calc(var(--map-locked-h,100dvh)-env(safe-area-inset-top)-var(--page-title-height))]"
+        ref={mapAreaRef}
+        className="relative isolate -mb-(--dock-space) h-[calc(100dvh-env(safe-area-inset-top)-var(--page-title-height))] overflow-hidden"
       >
         {/* 검색 중엔 뒤 지도의 마커·버튼에 Tab·스크린리더로도 닿지 않게 막는다 */}
-        <div inert={searching} className="size-full">
+        <div
+          inert={searching}
+          style={
+            keyboard.locked && frozenMapHeight !== null ? { height: frozenMapHeight } : undefined
+          }
+          className="size-full"
+        >
           <CampusMap
             places={visiblePlaces}
             selectedId={selectedId}
