@@ -45,13 +45,16 @@ function PlaceSummary({ place }: { place: MapPlace }) {
 
   return (
     <div className="flex flex-col gap-3 px-2">
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-start gap-2.5">
         <BottomSheetTitle lang={lang} className="text-2xl leading-[normal] font-semibold">
           {place.name}
         </BottomSheetTitle>
-        <PlaceBadge place={place} />
-        {/* 다른 장소로 바뀌면 복사했어요 표시가 남지 않게 새로 그린다 */}
-        <ShareLinkButton key={place.id} place={place} />
+        {/* 제목과 같은 글자 크기로 한 줄 높이(lh)를 잡아, 제목이 길어져도 첫 줄 가운데에 붙는다 */}
+        <div className="flex h-lh shrink-0 items-center gap-2.5 text-2xl leading-[normal]">
+          <PlaceBadge place={place} />
+          {/* 다른 장소로 바뀌면 복사했어요 표시가 남지 않게 새로 그린다 */}
+          <ShareLinkButton key={place.id} place={place} />
+        </div>
       </div>
       <div className="flex flex-col gap-5">
         <BottomSheetDescription asChild>
