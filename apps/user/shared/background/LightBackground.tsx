@@ -3,7 +3,7 @@ export function LightBackground({ glow = false }: { glow?: boolean }) {
   return (
     <div
       aria-hidden
-      className={`pointer-events-none fixed top-0 -z-10 h-lvh w-full max-w-(--app-max-width) bg-bg ${glow ? 'bg-linear-to-b from-bg/20 to-primary/20' : ''}`}
+      className={`pointer-events-none fixed top-0 -z-10 h-(--background-height,100lvh) w-full max-w-(--app-max-width) bg-bg ${glow ? 'bg-linear-to-b from-bg/20 to-primary/20' : ''}`}
     />
   )
 }

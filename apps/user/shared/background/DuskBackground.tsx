@@ -6,7 +6,7 @@ export function DuskBackground() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed top-0 -z-10 h-lvh w-full max-w-(--app-max-width) overflow-hidden bg-(--dark)"
+      className="pointer-events-none fixed top-0 -z-10 h-(--background-height,100lvh) w-full max-w-(--app-max-width) overflow-hidden bg-(--dark)"
     >
       {/* 시안처럼 아래에 붙여, 화면이 이미지보다 길면 위는 바탕색이 채운다 */}
       <div className="absolute inset-x-0 bottom-0">

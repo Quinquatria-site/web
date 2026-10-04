@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
+import { BackgroundHeightLock } from '@/shared/background/BackgroundHeightLock'
 import { SunsetBackground } from '@/shared/background/SunsetBackground'
 import { Dock } from '@/shared/dock/Dock'
 import { pretendard } from '@/shared/fonts'
@@ -35,8 +36,6 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  // 키보드가 화면을 줄이지 않고 위를 덮게 한다. 줄이면 바닥에 붙은 도크·노을이 딸려 오르고 줄어든 밖은 그려지지 않는다
-  interactiveWidget: 'overlays-content',
 }
 
 /** Cloudflare Web Analytics 토큰. 없으면(로컬·스테이징) 비콘을 싣지 않는다 */
@@ -52,6 +51,7 @@ export default async function RootLayout({ children }: LayoutProps<'/[lang]'>) {
         <WebBackdrop />
         {/* 모달이 스크롤을 잠글 때 body 의 좌우 margin 을 padding 으로 바꿔 넣어서, 가운데 정렬은 body 가 아닌 안쪽 기둥에 둔다 */}
         <div className="mx-auto max-w-(--app-max-width)">
+          <BackgroundHeightLock />
           <SunsetBackground />
           <main className="min-h-dvh pt-[env(safe-area-inset-top)] pb-(--dock-space)">
             {children}
