@@ -1,8 +1,9 @@
 import { contentLang } from '@/shared/i18n/locales'
 import { formatSeoulTime } from '@/shared/time/format-seoul-time'
 import type { Notice } from './notice'
+import { NoticePhotos } from './NoticePhotos'
 
-/** 공지 상세. 제목·등록 시각 아래 구분선을 긋고 본문을 잇는다 */
+/** 공지 상세. 제목·등록 시각 아래 구분선을 긋고 본문을 잇고, 사진이 있으면 그 아래 차례대로 쌓는다 */
 export function NoticeDetail({ notice }: { notice: Notice }) {
   const lang = contentLang(notice.language_code)
   return (
@@ -19,6 +20,9 @@ export function NoticeDetail({ notice }: { notice: Notice }) {
       <p lang={lang} className="px-[5px] pt-3 leading-[1.18] whitespace-pre-line wrap-break-word">
         {notice.content}
       </p>
+      {notice.notice_image_uri?.length ? (
+        <NoticePhotos images={notice.notice_image_uri} alt={notice.title} />
+      ) : null}
     </article>
   )
 }
