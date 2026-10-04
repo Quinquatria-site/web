@@ -34,15 +34,16 @@ export function GoodsCard({
       <div className="w-full">
         <GoodsPhoto src={image} name={name} order={order} variant="card" />
       </div>
-      <div aria-hidden className="pointer-events-none">
+      {/* 꾸밈 칸이 flex 항목이 되면 gap 이 한 번 더 붙어 사진과 이름이 벌어진다 */}
+      <div aria-hidden className="pointer-events-none absolute inset-0">
         <GlowStar kind="a" className="absolute bottom-[60px] left-[18px]" />
         <GlowStar kind="b" className="absolute right-[18px] bottom-[13px]" />
         {DOTS.map(({ size, className }, i) => (
           <GlowDot key={i} size={size} className={`absolute ${className}`} />
         ))}
       </div>
-      {/* 이름 두 줄 자리를 늘 잡아 둬야 넘길 때 카드 높이와 아래 버튼이 튀지 않는다 */}
-      <div className="flex min-h-[calc(2lh+var(--text-xl)*1.288)] flex-col items-center justify-center text-center font-heir text-2xl leading-[normal] font-bold">
+      {/* 이름 두 줄 자리를 늘 잡아 둬야 넘길 때 카드 높이와 아래 버튼이 튀지 않는다. 남는 줄은 가격 아래로 보내 사진 밑에 붙인다 */}
+      <div className="flex min-h-[calc(2lh+var(--text-xl)*1.288)] flex-col items-center text-center font-heir text-2xl leading-[normal] font-bold">
         <h2 className="text-text">{name}</h2>
         <p className="text-xl leading-[1.288] text-accent">{price}</p>
       </div>
