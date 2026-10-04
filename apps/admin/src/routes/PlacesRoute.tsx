@@ -144,7 +144,7 @@ export function PlacesRoute() {
   const sectionKeys = [...new Set(byCategory.map(sectionKeyOf))].sort(compareSectionKeys)
   // 구역 글자가 하나도 없으면(푸드트럭·의무실 등) "구역 없음" 하나만 남아 거를 것이 없다. 줄을 감춘다
   const hasSections = sectionKeys.some((key) => key !== NO_SECTION)
-  // 카테고리를 옮겨 고른 구역이 사라지면 빈 화면만 남는다. 번역 누락 토글처럼 그때는 푼다
+  // 카테고리를 옮기면 changeFilter 가 구역을 푼다. 여기는 고른 구역의 마지막 장소를 지워 칩이 사라질 때만 남는다
   const activeSection = hasSections && sectionKeys.includes(section) ? section : 'all'
   // 구역도 카테고리·번역 누락과 다른 축이라 AND 로 건다 — "주점 중 B구역"이 보여야 한다
   const bySection =
@@ -162,15 +162,33 @@ export function PlacesRoute() {
   const groups =
     hasSections && activeSection === 'all' ? groupBySection(places) : [{ key: null, places }]
 
+  // 화면에서만 풀면 state 에 구역이 남아, 부스로 돌아왔을 때 예전 구역이 다시 걸린다. state 를 같이 푼다
+  const changeFilter = (next: string) => {
+    setFilter(next)
+    setSection('all')
+  }
+  // 고른 칩을 다시 누르면 푼다. ChipTabs 는 같은 값을 다시 누르면 onValueChange 를 부르지 않아 click 으로 잡는다.
+  // 고르기는 click 에서 일어나 렌더 때 값이 누르기 전 값이다. Enter·Space 도 button 이라 click 으로 온다
+  const releaseFilter = (value: string) => () => {
+    if (filter === value) changeFilter('all')
+  }
+  const releaseSection = (value: string) => () => {
+    if (activeSection === value) setSection('all')
+  }
+
   return (
     <div className={styles.screen}>
       {/* 단순 선택이 아니라 목록을 갈아끼우는 필터라 Chip 이 아니라 ChipTabs 다.
           가로 스크롤과 선택 칩 자동 노출을 ChipTabsList 가 맡는다 */}
-      <ChipTabsRoot className={styles.filters} value={filter} onValueChange={setFilter}>
+      <ChipTabsRoot className={styles.filters} value={filter} onValueChange={changeFilter}>
         <ChipTabsList>
           <ChipTabsTrigger value="all">전체</ChipTabsTrigger>
           {CATEGORIES.map((category) => (
-            <ChipTabsTrigger key={category.id} value={String(category.id)}>
+            <ChipTabsTrigger
+              key={category.id}
+              value={String(category.id)}
+              onClick={releaseFilter(String(category.id))}
+            >
               {findTranslation(category.translations, 'KO')?.name}
             </ChipTabsTrigger>
           ))}
@@ -187,7 +205,7 @@ export function PlacesRoute() {
           <ChipTabsList>
             <ChipTabsTrigger value="all">전체 구역</ChipTabsTrigger>
             {sectionKeys.map((key) => (
-              <ChipTabsTrigger key={key} value={key}>
+              <ChipTabsTrigger key={key} value={key} onClick={releaseSection(key)}>
                 {key === NO_SECTION ? sectionName(key) : key}
               </ChipTabsTrigger>
             ))}
