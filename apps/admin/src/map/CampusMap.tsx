@@ -11,6 +11,7 @@ import {
 import { useEffect, useRef, type ReactNode } from 'react'
 import { MapContainer, useMap, useMapEvents } from 'react-leaflet'
 import { CampusLabels } from './CampusLabels'
+import { isZoomClick } from './double-click'
 import {
   fromLatLng,
   MAP_BOUNDS,
@@ -251,17 +252,19 @@ function DragTolerance() {
 // 두 번 탭은 확대라서, 한 번 탭은 두 번째 탭이 오지 않을 만큼 기다렸다가 알린다. 모바일 브라우저의 두 번 탭 판정(약 300ms)에 맞춘다
 const DOUBLE_TAP_WAIT_MS = 300
 
-/** 좌표 픽커. 기다리지 않고 바로 찍되, 두 번 탭 확대의 두 번째 탭은 같은 자리라 버린다 */
+/**
+ * 좌표 픽커. 기다리지 않고 바로 찍되, 확대로 이어지는 두 번째 누름은 같은 자리라 버린다.
+ * 시간을 고정해 재면 OS 더블클릭 간격보다 느린 두 번 누름이 확대되며 두 번 찍혀, 판정은 isZoomClick 에 맡긴다
+ */
 function PickLayer({ onPick }: { onPick: (point: Point) => void }) {
-  const lastPickRef = useRef(-Infinity)
+  const lastTapRef = useRef(-Infinity)
   const map = useMapEvents({
     click: (event) => {
       // 지도 칸에서 Enter 를 누르면 Leaflet 이 click 으로 바꿔 보내는데, 누른 자리가 없어 찍지 않는다
       if (!(event.originalEvent instanceof MouseEvent)) return
-      const at = event.originalEvent.timeStamp
-      const repeat = at - lastPickRef.current < DOUBLE_TAP_WAIT_MS
-      lastPickRef.current = at
-      if (repeat) return
+      const { zoom, lastTapAt } = isZoomClick(event.originalEvent, lastTapRef.current)
+      lastTapRef.current = lastTapAt
+      if (zoom) return
       // user 앱이 같은 좌표계(이미지 픽셀, 왼쪽 아래 원점)로 읽는다. 마커에서 올라온 누름은 latlng 가 마커 자리라 누른 자리를 다시 잰다
       onPick(fromLatLng(map.mouseEventToLatLng(event.originalEvent)))
     },
