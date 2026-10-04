@@ -175,10 +175,10 @@ export function MapView({
             onOpenList={openList}
           />
         </div>
-        {/* Leaflet 판(400~1000) 위에 띄운다. 칩 사이 빈 곳은 지도를 끌 수 있게 누름을 흘려보낸다 */}
+        {/* Leaflet 판(400~1000) 위에 띄운다. 칩 사이 빈 곳은 지도를 끌 수 있게 누름을 흘려보낸다. 검색창이 같은 자리에 바로 뜨니 검색 중엔 전환 없이 바로 숨긴다 */}
         <div
           ref={filterRef}
-          className="pointer-events-none absolute inset-x-0 top-0 z-[1000] px-[17px] pt-3 transition-[translate,opacity,visibility] duration-300 ease-out in-data-[chrome=hidden]:invisible in-data-[chrome=hidden]:-translate-y-full in-data-[chrome=hidden]:opacity-0 in-data-searching:invisible"
+          className="pointer-events-none absolute inset-x-0 top-0 z-[1000] px-[17px] pt-3 transition-[translate,opacity,visibility] duration-300 ease-out in-data-[chrome=hidden]:invisible in-data-[chrome=hidden]:-translate-y-full in-data-[chrome=hidden]:opacity-0 in-data-searching:invisible in-data-searching:transition-none"
         >
           <PlaceSearchBar query={query} onOpen={openSearch} onClear={clearSearch} />
           <PlaceFilter selected={filter} onToggle={toggleFilter} onReset={resetFilter} />
