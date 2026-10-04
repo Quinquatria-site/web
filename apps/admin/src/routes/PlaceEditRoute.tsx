@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { Callout } from 'seed-design/ui/callout'
+import { Checkbox } from 'seed-design/ui/checkbox'
 import { List, ListButtonItem } from 'seed-design/ui/list'
 import { ListHeader } from 'seed-design/ui/list-header'
 import { SegmentedControl, SegmentedControlItem } from 'seed-design/ui/segmented-control'
@@ -15,9 +16,10 @@ import { ConfirmDialog, HourField, PhotoPicker, type Hour } from '../ui'
 import { CampusMap } from '../map/CampusMap'
 import { MAP_HEIGHT, MAP_WIDTH, type Point } from '../map/campus'
 import { PlaceMarker } from '../map/PlaceMarker'
-import { sequenceHint } from '../map/place-label'
+import { placeLabel, sequenceHint } from '../map/place-label'
 import { CATEGORIES, categoryById } from '../mocks/categories'
 import { menusByPlace } from '../mocks/menus'
+import { PLACES } from '../mocks/places'
 import {
   placeById,
   removePlace,
@@ -104,6 +106,8 @@ function PlaceEditForm() {
   const [photos, setPhotos] = useState<string[]>(editing?.place_image_uri ?? [])
   // 서버를 다녀오는 동안 버튼을 막는다. 두 번 누르면 장소가 두 곳 생긴다
   const [pending, setPending] = useState(false)
+  // 좌표 픽커에 다른 장소를 깔지. 새로 들어오면 꺼진 채로 시작한다
+  const [showOthers, setShowOthers] = useState(false)
 
   // 운영시간이 비어 있는 장소는 새 장소와 같은 기본값으로 채워 보여 준다
   const [date, setDate] = useState<string>(
@@ -374,8 +378,26 @@ function PlaceEditForm() {
             <TextFieldInput inputMode="decimal" placeholder="예: 680" />
           </TextField>
         </div>
+        <Checkbox label="다른 장소도 표시" checked={showOthers} onCheckedChange={setShowOthers} />
         <div className={styles.picker}>
           <CampusMap onPick={pickPoint}>
+            {/* 옆 부스와 겹치지 않게 참고로 깐다. 누를 수 없고, 마커 위를 눌러도 좌표가 찍힌다 */}
+            {showOthers &&
+              PLACES.filter((place) => place.id !== editing?.id).map((place) => {
+                const code = categoryById(place.category_id)?.code ?? 'BOOTH'
+                const label = placeLabel(code, place.category_sequence)
+                const name = findTranslation(place.translations, 'KO')?.name ?? `장소 ${place.id}`
+                return (
+                  <PlaceMarker
+                    key={place.id}
+                    point={place}
+                    code={code}
+                    sequence={place.category_sequence}
+                    tooltip={label ? `${name} · ${label}` : name}
+                    faded
+                  />
+                )
+              })}
             {point && (
               <PlaceMarker
                 point={point}
