@@ -103,7 +103,6 @@ export const en: Messages = {
       hours: 'Hours',
       location: 'Location',
       menu: 'Menu',
-      photos: 'Photos',
       price: '₩{price}',
       copyLink: 'Copy link',
       linkCopied: 'Copied',

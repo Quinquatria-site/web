@@ -97,7 +97,6 @@ export const zh: Messages = {
       hours: '运营时间',
       location: '位置',
       menu: '菜单',
-      photos: '照片',
       price: '{price}韩元',
       copyLink: '复制链接',
       linkCopied: '已复制',
