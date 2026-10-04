@@ -16,6 +16,21 @@ export const PLACE_NAMES: Record<PlaceCode, string> = {
 // 구역 번호를 쓰는 카테고리. 나머지는 category_sequence 가 그냥 표시 순서다
 const SECTION_CODES: ReadonlySet<PlaceCode> = new Set(['BOOTH', 'PUB'])
 
+// 백의 자리 → 구역 글자. 1 → A. 마커 글자와 구역 필터가 같은 글자를 쓰도록 여기서만 계산한다
+function sectionLetter(sequence: number): string {
+  return String.fromCharCode(64 + Math.floor(sequence / 100))
+}
+
+/**
+ * 장소의 구역(A·B·C…). 구역 번호를 쓰는 카테고리이면서 100 이상일 때만 있다.
+ * 100 미만(무대 출입구 11·12 등)은 구역 밖 예외 장소라 null
+ */
+export function placeSection(code: PlaceCode, sequence: number | null): string | null {
+  return SECTION_CODES.has(code) && sequence !== null && sequence >= 100
+    ? sectionLetter(sequence)
+    : null
+}
+
 // 끝 두 자리가 이 값부터면 숫자 대신 소문자다. 51 → a
 const LETTER_FROM = 51
 
@@ -25,7 +40,8 @@ const LETTER_FROM = 51
  */
 export function placeLabel(code: PlaceCode, sequence: number | null): string | null {
   if (!SECTION_CODES.has(code) || sequence === null) return null
-  const section = String.fromCharCode(64 + Math.floor(sequence / 100))
+  // placeSection 을 쓰지 않는다. 100 미만도 지금껏 찍던 글자를 그대로 둔다
+  const section = sectionLetter(sequence)
   const number = sequence % 100
   const suffix = number >= LETTER_FROM ? String.fromCharCode(97 + number - LETTER_FROM) : number
   return `${section}${suffix}`

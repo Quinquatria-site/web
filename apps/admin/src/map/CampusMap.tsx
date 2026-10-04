@@ -1,7 +1,17 @@
-import { CRS } from 'leaflet'
+import {
+  Bounds,
+  CRS,
+  DomUtil,
+  ImageOverlay,
+  type LatLng,
+  type LatLngBounds,
+  type Map as LeafletMap,
+  type ZoomAnimEvent,
+} from 'leaflet'
 import { useEffect, useRef, type ReactNode } from 'react'
-import { ImageOverlay, MapContainer, useMap, useMapEvents } from 'react-leaflet'
+import { MapContainer, useMap, useMapEvents } from 'react-leaflet'
 import { CampusLabels } from './CampusLabels'
+import { isZoomClick } from './double-click'
 import {
   fromLatLng,
   MAP_BOUNDS,
@@ -15,7 +25,10 @@ import styles from './CampusMap.module.css'
 import { ZoomButtons } from './ZoomButtons'
 import 'leaflet/dist/leaflet.css'
 
-/* 아래 값과 FitCampus·TrackpadPinchZoom·FocusPlace·DragWatch 는 user 앱 features/map/CampusMap.tsx 와 같다 */
+/*
+ * 아래 값과 FitCampus·TrackpadPinchZoom·PinchZoomRelease·FocusPlace·EmptyTap·DragWatch·DragTolerance·
+ * ScaledImageOverlay 는 user 앱 features/map/CampusMap.tsx 와 같다. 한쪽 손동작을 고치면 다른 쪽도 같이 고친다
+ */
 
 // 이미지 1px 이 화면 2px 까지 커진다. 그 이상은 흐려진다
 const MAX_ZOOM = 1
@@ -146,40 +159,212 @@ function FocusPlace({
   return null
 }
 
-/** 손으로 지도를 끄는 동안을 알린다. 시트가 그동안 아래로 비켜 지도를 가리지 않는다 */
-function DragWatch({ onDragChange }: { onDragChange: (dragging: boolean) => void }) {
-  useMapEvents({
-    dragstart: () => onDragChange(true),
-    dragend: () => onDragChange(false),
-  })
+// Leaflet 내부 메서드. 공개 API 가 없어 1.9.4 기준으로 쓴다 — 올릴 때 이름·동작을 다시 확인한다
+type ZoomTransitionMap = LeafletMap & { _onZoomTransitionEnd: () => void }
+
+/** 핀치는 손을 뗄 때 배율이 이미 맞아 있는데도 Leaflet 이 확대 전환을 다시 걸어 250ms 동안 끌기를 막아서, 핀치 끝 전환만 바로 끝낸다 */
+function PinchZoomRelease() {
+  const map = useMap()
+
+  useEffect(() => {
+    const container = map.getContainer()
+    let pinching = false
+    // 두 손가락이 닿았던 터치만 핀치로 본다. 한 손가락으로 새로 닿으면 두 번 탭 확대처럼 애니메이션이 필요한 경로라 푼다
+    const handleTouchStart = (event: TouchEvent) => {
+      pinching = event.touches.length >= 2
+    }
+    const handleZoomAnim = () => {
+      if (!pinching) return
+      pinching = false
+      // 전환을 거는 Leaflet 터치 처리가 다 끝난 뒤에 끝내야 다른 레이어의 zoomanim 처리를 건너뛰지 않는다
+      queueMicrotask(() => (map as ZoomTransitionMap)._onZoomTransitionEnd())
+    }
+    container.addEventListener('touchstart', handleTouchStart, { capture: true, passive: true })
+    map.on('zoomanim', handleZoomAnim)
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart, { capture: true })
+      map.off('zoomanim', handleZoomAnim)
+    }
+  }, [map])
+
   return null
 }
 
+/** 손으로 지도를 끄는 동안을 알린다. 시트가 그동안 숨었다가 끝나면 다시 보인다 */
+function DragWatch({ onDragChange }: { onDragChange: (dragging: boolean) => void }) {
+  const map = useMap()
+  const onDragChangeRef = useRef(onDragChange)
+  useEffect(() => {
+    onDragChangeRef.current = onDragChange
+  })
+
+  useEffect(() => {
+    let dragging = false
+    const start = () => {
+      dragging = true
+      onDragChangeRef.current(true)
+    }
+    const end = () => {
+      if (!dragging) return
+      dragging = false
+      onDragChangeRef.current(false)
+    }
+    // 끄는 중 두 번째 손가락이 닿으면 Leaflet 이 dragend 없이 끌기를 끝내서, 손가락이 다 떨어질 때도 끝낸다
+    const release = (event: TouchEvent) => {
+      if (event.touches.length === 0) end()
+    }
+    map.on('dragstart', start)
+    map.on('dragend', end)
+    document.addEventListener('touchend', release)
+    document.addEventListener('touchcancel', release)
+    return () => {
+      map.off('dragstart', start)
+      map.off('dragend', end)
+      document.removeEventListener('touchend', release)
+      document.removeEventListener('touchcancel', release)
+    }
+  }, [map])
+
+  return null
+}
+
+// Leaflet 내부 끌기 객체. 지도 옵션으로 넘길 길이 없어 1.9.4 기준으로 쓴다 — 올릴 때 이름·동작을 다시 확인한다
+type DraggableMap = LeafletMap & {
+  dragging: { _draggable?: { options: { clickTolerance: number } } }
+}
+
+// 기본 3px 은 마우스 기준이라, 손가락 탭이 조금만 밀려도 끌기가 되어 마커 누름이 버려진다
+const DRAG_TOLERANCE_PX = 10
+
+function widenDragTolerance(map: LeafletMap) {
+  const draggable = (map as DraggableMap).dragging._draggable
+  if (draggable) draggable.options.clickTolerance = DRAG_TOLERANCE_PX
+}
+
+function DragTolerance() {
+  const map = useMap()
+
+  useEffect(() => widenDragTolerance(map), [map])
+
+  return null
+}
+
+// 두 번 탭은 확대라서, 한 번 탭은 두 번째 탭이 오지 않을 만큼 기다렸다가 알린다. 모바일 브라우저의 두 번 탭 판정(약 300ms)에 맞춘다
+const DOUBLE_TAP_WAIT_MS = 300
+
+/**
+ * 좌표 픽커. 기다리지 않고 바로 찍되, 확대로 이어지는 두 번째 누름은 같은 자리라 버린다.
+ * 시간을 고정해 재면 OS 더블클릭 간격보다 느린 두 번 누름이 확대되며 두 번 찍혀, 판정은 isZoomClick 에 맡긴다
+ */
 function PickLayer({ onPick }: { onPick: (point: Point) => void }) {
-  useMapEvents({
+  const lastTapRef = useRef(-Infinity)
+  const map = useMapEvents({
     click: (event) => {
-      // user 앱이 같은 좌표계(이미지 픽셀, 왼쪽 아래 원점)로 읽는다
-      onPick(fromLatLng(event.latlng))
+      // 지도 칸에서 Enter 를 누르면 Leaflet 이 click 으로 바꿔 보내는데, 누른 자리가 없어 찍지 않는다
+      if (!(event.originalEvent instanceof MouseEvent)) return
+      const { zoom, lastTapAt } = isZoomClick(event.originalEvent, lastTapRef.current)
+      lastTapRef.current = lastTapAt
+      if (zoom) return
+      // user 앱이 같은 좌표계(이미지 픽셀, 왼쪽 아래 원점)로 읽는다. 마커에서 올라온 누름은 latlng 가 마커 자리라 누른 자리를 다시 잰다
+      onPick(fromLatLng(map.mouseEventToLatLng(event.originalEvent)))
     },
   })
   return null
 }
 
 /**
- * 마커가 아닌 빈 곳을 눌렀을 때.
- *
- * 마커 클릭이 여기까지 올라오면 마커를 눌러 연 시트가 같은 클릭으로 바로 닫힌다.
- * PlaceMarker 가 클릭을 여기서 끊는다.
+ * 지도 빈 곳 한 번 탭을 알린다. 마커 누름은 지도로 번지지 않아 여기엔 빈 곳만 온다.
+ * 두 번 탭 확대로 시트가 닫히지 않게 두 번째 탭을 기다렸다가 알린다
  */
-function BackgroundClick({ onClick }: { onClick: () => void }) {
-  useMapEvents({ click: onClick })
+function EmptyTap({ onTap, cancelKey }: { onTap: () => void; cancelKey: number }) {
+  const map = useMap()
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const onTapRef = useRef(onTap)
+  useEffect(() => {
+    onTapRef.current = onTap
+  })
+  useMapEvents({
+    click: () => {
+      clearTimeout(timerRef.current)
+      timerRef.current = setTimeout(() => onTapRef.current(), DOUBLE_TAP_WAIT_MS)
+    },
+    dblclick: () => clearTimeout(timerRef.current),
+  })
+  // 기다리는 사이 마커를 고르면, 늦게 온 빈 곳 탭이 방금 고른 장소를 풀지 않게 버린다
+  useEffect(() => clearTimeout(timerRef.current), [cancelKey])
+  useEffect(() => () => clearTimeout(timerRef.current), [])
+
+  // 키보드로도 같은 일을 하게 지도 칸에 포커스가 있을 때 Enter·Space 를 받는다. 마커에서 올라온 키는 마커 몫이다
+  useEffect(() => {
+    const container = map.getContainer()
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.target !== container || (event.key !== 'Enter' && event.key !== ' ')) return
+      event.preventDefault()
+      onTapRef.current()
+    }
+    container.addEventListener('keydown', handleKeyDown)
+    return () => container.removeEventListener('keydown', handleKeyDown)
+  }, [map])
+
+  return null
+}
+
+// Leaflet 내부 메서드. 공개 API 가 없어 1.9.4 기준으로 쓴다 — 올릴 때 이름·동작을 다시 확인한다
+type NewBoundsMap = LeafletMap & {
+  _latLngBoundsToNewLayerBounds: (bounds: LatLngBounds, zoom: number, center: LatLng) => Bounds
+}
+
+// 기본 ImageOverlay 는 핀치 매 프레임 width·height 를 바꿔 레이아웃과 이미지 다시 그리기가 돈다. 원본 크기로 고정하고 transform 배율로만 키운다
+class ScaledImageOverlay extends ImageOverlay {
+  onAdd(map: LeafletMap) {
+    super.onAdd(map)
+    const image = this.getElement()
+    if (image) {
+      // CRS.Simple 배율 0 에서 좌표 1 이 1px 이라 이미지 원본 크기가 배율 0 크기다
+      image.style.width = `${MAP_WIDTH}px`
+      image.style.height = `${MAP_HEIGHT}px`
+      image.style.transformOrigin = '0 0'
+    }
+    return this
+  }
+
+  // 원래 getEvents 가 이 이름으로 zoom·viewreset 을 묶어 두어 덮어쓴다
+  _reset() {
+    const image = this.getElement()
+    if (!image || !this._map) return
+    const origin = this._map.latLngToLayerPoint(this.getBounds().getNorthWest())
+    DomUtil.setTransform(image, origin, this._map.getZoomScale(this._map.getZoom(), 0))
+  }
+
+  // 버튼·두 번 탭 확대 전환. 원래는 지금 크기 기준 배율이라 배율 0 기준으로 바꾼다
+  _animateZoom({ zoom, center }: ZoomAnimEvent) {
+    const image = this.getElement()
+    if (!image || !this._map) return
+    const map = this._map as NewBoundsMap
+    const { min } = map._latLngBoundsToNewLayerBounds(this.getBounds(), zoom, center)
+    if (min) DomUtil.setTransform(image, min, map.getZoomScale(zoom, 0))
+  }
+}
+
+/** 캠퍼스 그림. 이름표·마커 아래에 깐다 */
+function MapImage() {
+  const map = useMap()
+
+  useEffect(() => {
+    const layer = new ScaledImageOverlay(MAP_IMAGE_URL, MAP_BOUNDS).addTo(map)
+    layer.bringToBack()
+    return () => {
+      layer.remove()
+    }
+  }, [map])
+
   return null
 }
 
 export interface CampusMapProps {
   /** 지도를 누르면 배치 도면 좌표를 돌려준다. 좌표 픽커 모드 */
   onPick?: (point: Point) => void
-  /** 마커가 아닌 빈 곳 클릭. 시트 닫기에 쓴다 */
+  /** 마커가 아닌 빈 곳 한 번 탭. 두 번 탭(확대)과 구분하려 300ms 늦게 온다. 시트 닫기에 쓴다 */
   onBackgroundClick?: () => void
   /** 고른 장소. 시트 위 남은 화면 가운데로 옮긴다 */
   focus?: Point | null
@@ -219,15 +404,17 @@ export function CampusMap({
       attributionControl={false}
       style={{ width: '100%', height: '100%' }}
     >
-      <ImageOverlay url={MAP_IMAGE_URL} bounds={MAP_BOUNDS} />
+      <MapImage />
       <CampusLabels />
       <FitCampus bottomInset={focus ? bottomInset : 0} />
       <TrackpadPinchZoom />
+      <PinchZoomRelease />
       {children}
       <FocusPlace point={focus} request={focusRequest} bottomInset={bottomInset} />
       {onDragChange && <DragWatch onDragChange={onDragChange} />}
+      <DragTolerance />
       {onPick && <PickLayer onPick={onPick} />}
-      {onBackgroundClick && <BackgroundClick onClick={onBackgroundClick} />}
+      {onBackgroundClick && <EmptyTap onTap={onBackgroundClick} cancelKey={focusRequest} />}
       <ZoomButtons />
     </MapContainer>
   )

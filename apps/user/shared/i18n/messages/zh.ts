@@ -94,10 +94,12 @@ export const zh: Messages = {
       location: '位置',
       menu: '菜单',
       price: '{price}韩元',
+      share: '分享',
       copyLink: '复制链接',
       linkCopied: '已复制',
       more: '展开',
       less: '收起',
+      copyFailed: '无法复制链接',
     },
     /** 프론트에 둔 팔찌 수령 영역 */
     braceletPickup: {

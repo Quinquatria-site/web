@@ -11,11 +11,11 @@ import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { type MapPlace, placeHours, placeLabel } from './map-place'
-import { CopyLinkButton } from './CopyLinkButton'
 import { LinkedText } from './LinkedText'
 import { MenuCard } from './MenuCard'
 import { PLACE_BG } from './place-colors'
 import { PLACE_PHOTO_HEIGHT, PlacePhotos } from './PlacePhotos'
+import { ShareLinkButton } from './ShareLinkButton'
 
 /** 시트 1단계 높이. 이름·운영·시간·위치 아래 사진 줄까지 보인다 */
 export const PLACE_SHEET_PEEK = 197 + PLACE_PHOTO_HEIGHT
@@ -69,7 +69,7 @@ function PlaceSummary({ place }: { place: MapPlace }) {
           alt={place.name ?? ''}
         />
         {/* 다른 장소로 바뀌면 복사했어요 글자가 남지 않게 새로 그린다 */}
-        <CopyLinkButton key={`copy-${place.id}`} placeId={place.id} />
+        <ShareLinkButton key={place.id} place={place} />
         {/* 백오피스에서 넣은 줄바꿈을 그대로 살리고, 긴 주소는 칸 안에서 끊고 링크로 연다 */}
         {place.description && (
           <p lang={lang} className="leading-[1.4] whitespace-pre-line wrap-break-word">
