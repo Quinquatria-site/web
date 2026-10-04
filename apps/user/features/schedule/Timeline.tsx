@@ -19,10 +19,6 @@ type Row = { key: string; time: string | null } & (
   | { performance: Performance }
 )
 
-/** 아티스트 공연 줄. 시각·점 칸까지 덮는 넓은 카드라 세로선이 그 위아래에서 끊긴다 */
-const isWide = (row: Row | undefined) =>
-  !!row && 'performance' in row && row.performance.type === 'ARTIST'
-
 // 문구 칸은 다음 칸 시각 전까지 진행 중이다. 공연이 없는 종류는 칸째 숨긴다
 function toRows(date: string, performances: Performance[]): Row[] {
   return TIMELINE_SLOTS.flatMap((slot, i): Row[] => {
@@ -72,56 +68,38 @@ export async function Timeline({
   return (
     // --tl 은 360 화면 기준 1px. 좁은 폰에서는 화면 폭만큼 시각·칸·이름을 같이 줄인다
     <ol className="flex flex-col gap-[3px] text-text-inverse [--tl:min(1px,var(--app-width)/360)]">
-      {rows.map((row, i) =>
-        'performance' in row && isWide(row) ? (
-          <li
-            key={row.key}
-            id={performanceAnchorId(row.performance.id)}
-            className="grid h-15 scroll-mt-6 grid-cols-[calc(40*var(--tl))_calc(35*var(--tl))_1fr] items-center"
-          >
-            <div className="col-[2/-1] min-w-0">
-              <PerformanceCard performance={row.performance} day={day} />
-            </div>
-          </li>
-        ) : (
-          <li
-            key={row.key}
-            id={'performance' in row ? performanceAnchorId(row.performance.id) : undefined}
-            className="grid h-10 scroll-mt-6 grid-cols-[calc(40*var(--tl))_calc(35*var(--tl))_1fr] items-center"
-          >
-            <span className="pl-0.5 text-[length:calc(12*var(--tl))] leading-[normal]">
-              {row.time}
-            </span>
-            <span className="relative flex h-full items-center justify-center">
-              {'text' in row ? (
-                <ClockDot start={row.start} end={row.end} />
-              ) : (
-                <TimelineDot active={'label' in row ? row.live : row.performance.is_live} />
-              )}
-              {/* 점 아래 4px 을 띄우고 다음 줄 점 위 4px 까지 잇는다. 다음 줄이 넓은 카드면 그 윗변에서 멈춘다 */}
-              {i < rows.length - 1 && (
-                <span
-                  className={`absolute top-[calc(50%+8px)] w-px bg-(--beige-yellow) ${isWide(rows[i + 1]) ? 'h-[15px]' : 'h-[27px]'}`}
-                />
-              )}
-              {/* 넓은 카드 아래 줄은 카드 아랫변에서 선을 다시 받아 점 위 4px 까지 잇는다 */}
-              {isWide(rows[i - 1]) && (
-                <span className="absolute bottom-[calc(50%+8px)] h-[15px] w-px bg-(--beige-yellow)" />
-              )}
-            </span>
-            {'performance' in row ? (
-              // min-w-0 이 없으면 1fr 칸이 긴 공연 이름 폭만큼 늘어나 말줄임 대신 화면 밖으로 밀린다
-              <div className="min-w-0 pl-1">
-                <PerformanceCard performance={row.performance} day={day} />
-              </div>
+      {rows.map((row, i) => (
+        <li
+          key={row.key}
+          id={'performance' in row ? performanceAnchorId(row.performance.id) : undefined}
+          className="grid h-10 scroll-mt-6 grid-cols-[calc(40*var(--tl))_calc(35*var(--tl))_1fr] items-center"
+        >
+          <span className="pl-0.5 text-[length:calc(12*var(--tl))] leading-[normal]">
+            {row.time}
+          </span>
+          <span className="relative flex h-full items-center justify-center">
+            {'text' in row ? (
+              <ClockDot start={row.start} end={row.end} />
             ) : (
-              <span className="truncate pl-1.5 text-[length:calc(16*var(--tl))] leading-[normal]">
-                {'text' in row ? slots[row.text][day] : performanceTypes[row.label]}
-              </span>
+              <TimelineDot active={'label' in row ? row.live : row.performance.is_live} />
             )}
-          </li>
-        ),
-      )}
+            {/* 점 아래 4px 을 띄우고 다음 줄 점 위 4px 까지 잇는다 */}
+            {i < rows.length - 1 && (
+              <span className="absolute top-[calc(50%+8px)] h-[27px] w-px bg-(--beige-yellow)" />
+            )}
+          </span>
+          {'performance' in row ? (
+            // min-w-0 이 없으면 1fr 칸이 긴 공연 이름 폭만큼 늘어나 말줄임 대신 화면 밖으로 밀린다
+            <div className="min-w-0 pl-1">
+              <PerformanceCard performance={row.performance} />
+            </div>
+          ) : (
+            <span className="truncate pl-1.5 text-[length:calc(16*var(--tl))] leading-[normal]">
+              {'text' in row ? slots[row.text][day] : performanceTypes[row.label]}
+            </span>
+          )}
+        </li>
+      ))}
     </ol>
   )
 }
