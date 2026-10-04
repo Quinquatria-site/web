@@ -94,8 +94,7 @@ export function SunsetBackground() {
       viewBox="0 0 390 260"
       // 폭은 앱 기둥에 맞춰 늘리고 높이는 화면 비율을 따라 물결이 한 벌로 유지된다
       preserveAspectRatio="none"
-      // 바닥 대신 잠긴 배경 높이로 위치를 잡아, 키보드가 화면을 줄여도 딸려 올라오지 않는다
-      className="pointer-events-none fixed top-[calc(var(--background-height,100lvh)*0.66)] -z-10 h-[calc(var(--background-height,100lvh)*0.34)] w-full max-w-(--app-max-width)"
+      className="pointer-events-none fixed bottom-0 -z-10 h-[34lvh] w-full max-w-(--app-max-width)"
     >
       <defs>
         <filter id="sunset-blur" x="-5%" y="-20%" width="110%" height="140%">
