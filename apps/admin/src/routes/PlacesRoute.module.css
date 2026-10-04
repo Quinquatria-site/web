@@ -47,6 +47,21 @@
   text-align: center;
 }
 
+/* 번호와 지도 표시 번호를 세로로 묶는다. 폭은 .seq 와 같아 줄마다 제목 시작선이 맞는다 */
+.seqBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: var(--seed-dimension-x5);
+}
+
+/* 지도·현장에 찍히는 번호(A1). 숫자보다 한 단계 작고 옅다 */
+.seqLabel {
+  font-size: var(--seed-font-size-t1);
+  line-height: var(--seed-line-height-t1);
+  color: var(--seed-color-fg-neutral-subtle);
+}
+
 .list::-webkit-scrollbar {
   display: none;
 }
