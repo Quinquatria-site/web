@@ -1,4 +1,5 @@
 import type { LanguageCode } from '@quen/schema/common/language'
+import type { PlaceVertex } from '@quen/schema/entities/place'
 import { toKstIso } from '../lib/kst'
 import type { Category, Menu, Place } from '../mocks/types'
 import { request } from './client'
@@ -28,11 +29,14 @@ export interface PlaceTextWrite {
   description: string
 }
 
+/** 점 장소는 x · y 를, 구역 장소(is_polygon)는 꼭짓점 3개 이상인 area 를 보낸다. 안 쓰는 쪽은 null 로 비운다 */
 export interface PlaceWrite {
   category_id: number
   category_sequence: number
-  x: number
-  y: number
+  is_polygon: boolean
+  x: number | null
+  y: number | null
+  area: PlaceVertex[] | null
   start_hour: string
   end_hour: string
   place_image_uri: string[] | null

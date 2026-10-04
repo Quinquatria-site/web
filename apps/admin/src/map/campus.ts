@@ -34,3 +34,25 @@ const snap = (value: number, max: number) => Math.round(Math.min(Math.max(value,
 export function fromLatLng({ lat, lng }: { lat: number; lng: number }): Point {
   return { x: snap(lng, MAP_WIDTH), y: snap(lat, MAP_HEIGHT) }
 }
+
+/** 장소의 점 좌표. 구역 장소이거나 아직 정하지 않았으면 null 이라 마커를 찍지 않는다 */
+export function placePoint({ x, y }: { x: number | null; y: number | null }): Point | null {
+  return x === null || y === null ? null : { x, y }
+}
+
+/** 구역 꼭짓점들의 평균. 구역 장소를 고를 때 화면을 옮길 기준점이다. user 앱 get-places.ts 의 centerOf 와 같다 */
+export function areaCenter(area: Point[]): Point {
+  const sum = area.reduce((acc, { x, y }) => ({ x: acc.x + x, y: acc.y + y }), { x: 0, y: 0 })
+  return { x: sum.x / area.length, y: sum.y / area.length }
+}
+
+/** 장소를 가리키는 점. 구역 장소는 꼭짓점 가운데, 점 장소는 좌표다. 위치가 아직 없으면 null */
+export function placeAnchor(place: {
+  is_polygon: boolean
+  x: number | null
+  y: number | null
+  area: Point[] | null
+}): Point | null {
+  if (place.is_polygon) return place.area?.length ? areaCenter(place.area) : null
+  return placePoint(place)
+}

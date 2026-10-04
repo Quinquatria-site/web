@@ -1,6 +1,6 @@
 import type { CategoryCode } from '../mocks/types'
 
-/** 지도 마커 종류. 서버 카테고리 코드와 같다. user 앱은 프론트에만 둔 팔찌 수령처(BRACELET)를 더 갖는다 */
+/** 지도 마커 종류. 서버 카테고리 코드와 같다 */
 export type PlaceCode = CategoryCode
 
 /** 장소 종류 이름. user messages/ko.ts 의 map.places 와 같다. 마커 접근성 이름과 시트 뱃지가 쓴다 */
@@ -11,6 +11,9 @@ export const PLACE_NAMES: Record<PlaceCode, string> = {
   MEDI: '의무실',
   PHOTOBOOTH: '포토부스',
   TRASHCAN: '쓰레기통',
+  ENTRANCE: '무대 출입구',
+  BRACELET: '입장 팔찌',
+  PROMOTION: '프로모션',
 }
 
 // 구역 번호를 쓰는 카테고리. 나머지는 category_sequence 가 그냥 표시 순서다

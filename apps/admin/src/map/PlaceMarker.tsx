@@ -10,9 +10,12 @@ import { Marker, Tooltip, useMap } from 'react-leaflet'
 import { toLatLng, type Point } from './campus'
 import { CATEGORY_COLORS } from './category-colors'
 import styles from './CampusMap.module.css'
+import braceletIcon from './icons/bracelet.svg'
+import entranceIcon from './icons/entrance.svg'
 import foodtruckIcon from './icons/foodtruck.svg'
 import mediIcon from './icons/medi.svg'
 import photoboothIcon from './icons/photobooth.svg'
+import promotionIcon from './icons/promotion.svg'
 import trashcanIcon from './icons/trashcan.svg'
 import { PLACE_NAMES, placeLabel, type PlaceCode } from './place-label'
 
@@ -75,6 +78,9 @@ const PLACE_ICONS: Partial<Record<PlaceCode, { src: string; size: number }>> = {
   MEDI: { src: mediIcon, size: 33.6 },
   PHOTOBOOTH: { src: photoboothIcon, size: 26.6 },
   TRASHCAN: { src: trashcanIcon, size: 29.4 },
+  BRACELET: { src: braceletIcon, size: 30.1 },
+  ENTRANCE: { src: entranceIcon, size: 26.6 },
+  PROMOTION: { src: promotionIcon, size: 26.6 },
 }
 
 // 원 가운데 (0,0), 반지름 19.5, 끝 (0,28.8) 인 물방울. 흰 테두리 3 을 이 선 가운데에 그려 바깥이 지름 42, 끝이 31 에 온다. 화면에는 지름 26 으로 줄여 그린다
