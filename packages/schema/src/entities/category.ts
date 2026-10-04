@@ -6,6 +6,9 @@ export const CATEGORY_CODES = [
   'MEDI',
   'TRASHCAN',
   'PHOTOBOOTH',
+  'ENTRANCE',
+  'BRACELET',
+  'PROMOTION',
 ] as const
 export type CategoryCode = (typeof CATEGORY_CODES)[number]
 
