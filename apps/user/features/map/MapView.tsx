@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { dockStowStore } from '@/shared/dock/dock-stow-store'
 import { localePath } from '@/shared/i18n/paths'
@@ -14,6 +14,7 @@ import { PlaceSearch } from './PlaceSearch'
 import { PlaceSearchBar } from './PlaceSearchBar'
 import { PLACE_SHEET_PEEK, PlaceSheet } from './PlaceSheet'
 import { searchPlaces, toQuery, toSearchable } from './search-places'
+import { useKeyboardLock } from './useKeyboardLock'
 
 // Leaflet 은 불러오는 순간 window 를 읽어서 빌드 때 굽지 않고 브라우저에서만 싣는다
 const CampusMap = dynamic(() => import('./CampusMap'), { ssr: false })
@@ -86,7 +87,10 @@ export function MapView({
   // 검색을 닫으면 키보드 사용자가 제자리로 돌아가도록 연 버튼에 포커스를 되돌린다
   const searchOpenerRef = useRef<HTMLElement | null>(null)
   // 검색창이 검색 막대 누름 안에서 그려져야 iOS 가 키보드를 올려서, 다음 그리기를 기다리지 않고 바로 그린다
+  const keyboard = useKeyboardLock()
   const openSearch = () => {
+    // 키보드가 뜨기 전 높이로 잠가 지도·도크가 딸려 올라오지 않고 키보드가 덮게 한다
+    keyboard.lock()
     clearSelection()
     setListOpen(false)
     searchOpenerRef.current =
@@ -94,10 +98,12 @@ export function MapView({
     flushSync(() => setSearching(true))
   }
   // 지도에 걸린 inert 가 먼저 풀려야 버튼이 포커스를 받아서 바로 그린 뒤 되돌린다
+  const { unlock } = keyboard
   const closeSearch = useCallback(() => {
     flushSync(() => setSearching(false))
+    unlock()
     searchOpenerRef.current?.focus()
-  }, [])
+  }, [unlock])
   // 새 검색은 칩을 풀고 전체에서 찾은 결과를 목록으로 띄운다
   const submitSearch = (text: string) => {
     closeSearch()
@@ -158,7 +164,12 @@ export function MapView({
       <div
         data-chrome={chromeHidden ? 'hidden' : undefined}
         data-searching={searching || undefined}
-        className="relative isolate -mb-(--dock-space) h-[calc(100dvh-env(safe-area-inset-top)-var(--page-title-height))]"
+        style={
+          keyboard.lockedHeight === null
+            ? undefined
+            : ({ '--map-locked-h': `${keyboard.lockedHeight}px` } as CSSProperties)
+        }
+        className="relative isolate -mb-(--dock-space) h-[calc(var(--map-locked-h,100dvh)-env(safe-area-inset-top)-var(--page-title-height))]"
       >
         {/* 검색 중엔 뒤 지도의 마커·버튼에 Tab·스크린리더로도 닿지 않게 막는다 */}
         <div inert={searching} className="size-full">
