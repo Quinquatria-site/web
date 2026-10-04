@@ -20,7 +20,7 @@ const TONE_CLASS: Record<MapLabel['tone'], string> = {
 
 // 크기 0 인 뿌리에 글자 가운데를 맞춘다. 배율마다 글자를 다시 그리지 않게 크기는 12 로 고정한다
 function labelHtml({ tone, rotate = 0 }: MapLabel, text: string) {
-  return `<span class="absolute -translate-1/2 font-sans text-xs leading-tight font-semibold tracking-[0.04em] whitespace-pre text-center ${TONE_CLASS[tone]}" style="rotate:${rotate}deg">${text}</span>`
+  return `<span class="absolute -translate-1/2 font-sans text-xs leading-tight font-bold tracking-[0.04em] whitespace-pre text-center ${TONE_CLASS[tone]}" style="rotate:${rotate}deg">${text}</span>`
 }
 
 /** 건물·광장 이름표. 바탕 이미지에 굽지 않고 글자로 올려 확대해도 선명하고 언어를 따른다 */

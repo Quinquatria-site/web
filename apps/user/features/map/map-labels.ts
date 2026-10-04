@@ -22,7 +22,7 @@ export const MAP_LABELS: MapLabel[] = [
   { key: 'minervaComplex', x: 824, y: 599, tone: 'dark' },
   { key: 'minervaPark', x: 953, y: 482, tone: 'dark' },
   { key: 'field', x: 798, y: 323, tone: 'dark' },
-  { key: 'stage', x: 922, y: 278, tone: 'dark' },
+  { key: 'stage', x: 902, y: 278, tone: 'dark', rotate: -70 },
   { key: 'redSquare', x: 549, y: 500, tone: 'dark' },
   { key: 'humanities', x: 1073, y: 1025, tone: 'light' },
   { key: 'teachingCenter', x: 1277, y: 855, tone: 'light' },
