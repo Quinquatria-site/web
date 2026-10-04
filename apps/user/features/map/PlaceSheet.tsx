@@ -34,7 +34,7 @@ export function PlaceBadge({ place }: { place: MapPlace }) {
 
 // 1단계에 보이는 이름·운영 정보·사진과 이어지는 설명. 값이 없는 줄(편의시설의 운영·위치, 시간 없는 프론트 장소의 운영 시간)은 뺀다
 function PlaceSummary({ place }: { place: MapPlace }) {
-  const { sheet } = getMessages(useLocale()).map
+  const { sheet, places } = getMessages(useLocale()).map
   const label = placeLabel(place)
   const lang = contentLang(place.language_code)
   const rows = [
@@ -46,7 +46,8 @@ function PlaceSummary({ place }: { place: MapPlace }) {
   return (
     <div className="flex flex-col gap-3 px-2">
       <BottomSheetTitle lang={lang} className="text-2xl leading-[normal] font-semibold">
-        {place.name}
+        {/* 번역이 없어 이름이 비면 목록·검색처럼 종류 이름으로 채운다 */}
+        {place.name ?? places[place.code]}
       </BottomSheetTitle>
       <div className="flex flex-col gap-5">
         <BottomSheetDescription asChild>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { BottomSheet, BottomSheetTitle } from '@/shared/bottom-sheet/BottomSheet'
 import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
@@ -118,13 +118,20 @@ export function PlaceListSheet({
           .join(', ')
       : map.filterAll
 
-  // 칩이 바뀌면 목록이 새로 시작하니 처음 20곳만 다시 그린다
+  // 칩·검색이 바뀌거나 다시 열면 목록이 새로 시작하니 처음 20곳만 다시 그린다
   const [count, setCount] = useState(PAGE_SIZE)
   const [countedPlaces, setCountedPlaces] = useState(places)
-  if (places !== countedPlaces) {
+  const [wasOpen, setWasOpen] = useState(open)
+  if (places !== countedPlaces || open !== wasOpen) {
     setCountedPlaces(places)
+    setWasOpen(open)
     setCount(PAGE_SIZE)
   }
+  // 열린 채 목록이 바뀌면 이전 스크롤 자리에 남지 않게 맨 위로 올린다
+  const listRef = useRef<HTMLUListElement>(null)
+  useEffect(() => {
+    listRef.current?.closest('[data-step]')?.scrollTo({ top: 0 })
+  }, [countedPlaces])
 
   // 시트 본문은 포털로 한 박자 늦게 붙어서, ref 객체 대신 붙는 순간 받는 콜백 ref 로 잡는다
   const [sentinel, setSentinel] = useState<HTMLLIElement | null>(null)
@@ -173,11 +180,12 @@ export function PlaceListSheet({
           </div>
         </div>
       ) : (
-        <ul className="px-2">
+        <ul ref={listRef} className="px-2">
           {places.slice(0, count).map((place) => (
             <PlaceRow key={place.id} place={place} query={searchQuery} onPick={onPick} />
           ))}
-          {hasMore && <li ref={setSentinel} aria-hidden className="h-px" />}
+          {/* 줄이 늘 때 브라우저가 이 끝을 기준으로 스크롤을 붙들면 끝이 계속 보여 한 번에 다 그려진다 */}
+          {hasMore && <li ref={setSentinel} aria-hidden className="h-px [overflow-anchor:none]" />}
         </ul>
       )}
     </BottomSheet>
