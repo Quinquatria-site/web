@@ -111,11 +111,11 @@ function ModalContent({
   language_code,
 }: Pick<Performance, 'image_uri' | 'image_aspect' | 'title' | 'description' | 'language_code'>) {
   return (
-    <div className="mt-3 flex flex-col gap-4">
+    <div className="mt-4 flex flex-col gap-6">
       <ModalImage imageUri={image_uri} imageAspect={image_aspect} title={title} />
-      <div lang={contentLang(language_code)} className="flex flex-col gap-2 px-2">
+      <div lang={contentLang(language_code)} className="flex flex-col gap-3 px-3">
         <Dialog.Title className="text-2xl leading-[normal] font-semibold">{title}</Dialog.Title>
-        <Dialog.Description className="text-sm leading-[1.18] whitespace-pre-line">
+        <Dialog.Description className="text-sm leading-normal whitespace-pre-line">
           {description}
         </Dialog.Description>
       </div>
@@ -129,7 +129,7 @@ export function PerformanceModal({ performance }: { performance: Performance }) 
     <Dialog.Portal>
       <Dialog.Overlay className="fixed inset-0 z-50 bg-black/60" />
       {/* 폭은 기기마다 양옆 24 만 남기고 앱 기둥(480)을 넘지 않는다. 높이는 사진·소개만큼 늘되 화면을 넘으면 안에서 스크롤한다 */}
-      <Dialog.Content className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-48px)] w-[calc(var(--app-width)-48px)] -translate-1/2 overflow-y-auto rounded-2xl bg-bg bg-linear-to-b from-bg/20 to-primary/20 p-[13px] pb-6 text-text shadow-[0_4px_8px_rgb(0_0_0/0.25)]">
+      <Dialog.Content className="fixed top-1/2 left-1/2 z-50 max-h-[calc(100dvh-48px)] w-[calc(var(--app-width)-48px)] -translate-1/2 overflow-y-auto rounded-2xl bg-bg bg-linear-to-b from-bg/20 to-primary/20 p-4 pb-7 text-text shadow-[0_4px_8px_rgb(0_0_0/0.25)]">
         <ModalHeader type={performance.type} />
         <ModalContent
           image_uri={performance.image_uri}

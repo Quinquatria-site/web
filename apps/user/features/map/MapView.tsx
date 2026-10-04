@@ -10,6 +10,7 @@ import type { FocusRequest } from './CampusMap'
 import { type MapPlace, type PlaceCode, type PlaceId } from './map-place'
 import { PlaceFilter } from './PlaceFilter'
 import { PlaceSearch } from './PlaceSearch'
+import { PlaceSearchBar } from './PlaceSearchBar'
 import { PLACE_SHEET_PEEK, PlaceSheet } from './PlaceSheet'
 
 // Leaflet 은 불러오는 순간 window 를 읽어서 빌드 때 굽지 않고 브라우저에서만 싣는다
@@ -66,7 +67,7 @@ export function MapView({
   const [searching, setSearching] = useState(false)
   // 검색을 닫으면 키보드 사용자가 제자리로 돌아가도록 연 버튼에 포커스를 되돌린다
   const searchOpenerRef = useRef<HTMLElement | null>(null)
-  // 검색창이 돋보기 누름 안에서 그려져야 iOS 가 키보드를 올려서, 다음 그리기를 기다리지 않고 바로 그린다
+  // 검색창이 검색 막대 누름 안에서 그려져야 iOS 가 키보드를 올려서, 다음 그리기를 기다리지 않고 바로 그린다
   const openSearch = () => {
     clearSelection()
     searchOpenerRef.current =
@@ -106,7 +107,7 @@ export function MapView({
   useEffect(() => {
     setSafeBottom(safeProbeRef.current?.offsetHeight ?? 0)
   }, [])
-  // 칩은 폭에 따라 줄 수가 바뀌어서, 그 높이를 재어 지도가 칩 밑 마커를 꺼낼 수 있게 한다
+  // 칩은 폭에 따라 줄 수가 바뀌어서, 검색 막대까지 높이를 재어 지도가 그 밑 마커를 꺼낼 수 있게 한다
   const filterRef = useRef<HTMLDivElement>(null)
   const [filterHeight, setFilterHeight] = useState(0)
   useEffect(() => {
@@ -139,7 +140,6 @@ export function MapView({
             bottomInset={PLACE_SHEET_PEEK + safeBottom}
             onDragChange={handleDragChange}
             onEmptyTap={handleEmptyTap}
-            onSearch={openSearch}
           />
         </div>
         {/* Leaflet 판(400~1000) 위에 띄운다. 칩 사이 빈 곳은 지도를 끌 수 있게 누름을 흘려보낸다 */}
@@ -147,6 +147,7 @@ export function MapView({
           ref={filterRef}
           className="pointer-events-none absolute inset-x-0 top-0 z-[1000] px-[17px] pt-3 transition-[translate,opacity,visibility] duration-300 ease-out in-data-[chrome=hidden]:invisible in-data-[chrome=hidden]:-translate-y-full in-data-[chrome=hidden]:opacity-0 in-data-searching:invisible"
         >
+          <PlaceSearchBar onOpen={openSearch} />
           <PlaceFilter selected={filter} onToggle={toggleFilter} onReset={resetFilter} />
         </div>
         {searching && <PlaceSearch places={places} onPick={pickSearched} onClose={closeSearch} />}

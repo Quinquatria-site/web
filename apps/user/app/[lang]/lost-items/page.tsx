@@ -36,7 +36,7 @@ export default async function LostItemsPage() {
           <LostItemsContact
             notice={lostItems.contactNotice}
             instagramLabel={lostItems.councilInstagram}
-            callLabel={lostItems.councilCall}
+            kakaoLabel={lostItems.councilKakao}
           />
           <LostItemGrid items={items} />
         </div>

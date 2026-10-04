@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { Fragment, useMemo, useRef, useState } from 'react'
 import { useCloseWatcher } from '@/shared/history/useCloseWatcher'
 import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
@@ -8,18 +8,23 @@ import { useLocale } from '@/shared/i18n/useLocale'
 import { type MapPlace, placeLabel } from './map-place'
 import { PLACE_BG } from './place-colors'
 import { SearchIcon } from './SearchIcon'
-import { searchPlaces } from './search-places'
+import { matchRanges, type SearchQuery, searchPlaces, toQuery, toSearchable } from './search-places'
 
-// 걸린 글자를 굵게. 띄어쓰기를 무시하고 걸린 경우처럼 원문에서 그대로 못 찾으면 강조 없이 둔다
-function Highlight({ text, query }: { text: string; query: string }) {
-  const index = query ? text.toLowerCase().indexOf(query.toLowerCase()) : -1
-  if (index < 0) return text
-  const end = index + query.length
+// 걸린 글자를 굵게. 한국어 원문으로만 걸린 번역 장소처럼 보이는 글자에 없으면 강조 없이 둔다
+function Highlight({ text, query }: { text: string; query: SearchQuery }) {
+  const { text: shown, ranges } = matchRanges(text, query)
+  if (ranges.length === 0) return text
   return (
     <>
-      {text.slice(0, index)}
-      <mark className="bg-transparent font-extrabold text-inherit">{text.slice(index, end)}</mark>
-      {text.slice(end)}
+      {ranges.map(([start, end], i) => (
+        <Fragment key={start}>
+          {shown.slice(i === 0 ? 0 : ranges[i - 1][1], start)}
+          <mark className="bg-transparent font-extrabold text-inherit">
+            {shown.slice(start, end)}
+          </mark>
+        </Fragment>
+      ))}
+      {shown.slice(ranges[ranges.length - 1][1])}
     </>
   )
 }
@@ -30,7 +35,7 @@ function ResultItem({
   onPick,
 }: {
   place: MapPlace
-  query: string
+  query: SearchQuery
   onPick: (place: MapPlace) => void
 }) {
   const { places, sheet } = getMessages(useLocale()).map
@@ -73,7 +78,7 @@ function ResultItem({
   )
 }
 
-/** 지도 위에 뜨는 장소 검색. 이름·운영으로 찾아 고르게 하고, 열 때마다 빈 칸에서 시작하도록 닫으면 내려 둔다 */
+/** 지도 위에 뜨는 장소 검색. 이름·운영(번역된 장소는 한국어 원문까지)으로 찾아 고르게 하고, 열 때마다 빈 칸에서 시작하도록 닫으면 내려 둔다 */
 export function PlaceSearch({
   places,
   onPick,
@@ -87,7 +92,9 @@ export function PlaceSearch({
   const inputRef = useRef<HTMLInputElement>(null)
   const [query, setQuery] = useState('')
   const trimmed = query.trim()
-  const results = searchPlaces(places, trimmed)
+  const searchable = useMemo(() => toSearchable(places), [places])
+  const searchQuery = toQuery(trimmed)
+  const results = searchPlaces(searchable, searchQuery)
   useCloseWatcher(true, onClose)
 
   const clear = () => {
@@ -115,7 +122,7 @@ export function PlaceSearch({
               ref={inputRef}
               type="search"
               enterKeyHint="search"
-              // 돋보기 누름 안에서 그려져야 iOS 가 키보드를 올려 준다. 그래서 여는 쪽이 flushSync 로 그린다
+              // 검색 막대 누름 안에서 그려져야 iOS 가 키보드를 올려 준다. 그래서 여는 쪽이 flushSync 로 그린다
               autoFocus
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -169,7 +176,7 @@ export function PlaceSearch({
           ) : (
             <ul aria-label={search.results} className="divide-y divide-on-map-control/20">
               {results.map((place) => (
-                <ResultItem key={place.id} place={place} query={trimmed} onPick={onPick} />
+                <ResultItem key={place.id} place={place} query={searchQuery} onPick={onPick} />
               ))}
             </ul>
           )}

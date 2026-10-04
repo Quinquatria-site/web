@@ -7,13 +7,22 @@ import { ApiError } from './server-api'
 export async function listWithSource<T extends { id: number; language_code: unknown }>(
   load: (source: boolean) => Promise<T[]>,
 ): Promise<T[]> {
-  if ((await getLocale()) === SOURCE_LOCALE) return load(false)
+  return (await pairWithSource(load)).map(({ item }) => item)
+}
+
+/** listWithSource 의 항목마다 한국어 원문을 짝지어 둔 목록. 원문을 그대로 쓴 항목은 item 과 source 가 같은 객체다 */
+export async function pairWithSource<T extends { id: number; language_code: unknown }>(
+  load: (source: boolean) => Promise<T[]>,
+): Promise<{ item: T; source: T }[]> {
+  if ((await getLocale()) === SOURCE_LOCALE) {
+    return (await load(false)).map((item) => ({ item, source: item }))
+  }
   const [translated, source] = await Promise.all([load(false), load(true)])
   // 장소는 번역이 없어도 목록에 오고 language_code 부터 글자까지 전부 null 이다
   const byId = new Map(
     translated.filter((item) => item.language_code).map((item) => [item.id, item]),
   )
-  return source.map((item) => byId.get(item.id) ?? item)
+  return source.map((item) => ({ item: byId.get(item.id) ?? item, source: item }))
 }
 
 /** 한 건을 페이지 언어로, 번역이 없어 404 면 원문으로 받는다. 원문도 없으면 null */

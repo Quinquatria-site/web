@@ -8,7 +8,7 @@ import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/tex
 import type { NoticeTextWrite } from '../api/notices'
 import { apiErrorText } from '../lib/apiErrorText'
 import { useFormFields } from '../lib/useFormFields'
-import { ConfirmDialog } from '../ui'
+import { ConfirmDialog, PhotoPicker } from '../ui'
 import { noticeById, removeNotice, removeNoticeTranslation, saveNotice } from '../mocks/store'
 import {
   dateTimeLabel,
@@ -27,6 +27,9 @@ const TYPE_LABELS: Record<NoticeType, string> = {
   PERMANENT: '상시',
   GENERAL: '일반',
 }
+
+/** 공지 사진 최대 장수. 명세에 상한이 없어 장소와 같은 값을 쓴다 */
+const PHOTO_MAX = 10
 
 type TranslationField = 'title' | 'content'
 const fieldKey = (field: TranslationField, lang: LanguageCode) => `${field}_${lang}` as const
@@ -83,6 +86,7 @@ function NoticeEditForm() {
 
   // 축제 중 올라오는 공지는 대부분 일반이다. 상시는 축제 전에 몇 건 걸어두고 끝난다
   const [type, setType] = useState<NoticeType>(editing?.type ?? 'GENERAL')
+  const [photos, setPhotos] = useState<string[]>(editing?.notice_image_uri ?? [])
   const [lang, setLang] = useState<LanguageCode>('KO')
   const [confirming, setConfirming] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -138,7 +142,12 @@ function NoticeEditForm() {
     setError(null)
     setPending(true)
     try {
-      const saved = await saveNotice(editing?.id ?? null, { type, translations })
+      const saved = await saveNotice(editing?.id ?? null, {
+        type,
+        // 빈 배열은 422 다. 다 지웠으면 null 로 보낸다
+        notice_image_uri: photos.length > 0 ? photos : null,
+        translations,
+      })
 
       // 두 호출의 순서다 — PATCH 로 남길 언어를 올리고, 지울 언어는 전용 DELETE 로
       // 따로 부른다 (§5.2). 여기서 실패하면 PATCH 는 이미 반영된 채 화면에 남는다
@@ -156,15 +165,17 @@ function NoticeEditForm() {
                   message={`${values.title_KO} 저장했습니다 · ${removing.join('·')} 번역 삭제`}
                   actionLabel="실행취소"
                   onAction={() => {
-                    saveNotice(saved.id, { type: saved.type, translations: undo }).catch(
-                      (undoError: unknown) => {
-                        const message = apiErrorText(undoError)
-                        snackbar.create({
-                          timeout: 4000,
-                          render: () => <Snackbar variant="critical" message={message} />,
-                        })
-                      },
-                    )
+                    saveNotice(saved.id, {
+                      type: saved.type,
+                      notice_image_uri: saved.notice_image_uri,
+                      translations: undo,
+                    }).catch((undoError: unknown) => {
+                      const message = apiErrorText(undoError)
+                      snackbar.create({
+                        timeout: 4000,
+                        render: () => <Snackbar variant="critical" message={message} />,
+                      })
+                    })
                   }}
                 />
               ),
@@ -324,6 +335,17 @@ function NoticeEditForm() {
             placeholder={lang === 'KO' ? '무엇이 언제 어떻게 바뀌는지 적어주세요' : ''}
           />
         </TextField>
+      </div>
+
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>사진</h2>
+        <PhotoPicker
+          resourceType="NOTICE_IMAGE"
+          value={photos}
+          onChange={setPhotos}
+          max={PHOTO_MAX}
+          label={values.title_KO.trim() || '공지'}
+        />
       </div>
 
       {/* 되돌릴 수 없는 액션이라 저장 옆에 두지 않는다. 일부러 내려와야 닿는 자리다 */}
