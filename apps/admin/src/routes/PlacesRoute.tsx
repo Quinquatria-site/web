@@ -167,6 +167,14 @@ export function PlacesRoute() {
     setFilter(next)
     setSection('all')
   }
+  // 고른 칩을 다시 누르면 푼다. ChipTabs 는 같은 값을 다시 누르면 onValueChange 를 부르지 않아 click 으로 잡는다.
+  // 고르기는 click 에서 일어나 렌더 때 값이 누르기 전 값이다. Enter·Space 도 button 이라 click 으로 온다
+  const releaseFilter = (value: string) => () => {
+    if (filter === value) changeFilter('all')
+  }
+  const releaseSection = (value: string) => () => {
+    if (activeSection === value) setSection('all')
+  }
 
   return (
     <div className={styles.screen}>
@@ -176,7 +184,11 @@ export function PlacesRoute() {
         <ChipTabsList>
           <ChipTabsTrigger value="all">전체</ChipTabsTrigger>
           {CATEGORIES.map((category) => (
-            <ChipTabsTrigger key={category.id} value={String(category.id)}>
+            <ChipTabsTrigger
+              key={category.id}
+              value={String(category.id)}
+              onClick={releaseFilter(String(category.id))}
+            >
               {findTranslation(category.translations, 'KO')?.name}
             </ChipTabsTrigger>
           ))}
@@ -193,7 +205,7 @@ export function PlacesRoute() {
           <ChipTabsList>
             <ChipTabsTrigger value="all">전체 구역</ChipTabsTrigger>
             {sectionKeys.map((key) => (
-              <ChipTabsTrigger key={key} value={key}>
+              <ChipTabsTrigger key={key} value={key} onClick={releaseSection(key)}>
                 {key === NO_SECTION ? sectionName(key) : key}
               </ChipTabsTrigger>
             ))}
