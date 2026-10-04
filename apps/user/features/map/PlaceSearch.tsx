@@ -50,6 +50,11 @@ export function PlaceSearch({
               enterKeyHint="search"
               // 검색 막대 누름 안에서 그려져야 iOS 가 키보드를 올려 준다. 그래서 여는 쪽이 flushSync 로 그린다
               autoFocus
+              // 장소 이름은 사전에 없는 말이 많아 고쳐 쓰지 않게 하고, iOS 가 키보드 위에 띄우는 자동 완성 막대도 줄인다
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck={false}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={search.placeholder}
