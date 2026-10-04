@@ -87,6 +87,19 @@ export const ko = {
     filterAll: '전체',
     zoomIn: '확대',
     zoomOut: '축소',
+    search: {
+      open: '장소 검색',
+      placeholder: '학과나 부스 이름',
+      clear: '검색어 지우기',
+      cancel: '취소',
+      results: '검색 결과',
+      /** 검색어가 비었을 때 보이는 안내 */
+      tip: '학과 이름이나 부스 이름으로 찾을 수 있어요.',
+      tipExample: '예: 태국, 총학생회',
+      /** {query} 에 친 검색어가 들어간다 */
+      empty: '‘{query}’에 맞는 곳이 없어요.',
+      emptyHint: '이름 일부만 쳐 보세요.',
+    },
     sheet: {
       host: '운영',
       hours: '운영 시간',

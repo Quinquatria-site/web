@@ -21,11 +21,11 @@ import {
   type MapPoint,
   toLatLng,
 } from './map-coords'
+import { MapControls } from './MapControls'
 import { MapLabels } from './MapLabels'
 import type { MapPlace, PlaceId } from './map-place'
 import { PlaceMarkers } from './PlaceMarkers'
 import { StageArea } from './StageArea'
-import { ZoomButtons } from './ZoomButtons'
 import 'leaflet/dist/leaflet.css'
 
 // 이미지 1px 이 화면 2px 까지 커진다. 그 이상은 흐려진다
@@ -136,10 +136,16 @@ function PinchZoomRelease() {
   return null
 }
 
-// 장소 주소로 들어와 처음 고른 장소는 큰 물방울이 보이도록 전체 보기의 이 배수까지 확대한다
-const LINK_FOCUS_SCALE = 3
+// 장소 주소나 검색으로 고른 장소는 큰 물방울이 보이도록 전체 보기의 이 배수까지 확대한다
+const FOCUS_SCALE = 3
 
-// 고른 장소를 위 칩과 아래 시트 사이 남은 화면 가운데로 옮긴다. 지도에서 누른 장소는 배율을 그대로 두고, 장소 주소로 들어온 첫 장소(request 0)만 확대한다
+/** 고른 장소로 옮겨 달라는 요청. count 는 같은 장소를 다시 골라도 다시 옮기려고 늘리고, zoom 이면 그 장소로 확대도 한다 */
+export interface FocusRequest {
+  count: number
+  zoom: boolean
+}
+
+// 고른 장소를 위 칩과 아래 시트 사이 남은 화면 가운데로 옮긴다. 지도에서 누른 장소는 배율을 그대로 두고, 장소 주소로 들어오거나 검색으로 고른 장소는 확대한다
 function FocusPlace({
   point,
   request,
@@ -147,7 +153,7 @@ function FocusPlace({
   bottomInset,
 }: {
   point: MapPoint | null
-  request: number
+  request: FocusRequest
   topInset: number
   bottomInset: number
 }) {
@@ -178,17 +184,15 @@ function FocusPlace({
     pendingRef.current = undefined
     if (!point) return
     const focus = () => {
-      const zoom =
-        request === 0
-          ? Math.max(map.getZoom(), map.getMinZoom() + Math.log2(LINK_FOCUS_SCALE))
-          : map.getZoom()
+      const zoom = request.zoom
+        ? Math.max(map.getZoom(), map.getMinZoom() + Math.log2(FOCUS_SCALE))
+        : map.getZoom()
       // 칩과 시트 사이 가운데에 오도록, 두 높이 차의 절반만큼 중심을 아래로 잡는다
       const center = map.project(toLatLng(point), zoom).add([0, (bottomInset - topInset) / 2])
       map.setView(map.unproject(center, zoom), zoom)
     }
     if (zoomingRef.current) pendingRef.current = focus
     else focus()
-    // request 는 같은 장소를 다시 눌러도 다시 옮기려고 받는다
   }, [map, point, request, topInset, bottomInset])
 
   return null
@@ -427,19 +431,20 @@ export default function CampusMap({
   bottomInset,
   onDragChange,
   onEmptyTap,
+  onSearch,
 }: {
   places: MapPlace[]
   selectedId: PlaceId | null
   onSelect: (id: PlaceId) => void
   onClear: () => void
-  /** 마커를 누를 때마다 늘어나는 수. 같은 장소를 다시 눌러도 다시 옮긴다 */
-  focusRequest: number
+  focusRequest: FocusRequest
   /** 지도 위를 늘 가리는 칩 층 높이 */
   topInset: number
   /** 장소를 고른 동안 아래를 가리는 높이. 고른 장소를 이만큼 위로 비켜 둔다 */
   bottomInset: number
   onDragChange: (dragging: boolean, zoomed: boolean) => void
   onEmptyTap: () => void
+  onSearch: () => void
 }) {
   const selected = places.find((place) => place.id === selectedId) ?? null
 
@@ -470,8 +475,8 @@ export default function CampusMap({
       />
       <DragWatch onDragChange={onDragChange} />
       <DragTolerance />
-      <EmptyTap onTap={onEmptyTap} cancelKey={focusRequest} />
-      <ZoomButtons />
+      <EmptyTap onTap={onEmptyTap} cancelKey={focusRequest.count} />
+      <MapControls onSearch={onSearch} />
     </MapContainer>
   )
 }
