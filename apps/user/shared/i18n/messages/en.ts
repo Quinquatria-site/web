@@ -94,6 +94,17 @@ export const en: Messages = {
     filterAll: 'All',
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom out',
+    search: {
+      open: 'Search places',
+      placeholder: 'Department or booth name',
+      clear: 'Clear search',
+      cancel: 'Cancel',
+      results: 'Search results',
+      tip: 'Search by department, club, or booth name.',
+      tipExample: 'e.g. Thai, Student Council',
+      empty: 'No places match “{query}”.',
+      emptyHint: 'Try typing part of the name.',
+    },
     sheet: {
       host: 'Host',
       hours: 'Hours',
