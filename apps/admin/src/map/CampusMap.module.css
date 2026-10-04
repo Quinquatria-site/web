@@ -1,6 +1,6 @@
 /*
  * 장소 마커·이름표 모양. user 앱 features/map 의 PlaceMarkers·MapLabels 와 같은 치수다.
- * Leaflet 이 HTML 문자열로 그려서 클래스는 markers.tsx·labels.tsx 가 이 모듈에서 꺼내 넣는다.
+ * Leaflet 이 HTML 문자열로 그려서 클래스는 PlaceMarker.tsx·CampusLabels.tsx 가 이 모듈에서 꺼내 넣는다.
  */
 
 /* 지도 칸. user MapView 의 바탕색이다. leaflet.css 가 뒤에 실려 #ddd 가 이기지 않게 같은 클래스를 함께 건다 */
@@ -41,12 +41,40 @@
   z-index: auto !important;
 }
 
-/* 선택 링. 원 가운데에서 두 겹(56/72)이 퍼진다 */
+/* 축소 때 작은 물방울. 큰 물방울(원본 지름 42)을 1/4 로 줄인 폭 11. 누름은 지도로 흘린다 */
+.mini {
+  top: -14px;
+  left: -5.5px;
+  width: 11px;
+  height: 14px;
+  overflow: visible;
+  fill: var(--place-color);
+  stroke: #fff;
+  stroke-width: 4.5;
+  stroke-miterlimit: 10;
+  pointer-events: none;
+}
+
+/* 큰 물방울 묶음. 뿌리에 data-full 이 있을 때만 보이고, 그때 작은 물방울은 숨는다 */
+.full {
+  position: absolute;
+  display: none;
+}
+
+.root[data-full] .full {
+  display: block;
+}
+
+.root[data-full] .mini {
+  display: none;
+}
+
+/* 선택 링. 원 가운데에서 두 겹(34/44)이 퍼진다 */
 .ring {
-  top: -67px;
-  left: -36px;
-  width: 72px;
-  height: 72px;
+  top: -41px;
+  left: -22px;
+  width: 44px;
+  height: 44px;
   fill: var(--place-color);
   opacity: 0;
   scale: 0.68;
@@ -67,28 +95,13 @@
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* 흰 테두리 물방울. 원은 고유 색, 꼬리는 52% */
+/* 흰 테두리 물방울. 원과 꼬리 모두 고유 색이다 */
 .drop {
-  top: -52px;
-  left: -21px;
-  width: 42px;
-  height: 52px;
-}
-
-.dropBase {
-  fill: #fff;
-}
-
-.dropTail {
-  fill: color-mix(in srgb, var(--place-color) 52%, transparent);
-}
-
-.dropFill {
+  top: -32px;
+  left: -13px;
+  width: 26px;
+  height: 32px;
   fill: var(--place-color);
-}
-
-.dropEdge {
-  fill: none;
   stroke: #fff;
   stroke-width: 3;
 }
@@ -106,29 +119,16 @@
 /* 물방울 원 위의 글자·아이콘 */
 .circle {
   position: absolute;
-  top: -52px;
-  left: -21px;
+  top: -32px;
+  left: -13px;
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
+  width: 26px;
+  height: 26px;
   border-radius: 9999px;
   color: #fbf4ed;
-  font-size: 17px;
+  font-size: 10.5px;
   line-height: 1;
-}
-
-/* 축소 때 작은 물방울. 큰 물방울을 1/4 로 줄인 폭 11 */
-.mini {
-  top: -14px;
-  left: -5.5px;
-  width: 11px;
-  height: 14px;
-  overflow: visible;
-  fill: var(--place-color);
-  stroke: #fff;
-  stroke-width: 4.5;
-  stroke-miterlimit: 10;
 }
 
 /*

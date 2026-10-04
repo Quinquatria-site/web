@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react'
-import { Tooltip } from 'react-leaflet'
 import { useNavigate } from 'react-router'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { CampusMap } from '../map/CampusMap'
@@ -142,13 +141,10 @@ export function PlacesMapRoute() {
               code={code}
               sequence={place.category_sequence}
               selected={place.id === selectedId}
-              onSelect={() => select(place.id)}
-            >
-              {/* 물방울 원 위에 띄운다. 꼬리 끝이 좌표라 원 꼭대기가 52px 위다 */}
-              <Tooltip direction="top" offset={[0, -54]}>
-                {placeName(place)} · {place.category_sequence}
-              </Tooltip>
-            </PlaceMarker>
+              id={place.id}
+              onSelect={select}
+              tooltip={`${placeName(place)} · ${place.category_sequence}`}
+            />
           )
         })}
       </CampusMap>
