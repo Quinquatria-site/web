@@ -22,20 +22,6 @@
   color: var(--seed-color-fg-neutral);
 }
 
-/* SegmentedControl 은 라벨 슬롯이 없다. TextField 의 라벨과 같은 모양으로 맞춘다 */
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--seed-dimension-x1_5);
-}
-
-.fieldLabel {
-  font-size: var(--seed-font-size-t3);
-  font-weight: var(--seed-font-weight-medium);
-  line-height: var(--seed-line-height-t3);
-  color: var(--seed-color-fg-neutral);
-}
-
 .hint {
   margin: 0;
   font-size: var(--seed-font-size-t2);
