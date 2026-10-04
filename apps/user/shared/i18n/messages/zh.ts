@@ -88,12 +88,18 @@ export const zh: Messages = {
     filterAll: '全部',
     zoomIn: '放大',
     zoomOut: '缩小',
+    openList: '场所列表',
+    list: {
+      /** {count} 에 목록에 든 장소 수가 들어간다 */
+      count: '{count} 个',
+    },
     search: {
       open: '搜索场所',
       placeholder: '院系或摊位名称',
       clear: '清除搜索',
       cancel: '取消',
-      results: '搜索结果',
+      /** 목록 시트 제목. {query} 에 엔터로 찾은 검색어가 들어간다 */
+      resultTitle: '“{query}”的搜索结果',
       tip: '可按院系或摊位名称搜索。',
       tipExample: '例如：泰国、总学生会',
       empty: '没有与“{query}”匹配的场所。',

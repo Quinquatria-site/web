@@ -87,12 +87,18 @@ export const ko = {
     filterAll: '전체',
     zoomIn: '확대',
     zoomOut: '축소',
+    openList: '장소 목록',
+    list: {
+      /** {count} 에 목록에 든 장소 수가 들어간다 */
+      count: '{count}곳',
+    },
     search: {
       open: '장소 검색',
       placeholder: '학과나 부스 이름',
       clear: '검색어 지우기',
       cancel: '취소',
-      results: '검색 결과',
+      /** 목록 시트 제목. {query} 에 엔터로 찾은 검색어가 들어간다 */
+      resultTitle: '‘{query}’ 검색 결과',
       /** 검색어가 비었을 때 보이는 안내 */
       tip: '학과 이름이나 부스 이름으로 찾을 수 있어요.',
       tipExample: '예: 태국, 총학생회',

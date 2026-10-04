@@ -9,9 +9,11 @@ import { useLocale } from '@/shared/i18n/useLocale'
 import type { FocusRequest } from './CampusMap'
 import { type MapPlace, type PlaceCode, type PlaceId } from './map-place'
 import { PlaceFilter } from './PlaceFilter'
+import { PlaceListSheet } from './PlaceListSheet'
 import { PlaceSearch } from './PlaceSearch'
 import { PlaceSearchBar } from './PlaceSearchBar'
 import { PLACE_SHEET_PEEK, PlaceSheet } from './PlaceSheet'
+import { searchPlaces, toQuery, toSearchable } from './search-places'
 
 // Leaflet 은 불러오는 순간 window 를 읽어서 빌드 때 굽지 않고 브라우저에서만 싣는다
 const CampusMap = dynamic(() => import('./CampusMap'), { ssr: false })
@@ -40,15 +42,24 @@ export function MapView({
     })
   }, [])
   const resetFilter = useCallback(() => setFilter(new Set()), [])
+  // 엔터로 확정한 검색어. 있으면 지도·목록 모두 검색 결과만 두고 칩은 그 안에서 거른다
+  const [query, setQuery] = useState<string | null>(null)
+  const searchable = useMemo(() => toSearchable(places), [places])
+  const matched = useMemo(
+    () => (query === null ? places : searchPlaces(searchable, toQuery(query))),
+    [places, searchable, query],
+  )
   // 마커가 목록 변화로 선택 해제를 판단해서, 필터가 그대로면 같은 배열을 넘긴다
   const visiblePlaces = useMemo(
-    () => (filter.size ? places.filter((place) => filter.has(place.code)) : places),
-    [places, filter],
+    () => (filter.size ? matched.filter((place) => filter.has(place.code)) : matched),
+    [matched, filter],
   )
   // 빈 곳을 탭해 칩·확대 버튼·도크를 걷어 낸 상태. 지도만 넓게 본다
   const [chromeHidden, setChromeHidden] = useState(false)
   // 고른 장소를 주소(/map/12)에 담아 그대로 복사해 홍보할 수 있게 한다. 기록은 쌓지 않고 주소만 갈아 끼워, 시트 열림은 선택 상태 하나로만 정한다
   const mapPath = localePath(useLocale(), '/map')
+  // 상세는 목록 위에 겹쳐 열고, 그동안 목록은 닫지 않고 숨겨 상세를 닫으면 보던 자리 그대로 돌아온다
+  const [listOpen, setListOpen] = useState(false)
   const select = useCallback(
     (id: PlaceId, zoom = false) => {
       setSelectedId(id)
@@ -64,12 +75,20 @@ export function MapView({
     setSelectedId(null)
     if (location.pathname !== mapPath) history.replaceState(null, '', mapPath)
   }, [mapPath])
+  const openList = useCallback(() => {
+    clearSelection()
+    // 목록은 칩으로 거르며 보니 걷어 낸 칩을 되돌린다
+    setChromeHidden(false)
+    setListOpen(true)
+  }, [clearSelection])
+  const closeList = useCallback(() => setListOpen(false), [])
   const [searching, setSearching] = useState(false)
   // 검색을 닫으면 키보드 사용자가 제자리로 돌아가도록 연 버튼에 포커스를 되돌린다
   const searchOpenerRef = useRef<HTMLElement | null>(null)
   // 검색창이 검색 막대 누름 안에서 그려져야 iOS 가 키보드를 올려서, 다음 그리기를 기다리지 않고 바로 그린다
   const openSearch = () => {
     clearSelection()
+    setListOpen(false)
     searchOpenerRef.current =
       document.activeElement instanceof HTMLElement ? document.activeElement : null
     flushSync(() => setSearching(true))
@@ -79,15 +98,23 @@ export function MapView({
     flushSync(() => setSearching(false))
     searchOpenerRef.current?.focus()
   }, [])
-  // 검색은 필터와 상관없이 찾아서, 필터에 가려진 장소를 고르면 마커가 보이도록 필터를 푼다
-  const pickSearched = (place: MapPlace) => {
-    setSearching(false)
-    if (filter.size && !filter.has(place.code)) resetFilter()
-    select(place.id, true)
+  // 새 검색은 칩을 풀고 전체에서 찾은 결과를 목록으로 띄운다
+  const submitSearch = (text: string) => {
+    closeSearch()
+    setQuery(text)
+    resetFilter()
+    setChromeHidden(false)
+    setListOpen(true)
   }
-  // 빈 곳 탭은 고른 장소가 있으면 고름만 풀고, 없으면 걷어 내기를 켜고 끈다
+  const clearSearch = () => {
+    setQuery(null)
+    setListOpen(false)
+    clearSelection()
+  }
+  // 빈 곳 탭은 고른 장소나 목록이 열려 있으면 그것만 닫고, 없으면 걷어 내기를 켜고 끈다
   const handleEmptyTap = () => {
     if (selectedId !== null) clearSelection()
+    else if (listOpen) closeList()
     else setChromeHidden((hidden) => !hidden)
   }
   // 한 손가락으로 끌면 둘러보기로 보고 시트를 닫는다. 끄는 동안은 숨겨 두었다가 끝날 때 닫아, 고른 장소만큼 넓혀 둔 지도 범위가 끄는 도중에 줄어 튀지 않게 한다
@@ -110,10 +137,15 @@ export function MapView({
   // 칩은 폭에 따라 줄 수가 바뀌어서, 검색 막대까지 높이를 재어 지도가 그 밑 마커를 꺼낼 수 있게 한다
   const filterRef = useRef<HTMLDivElement>(null)
   const [filterHeight, setFilterHeight] = useState(0)
+  // 목록 시트를 끝까지 올려도 칩이 가려지지 않게 칩 층 아래 끝(화면 기준)까지만 올린다
+  const [filterBottom, setFilterBottom] = useState(0)
   useEffect(() => {
     const element = filterRef.current
     if (!element) return
-    const observer = new ResizeObserver(() => setFilterHeight(element.offsetHeight))
+    const observer = new ResizeObserver(() => {
+      setFilterHeight(element.offsetHeight)
+      setFilterBottom(element.getBoundingClientRect().bottom)
+    })
     observer.observe(element)
     return () => observer.disconnect()
   }, [])
@@ -140,6 +172,7 @@ export function MapView({
             bottomInset={PLACE_SHEET_PEEK + safeBottom}
             onDragChange={handleDragChange}
             onEmptyTap={handleEmptyTap}
+            onOpenList={openList}
           />
         </div>
         {/* Leaflet 판(400~1000) 위에 띄운다. 칩 사이 빈 곳은 지도를 끌 수 있게 누름을 흘려보낸다 */}
@@ -147,12 +180,24 @@ export function MapView({
           ref={filterRef}
           className="pointer-events-none absolute inset-x-0 top-0 z-[1000] px-[17px] pt-3 transition-[translate,opacity,visibility] duration-300 ease-out in-data-[chrome=hidden]:invisible in-data-[chrome=hidden]:-translate-y-full in-data-[chrome=hidden]:opacity-0 in-data-searching:invisible"
         >
-          <PlaceSearchBar onOpen={openSearch} />
+          <PlaceSearchBar query={query} onOpen={openSearch} onClear={clearSearch} />
           <PlaceFilter selected={filter} onToggle={toggleFilter} onReset={resetFilter} />
         </div>
-        {searching && <PlaceSearch places={places} onPick={pickSearched} onClose={closeSearch} />}
+        {searching && (
+          <PlaceSearch initialQuery={query ?? ''} onSubmit={submitSearch} onClose={closeSearch} />
+        )}
       </div>
       <PlaceSheet place={selected} hidden={dragging} onClose={clearSelection} />
+      <PlaceListSheet
+        open={listOpen}
+        places={visiblePlaces}
+        filter={filter}
+        query={query}
+        hidden={dragging || selected !== null}
+        fullHeight={`calc(100dvh - ${filterBottom + 8}px)`}
+        onPick={(place) => select(place.id, true)}
+        onClose={closeList}
+      />
     </>
   )
 }
