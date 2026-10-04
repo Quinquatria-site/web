@@ -8,6 +8,7 @@
   --color-text: var(--dark);
   --color-text-muted: var(--mauve-gray);
   --color-text-inverse: var(--warm-white);
+  --color-link: var(--blue);
 
   --color-border: var(--neutral-200);
   --color-border-strong: var(--neutral-300);
