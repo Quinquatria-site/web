@@ -134,6 +134,7 @@ export const ko = {
       minervaComplex: '미네르바\n컴플렉스',
       minervaPark: '미네르바\n공원',
       field: '운동장',
+      stage: '무대',
       redSquare: '붉은광장',
       humanities: '인문과학관',
       teachingCenter: '교수학습\n개발원',

@@ -128,6 +128,7 @@ export const zh: Messages = {
       minervaComplex: '密涅瓦\n综合楼',
       minervaPark: '密涅瓦\n公园',
       field: '运动场',
+      stage: '舞台',
       redSquare: '红色广场',
       humanities: '人文科学馆',
       teachingCenter: '教学\n发展院',

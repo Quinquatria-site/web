@@ -135,6 +135,7 @@ export const en: Messages = {
       minervaComplex: 'Minerva\nComplex',
       minervaPark: 'Minerva\nPark',
       field: 'Field',
+      stage: 'Stage',
       redSquare: 'Red Square',
       humanities: 'Humanities',
       teachingCenter: 'Teaching\nCenter',
