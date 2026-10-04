@@ -1,8 +1,8 @@
 import type { MapPlace } from './map-place'
 
-// 대소문자와 띄어쓰기를 무시해 "공과 대학"으로 쳐도 "공과대학"이 걸리게 한다
+// 대소문자·띄어쓰기·문장부호·기호를 무시해 "영eng업중"으로 쳐도 "영(ENG)업중 :"이, 아이폰이 바꾼 ’ 로 쳐도 ' 가 걸리게 한다
 function normalize(text: string | null): string {
-  return (text ?? '').toLowerCase().replace(/\s+/g, '')
+  return (text ?? '').toLowerCase().replace(/[\s\p{P}\p{S}]+/gu, '')
 }
 
 // 작을수록 앞. 이름이 검색어로 시작 → 이름에 포함 → 운영에 포함 순이고, 안 걸리면 null

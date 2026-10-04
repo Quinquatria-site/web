@@ -99,7 +99,7 @@ export type Performance = WithTranslations<PerformanceBase, PerformanceText, 'pe
 export type NoticeTranslation = Translation<NoticeText, 'notice'>
 
 /**
- * 공지 (§5.7). 운영자가 정하는 것은 type 과 번역뿐이고 나머지는 서버 몫이다.
+ * 공지 (§5.7). 운영자가 정하는 것은 type·사진·번역이고 나머지는 서버 몫이다.
  *
  * 공연과 달리 순서를 손댈 수단이 없다. 정렬 키가 created_at 하나뿐이라
  * (§5.1 created_at DESC, id DESC) 재정렬 엔드포인트 자체가 없다.
