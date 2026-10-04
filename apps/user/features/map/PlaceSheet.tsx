@@ -32,7 +32,7 @@ function PlaceBadge({ place }: { place: MapPlace }) {
   )
 }
 
-// 1단계에 보이는 이름·운영 정보·사진과 이어지는 링크 복사·설명. 값이 없는 줄(편의시설의 운영·위치, 시간 없는 프론트 장소의 운영 시간)은 뺀다
+// 1단계에 보이는 이름·공유·운영 정보·사진과 이어지는 설명. 값이 없는 줄(편의시설의 운영·위치, 시간 없는 프론트 장소의 운영 시간)은 뺀다
 function PlaceSummary({ place }: { place: MapPlace }) {
   const { sheet } = getMessages(useLocale()).map
   const label = placeLabel(place)
@@ -50,6 +50,8 @@ function PlaceSummary({ place }: { place: MapPlace }) {
           {place.name}
         </BottomSheetTitle>
         <PlaceBadge place={place} />
+        {/* 다른 장소로 바뀌면 복사했어요 표시가 남지 않게 새로 그린다 */}
+        <ShareLinkButton key={place.id} place={place} />
       </div>
       <div className="flex flex-col gap-5">
         <BottomSheetDescription asChild>
@@ -68,8 +70,6 @@ function PlaceSummary({ place }: { place: MapPlace }) {
           images={place.place_image_uri ?? []}
           alt={place.name ?? ''}
         />
-        {/* 다른 장소로 바뀌면 복사했어요 글자가 남지 않게 새로 그린다 */}
-        <ShareLinkButton key={place.id} place={place} />
         {/* 백오피스에서 넣은 줄바꿈을 그대로 살리고, 긴 주소는 칸 안에서 끊고 링크로 연다 */}
         {place.description && (
           <p lang={lang} className="leading-[1.4] whitespace-pre-line wrap-break-word">
