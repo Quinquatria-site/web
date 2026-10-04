@@ -122,7 +122,7 @@ export function PlaceSearch({
               ref={inputRef}
               type="search"
               enterKeyHint="search"
-              // 돋보기 누름 안에서 그려져야 iOS 가 키보드를 올려 준다. 그래서 여는 쪽이 flushSync 로 그린다
+              // 검색 막대 누름 안에서 그려져야 iOS 가 키보드를 올려 준다. 그래서 여는 쪽이 flushSync 로 그린다
               autoFocus
               value={query}
               onChange={(event) => setQuery(event.target.value)}
