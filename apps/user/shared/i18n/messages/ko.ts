@@ -16,7 +16,7 @@ export const ko = {
     top: '맨 위로',
     tabs: {
       home: '홈',
-      schedule: '일정표',
+      schedule: '공연',
       map: '지도',
       notices: '공지',
       lostItems: '분실물',
@@ -28,7 +28,7 @@ export const ko = {
     scrollCue: '다음 섹션으로',
     navLabel: '바로가기',
     nav: {
-      schedule: { title: '축제 일정표', description: '축제 일정과 공연 시간을 확인해보세요!' },
+      schedule: { title: '공연 타임라인', description: '날짜별 공연 순서를 확인해보세요!' },
       map: { title: '캠퍼스 지도', description: '다양한 부스와 편의시설 위치를 찾아보세요!' },
       notices: { title: '공지사항', description: '축제 관련 주요 소식을 알려드립니다.' },
       lostItems: { title: '분실물 찾기', description: '축제가 끝나면 분실물이 업로드됩니다.' },
@@ -42,7 +42,7 @@ export const ko = {
     },
   },
   pages: {
-    schedule: '축제 일정표',
+    schedule: '공연 타임라인',
     map: '캠퍼스 지도',
     notices: '공지사항',
     noticeDetail: '공지 상세',
@@ -78,7 +78,8 @@ export const ko = {
       ARTIST: '아티스트 공연',
     },
     slots: {
-      dayEnd: '축제 첫째날 종료',
+      /** DAY 순서대로 */
+      dayEnd: ['축제 첫째날 종료', '축제 둘째날 종료'],
     },
   },
   map: {

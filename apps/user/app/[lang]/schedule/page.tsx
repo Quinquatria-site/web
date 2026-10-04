@@ -36,7 +36,7 @@ export default async function SchedulePage() {
       <ScheduleBoard
         banner={<ScheduleBanner live={live} />}
         panels={FESTIVAL_DAYS.map(({ date }, i) => (
-          <Timeline key={date} date={date} performances={byDay[i]} />
+          <Timeline key={date} day={i} date={date} performances={byDay[i]} />
         ))}
         liveDay={liveDay === -1 ? null : liveDay}
         liveAnchor={live && liveDay !== -1 ? performanceAnchorId(live.id) : null}

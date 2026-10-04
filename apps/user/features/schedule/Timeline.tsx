@@ -54,9 +54,12 @@ function toRows(date: string, performances: Performance[]): Row[] {
 
 /** 하루 타임라인. 고정 문구 사이에 종류별 공연을 seq 순으로 끼워 넣고, 진행 중인 줄의 점을 반짝인다 */
 export async function Timeline({
+  day,
   date,
   performances,
 }: {
+  /** FESTIVAL_DAYS 의 자리. 날마다 다른 문구를 고른다 */
+  day: number
   date: string
   performances: Performance[]
 }) {
@@ -92,7 +95,7 @@ export async function Timeline({
             </div>
           ) : (
             <span className="truncate pl-1.5 text-[length:calc(16*var(--tl))] leading-[normal]">
-              {'text' in row ? slots[row.text] : performanceTypes[row.label]}
+              {'text' in row ? slots[row.text][day] : performanceTypes[row.label]}
             </span>
           )}
         </li>

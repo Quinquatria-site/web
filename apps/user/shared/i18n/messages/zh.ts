@@ -17,7 +17,7 @@ export const zh: Messages = {
     top: '回到顶部',
     tabs: {
       home: '首页',
-      schedule: '日程',
+      schedule: '演出',
       map: '地图',
       notices: '公告',
       lostItems: '失物',
@@ -29,7 +29,7 @@ export const zh: Messages = {
     scrollCue: '下一部分',
     navLabel: '快捷入口',
     nav: {
-      schedule: { title: '庆典日程', description: '查看庆典日程和演出时间！' },
+      schedule: { title: '演出时间表', description: '查看每天的演出顺序！' },
       map: { title: '校园地图', description: '查找各类摊位和便利设施的位置！' },
       notices: { title: '公告', description: '为您带来庆典相关的重要消息。' },
       lostItems: { title: '失物招领', description: '庆典结束后将上传失物信息。' },
@@ -43,7 +43,7 @@ export const zh: Messages = {
     },
   },
   pages: {
-    schedule: '庆典日程',
+    schedule: '演出时间表',
     map: '校园地图',
     notices: '公告',
     noticeDetail: '公告详情',
@@ -80,7 +80,7 @@ export const zh: Messages = {
       ARTIST: '艺人演出',
     },
     slots: {
-      dayEnd: '庆典第一天结束',
+      dayEnd: ['庆典第一天结束', '庆典第二天结束'],
     },
   },
   map: {

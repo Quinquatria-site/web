@@ -17,7 +17,7 @@ export const en: Messages = {
     top: 'Back to top',
     tabs: {
       home: 'Home',
-      schedule: 'Events',
+      schedule: 'Shows',
       map: 'Map',
       notices: 'Notices',
       lostItems: 'Lost',
@@ -30,8 +30,8 @@ export const en: Messages = {
     navLabel: 'Shortcuts',
     nav: {
       schedule: {
-        title: 'Festival Schedule',
-        description: 'Check the festival schedule!',
+        title: 'Performance Timeline',
+        description: 'Check the performance lineup for each day!',
       },
       map: { title: 'Campus Map', description: 'Find booths and facilities around campus!' },
       notices: { title: 'Notices', description: 'Key news about the festival.' },
@@ -49,7 +49,7 @@ export const en: Messages = {
     },
   },
   pages: {
-    schedule: 'Festival Schedule',
+    schedule: 'Performance Timeline',
     map: 'Campus Map',
     notices: 'Notices',
     noticeDetail: 'Notice',
@@ -86,7 +86,7 @@ export const en: Messages = {
       ARTIST: 'Artist Performance',
     },
     slots: {
-      dayEnd: 'Day 1 ends',
+      dayEnd: ['Day 1 ends', 'Day 2 ends'],
     },
   },
   map: {
