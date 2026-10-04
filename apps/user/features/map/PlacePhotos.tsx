@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
 
 /** 사진 줄 높이. 1단계 높이가 이 값에 기대 있다 */
-export const PLACE_PHOTO_HEIGHT = 150
+export const PLACE_PHOTO_HEIGHT = 190
 
 // 비율을 읽기 전과 사진이 없을 때의 틀. 대부분 인스타 피드(4:5)로 올라온다
 const FALLBACK_ASPECT = 4 / 5
