@@ -100,7 +100,7 @@ export const en: Messages = {
       clear: 'Clear search',
       cancel: 'Cancel',
       results: 'Search results',
-      tip: 'Search by department, club, or booth name.',
+      tip: 'Search by department or booth name.',
       tipExample: 'e.g. Thai, Student Council',
       empty: 'No places match “{query}”.',
       emptyHint: 'Try typing part of the name.',

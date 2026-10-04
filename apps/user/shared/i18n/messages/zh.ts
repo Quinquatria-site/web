@@ -94,7 +94,7 @@ export const zh: Messages = {
       clear: '清除搜索',
       cancel: '取消',
       results: '搜索结果',
-      tip: '可按院系、社团或摊位名称搜索。',
+      tip: '可按院系或摊位名称搜索。',
       tipExample: '例如：泰国、总学生会',
       empty: '没有与“{query}”匹配的场所。',
       emptyHint: '试试只输入名称的一部分。',
