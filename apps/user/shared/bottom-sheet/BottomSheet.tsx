@@ -38,6 +38,8 @@ interface SheetProps {
   closeOnBack?: boolean
   /** 바뀔 때마다 시트를 지금 단계 자리로 다시 올린다. 열린 채 내용만 바꿀 때 시트가 화면 밖에 남아 있지 않게 한다 */
   revealKey?: unknown
+  /** 손잡이 줄 왼쪽에 닫기와 마주 보게 띄우는 요소. 2단계에서 본문이 스크롤돼도 늘 보인다 */
+  headerStart?: ReactNode
   children: ReactNode
 }
 
@@ -70,7 +72,14 @@ export function BottomSheet({
   )
 }
 
-function SheetPanel({ onClose, hidden = false, peekHeight, revealKey, children }: SheetProps) {
+function SheetPanel({
+  onClose,
+  hidden = false,
+  peekHeight,
+  revealKey,
+  headerStart,
+  children,
+}: SheetProps) {
   const { bottomSheet } = getMessages(useLocale())
   // 닫혀 내려가는 중인 시트는 새로 열린 시트와 겹칠 수 있어 누름을 받지 않는다
   const isPresent = useIsPresent()
@@ -252,6 +261,12 @@ function SheetPanel({ onClose, hidden = false, peekHeight, revealKey, children }
               <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
             </svg>
           </Dialog.Close>
+          {/* 닫기와 같은 높이·바깥 여백으로 왼쪽에 둬서 좌우가 맞는다 */}
+          {headerStart && (
+            <div className="absolute top-[9px] left-[22px] flex h-6 items-center gap-2.5">
+              {headerStart}
+            </div>
+          )}
           <div
             ref={bodyRef}
             data-step={step}
