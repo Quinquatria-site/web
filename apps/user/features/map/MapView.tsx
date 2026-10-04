@@ -99,7 +99,7 @@ export function MapView({
       {/* 배경은 비워 페이지의 노을 하늘이 지도 뒤로 보이게 하고, 도크 여백은 되돌려 바닥까지 채우고, isolate 로 Leaflet z-index(400~1000)를 가둬 도크를 위에 둔다 */}
       <div
         data-chrome={chromeHidden ? 'hidden' : undefined}
-        className="relative isolate -mb-(--dock-space) h-[calc(100dvh-env(safe-area-inset-top)-var(--spacing)*19)]"
+        className="relative isolate -mb-(--dock-space) h-[calc(100dvh-env(safe-area-inset-top))]"
       >
         <CampusMap
           places={visiblePlaces}
