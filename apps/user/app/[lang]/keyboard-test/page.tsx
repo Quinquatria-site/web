@@ -1,6 +1,6 @@
 import { KeyboardProbe } from './KeyboardProbe'
 
-/** 일회용 시험 페이지. 키보드 자동완성 막대 뒤 띠가 웹 화면 안인지 밖인지 색으로 가린다 */
+/** 일회용 시험 페이지(재배포). 키보드 자동완성 막대 뒤 띠가 웹 화면 안인지 밖인지 색으로 가린다 */
 export default function KeyboardTestPage() {
   return (
     <>
