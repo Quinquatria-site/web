@@ -98,7 +98,6 @@ export const ko = {
     filterAll: '전체',
     zoomIn: '확대',
     zoomOut: '축소',
-    openList: '장소 목록',
     list: {
       /** {count} 에 목록에 든 장소 수가 들어간다 */
       count: '{count}곳',

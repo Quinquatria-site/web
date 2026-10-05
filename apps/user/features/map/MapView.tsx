@@ -56,13 +56,13 @@ export function MapView({
   const [chromeHidden, setChromeHidden] = useState(false)
   // 고른 장소를 주소(/map/12)에 담아 그대로 복사해 홍보할 수 있게 한다. 기록은 쌓지 않고 주소만 갈아 끼워, 시트 열림은 선택 상태 하나로만 정한다
   const mapPath = localePath(useLocale(), '/map')
+  // 장소 목록은 검색창으로만 연다. 아무것도 치지 않으면 칩으로 거른 목록이다
   const [listOpen, setListOpen] = useState(false)
-  // 목록을 검색창으로 열었는지. 끝까지 올려 열고, 검색어가 비면 안내를 보인다
-  const [searching, setSearching] = useState(false)
+  // 검색창에 포커스가 있는지. 그동안은 키보드가 아래를 가려도 결과가 보이게 목록을 끝까지 올린다
+  const [typing, setTyping] = useState(false)
   // 검색 결과는 목록으로만 보니, 목록을 닫으면 검색도 풀어 마커만 걸러진 채 남지 않게 한다
   const closeList = useCallback(() => {
     setListOpen(false)
-    setSearching(false)
     setQuery('')
   }, [])
   const select = useCallback(
@@ -81,18 +81,11 @@ export function MapView({
     setSelectedId(null)
     if (location.pathname !== mapPath) history.replaceState(null, '', mapPath)
   }, [mapPath])
-  const openList = useCallback(() => {
-    clearSelection()
-    // 목록은 칩으로 거르며 보니 걷어 낸 칩을 되돌린다
-    setChromeHidden(false)
-    setListOpen(true)
-  }, [clearSelection])
-  // 검색창을 누르면 키보드가 아래를 가려도 결과가 보이게 목록을 끝까지 올려 연다. 칩은 검색을 처음 시작할 때만 풀어 전체에서 찾게 한다
+  // 검색창을 누르면 칩은 그대로 둔 채 목록을 열어, 칩으로 거른 목록에서 이름으로 더 좁힌다
   const startSearch = () => {
     clearSelection()
-    if (!searching) resetFilter()
+    setTyping(true)
     setChromeHidden(false)
-    setSearching(true)
     setListOpen(true)
   }
   // 빈 곳 탭은 고른 장소나 목록이 열려 있으면 그것만 닫고, 없으면 걷어 내기를 켜고 끈다
@@ -154,14 +147,18 @@ export function MapView({
           bottomInset={PLACE_SHEET_PEEK + safeBottom}
           onDragChange={handleDragChange}
           onEmptyTap={handleEmptyTap}
-          onOpenList={openList}
         />
         {/* Leaflet 판(400~1000) 위에 띄운다. 칩 사이 빈 곳은 지도를 끌 수 있게 누름을 흘려보낸다 */}
         <div
           ref={filterRef}
           className="pointer-events-none absolute inset-x-0 top-0 z-[1000] px-[17px] pt-3 transition-[translate,opacity,visibility] duration-300 ease-out in-data-[chrome=hidden]:invisible in-data-[chrome=hidden]:-translate-y-full in-data-[chrome=hidden]:opacity-0"
         >
-          <PlaceSearchBar query={query} onQueryChange={setQuery} onFocus={startSearch} />
+          <PlaceSearchBar
+            query={query}
+            onQueryChange={setQuery}
+            onFocus={startSearch}
+            onBlur={() => setTyping(false)}
+          />
           <PlaceFilter selected={filter} onToggle={toggleFilter} onReset={resetFilter} />
         </div>
       </div>
@@ -172,7 +169,7 @@ export function MapView({
         totalCount={matched.length}
         filter={filter}
         query={query}
-        searching={searching}
+        expanded={typing}
         hidden={dragging}
         fullHeight={`calc(100dvh - ${filterBottom + 8}px)`}
         onPick={(place) => select(place.id, true)}

@@ -97,7 +97,7 @@ export function PlaceListSheet({
   totalCount,
   filter,
   query,
-  searching,
+  expanded,
   hidden,
   fullHeight,
   onPick,
@@ -111,8 +111,8 @@ export function PlaceListSheet({
   filter: ReadonlySet<PlaceCode>
   /** 검색창에 친 글자. 있으면 제목이 검색 결과가 되고 걸린 글자를 굵게 한다 */
   query: string
-  /** 검색창으로 연 목록. 끝까지 올려 열고, 검색어가 비면 안내를 보인다 */
-  searching: boolean
+  /** 검색창에 포커스가 있는 동안. 키보드가 아래를 가려도 결과가 보이게 끝까지 올린다 */
+  expanded: boolean
   hidden: boolean
   /** 끝까지 올렸을 때 높이. 칩 줄 아래에서 멈춰 칩을 계속 누를 수 있게 한다 */
   fullHeight: string
@@ -167,7 +167,7 @@ export function PlaceListSheet({
       peekHeight={PLACE_SHEET_PEEK}
       fullHeight={fullHeight}
       dismissFromFull
-      expanded={searching}
+      expanded={expanded}
       // 끝까지 올려도 위 칩으로 목록을 바꿀 수 있게 뒤 화면을 막지 않는다
       blockBehind={false}
       onClose={onClose}
@@ -184,7 +184,7 @@ export function PlaceListSheet({
               .replace('{count}', String(places.length))}
           </span>
         </div>
-        {searching && !trimmed && (
+        {!trimmed && (
           <p className="px-2 pb-1 text-sm leading-normal text-text-muted">
             {map.search.tip}
             <span className="block text-[13px]">{map.search.tipExample}</span>

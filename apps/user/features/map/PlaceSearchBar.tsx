@@ -10,10 +10,12 @@ export function PlaceSearchBar({
   query,
   onQueryChange,
   onFocus,
+  onBlur,
 }: {
   query: string
   onQueryChange: (query: string) => void
   onFocus: () => void
+  onBlur: () => void
 }) {
   const { search } = getMessages(useLocale()).map
   const inputRef = useRef<HTMLInputElement>(null)
@@ -45,6 +47,7 @@ export function PlaceSearchBar({
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
           onFocus={onFocus}
+          onBlur={onBlur}
           placeholder={search.placeholder}
           aria-label={search.open}
           className="min-w-0 flex-1 bg-transparent text-base font-semibold outline-none placeholder:font-normal placeholder:text-on-map-control/60 [&::-webkit-search-cancel-button]:appearance-none"

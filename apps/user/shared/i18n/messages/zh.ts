@@ -96,7 +96,6 @@ export const zh: Messages = {
     filterAll: '全部',
     zoomIn: '放大',
     zoomOut: '缩小',
-    openList: '场所列表',
     list: {
       /** {count} 에 목록에 든 장소 수가 들어간다 */
       count: '{count} 个',
