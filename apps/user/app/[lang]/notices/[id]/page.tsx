@@ -7,6 +7,7 @@ import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
 import { PageTitle } from '@/shared/page-title/PageTitle'
 import { localePath } from '@/shared/i18n/paths'
+import { assetUrl } from '@/shared/photo/asset-url'
 import { oneLine, shareMetadata, taggedTitle } from '@/shared/metadata/share-metadata'
 
 /** 목록에 있는 공지 id 로 정적 생성한다. 언어는 레이아웃이 곱한다 */
@@ -20,7 +21,7 @@ export async function generateStaticParams() {
 /** 빌드 뒤에 올라온 공지도 첫 요청 때 굽고 캐시한다. 재검증은 이미 있는 페이지만 다시 굽기 때문이다 */
 export const dynamicParams = true
 
-/** 공유 카드에 `[공지]`(상단 고정이면 `[중요]`) 제목과 본문 앞부분을 싣는다 */
+/** 공유 카드에 `[공지]`(상단 고정이면 `[중요]`) 제목과 본문 앞부분을, 사진이 있으면 첫 장을 싣는다 */
 export async function generateMetadata(
   { params }: PageProps<'/[lang]/notices/[id]'>,
   parent: ResolvingMetadata,
@@ -32,10 +33,12 @@ export async function generateMetadata(
   const locale = await getLocale()
   const { notices, meta } = getMessages(locale)
   const label = notice.type === 'PERMANENT' ? notices.important : meta.notice
+  const cover = notice.notice_image_uri?.[0]
   return shareMetadata(parent, {
     title: taggedTitle(locale, label, notice.title),
     description: oneLine(notice.content),
     path: localePath(locale, `/notices/${notice.id}`),
+    ...(cover && { image: { url: assetUrl(cover), alt: notice.title } }),
   })
 }
 
