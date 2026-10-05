@@ -107,28 +107,24 @@ export function PlaceSearch({
       <div aria-hidden onClick={onClose} className="absolute inset-0 bg-bg-inverse/25" />
       {/* 목록이 도크 밑으로 들어가지 않게 도크 높이만큼 비운다 */}
       <div className="pointer-events-none relative flex max-h-full flex-col gap-2 px-[17px] pt-3 pb-(--dock-space) text-on-map-control">
-        <form
-          role="search"
-          // 키보드의 검색 키는 결과를 보려는 것이라 키보드만 내린다
-          onSubmit={(event) => {
-            event.preventDefault()
-            inputRef.current?.blur()
-          }}
-          className="pointer-events-auto flex items-center gap-2.5"
-        >
+        {/* form·type="search"·enterKeyHint 는 모바일 키보드 자동완성 막대 뒤에 띠를 남겨 단독 입력으로 둔다 */}
+        <div role="search" className="pointer-events-auto flex items-center gap-2.5">
           <label className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-xl border border-map-control-border bg-map-control/92 px-3 shadow-[0_1px_4px_var(--color-map-control-glow)]">
             <SearchIcon className="size-5 shrink-0" />
             <input
               ref={inputRef}
-              type="search"
-              enterKeyHint="search"
               // 검색 막대 누름 안에서 그려져야 iOS 가 키보드를 올려 준다. 그래서 여는 쪽이 flushSync 로 그린다
               autoFocus
               value={query}
               onChange={(event) => setQuery(event.target.value)}
+              // 엔터는 결과를 보려는 것이라 키보드만 내린다. 한글 조합을 끝내는 엔터는 건너뛴다
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' && !event.nativeEvent.isComposing)
+                  event.currentTarget.blur()
+              }}
               placeholder={search.placeholder}
               aria-label={search.open}
-              className="min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-on-map-control/55 [&::-webkit-search-cancel-button]:appearance-none"
+              className="min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-on-map-control/55"
             />
             {query && (
               <button
@@ -153,7 +149,7 @@ export function PlaceSearch({
           >
             {search.cancel}
           </button>
-        </form>
+        </div>
         <div
           // 손가락으로 밀면 결과를 훑는 것이라 키보드를 내려 가려진 결과를 드러낸다. 목록이 줄어 생기는 scroll 은 입력 중이라 쓰지 않는다
           onTouchMove={() => inputRef.current?.blur()}
