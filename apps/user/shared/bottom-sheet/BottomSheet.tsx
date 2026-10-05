@@ -10,7 +10,15 @@ import {
   useMotionValue,
   type PanInfo,
 } from 'motion/react'
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { useCloseOnBack } from '@/shared/history/useCloseOnBack'
@@ -23,7 +31,15 @@ export const BottomSheetDescription = Dialog.Description
 
 type Step = 'peek' | 'full'
 
-const SLIDE = { type: 'spring', bounce: 0, duration: 0.35 } as const
+/** 시트가 단계를 오가는 스프링. 안쪽 내용이 시트와 같은 속도로 움직일 때도 쓴다 */
+export const SLIDE = { type: 'spring', bounce: 0, duration: 0.35 } as const
+
+const StepContext = createContext<Step>('full')
+
+/** 감싼 시트의 지금 단계. 1단계와 끝까지 올린 상태에서 모양이 달라지는 내용이 읽는다 */
+export function useBottomSheetStep() {
+  return useContext(StepContext)
+}
 
 // 손을 뗀 속도로 이만큼(초) 더 미끄러진 자리에서 가장 가까운 단계에 붙인다
 const PROJECTION = 0.2
@@ -328,7 +344,7 @@ function SheetPanel({
             data-step={step}
             className="min-h-0 flex-1 overscroll-contain px-5 pb-[calc(env(safe-area-inset-bottom)+24px)] data-[step=full]:overflow-y-auto data-[step=peek]:touch-none data-[step=peek]:overflow-hidden"
           >
-            {children}
+            <StepContext value={step}>{children}</StepContext>
           </div>
         </motion.section>
       </Dialog.Content>

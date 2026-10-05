@@ -129,7 +129,7 @@ export const zh: Messages = {
       /** 목록 시트 제목. {query} 에 검색창에 친 글자가 들어간다 */
       resultTitle: '“{query}”的搜索结果',
       tip: '可按院系或摊位名称搜索。',
-      tipExample: '例如：泰国、总学生会',
+      tipExample: '例如：泰语系',
       empty: '没有与“{query}”匹配的场所。',
       emptyHint: '试试只输入名称的一部分。',
     },

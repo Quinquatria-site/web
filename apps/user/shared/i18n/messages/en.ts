@@ -137,7 +137,7 @@ export const en: Messages = {
       /** 목록 시트 제목. {query} 에 검색창에 친 글자가 들어간다 */
       resultTitle: 'Results for ‘{query}’',
       tip: 'Search by department or booth name.',
-      tipExample: 'e.g. Thai, Student Council',
+      tipExample: 'e.g. Thai Studies',
       empty: 'No places match “{query}”.',
       emptyHint: 'Try typing part of the name.',
     },
