@@ -5,8 +5,9 @@ import type { PlaceBase, PlaceText } from '@quen/schema/entities/place'
 import { CACHE_TAGS } from '@/shared/api/cache-tags'
 import { serverApi } from '@/shared/api/server-api'
 import { listWithSource, pairWithSource } from '@/shared/api/source-fallback'
+import { imageAspect } from '@/shared/photo/image-aspect'
 import type { MapPoint } from './map-coords'
-import type { MapPlace, PlaceCode, PlaceMenu } from './map-place'
+import type { ApiMenu, MapPlace, PlaceCode } from './map-place'
 
 type Category = Localized<CategoryBase, CategoryText>
 type PlaceItem = MaybeLocalized<PlaceBase, PlaceText>
@@ -65,12 +66,24 @@ export async function getPlaces(): Promise<MapPlace[]> {
       }
       if (!MENU_CODES.has(code)) return [Promise.resolve({ ...place, menus: [] })]
       const menus = listWithSource((source) =>
-        serverApi<{ menus: PlaceMenu[] }>(`/places/${place.id}`, {
+        serverApi<{ menus: ApiMenu[] }>(`/places/${place.id}`, {
           tags: [CACHE_TAGS.places],
           source,
         }).then((detail) => detail.menus),
       )
-      return [menus.then((items) => ({ ...place, menus: items }))]
+      // 펼친 메뉴 사진이 처음부터 맞는 높이로 열리게 비율을 빌드 때 읽어 붙인다
+      return [
+        menus
+          .then((items) =>
+            Promise.all(
+              items.map(async (menu) => ({
+                ...menu,
+                image_aspect: menu.image_url ? await imageAspect(menu.image_url) : null,
+              })),
+            ),
+          )
+          .then((items) => ({ ...place, menus: items })),
+      ]
     }),
   )
 }

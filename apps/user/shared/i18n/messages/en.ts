@@ -149,8 +149,6 @@ export const en: Messages = {
       share: 'Share',
       copyLink: 'Copy link',
       linkCopied: 'Copied',
-      more: 'More',
-      less: 'Less',
       copyFailed: "Couldn't copy link",
     },
     /** 프론트에 둔 팔찌 수령 영역 */

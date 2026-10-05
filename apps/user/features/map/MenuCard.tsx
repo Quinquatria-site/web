@@ -1,22 +1,28 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { motion, useReducedMotion } from 'motion/react'
+import { useState } from 'react'
 import { contentLang, HTML_LANG } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
+import { ChevronRightIcon } from '@/shared/icons/ChevronRightIcon'
 import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
 import type { PlaceMenu } from './map-place'
 
-// 메뉴 사진은 대부분 인스타 피드(4:5)로 올라와 잘리지 않게 세운다
-const PHOTO_ASPECT = 4 / 5
+// 사진·글·카드가 한 번에 미끄러져 가는 시간. 튕기지 않는 스프링이라 끝이 부드럽게 멈춘다
+const MORPH = { type: 'spring', bounce: 0, duration: 0.4 } as const
 
-// 접혔을 때 사진 높이. 이름·가격·설명 세 줄과 맞는다
-const PHOTO_HEIGHT = 70
+// 설명은 자리가 어느 정도 열린 뒤 떠오른다
+const DESC_FADE = { delay: 0.12, duration: 0.26, ease: 'easeOut' } as const
 
-// 펼친 사진의 상한. 사진이 커질수록 글 칸이 좁아져 다시 길어지니, 설명 세 줄 높이에서 멈추고 나머지 글은 아래로 감긴다
-const PHOTO_MAX_HEIGHT = 96
+// 펼친 사진은 원본 비율을 따르되, 4:5 보다 긴 세로는 4:5 에서, 16:9 보다 넓은 가로는 16:9 에서 잘라 시트 한 화면에 이름·가격까지 들어오게 한다. 공연 모달과 같은 세로 상한이다
+const TALLEST_ASPECT = 4 / 5
+const WIDEST_ASPECT = 16 / 9
 
-/** 메뉴 한 칸. 왼쪽 사진, 오른쪽에 이름·가격·설명을 쌓고, 잘린 설명은 더보기로 펼친다 */
+// 사진이 없으면 빈 문양 자리가 너무 길지 않게 정사각으로 편다
+const EMPTY_ASPECT = 1
+
+/** 메뉴 한 칸. 접으면 정사각 사진 옆에 이름 한 줄·가격, 누르면 그 자리에서 큰 사진 아래 이름·가격·설명으로 펼친다 */
 export function MenuCard({ menu }: { menu: PlaceMenu }) {
   const locale = useLocale()
   const { sheet } = getMessages(locale).map
@@ -24,89 +30,95 @@ export function MenuCard({ menu }: { menu: PlaceMenu }) {
     '{price}',
     new Intl.NumberFormat(HTML_LANG[locale]).format(menu.price),
   )
-  const [expanded, setExpanded] = useState(false)
-  const [truncated, setTruncated] = useState(false)
-  const [textHeight, setTextHeight] = useState(0)
-  const descRef = useRef<HTMLSpanElement>(null)
-  const textRef = useRef<HTMLDivElement>(null)
-
-  // 설명이 잘리거나 줄을 나눴을 때만 더보기를 단다. 한 줄에선 줄바꿈이 사라져 보이기 때문이다. 시트 폭이 바뀌면 다시 잰다
-  useEffect(() => {
-    const desc = descRef.current
-    if (!desc) return
-    const observer = new ResizeObserver(() =>
-      setTruncated(desc.scrollWidth > desc.clientWidth || menu.description.includes('\n')),
-    )
-    observer.observe(desc)
-    return () => observer.disconnect()
-  }, [expanded, menu.description])
-
-  // 펼친 사진은 글 높이를 따라 커진다. 사진이 넓어져 줄이 늘면 다시 불려 맞춰지고, 같은 프레임에 고치면 관찰 루프 경고가 나서 다음 프레임에 넣는다
-  useEffect(() => {
-    const text = textRef.current
-    if (!text) return
-    let frame = 0
-    const observer = new ResizeObserver(([entry]) => {
-      cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(() => setTextHeight(entry.borderBoxSize[0].blockSize))
-    })
-    observer.observe(text)
-    return () => {
-      cancelAnimationFrame(frame)
-      observer.disconnect()
-    }
-  }, [])
-
-  const photoHeight = expanded
-    ? Math.min(PHOTO_MAX_HEIGHT, Math.max(PHOTO_HEIGHT, Math.round(textHeight)))
-    : PHOTO_HEIGHT
+  const [open, setOpen] = useState(false)
+  // 빌드 때 못 읽은 사진만 상한 비율로 열었다가 받은 뒤 맞춘다
+  const [aspect, setAspect] = useState(
+    menu.image_url ? (menu.image_aspect ?? TALLEST_ASPECT) : EMPTY_ASPECT,
+  )
+  // 움직임 줄이기를 켠 사람에게는 미끄러짐 없이 바로 바뀐다
+  const reduce = useReducedMotion()
+  const morph = reduce ? { duration: 0 } : MORPH
 
   return (
-    <li className="flex items-start gap-3 overflow-hidden rounded-xl bg-menu-card p-[3px] pr-3">
-      <div
-        style={{ height: photoHeight, aspectRatio: PHOTO_ASPECT }}
-        className="shrink-0 overflow-hidden rounded-lg"
+    // 크기가 바뀌는 동안 모서리가 늘어나 보이지 않게 둥글기를 style 로 줘야 motion 이 보정한다
+    <motion.li
+      layout
+      transition={morph}
+      style={{ borderRadius: 12 }}
+      className={`flex gap-3 overflow-hidden bg-menu-card p-2 ${open ? 'flex-col' : 'items-center'}`}
+    >
+      {/* 접혔을 땐 사진을 눌러도 펼치기만 하고, 펼친 뒤에야 크게 보기가 된다 */}
+      <motion.div
+        layout
+        transition={morph}
+        style={{
+          borderRadius: 8,
+          aspectRatio: open ? Math.min(Math.max(aspect, TALLEST_ASPECT), WIDEST_ASPECT) : undefined,
+        }}
+        onClick={open ? undefined : () => setOpen(true)}
+        className={`shrink-0 overflow-hidden ${open ? 'w-full' : 'size-14'}`}
       >
-        <ZoomablePhoto src={menu.image_url} alt={menu.name} sizes="96px" />
-      </div>
-      <div
-        ref={textRef}
+        <div inert={!open} className="size-full">
+          <ZoomablePhoto
+            src={menu.image_url}
+            alt={menu.name}
+            sizes="(max-width: 480px) 90vw, 432px"
+            onLoad={
+              menu.image_aspect
+                ? undefined
+                : ({ currentTarget: { naturalWidth, naturalHeight } }) => {
+                    if (naturalWidth && naturalHeight) setAspect(naturalWidth / naturalHeight)
+                  }
+            }
+          />
+        </div>
+      </motion.div>
+      <motion.button
+        layout
+        transition={morph}
+        type="button"
+        aria-expanded={open}
+        onClick={() => setOpen(!open)}
         lang={contentLang(menu.language_code)}
-        className="flex min-w-0 flex-1 flex-col gap-[3px] pt-1.5 pb-1"
+        className={`flex min-w-0 flex-1 items-start gap-2 text-left ${open ? 'px-1 pb-1' : ''}`}
       >
-        <p className="truncate leading-[normal] font-semibold">{menu.name}</p>
-        <p className="leading-[normal] font-semibold">{price}</p>
-        {menu.description &&
-          (expanded ? (
-            <p className="text-xs leading-[1.18] whitespace-pre-line wrap-break-word">
-              {menu.description}{' '}
-              <button
-                type="button"
-                aria-expanded
-                onClick={() => setExpanded(false)}
-                className="font-semibold text-text-muted"
-              >
-                {sheet.less}
-              </button>
-            </p>
-          ) : (
-            <p className="flex text-xs leading-[1.18]">
-              <span ref={descRef} className="truncate">
-                {menu.description}
-              </span>
-              {truncated && (
-                <button
-                  type="button"
-                  aria-expanded={false}
-                  onClick={() => setExpanded(true)}
-                  className="shrink-0 pl-0.5 font-semibold text-text-muted"
-                >
-                  {sheet.more}
-                </button>
-              )}
-            </p>
-          ))}
-      </div>
-    </li>
+        <span className="flex min-w-0 flex-1 flex-col gap-[3px]">
+          {/* 글자가 늘었다 줄지 않게 자리만 옮긴다 */}
+          <motion.span
+            layout="position"
+            transition={morph}
+            className={`leading-[normal] font-semibold ${open ? 'wrap-break-word' : 'truncate'}`}
+          >
+            {menu.name}
+          </motion.span>
+          <motion.span
+            layout="position"
+            transition={morph}
+            className="leading-[normal] font-semibold"
+          >
+            {price}
+          </motion.span>
+          {open && menu.description && (
+            <motion.span
+              layout="position"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={reduce ? { duration: 0 } : { ...MORPH, opacity: DESC_FADE }}
+              className="mt-1 text-xs leading-[1.18] whitespace-pre-line wrap-break-word"
+            >
+              {menu.description}
+            </motion.span>
+          )}
+        </span>
+        <motion.span
+          layout="position"
+          animate={{ rotate: open ? -90 : 90 }}
+          transition={morph}
+          className="flex"
+        >
+          <ChevronRightIcon />
+        </motion.span>
+      </motion.button>
+    </motion.li>
   )
 }

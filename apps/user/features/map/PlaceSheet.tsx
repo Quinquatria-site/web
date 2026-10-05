@@ -1,5 +1,6 @@
 'use client'
 
+import { LayoutGroup } from 'motion/react'
 import { type ReactNode, useState } from 'react'
 import {
   BottomSheet,
@@ -98,11 +99,14 @@ function PlaceDetails({ place }: { place: MapPlace }) {
       <PlaceSummary place={place} />
       {place.menus.length > 0 && (
         <SheetSection title={sheet.menu}>
-          <ul className="flex flex-col gap-2">
-            {place.menus.map((menu) => (
-              <MenuCard key={menu.id} menu={menu} />
-            ))}
-          </ul>
+          {/* 한 칸이 펼쳐지면 아래 칸들도 같이 재어 밀려 내려가게 묶는다 */}
+          <LayoutGroup>
+            <ul className="flex flex-col gap-2">
+              {place.menus.map((menu) => (
+                <MenuCard key={menu.id} menu={menu} />
+              ))}
+            </ul>
+          </LayoutGroup>
         </SheetSection>
       )}
     </div>

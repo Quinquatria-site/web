@@ -8,8 +8,11 @@ import type { MapPoint } from './map-coords'
 /** 지도에 찍는 장소 종류. 서버 카테고리 코드와 같다 */
 export type PlaceCode = CategoryCode
 
-/** 장소에 딸린 메뉴 한 건 */
-export type PlaceMenu = Localized<MenuBase, MenuText>
+/** Customer API 가 돌려주는 메뉴 한 건 */
+export type ApiMenu = Localized<MenuBase, MenuText>
+
+/** 장소에 딸린 메뉴 한 건에 빌드 때 읽은 사진 비율(가로/세로)을 붙인 것. 사진이 없거나 못 읽으면 null */
+export type PlaceMenu = ApiMenu & { image_aspect: number | null }
 
 /** 장소 구분값이자 주소 칸(/map/12) */
 export type PlaceId = number
