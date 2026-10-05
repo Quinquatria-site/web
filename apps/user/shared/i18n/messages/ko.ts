@@ -33,6 +33,7 @@ export const ko = {
       notices: { title: '공지사항', description: '축제 관련 주요 소식을 알려드립니다.' },
       lostItems: { title: '분실물 찾기', description: '축제가 끝나면 분실물이 업로드됩니다.' },
       goods: { title: 'QUINQUATRIA 굿즈', description: '2026 축제 굿즈를 만나보세요!' },
+      online: { title: '온라인 콘텐츠', description: '현장 밖에서도 축제를 즐겨보세요!' },
     },
     credits: {
       likelion: '한국외대(서울) 멋쟁이사자처럼',
@@ -49,9 +50,19 @@ export const ko = {
     lostItems: '분실물 찾기',
     lostItemDetail: '분실물 상세',
     goods: 'QUINQUATRIA 굿즈',
+    online: '온라인 콘텐츠',
   },
   notices: {
     important: '중요',
+  },
+  online: {
+    items: {
+      quiz: {
+        title: '외대인 유형 테스트',
+        description: '나는 어떤 외대인일까? 테스트로 알아보세요!',
+      },
+      photoContest: { title: '사진 콘테스트', description: '축제의 순간을 찍어 응모해 보세요!' },
+    },
   },
   lostItems: {
     contactNotice: '분실물 관련 문의는 총학생회로 연락주세요!',

@@ -34,7 +34,7 @@ export async function shareMetadata(
 export function listShareMetadata(
   parent: ResolvingMetadata,
   locale: Locale,
-  page: 'schedule' | 'map' | 'notices' | 'lostItems' | 'goods',
+  page: 'schedule' | 'map' | 'notices' | 'lostItems' | 'goods' | 'online',
   path: `/${string}`,
 ) {
   const { pages, home, meta } = getMessages(locale)

@@ -34,6 +34,7 @@ export const zh: Messages = {
       notices: { title: '公告', description: '为您带来庆典相关的重要消息。' },
       lostItems: { title: '失物招领', description: '庆典结束后将上传失物信息。' },
       goods: { title: 'QUINQUATRIA 周边', description: '来看看2026庆典周边吧！' },
+      online: { title: '线上内容', description: '在现场之外也能享受庆典！' },
     },
     credits: {
       likelion: '韩国外国语大学（首尔）LIKELION',
@@ -50,9 +51,16 @@ export const zh: Messages = {
     lostItems: '失物招领',
     lostItemDetail: '失物详情',
     goods: 'QUINQUATRIA 周边',
+    online: '线上内容',
   },
   notices: {
     important: '重要',
+  },
+  online: {
+    items: {
+      quiz: { title: '外大人类型测试', description: '我是哪种外大人？来测试一下吧！' },
+      photoContest: { title: '摄影大赛', description: '拍下庆典的精彩瞬间来参赛吧！' },
+    },
   },
   lostItems: {
     contactNotice: '失物相关咨询请联系总学生会！',

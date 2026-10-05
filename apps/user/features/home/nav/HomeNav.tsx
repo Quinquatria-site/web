@@ -6,6 +6,7 @@ import goods from './images/goods.png'
 import lostItems from './images/lost-items.png'
 import map from './images/map.png'
 import notices from './images/notices.png'
+import online from './images/online.png'
 import timetable from './images/timetable.png'
 
 // 그림마다 피그마에서 크기와 오른쪽 여백이 조금씩 달라 카드별로 옮겨 둔다
@@ -42,9 +43,15 @@ const ITEMS: (Omit<HomeNavItem, 'title' | 'description'> & {
     image: goods,
     imageBox: { right: 13.3, width: 83.7 },
   },
+  {
+    key: 'online',
+    href: '/online',
+    image: online,
+    imageBox: { right: 14, width: 79 },
+  },
 ]
 
-/** 홈 랜딩 아래 바로가기 목록. 메인 탭 다섯 곳으로 가는 카드를 세로로 쌓는다 */
+/** 홈 랜딩 아래 바로가기 목록. 메인 탭 다섯 곳과 온라인 콘텐츠로 가는 카드를 세로로 쌓는다 */
 export async function HomeNav() {
   const locale = await getLocale()
   const { home } = getMessages(locale)
