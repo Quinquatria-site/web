@@ -42,6 +42,8 @@ interface SheetProps {
   fullHeight?: string
   /** 2단계에서도 아래로 충분히 끌면 1단계를 거치지 않고 닫는다 */
   dismissFromFull?: boolean
+  /** true 로 열면 2단계로 열고, 열린 채 true 가 되면 2단계로 올린다 */
+  expanded?: boolean
   /** 2단계에서 드러난 뒤 화면을 막아 누르면 닫는다. 끄면 뒤 화면을 계속 만질 수 있다 */
   blockBehind?: boolean
   /** 손잡이 줄 왼쪽에 닫기와 마주 보게 띄우는 요소. 2단계에서 본문이 스크롤돼도 늘 보인다 */
@@ -85,6 +87,7 @@ function SheetPanel({
   revealKey,
   fullHeight,
   dismissFromFull = false,
+  expanded = false,
   blockBehind = true,
   headerStart,
   children,
@@ -93,7 +96,12 @@ function SheetPanel({
   // 닫혀 내려가는 중인 시트는 새로 열린 시트와 겹칠 수 있어 누름을 받지 않는다
   const isPresent = useIsPresent()
   const hasPeek = peekHeight !== undefined
-  const [step, setStep] = useState<Step>(hasPeek ? 'peek' : 'full')
+  const [step, setStep] = useState<Step>(hasPeek && !expanded ? 'peek' : 'full')
+  const [wasExpanded, setWasExpanded] = useState(expanded)
+  if (expanded !== wasExpanded) {
+    setWasExpanded(expanded)
+    if (expanded) setStep('full')
+  }
   const [height, setHeight] = useState(0)
   const [safeBottom, setSafeBottom] = useState(0)
   const sheetRef = useRef<HTMLElement>(null)
@@ -135,7 +143,7 @@ function SheetPanel({
 
   const settle = (velocityY: number) => {
     const projected = y.get() + velocityY * PROJECTION
-    // 2단계에서 세게 내려도 한 번에 닫히지 않고 1단계에 멈춘다. 1단계가 없으면 바로 닫힌다
+    // 2단계에서 세게 내려도 1단계에 멈춘다. dismissFromFull 이면 닫히고, 1단계가 없으면 바로 닫힌다
     const stops = !hasPeek
       ? [0, height]
       : step === 'full'

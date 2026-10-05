@@ -104,8 +104,7 @@ export const zh: Messages = {
       open: '搜索场所',
       placeholder: '院系或摊位名称',
       clear: '清除搜索',
-      cancel: '取消',
-      /** 목록 시트 제목. {query} 에 엔터로 찾은 검색어가 들어간다 */
+      /** 목록 시트 제목. {query} 에 검색창에 친 글자가 들어간다 */
       resultTitle: '“{query}”的搜索结果',
       tip: '可按院系或摊位名称搜索。',
       tipExample: '例如：泰国、总学生会',

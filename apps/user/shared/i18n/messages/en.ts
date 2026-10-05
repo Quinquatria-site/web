@@ -113,8 +113,7 @@ export const en: Messages = {
       open: 'Search places',
       placeholder: 'Department or booth name',
       clear: 'Clear search',
-      cancel: 'Cancel',
-      /** 목록 시트 제목. {query} 에 엔터로 찾은 검색어가 들어간다 */
+      /** 목록 시트 제목. {query} 에 검색창에 친 글자가 들어간다 */
       resultTitle: 'Results for ‘{query}’',
       tip: 'Search by department or booth name.',
       tipExample: 'e.g. Thai, Student Council',
