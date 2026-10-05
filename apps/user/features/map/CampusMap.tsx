@@ -11,7 +11,7 @@ import {
   Marker,
   type ZoomAnimEvent,
 } from 'leaflet'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { MapContainer, useMap, useMapEvents } from 'react-leaflet'
 import {
   MAP_BOUNDS,
@@ -237,23 +237,31 @@ function EmptyTap({ onTap, cancelKey }: { onTap: () => void; cancelKey: number }
 
 // 손으로 지도를 끄는 동안을 알린다. 끄는 사이 확대가 끼었으면(핀치) 끝날 때 함께 알린다
 function DragWatch({
+  selectedId,
   onDragChange,
 }: {
-  onDragChange: (dragging: boolean, zoomed: boolean) => void
+  selectedId: PlaceId | null
+  onDragChange: (dragging: boolean, zoomed: boolean, selectedAtStart: PlaceId | null) => void
 }) {
   const map = useMap()
   const onDragChangeRef = useRef(onDragChange)
-  useEffect(() => {
+  const selectedIdRef = useRef(selectedId)
+  useLayoutEffect(() => {
     onDragChangeRef.current = onDragChange
   })
+  useLayoutEffect(() => {
+    selectedIdRef.current = selectedId
+  }, [selectedId])
 
   useEffect(() => {
     let dragging = false
     let zoomed = false
+    let selectedAtStart: PlaceId | null = null
     const start = () => {
       dragging = true
       zoomed = false
-      onDragChangeRef.current(true, false)
+      selectedAtStart = selectedIdRef.current
+      onDragChangeRef.current(true, false, selectedAtStart)
     }
     const zoom = () => {
       zoomed = true
@@ -261,7 +269,7 @@ function DragWatch({
     const end = () => {
       if (!dragging) return
       dragging = false
-      onDragChangeRef.current(false, zoomed)
+      onDragChangeRef.current(false, zoomed, selectedAtStart)
     }
     // 끄는 중 두 번째 손가락이 닿으면 Leaflet 이 dragend 없이 끌기를 끝내서, 손가락이 다 떨어질 때도 끝낸다
     const release = (event: TouchEvent) => {
@@ -442,7 +450,7 @@ export default function CampusMap({
   topInset: number
   /** 장소를 고른 동안 아래를 가리는 높이. 고른 장소를 이만큼 위로 비켜 둔다 */
   bottomInset: number
-  onDragChange: (dragging: boolean, zoomed: boolean) => void
+  onDragChange: (dragging: boolean, zoomed: boolean, selectedAtStart: PlaceId | null) => void
   onEmptyTap: () => void
   onOpenList: () => void
 }) {
@@ -473,7 +481,7 @@ export default function CampusMap({
         topInset={topInset}
         bottomInset={bottomInset}
       />
-      <DragWatch onDragChange={onDragChange} />
+      <DragWatch selectedId={selectedId} onDragChange={onDragChange} />
       <DragTolerance />
       <EmptyTap onTap={onEmptyTap} cancelKey={focusRequest.count} />
       <MapControls onOpenList={onOpenList} />

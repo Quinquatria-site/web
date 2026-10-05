@@ -28,6 +28,15 @@ const SLIDE = { type: 'spring', bounce: 0, duration: 0.35 } as const
 // 손을 뗀 속도로 이만큼(초) 더 미끄러진 자리에서 가장 가까운 단계에 붙인다
 const PROJECTION = 0.2
 
+function swallowNextClick() {
+  const swallow = (event: MouseEvent) => {
+    event.stopPropagation()
+    event.preventDefault()
+  }
+  addEventListener('click', swallow, { capture: true, once: true })
+  setTimeout(() => removeEventListener('click', swallow, { capture: true }), 100)
+}
+
 interface SheetProps {
   onClose: () => void
   /** 지도를 움직이는 동안처럼 닫지 않고 잠깐 아래로 숨긴다 */
@@ -137,7 +146,10 @@ function SheetPanel({
     const nearest = stops.reduce((a, b) =>
       Math.abs(b - projected) < Math.abs(a - projected) ? b : a,
     )
-    if (nearest === height) return onClose()
+    if (nearest === height) {
+      swallowNextClick()
+      return onClose()
+    }
     const next: Step = nearest === 0 ? 'full' : 'peek'
     // 같은 단계면 target 이 그대로라 effect 가 돌지 않아 직접 되돌린다
     if (next === step) animate(y, target, SLIDE)

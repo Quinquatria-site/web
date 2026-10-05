@@ -119,9 +119,14 @@ export function MapView({
   }
   // 한 손가락으로 끌면 둘러보기로 보고 시트를 닫는다. 끄는 동안은 숨겨 두었다가 끝날 때 닫아, 고른 장소만큼 넓혀 둔 지도 범위가 끄는 도중에 줄어 튀지 않게 한다
   // 핀치는 고른 장소를 크게 보려는 것이라 시트를 남긴다
-  const handleDragChange = (next: boolean, zoomed: boolean) => {
+  const handleDragChange = (
+    next: boolean,
+    zoomed: boolean,
+    selectedAtStart: PlaceId | null,
+  ) => {
     setDragging(next)
-    if (!next && !zoomed && selectedId !== null) clearSelection()
+    if (!next && !zoomed && selectedAtStart !== null && selectedId === selectedAtStart)
+      clearSelection()
   }
   useEffect(() => {
     dockStowStore.set(chromeHidden)
