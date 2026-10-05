@@ -28,10 +28,6 @@ const DOUBLE_TAP_GAP = 40
 // 이만큼(px) 내리거나 이 속도(px/s)로 튕기면 닫는다
 const DISMISS_DISTANCE = 120
 const DISMISS_VELOCITY = 800
-// 휠을 이만큼(px) 굴리면 닫는다. 마우스 한 칸(보통 100)이면 바로 닫히고 트랙패드는 조금 밀어야 닫힌다
-const WHEEL_DISMISS = 60
-// deltaMode 가 줄·쪽 단위로 오는 브라우저(Firefox 등)를 px 로 맞춘다
-const WHEEL_LINE = 16
 // 가장자리 너머로 끌면 이 비율로만 따라와 고무줄처럼 버틴다
 const RUBBER = 0.35
 // 손을 뗀 속도로 이만큼(초) 더 미끄러진 자리에서 멈춘다
@@ -352,9 +348,6 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
   useEffect(() => {
     const stage = stageRef.current
     if (!stage) return
-    let wheelDown = 0
-    let wheelTimer: ReturnType<typeof setTimeout> | undefined
-
     // React 의 onWheel 은 passive 라 막을 수 없어 직접 단다. 막지 않으면 뒤 페이지가 굴러가거나 브라우저가 확대된다
     const handleWheel = (event: WheelEvent) => {
       event.preventDefault()
@@ -373,39 +366,12 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
         return
       }
 
+      // 확대했을 때만 굴려서 옮기고, 확대 전 휠은 뒤 페이지로 새지 않게 막기만 한다
       if (current > 1.01) {
         const max = bounds(current)
         stopAll()
         x.set(clamp(x.get() - event.deltaX, -max.x, max.x))
         y.set(clamp(y.get() - event.deltaY, -max.y, max.y))
-        return
-      }
-
-      // 옆으로 굴린 트랙패드는 닫기로 치지 않는다
-      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) return
-
-      const toPx = (delta: number) =>
-        event.deltaMode === WheelEvent.DOM_DELTA_LINE
-          ? delta * WHEEL_LINE
-          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
-            ? delta * stageSize().width
-            : delta
-
-      // 확대하지 않은 채 굴리면 사진이 아래로 미끄러지며 닫힌다. 트랙패드 자연 스크롤은 방향이 반대라 양만 본다
-      wheelDown += Math.abs(toPx(event.deltaY))
-      clearTimeout(wheelTimer)
-      // 조금 굴리다 멈추면 쌓인 양을 비우고 제자리로 돌아온다
-      wheelTimer = setTimeout(() => {
-        wheelDown = 0
-        if (!closing.current) animateTo(1, 0, 0)
-      }, 200)
-      const progress = clamp(wheelDown / WHEEL_DISMISS, 0, 1)
-      y.set(wheelDown)
-      scale.set(1 - progress * 0.1)
-      dismiss.set(progress * 0.5)
-      if (wheelDown >= WHEEL_DISMISS) {
-        clearTimeout(wheelTimer)
-        close()
       }
     }
 
@@ -422,7 +388,6 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     stage.addEventListener('gesturechange', preventGesture)
     window.addEventListener('resize', handleResize)
     return () => {
-      clearTimeout(wheelTimer)
       stage.removeEventListener('wheel', handleWheel)
       stage.removeEventListener('gesturestart', preventGesture)
       stage.removeEventListener('gesturechange', preventGesture)
