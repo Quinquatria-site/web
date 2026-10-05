@@ -20,8 +20,8 @@ import { ShareLinkButton } from './ShareLinkButton'
 /** 시트 1단계 높이. 이름·운영·시간·위치 아래 사진 줄까지 보인다 */
 export const PLACE_SHEET_PEEK = 197 + PLACE_PHOTO_HEIGHT
 
-// 이름 옆 카테고리 뱃지. 마커와 같은 고유 색을 깐다
-function PlaceBadge({ place }: { place: MapPlace }) {
+/** 이름 옆 카테고리 뱃지. 마커와 같은 고유 색을 깐다 */
+export function PlaceBadge({ place }: { place: MapPlace }) {
   const name = getMessages(useLocale()).map.places[place.code]
   return (
     <span
@@ -34,7 +34,7 @@ function PlaceBadge({ place }: { place: MapPlace }) {
 
 // 1단계에 보이는 이름·운영 정보·사진과 이어지는 설명. 값이 없는 줄(편의시설의 운영·위치, 시간 없는 프론트 장소의 운영 시간)은 뺀다
 function PlaceSummary({ place }: { place: MapPlace }) {
-  const { sheet } = getMessages(useLocale()).map
+  const { sheet, places } = getMessages(useLocale()).map
   const label = placeLabel(place)
   const lang = contentLang(place.language_code)
   const rows = [
@@ -46,7 +46,8 @@ function PlaceSummary({ place }: { place: MapPlace }) {
   return (
     <div className="flex flex-col gap-3 px-2">
       <BottomSheetTitle lang={lang} className="text-2xl leading-[normal] font-semibold">
-        {place.name}
+        {/* 번역이 없어 이름이 비면 목록·검색처럼 종류 이름으로 채운다 */}
+        {place.name ?? places[place.code]}
       </BottomSheetTitle>
       <div className="flex flex-col gap-5">
         <BottomSheetDescription asChild>

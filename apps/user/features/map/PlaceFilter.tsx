@@ -4,8 +4,8 @@ import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import type { PlaceCode } from './map-place'
 
-// 피그마 칩 순서
-const FILTER_CODES: PlaceCode[] = [
+/** 피그마 칩 순서. 목록 시트 제목도 이 순서로 적는다 */
+export const FILTER_CODES: PlaceCode[] = [
   'BOOTH',
   'PUB',
   'FOODTRUCK',
