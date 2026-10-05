@@ -1,10 +1,9 @@
 'use client'
 
 import * as Dialog from '@radix-ui/react-dialog'
-import { animate, AnimatePresence, motion, useTransform } from 'motion/react'
+import { AnimatePresence, motion, useTransform } from 'motion/react'
 import Image from 'next/image'
-import { useRef, useState, type ReactElement } from 'react'
-import { flushSync } from 'react-dom'
+import { useRef, type ReactElement } from 'react'
 import { useCloseOnBack } from '@/shared/history/useCloseOnBack'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
@@ -14,19 +13,11 @@ import { usePinchZoom } from './usePinchZoom'
 // 뷰어가 앱 기둥 폭이라 그만큼만 받는다
 const VIEWER_SIZES = '(max-width: 480px) 100vw, 480px'
 
-const SLIDE = { type: 'spring', bounce: 0, duration: 0.35 } as const
-// 화면 폭의 이 비율 넘게 밀거나 이 속도(px/s)로 튕기면 옆 사진으로 넘긴다
-const SWIPE_RATIO = 0.25
-const SWIPE_VELOCITY = 500
-
 const FADE = { duration: 0.2, ease: 'easeOut' } as const
 
 interface ViewerProps {
-  /** 넘겨 볼 사진들. 주소나 API 의 S3 key */
-  photos: string[]
-  /** 처음 띄울 사진 */
-  index: number
-  /** 사진 이름. 여러 장이면 뒤에 몇 번째인지 붙는다 */
+  /** 띄울 사진. 주소나 API 의 S3 key */
+  src: string
   alt: string
   /** 눌러 연 사진의 sizes. 같은 주소라 이미 받은 사진을 먼저 띄우고 큰 사진이 오면 덮는다 */
   sizes: string
@@ -62,54 +53,15 @@ export function PhotoViewer({
   )
 }
 
-function ViewerPanel({
-  photos,
-  index: initialIndex,
-  alt,
-  sizes,
-  onClose,
-}: ViewerProps & { onClose: () => void }) {
+function ViewerPanel({ src, alt, sizes, onClose }: ViewerProps & { onClose: () => void }) {
   const { photoViewer } = getMessages(useLocale())
   const stageRef = useRef<HTMLDivElement>(null)
-  const [index, setIndex] = useState(initialIndex)
-  // 손짓 콜백이 렌더를 기다리지 않고 지금 사진을 읽어야 해서 state 와 함께 둔다
-  const indexRef = useRef(initialIndex)
-  const naturals = useRef(new Map<number, { width: number; height: number }>())
-  const multiple = photos.length > 1
-  const canSwipe = (direction: 1 | -1) => {
-    const next = indexRef.current + direction
-    return next >= 0 && next < photos.length
-  }
-
-  const go = (direction: 1 | -1, velocity = 0) => {
-    if (!canSwipe(direction)) return
-    const next = indexRef.current + direction
-    indexRef.current = next
-    reset(naturals.current.get(next) ?? null)
-    // 사진 띠를 한 칸 옮기는 렌더와 swipe 를 같은 프레임에 맞춰야 화면이 튀지 않는다
-    flushSync(() => setIndex(next))
-    swipe.jump(swipe.get() + direction * (stageRef.current?.clientWidth ?? 0))
-    animate(swipe, 0, { ...SLIDE, velocity })
-  }
-
-  const { x, y, scale, dismiss, swipe, handlers, setNaturalSize, reset } = usePinchZoom(stageRef, {
+  const { x, y, scale, dismiss, handlers, setNaturalSize } = usePinchZoom(stageRef, {
     onDismiss: onClose,
-    canSwipe: multiple ? canSwipe : undefined,
-    onSwipeEnd: (offset, velocity) => {
-      const width = stageRef.current?.clientWidth ?? 1
-      // 반쯤 넘게 밀었거나 빠르게 튕기면 넘기고, 아니면 제자리로 돌아온다
-      const direction = offset < 0 ? 1 : -1
-      const far = Math.abs(offset) > width * SWIPE_RATIO
-      const fast = Math.abs(velocity) > SWIPE_VELOCITY && Math.sign(velocity) === Math.sign(offset)
-      if ((far || fast) && canSwipe(direction)) go(direction, velocity)
-      else animate(swipe, 0, { ...SLIDE, velocity })
-    },
-    onStep: (direction) => go(direction),
   })
   // 내릴수록 뒤가 비치고 닫기 버튼이 흐려져 놓으면 닫힌다는 걸 알린다
   const backdropOpacity = useTransform(dismiss, [0, 1], [1, 0.15])
   const chromeOpacity = useTransform(dismiss, [0, 0.4], [1, 0])
-  const photoAlt = (i: number) => (multiple ? `${alt} ${i + 1}` : alt)
 
   return (
     <>
@@ -129,15 +81,7 @@ function ViewerPanel({
           />
         </motion.div>
       </Dialog.Overlay>
-      <Dialog.Content
-        forceMount
-        asChild
-        onKeyDown={(event) => {
-          if (!multiple) return
-          if (event.key === 'ArrowRight') go(1)
-          else if (event.key === 'ArrowLeft') go(-1)
-        }}
-      >
+      <Dialog.Content forceMount asChild>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -145,10 +89,8 @@ function ViewerPanel({
           transition={FADE}
           className="fixed inset-0 z-[1100] mx-auto max-w-(--app-max-width) outline-none"
         >
-          <Dialog.Title className="sr-only">{photoAlt(index)}</Dialog.Title>
-          <Dialog.Description className="sr-only">
-            {multiple ? `${photoViewer.hint} ${photoViewer.swipeHint}` : photoViewer.hint}
-          </Dialog.Description>
+          <Dialog.Title className="sr-only">{alt}</Dialog.Title>
+          <Dialog.Description className="sr-only">{photoViewer.hint}</Dialog.Description>
           {/* 손짓을 브라우저가 스크롤·페이지 확대로 가져가지 않게 touch-none 으로 전부 받는다 */}
           <div
             ref={stageRef}
@@ -162,45 +104,30 @@ function ViewerPanel({
               transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
               className="size-full"
             >
-              <motion.div style={{ x: swipe }} className="relative size-full">
-                {photos.map((src, i) =>
-                  // 지금 사진과 양옆 한 장씩만 그려 넘길 때 바로 보이고 나머지는 받지 않는다
-                  Math.abs(i - index) > 1 ? null : (
-                    <motion.div
-                      key={`${src}-${i}`}
-                      aria-hidden={i !== index}
-                      // 사진마다 한 칸씩 비켜 세워, 넘긴 뒤 swipe 만 0 으로 돌리면 된다. 확대는 지금 사진만 받는다
-                      style={{ ...(i === index && { x, y, scale }), left: `${(i - index) * 100}%` }}
-                      className="absolute inset-y-0 w-full"
-                    >
-                      <Image
-                        src={assetUrl(src)}
-                        alt=""
-                        aria-hidden
-                        fill
-                        sizes={sizes}
-                        draggable={false}
-                        className="object-contain"
-                      />
-                      <Image
-                        src={assetUrl(src)}
-                        alt={photoAlt(i)}
-                        fill
-                        sizes={VIEWER_SIZES}
-                        draggable={false}
-                        onLoad={(event) => {
-                          const size = {
-                            width: event.currentTarget.naturalWidth,
-                            height: event.currentTarget.naturalHeight,
-                          }
-                          naturals.current.set(i, size)
-                          if (i === indexRef.current) setNaturalSize(size)
-                        }}
-                        className="object-contain"
-                      />
-                    </motion.div>
-                  ),
-                )}
+              <motion.div style={{ x, y, scale }} className="relative size-full">
+                <Image
+                  src={assetUrl(src)}
+                  alt=""
+                  aria-hidden
+                  fill
+                  sizes={sizes}
+                  draggable={false}
+                  className="object-contain"
+                />
+                <Image
+                  src={assetUrl(src)}
+                  alt={alt}
+                  fill
+                  sizes={VIEWER_SIZES}
+                  draggable={false}
+                  onLoad={(event) =>
+                    setNaturalSize({
+                      width: event.currentTarget.naturalWidth,
+                      height: event.currentTarget.naturalHeight,
+                    })
+                  }
+                  className="object-contain"
+                />
               </motion.div>
             </motion.div>
           </div>
@@ -209,17 +136,7 @@ function ViewerPanel({
             // 사진 위에서도 X 가 보이게 위쪽만 어둡게 깐다. 띠는 손짓을 막지 않고 버튼만 눌린다
             className="pointer-events-none absolute inset-x-0 top-0 bg-linear-to-b from-black/50 to-transparent pt-[env(safe-area-inset-top)]"
           >
-            <div className="flex h-16 items-center justify-between px-3">
-              {multiple ? (
-                <p
-                  aria-live="polite"
-                  className="rounded-full bg-black/40 px-3 py-1 text-sm font-medium text-white tabular-nums backdrop-blur-sm"
-                >
-                  {index + 1} / {photos.length}
-                </p>
-              ) : (
-                <span />
-              )}
+            <div className="flex h-16 items-center justify-end px-3">
               <Dialog.Close
                 aria-label={photoViewer.close}
                 className="pointer-events-auto flex size-11 items-center justify-center rounded-full bg-black/40 text-white backdrop-blur-sm"
