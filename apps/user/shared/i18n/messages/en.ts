@@ -93,12 +93,18 @@ export const en: Messages = {
     filterAll: 'All',
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom out',
+    openList: 'Place list',
+    list: {
+      /** {count} 에 목록에 든 장소 수가 들어간다 */
+      count: '{count} places',
+    },
     search: {
       open: 'Search places',
       placeholder: 'Department or booth name',
       clear: 'Clear search',
       cancel: 'Cancel',
-      results: 'Search results',
+      /** 목록 시트 제목. {query} 에 엔터로 찾은 검색어가 들어간다 */
+      resultTitle: 'Results for ‘{query}’',
       tip: 'Search by department or booth name.',
       tipExample: 'e.g. Thai, Student Council',
       empty: 'No places match “{query}”.',

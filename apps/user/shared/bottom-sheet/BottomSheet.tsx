@@ -38,6 +38,10 @@ interface SheetProps {
   closeOnBack?: boolean
   /** 바뀔 때마다 시트를 지금 단계 자리로 다시 올린다. 열린 채 내용만 바꿀 때 시트가 화면 밖에 남아 있지 않게 한다 */
   revealKey?: unknown
+  /** 2단계 높이. 위에 늘 보여야 하는 것이 있으면 줄인다. 안 주면 80dvh */
+  fullHeight?: string
+  /** 2단계에서 드러난 뒤 화면을 막아 누르면 닫는다. 끄면 뒤 화면을 계속 만질 수 있다 */
+  blockBehind?: boolean
   /** 손잡이 줄 왼쪽에 닫기와 마주 보게 띄우는 요소. 2단계에서 본문이 스크롤돼도 늘 보인다 */
   headerStart?: ReactNode
   children: ReactNode
@@ -77,6 +81,8 @@ function SheetPanel({
   hidden = false,
   peekHeight,
   revealKey,
+  fullHeight,
+  blockBehind = true,
   headerStart,
   children,
 }: SheetProps) {
@@ -112,11 +118,12 @@ function SheetPanel({
   }, [])
 
   useEffect(() => {
-    if (!height) return
+    // 닫혀 내려가는 중에 키보드가 올라와 높이가 바뀌어도 단계 자리로 되돌리지 않는다. 되돌리면 퇴장이 끊겨 시트가 화면에 남는다
+    if (!height || !isPresent) return
     const controls = animate(y, target, SLIDE)
     return () => controls.stop()
     // revealKey 는 자리가 그대로여도 다시 올리려고 받는다
-  }, [y, target, height, revealKey])
+  }, [y, target, height, revealKey, isPresent])
 
   useEffect(() => {
     // 1단계로 내려오면 본문을 맨 위로 돌려 제목이 다시 보이게 한다
@@ -213,7 +220,7 @@ function SheetPanel({
   return (
     <>
       {/* 2단계에서는 드러난 지도를 눌러도 마커가 눌리지 않고 시트가 닫힌다. 투명한 막이라 흐려지는 퇴장 없이 바로 걷어, 1단계로 내린 직후 누름을 가로채지 않게 한다 */}
-      {step === 'full' && !hidden && isPresent && (
+      {blockBehind && step === 'full' && !hidden && isPresent && (
         <div aria-hidden onClick={onClose} className="fixed inset-0 z-50" />
       )}
       <Dialog.Content
@@ -224,7 +231,7 @@ function SheetPanel({
       >
         <motion.section
           ref={sheetRef}
-          style={{ y }}
+          style={{ y, height: fullHeight }}
           exit={{ y: height }}
           transition={SLIDE}
           inert={hidden || !isPresent}
