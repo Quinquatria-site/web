@@ -9,6 +9,7 @@ export const en: Messages = {
     open: 'View {name} photo full screen',
     close: 'Close',
     hint: 'Pinch to zoom. Swipe down or tap outside the photo to close.',
+    swipeHint: 'Swipe sideways to see other photos.',
   },
   dock: {
     label: 'Main menu',

@@ -13,7 +13,9 @@ type Gesture =
   | { kind: 'pan'; start: Point; x: number; y: number }
   | { kind: 'pinch'; distance: number; mid: Point; scale: number; x: number; y: number }
   | { kind: 'dismiss'; start: Point }
-  // 확대 전 위·옆으로 민 것처럼 아무것도 하지 않을 손짓
+  // 확대 전 옆으로 밀어 다른 사진으로 넘기는 중. base 는 넘어가던 중에 잡은 자리
+  | { kind: 'swipe'; start: Point; base: number }
+  // 확대 전 위로 민 것처럼 아무것도 하지 않을 손짓
   | { kind: 'ignore' }
 
 const MAX_SCALE = 4
@@ -46,17 +48,25 @@ function rubber(value: number, min: number, max: number) {
   return value
 }
 
+type Direction = 1 | -1
+
 interface PinchZoomOptions {
   onDismiss: () => void
+  /** 이 방향(1 은 다음)에 넘길 사진이 있는지. 주지 않으면 옆으로 넘기지 않는다 */
+  canSwipe?: (direction: Direction) => boolean
+  /** 옆으로 밀던 손을 뗐을 때. swipe 를 제자리로 돌릴지 넘길지는 부르는 쪽이 정한다 */
+  onSwipeEnd?: (offset: number, velocity: number) => void
 }
 
-/** 사진 뷰어의 두 손가락 확대·끌어 보기·두 번 눌러 확대·아래로 내려 닫기. 화면 가운데 기준 x·y·scale 을 돌려준다 */
+/** 사진 뷰어의 두 손가락 확대·끌어 보기·두 번 눌러 확대·아래로 내려 닫기·옆으로 넘기기. 화면 가운데 기준 x·y·scale 을 돌려준다 */
 export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: PinchZoomOptions) {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const scale = useMotionValue(1)
   /** 아래로 내려 닫는 정도. 0 은 제자리, 1 은 거의 닫힘 */
   const dismiss = useMotionValue(0)
+  /** 옆으로 민 거리. 확대 전에만 움직인다 */
+  const swipe = useMotionValue(0)
 
   const pointers = useRef(new Map<number, Point>())
   const gesture = useRef<Gesture>({ kind: 'idle' })
@@ -117,6 +127,7 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     y.stop()
     scale.stop()
     dismiss.stop()
+    swipe.stop()
   }
 
   const animateTo = (s: number, tx: number, ty: number, velocity?: Point) => {
@@ -124,6 +135,8 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     animate(x, tx, { ...SETTLE, velocity: velocity?.x ?? 0 })
     animate(y, ty, { ...SETTLE, velocity: velocity?.y ?? 0 })
     animate(dismiss, 0, SETTLE)
+    // 넘어가던 사진을 누르기만 하고 떼면 제자리로 마저 붙인다
+    animate(swipe, 0, SETTLE)
   }
 
   // 손을 다 떼면 배율을 1~MAX 안으로, 위치를 사진이 화면을 벗어나지 않는 범위로 되돌린다
@@ -250,9 +263,21 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
       const dx = point.x - g.start.x
       const dy = point.y - g.start.y
       if (Math.hypot(dx, dy) <= TAP_SLOP) return
-      // 아래로 내리면 닫기다. 위·옆으로 민 것은 흘려보낸다
+      // 아래로 내리면 닫기, 넘길 사진이 있을 때 옆으로 밀면 넘기기다. 위로 민 것은 흘려보낸다
       gesture.current =
-        dy > 0 && dy > Math.abs(dx) ? { kind: 'dismiss', start: g.start } : { kind: 'ignore' }
+        dy > 0 && dy > Math.abs(dx)
+          ? { kind: 'dismiss', start: g.start }
+          : Math.abs(dx) >= Math.abs(dy) && optionsRef.current.canSwipe
+            ? { kind: 'swipe', start: g.start, base: swipe.get() }
+            : { kind: 'ignore' }
+    }
+
+    if (gesture.current.kind === 'swipe') {
+      const { start, base } = gesture.current
+      const dx = base + point.x - start.x
+      // 처음·마지막 사진에서 더 밀면 고무줄처럼 버틴다
+      swipe.set(optionsRef.current.canSwipe?.(dx < 0 ? 1 : -1) ? dx : dx * RUBBER)
+      return
     }
 
     if (gesture.current.kind === 'dismiss') {
@@ -286,6 +311,14 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     const point = toStage(event.clientX, event.clientY)
     const t = tap.current
     tap.current = null
+
+    if (g.kind === 'swipe') {
+      const cancelled = event.type === 'pointercancel'
+      return optionsRef.current.onSwipeEnd?.(
+        cancelled ? 0 : swipe.get(),
+        cancelled ? 0 : swipe.getVelocity(),
+      )
+    }
 
     if (g.kind === 'dismiss') {
       if (
@@ -404,6 +437,16 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     natural.current = size
   }
 
+  /** 다른 사진으로 넘어가면 배율·위치를 처음으로 되돌린다 */
+  const reset = (size: Size | null) => {
+    stopAll()
+    x.set(0)
+    y.set(0)
+    scale.set(1)
+    natural.current = size
+    lastTap.current = null
+  }
+
   const handlers = {
     onPointerDown,
     onPointerMove,
@@ -411,5 +454,5 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     onPointerCancel: onPointerUp,
   }
 
-  return { x, y, scale, dismiss, handlers, setNaturalSize }
+  return { x, y, scale, dismiss, swipe, handlers, setNaturalSize, reset }
 }
