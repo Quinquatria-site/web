@@ -439,7 +439,6 @@ export default function CampusMap({
   bottomInset,
   onDragChange,
   onEmptyTap,
-  onOpenList,
 }: {
   places: MapPlace[]
   selectedId: PlaceId | null
@@ -452,7 +451,6 @@ export default function CampusMap({
   bottomInset: number
   onDragChange: (dragging: boolean, zoomed: boolean, selectedAtStart: PlaceId | null) => void
   onEmptyTap: () => void
-  onOpenList: () => void
 }) {
   const selected = places.find((place) => place.id === selectedId) ?? null
 
@@ -484,7 +482,7 @@ export default function CampusMap({
       <DragWatch selectedId={selectedId} onDragChange={onDragChange} />
       <DragTolerance />
       <EmptyTap onTap={onEmptyTap} cancelKey={focusRequest.count} />
-      <MapControls onOpenList={onOpenList} />
+      <MapControls />
     </MapContainer>
   )
 }

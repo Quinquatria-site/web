@@ -19,6 +19,9 @@ export async function generateMetadata(
   return listShareMetadata(parent, await getLocale(), 'schedule', '/schedule')
 }
 
+// 배너가 굽는 시각으로 축제 시점을 고르므로, 시점이 바뀐 뒤 늦어도 이만큼 지나 다시 굽는다
+export const revalidate = 300
+
 /** 일정표 탭. 배너와 두 날치 타임라인을 미리 그려 두고, 탭만 브라우저에서 고른다 */
 export default async function SchedulePage() {
   const { pages } = getMessages(await getLocale())
@@ -39,7 +42,7 @@ export default async function SchedulePage() {
       <ScheduleBoard
         banner={<ScheduleBanner live={live} />}
         panels={FESTIVAL_DAYS.map(({ date }, i) => (
-          <Timeline key={date} day={i} date={date} performances={byDay[i]} />
+          <Timeline key={date} day={i} performances={byDay[i]} />
         ))}
         liveDay={liveDay === -1 ? null : liveDay}
         liveAnchor={live && liveDay !== -1 ? performanceAnchorId(live.id) : null}

@@ -34,6 +34,11 @@ function EmptyPin() {
   )
 }
 
+// 검색 입력칸에 남은 포커스를 풀어 키보드를 내린다
+function blurSearch() {
+  if (document.activeElement instanceof HTMLInputElement) document.activeElement.blur()
+}
+
 // 사진 · 종류 배지와 번호 · 이름 · 운영과 시간. 누르면 그 장소 상세로 간다
 function PlaceRow({
   place,
@@ -89,8 +94,10 @@ function PlaceRow({
 export function PlaceListSheet({
   open,
   places,
+  totalCount,
   filter,
   query,
+  expanded,
   hidden,
   fullHeight,
   onPick,
@@ -99,9 +106,13 @@ export function PlaceListSheet({
   open: boolean
   /** 칩으로 거른 장소. 지도 마커와 같은 배열이다 */
   places: MapPlace[]
+  /** 칩으로 거르기 전 장소 수. 검색 결과를 칩으로 거른 동안 몇 곳이 빠졌는지 보인다 */
+  totalCount: number
   filter: ReadonlySet<PlaceCode>
-  /** 엔터로 확정한 검색어. 있으면 제목이 검색 결과가 되고 걸린 글자를 굵게 한다 */
-  query: string | null
+  /** 검색창에 친 글자. 있으면 제목이 검색 결과가 되고 걸린 글자를 굵게 한다 */
+  query: string
+  /** 검색창에 포커스가 있는 동안. 키보드가 아래를 가려도 결과가 보이게 끝까지 올린다 */
+  expanded: boolean
   hidden: boolean
   /** 끝까지 올렸을 때 높이. 칩 줄 아래에서 멈춰 칩을 계속 누를 수 있게 한다 */
   fullHeight: string
@@ -109,9 +120,10 @@ export function PlaceListSheet({
   onClose: () => void
 }) {
   const { map } = getMessages(useLocale())
-  const searchQuery = useMemo(() => toQuery(query ?? ''), [query])
-  const title = query
-    ? map.search.resultTitle.replace('{query}', query)
+  const trimmed = query.trim()
+  const searchQuery = useMemo(() => toQuery(trimmed), [trimmed])
+  const title = trimmed
+    ? map.search.resultTitle.replace('{query}', trimmed)
     : filter.size
       ? FILTER_CODES.filter((code) => filter.has(code))
           .map((code) => map.places[code])
@@ -155,40 +167,54 @@ export function PlaceListSheet({
       peekHeight={PLACE_SHEET_PEEK}
       fullHeight={fullHeight}
       dismissFromFull
+      expanded={expanded}
       // 끝까지 올려도 위 칩으로 목록을 바꿀 수 있게 뒤 화면을 막지 않는다
       blockBehind={false}
       onClose={onClose}
     >
-      <div className="flex items-baseline gap-1.5 px-2 pb-1">
-        <BottomSheetTitle className="text-lg leading-[normal] font-semibold">
-          {title}
-        </BottomSheetTitle>
-        <span className="text-sm text-text-muted">
-          {map.list.count.replace('{count}', String(places.length))}
-        </span>
-      </div>
-      {places.length === 0 ? (
-        <div
-          style={{ minHeight: EMPTY_HEIGHT }}
-          className="flex flex-col items-center justify-center gap-3 text-center font-medium"
-        >
-          <EmptyPin />
-          <div className="flex flex-col gap-1.5">
-            <p className="text-lg leading-[1.2] font-semibold break-keep text-secondary">
-              {map.search.empty.replace('{query}', query ?? '')}
-            </p>
-            <p className="leading-[1.32] text-text-muted">{map.search.emptyHint}</p>
-          </div>
+      {/* 목록을 밀면 훑어보려는 것이라 키보드를 내려 가려진 결과를 드러낸다 */}
+      <div onTouchMove={blurSearch}>
+        <div className="flex items-baseline gap-1.5 px-2 pb-1">
+          <BottomSheetTitle className="text-lg leading-[normal] font-semibold">
+            {title}
+          </BottomSheetTitle>
+          <span className="text-sm text-text-muted">
+            {(trimmed && filter.size ? map.list.countOf : map.list.count)
+              .replace('{total}', String(totalCount))
+              .replace('{count}', String(places.length))}
+          </span>
         </div>
-      ) : (
-        <ul ref={listRef} className="px-2">
-          {places.slice(0, count).map((place) => (
-            <PlaceRow key={place.id} place={place} query={searchQuery} onPick={onPick} />
-          ))}
-          {/* 줄이 늘 때 브라우저가 이 끝을 기준으로 스크롤을 붙들면 끝이 계속 보여 한 번에 다 그려진다 */}
-          {hasMore && <li ref={setSentinel} aria-hidden className="h-px [overflow-anchor:none]" />}
-        </ul>
-      )}
+        {!trimmed && (
+          <p className="px-2 pb-1 text-sm leading-normal text-text-muted">
+            {map.search.tip}
+            <span className="block text-[13px]">{map.search.tipExample}</span>
+          </p>
+        )}
+        {places.length === 0 ? (
+          <div
+            style={{ minHeight: EMPTY_HEIGHT }}
+            className="flex flex-col items-center justify-center gap-3 text-center font-medium"
+          >
+            <EmptyPin />
+            <div className="flex flex-col gap-1.5">
+              <p className="text-lg leading-[1.2] font-semibold break-keep text-secondary">
+                {map.search.empty.replace('{query}', trimmed)}
+              </p>
+              <p className="leading-[1.32] text-text-muted">{map.search.emptyHint}</p>
+            </div>
+          </div>
+        ) : (
+          <ul ref={listRef} className="px-2">
+            {places.slice(0, count).map((place) => (
+              <PlaceRow key={place.id} place={place} query={searchQuery} onPick={onPick} />
+            ))}
+            {/* 줄이 늘 때 브라우저가 이 끝을 기준으로 스크롤을 붙들면 끝이 계속 보여 한 번에 다 그려진다 */}
+            {hasMore && (
+              <li ref={setSentinel} aria-hidden className="h-px [overflow-anchor:none]" />
+            )}
+          </ul>
+        )}
+      </div>
     </BottomSheet>
   )
 }
