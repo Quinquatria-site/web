@@ -13,9 +13,7 @@ type Gesture =
   | { kind: 'pan'; start: Point; x: number; y: number }
   | { kind: 'pinch'; distance: number; mid: Point; scale: number; x: number; y: number }
   | { kind: 'dismiss'; start: Point }
-  // 확대 전 옆으로 밀어 다른 사진으로 넘기는 중
-  | { kind: 'swipe'; start: Point; base: number }
-  // 확대 전 위로 민 것처럼 아무것도 하지 않을 손짓
+  // 확대 전 위·옆으로 민 것처럼 아무것도 하지 않을 손짓
   | { kind: 'ignore' }
 
 const MAX_SCALE = 4
@@ -32,8 +30,6 @@ const DISMISS_VELOCITY = 800
 const WHEEL_DISMISS = 60
 // deltaMode 가 줄·쪽 단위로 오는 브라우저(Firefox 등)를 px 로 맞춘다
 const WHEEL_LINE = 16
-// 옆으로 넘긴 뒤 트랙패드 관성이 이만큼(ms) 잦아들어야 다음 장으로 또 넘긴다
-const WHEEL_STEP_QUIET = 250
 // 가장자리 너머로 끌면 이 비율로만 따라와 고무줄처럼 버틴다
 const RUBBER = 0.35
 // 손을 뗀 속도로 이만큼(초) 더 미끄러진 자리에서 멈춘다
@@ -50,27 +46,17 @@ function rubber(value: number, min: number, max: number) {
   return value
 }
 
-type Direction = 1 | -1
-
 interface PinchZoomOptions {
   onDismiss: () => void
-  /** 이 방향(1 은 다음)에 넘길 사진이 있는지. 없으면 옆으로 넘기지 않는다 */
-  canSwipe?: (direction: Direction) => boolean
-  /** 옆으로 밀던 손을 뗐을 때. swipe 를 제자리로 돌리든 넘기든 부르는 쪽이 정한다 */
-  onSwipeEnd?: (offset: number, velocity: number) => void
-  /** 휠을 옆으로 굴려 한 장 넘길 때 */
-  onStep?: (direction: Direction) => void
 }
 
-/** 사진 뷰어의 두 손가락 확대·끌어 보기·두 번 눌러 확대·아래로 내려 닫기·옆으로 넘기기. 화면 가운데 기준 x·y·scale 을 돌려준다 */
+/** 사진 뷰어의 두 손가락 확대·끌어 보기·두 번 눌러 확대·아래로 내려 닫기. 화면 가운데 기준 x·y·scale 을 돌려준다 */
 export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: PinchZoomOptions) {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const scale = useMotionValue(1)
   /** 아래로 내려 닫는 정도. 0 은 제자리, 1 은 거의 닫힘 */
   const dismiss = useMotionValue(0)
-  /** 옆으로 민 거리. 확대 전에만 움직인다 */
-  const swipe = useMotionValue(0)
 
   const pointers = useRef(new Map<number, Point>())
   const gesture = useRef<Gesture>({ kind: 'idle' })
@@ -131,7 +117,6 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     y.stop()
     scale.stop()
     dismiss.stop()
-    swipe.stop()
   }
 
   const animateTo = (s: number, tx: number, ty: number, velocity?: Point) => {
@@ -139,8 +124,6 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     animate(x, tx, { ...SETTLE, velocity: velocity?.x ?? 0 })
     animate(y, ty, { ...SETTLE, velocity: velocity?.y ?? 0 })
     animate(dismiss, 0, SETTLE)
-    // 넘어가던 사진을 누르기만 하고 떼면 제자리로 마저 붙인다
-    animate(swipe, 0, SETTLE)
   }
 
   // 손을 다 떼면 배율을 1~MAX 안으로, 위치를 사진이 화면을 벗어나지 않는 범위로 되돌린다
@@ -196,7 +179,6 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
       y: y.get(),
     }
     animate(dismiss, 0, SETTLE)
-    animate(swipe, 0, SETTLE)
   }
 
   // 한 손가락으로 이어 갈 때 시작점을 지금 자리로 다시 잡아 사진이 튀지 않게 한다
@@ -268,23 +250,9 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
       const dx = point.x - g.start.x
       const dy = point.y - g.start.y
       if (Math.hypot(dx, dy) <= TAP_SLOP) return
-      // 아래로 내리면 닫기, 옆으로 밀면 넘기기다. 위로 민 것은 흘려보낸다
+      // 아래로 내리면 닫기다. 위·옆으로 민 것은 흘려보낸다
       gesture.current =
-        dy > 0 && dy > Math.abs(dx)
-          ? { kind: 'dismiss', start: g.start }
-          : Math.abs(dx) >= Math.abs(dy) && optionsRef.current.canSwipe
-            ? { kind: 'swipe', start: g.start, base: swipe.get() }
-            : { kind: 'ignore' }
-    }
-
-    if (gesture.current.kind === 'swipe') {
-      const { start, base } = gesture.current
-      // 넘어가던 중에 잡았으면 멈춘 자리에서 이어 끈다
-      const dx = base + point.x - start.x
-      // 처음·마지막 사진에서 더 밀면 고무줄처럼 버틴다
-      const open = optionsRef.current.canSwipe?.(dx < 0 ? 1 : -1)
-      swipe.set(open ? dx : dx * RUBBER)
-      return
+        dy > 0 && dy > Math.abs(dx) ? { kind: 'dismiss', start: g.start } : { kind: 'ignore' }
     }
 
     if (gesture.current.kind === 'dismiss') {
@@ -318,14 +286,6 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     const point = toStage(event.clientX, event.clientY)
     const t = tap.current
     tap.current = null
-
-    if (g.kind === 'swipe') {
-      const cancelled = event.type === 'pointercancel'
-      return optionsRef.current.onSwipeEnd?.(
-        cancelled ? 0 : swipe.get(),
-        cancelled ? 0 : swipe.getVelocity(),
-      )
-    }
 
     if (g.kind === 'dismiss') {
       if (
@@ -361,9 +321,6 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     if (!stage) return
     let wheelDown = 0
     let wheelTimer: ReturnType<typeof setTimeout> | undefined
-    let wheelSide = 0
-    let wheelSideLocked = false
-    let wheelSideTimer: ReturnType<typeof setTimeout> | undefined
 
     // React 의 onWheel 은 passive 라 막을 수 없어 직접 단다. 막지 않으면 뒤 페이지가 굴러가거나 브라우저가 확대된다
     const handleWheel = (event: WheelEvent) => {
@@ -391,31 +348,15 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
         return
       }
 
+      // 옆으로 굴린 트랙패드는 닫기로 치지 않는다
+      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) return
+
       const toPx = (delta: number) =>
         event.deltaMode === WheelEvent.DOM_DELTA_LINE
           ? delta * WHEEL_LINE
           : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
             ? delta * stageSize().width
             : delta
-
-      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
-        const { onStep, canSwipe } = optionsRef.current
-        if (!onStep) return
-        // 한 번 넘긴 뒤에는 관성 휠이 멈출 때까지 기다려 여러 장을 건너뛰지 않는다
-        clearTimeout(wheelSideTimer)
-        wheelSideTimer = setTimeout(() => {
-          wheelSide = 0
-          wheelSideLocked = false
-        }, WHEEL_STEP_QUIET)
-        if (wheelSideLocked) return
-        wheelSide += toPx(event.deltaX)
-        if (Math.abs(wheelSide) < WHEEL_DISMISS) return
-        const direction: Direction = wheelSide > 0 ? 1 : -1
-        wheelSide = 0
-        wheelSideLocked = true
-        if (canSwipe?.(direction)) onStep(direction)
-        return
-      }
 
       // 확대하지 않은 채 굴리면 사진이 아래로 미끄러지며 닫힌다. 트랙패드 자연 스크롤은 방향이 반대라 양만 본다
       wheelDown += Math.abs(toPx(event.deltaY))
@@ -449,7 +390,6 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     window.addEventListener('resize', handleResize)
     return () => {
       clearTimeout(wheelTimer)
-      clearTimeout(wheelSideTimer)
       stage.removeEventListener('wheel', handleWheel)
       stage.removeEventListener('gesturestart', preventGesture)
       stage.removeEventListener('gesturechange', preventGesture)
@@ -464,16 +404,6 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     natural.current = size
   }
 
-  /** 다른 사진으로 넘어가면 배율·위치를 처음으로 되돌린다 */
-  const reset = (size: Size | null) => {
-    stopAll()
-    x.set(0)
-    y.set(0)
-    scale.set(1)
-    natural.current = size
-    lastTap.current = null
-  }
-
   const handlers = {
     onPointerDown,
     onPointerMove,
@@ -481,5 +411,5 @@ export function usePinchZoom(stageRef: RefObject<HTMLElement | null>, options: P
     onPointerCancel: onPointerUp,
   }
 
-  return { x, y, scale, dismiss, swipe, handlers, setNaturalSize, reset }
+  return { x, y, scale, dismiss, handlers, setNaturalSize }
 }

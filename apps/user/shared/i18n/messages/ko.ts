@@ -8,7 +8,6 @@ export const ko = {
     open: '{name} 사진 크게 보기',
     close: '닫기',
     hint: '두 손가락으로 벌려 확대하고, 아래로 내리거나 사진 밖을 누르면 닫혀요.',
-    swipeHint: '옆으로 밀면 다른 사진을 볼 수 있어요.',
   },
   dock: {
     label: '메인 메뉴',

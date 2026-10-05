@@ -7,19 +7,15 @@ import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
 /** 사진 줄 높이. 1단계 높이가 이 값에 기대 있다 */
 export const PLACE_PHOTO_HEIGHT = 190
 
+// 여러 장이면 몇 번째인지 붙여 읽는 사람이 사진을 구분한다
+const photoName = (alt: string, images: string[], i: number) =>
+  images.length > 1 ? `${alt} ${i + 1}` : alt
+
 // 비율을 읽기 전의 틀. 대부분 인스타 피드(4:5)로 올라온다
 const FALLBACK_ASPECT = 4 / 5
 
 // 높이는 고정하고 너비를 원본 비율대로 둬서, 세로·가로 사진 모두 잘리지 않는다
-function PlacePhoto({
-  src,
-  alt,
-  gallery,
-}: {
-  src: string
-  alt: string
-  gallery: { photos: string[]; index: number }
-}) {
+function PlacePhoto({ src, alt }: { src: string; alt: string }) {
   const [aspect, setAspect] = useState(FALLBACK_ASPECT)
   return (
     <li style={{ aspectRatio: aspect }} className="h-full shrink-0 overflow-hidden rounded-lg">
@@ -27,7 +23,6 @@ function PlacePhoto({
         src={src}
         alt={alt}
         sizes="(max-width: 480px) 90vw, 432px"
-        gallery={gallery}
         onLoad={({ currentTarget: { naturalWidth, naturalHeight } }) => {
           if (naturalWidth && naturalHeight) setAspect(naturalWidth / naturalHeight)
         }}
@@ -54,13 +49,7 @@ export function PlacePhotos({ images, alt }: { images: string[]; alt: string }) 
       className="-mx-7 flex gap-2 overflow-x-auto overscroll-x-contain px-7 [scrollbar-width:none]"
     >
       {images.map((src, i) => (
-        <PlacePhoto
-          key={src}
-          src={src}
-          alt={alt}
-          // 뷰어에서도 옆으로 넘겨 이 장소의 다른 사진을 본다
-          gallery={{ photos: images, index: i }}
-        />
+        <PlacePhoto key={src} src={src} alt={photoName(alt, images, i)} />
       ))}
     </ul>
   )
