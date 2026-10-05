@@ -9,6 +9,7 @@ export const zh: Messages = {
     open: '查看{name}大图',
     close: '关闭',
     hint: '双指张开可放大，向下滑动或点击照片外部即可关闭。',
+    swipeHint: '左右滑动可查看其他照片。',
   },
   dock: {
     label: '主菜单',
@@ -95,17 +96,17 @@ export const zh: Messages = {
     filterAll: '全部',
     zoomIn: '放大',
     zoomOut: '缩小',
-    openList: '场所列表',
     list: {
       /** {count} 에 목록에 든 장소 수가 들어간다 */
       count: '{count} 个',
+      /** 검색 결과를 칩으로 거른 동안. {total} 에 거르기 전, {count} 에 남은 장소 수가 들어간다 */
+      countOf: '{total} 个中的 {count} 个',
     },
     search: {
       open: '搜索场所',
       placeholder: '院系或摊位名称',
       clear: '清除搜索',
-      cancel: '取消',
-      /** 목록 시트 제목. {query} 에 엔터로 찾은 검색어가 들어간다 */
+      /** 목록 시트 제목. {query} 에 검색창에 친 글자가 들어간다 */
       resultTitle: '“{query}”的搜索结果',
       tip: '可按院系或摊位名称搜索。',
       tipExample: '例如：泰国、总学生会',

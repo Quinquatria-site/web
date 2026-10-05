@@ -16,7 +16,7 @@ const PHOTO_HEIGHT = 70
 // 펼친 사진의 상한. 사진이 커질수록 글 칸이 좁아져 다시 길어지니, 설명 세 줄 높이에서 멈추고 나머지 글은 아래로 감긴다
 const PHOTO_MAX_HEIGHT = 96
 
-/** 메뉴 한 칸. 왼쪽 사진, 오른쪽에 이름·가격·설명을 쌓고, 잘린 설명은 더보기로 펼친다 */
+/** 메뉴 한 칸. 왼쪽 사진, 오른쪽에 이름·가격·설명을 쌓고, 이름이나 설명이 잘리면 오른쪽 아래 더보기로 둘 다 펼친다 */
 export function MenuCard({ menu }: { menu: PlaceMenu }) {
   const locale = useLocale()
   const { sheet } = getMessages(locale).map
@@ -27,19 +27,23 @@ export function MenuCard({ menu }: { menu: PlaceMenu }) {
   const [expanded, setExpanded] = useState(false)
   const [truncated, setTruncated] = useState(false)
   const [textHeight, setTextHeight] = useState(0)
+  const nameRef = useRef<HTMLParagraphElement>(null)
   const descRef = useRef<HTMLSpanElement>(null)
   const textRef = useRef<HTMLDivElement>(null)
 
-  // 설명이 잘리거나 줄을 나눴을 때만 더보기를 단다. 한 줄에선 줄바꿈이 사라져 보이기 때문이다. 시트 폭이 바뀌면 다시 잰다
+  // 이름·설명이 잘리거나 설명이 줄을 나눴을 때만 더보기를 단다. 한 줄에선 줄바꿈이 사라져 보이기 때문이다. 시트 폭이 바뀌면 다시 재고, 펼친 동안은 잴 게 없어 둔다
   useEffect(() => {
+    const name = nameRef.current
     const desc = descRef.current
-    if (!desc) return
+    if (expanded || !name || !desc) return
+    const cut = (element: HTMLElement) => element.scrollWidth > element.clientWidth
     const observer = new ResizeObserver(() =>
-      setTruncated(desc.scrollWidth > desc.clientWidth || menu.description.includes('\n')),
+      setTruncated(cut(name) || cut(desc) || menu.description.includes('\n')),
     )
+    observer.observe(name)
     observer.observe(desc)
     return () => observer.disconnect()
-  }, [expanded, menu.description])
+  }, [expanded, menu.name, menu.description])
 
   // 펼친 사진은 글 높이를 따라 커진다. 사진이 넓어져 줄이 늘면 다시 불려 맞춰지고, 같은 프레임에 고치면 관찰 루프 경고가 나서 다음 프레임에 넣는다
   useEffect(() => {
@@ -74,38 +78,47 @@ export function MenuCard({ menu }: { menu: PlaceMenu }) {
         lang={contentLang(menu.language_code)}
         className="flex min-w-0 flex-1 flex-col gap-[3px] pt-1.5 pb-1"
       >
-        <p className="truncate leading-[normal] font-semibold">{menu.name}</p>
+        <p
+          ref={nameRef}
+          className={`leading-[normal] font-semibold ${expanded ? 'wrap-break-word' : 'truncate'}`}
+        >
+          {menu.name}
+        </p>
         <p className="leading-[normal] font-semibold">{price}</p>
-        {menu.description &&
-          (expanded ? (
-            <p className="text-xs leading-[1.18] whitespace-pre-line wrap-break-word">
-              {menu.description}{' '}
+        {expanded ? (
+          <>
+            {menu.description && (
+              <p className="text-xs leading-[1.18] whitespace-pre-line wrap-break-word">
+                {menu.description}
+              </p>
+            )}
+            <button
+              type="button"
+              aria-expanded
+              onClick={() => setExpanded(false)}
+              className="self-end text-xs leading-[1.18] font-semibold text-text-muted"
+            >
+              {sheet.less}
+            </button>
+          </>
+        ) : (
+          // 설명이 없어도 줄을 남겨 더보기가 늘 오른쪽 아래 같은 자리에 온다. 사진 높이 안이라 카드는 커지지 않는다
+          <p className="flex gap-1 text-xs leading-[1.18]">
+            <span ref={descRef} className="min-w-0 flex-1 truncate">
+              {menu.description}
+            </span>
+            {truncated && (
               <button
                 type="button"
-                aria-expanded
-                onClick={() => setExpanded(false)}
-                className="font-semibold text-text-muted"
+                aria-expanded={false}
+                onClick={() => setExpanded(true)}
+                className="shrink-0 font-semibold text-text-muted"
               >
-                {sheet.less}
+                {sheet.more}
               </button>
-            </p>
-          ) : (
-            <p className="flex text-xs leading-[1.18]">
-              <span ref={descRef} className="truncate">
-                {menu.description}
-              </span>
-              {truncated && (
-                <button
-                  type="button"
-                  aria-expanded={false}
-                  onClick={() => setExpanded(true)}
-                  className="shrink-0 pl-0.5 font-semibold text-text-muted"
-                >
-                  {sheet.more}
-                </button>
-              )}
-            </p>
-          ))}
+            )}
+          </p>
+        )}
       </div>
     </li>
   )

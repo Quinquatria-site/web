@@ -1,44 +1,28 @@
 import { FESTIVAL_DAYS } from './festival-days'
 import { at } from './seoul-time'
-import { TIMELINE_SLOTS } from './timeline-slots'
 
-/** 배너가 고르는 축제 시점. 전 · 여는 중 · 밤사이 쉼 · 끝 */
-export type FestivalPhase = 'before' | 'open' | 'break' | 'after'
+type FestivalPhase = 'before' | 'open' | 'break' | 'after'
 
-// 시각이 적힌 칸만. 아티스트 칸은 시각을 공개하지 않는다
-const SLOT_TIMES = TIMELINE_SLOTS.flatMap((slot) => (slot.time ? [slot.time] : []))
+// 공연 시각과 따로 간다. 타임라인 칸 시각이 바뀌어도 배너 시각은 그대로다
+const OPEN_TIME = '11:00'
+const CLOSE_TIME = '23:00'
 
-/** 축제 날마다 [여는 시각, 닫는 시각] ms. 타임라인 첫 칸(학생 공연)에 열고 마지막 칸(하루 종료)에 닫는다 */
-export const FESTIVAL_HOURS: [number, number][] = FESTIVAL_DAYS.map(({ date }) => [
-  at(date, SLOT_TIMES[0]),
-  at(date, SLOT_TIMES[SLOT_TIMES.length - 1]),
+// 축제 날마다 [여는 시각, 닫는 시각] ms
+const FESTIVAL_HOURS: [number, number][] = FESTIVAL_DAYS.map(({ date }) => [
+  at(date, OPEN_TIME),
+  at(date, CLOSE_TIME),
 ])
 
-/** 그 순간의 축제 시점 */
+/** 그 순간의 축제 시점. 전 · 여는 중 · 밤사이 쉼 · 끝 */
 export function phaseAt(now: number): FestivalPhase {
   if (now < FESTIVAL_HOURS[0][0]) return 'before'
   if (now >= FESTIVAL_HOURS[FESTIVAL_HOURS.length - 1][1]) return 'after'
   return FESTIVAL_HOURS.some(([open, close]) => now >= open && now < close) ? 'open' : 'break'
 }
 
-// 개발 서버에서만 ?now=2026-10-07T23:30(서울 시각)으로 지금을 바꿔 조건별 배너를 본다
-const NOW_OVERRIDE = process.env.NODE_ENV === 'development'
-
-/** 지금 시각(ms). 개발 서버에서는 ?now= 를 먼저 본다 */
-export function currentTime(): number {
-  if (NOW_OVERRIDE) {
-    const q = new URLSearchParams(location.search).get('now')
-    const t = q ? Date.parse(`${q}+09:00`) : NaN
-    if (!Number.isNaN(t)) return t
-  }
-  return Date.now()
-}
-
-const NOW_EXPR = NOW_OVERRIDE
-  ? '(function(){var q=new URLSearchParams(location.search).get("now"),t=q?Date.parse(q+"+09:00"):NaN;return isNaN(t)?Date.now():t})()'
-  : 'Date.now()'
-
-/** 그리기 전에 돌아 elementId 의 data-phase 를 맞추는 인라인 스크립트. React 밖이라 phaseAt·currentTime 을 문자열로 한 번 더 적는다 */
-export function phaseScript(elementId: string): string {
-  return `{var e=document.getElementById(${JSON.stringify(elementId)});if(e){var n=${NOW_EXPR},h=${JSON.stringify(FESTIVAL_HOURS)};e.setAttribute("data-phase",n<h[0][0]?"before":n>=h[h.length-1][1]?"after":h.some(function(d){return n>=d[0]&&n<d[1]})?"open":"break")}}`
+/** 페이지를 굽는 지금 시각(ms). 개발 서버에서는 NOW=2026-10-07T23:30(서울 시각)으로 바꿔 조건별 배너를 본다 */
+export function bakeTime(): number {
+  const override = process.env.NODE_ENV === 'development' ? process.env.NOW : undefined
+  const t = override ? Date.parse(`${override}+09:00`) : NaN
+  return Number.isNaN(t) ? Date.now() : t
 }
