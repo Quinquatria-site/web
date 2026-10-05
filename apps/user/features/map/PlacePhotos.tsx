@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { Photo } from '@/shared/photo/Photo'
 import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
 
 /** 사진 줄 높이. 1단계 높이가 이 값에 기대 있다 */
@@ -29,14 +28,10 @@ function PlacePhoto({ images, index, alt }: { images: string[]; index: number; a
   )
 }
 
-/** 장소 사진 줄. 같은 높이로 이어 붙여 옆으로 밀어 보고, 누르면 크게 본 채 옆 사진으로 넘긴다. 없으면 줄 폭을 채운 빈 사진 자리 */
+/** 장소 사진 줄. 같은 높이로 이어 붙여 옆으로 밀어 보고, 누르면 크게 본 채 옆 사진으로 넘긴다. 없으면 그리지 않는다 */
 export function PlacePhotos({ images, alt }: { images: string[]; alt: string }) {
-  if (!images.length)
-    return (
-      <div style={{ height: PLACE_PHOTO_HEIGHT }} className="overflow-hidden rounded-lg">
-        <Photo src={null} alt={alt} sizes="(max-width: 480px) 90vw, 432px" />
-      </div>
-    )
+  // 포스터를 안 올린 부스가 많아, 빈 문양 칸 대신 설명이 바로 올라오게 한다
+  if (!images.length) return null
 
   return (
     // 포커스를 받으면 방향키로 옆으로 민다. 시트 좌우 여백까지 사진이 흘러가게 여백만큼 바깥으로 늘린다

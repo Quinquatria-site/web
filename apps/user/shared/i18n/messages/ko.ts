@@ -56,12 +56,31 @@ export const ko = {
     important: '중요',
   },
   online: {
+    period: '진행 기간',
+    route: '참여 경로',
     items: {
       quiz: {
         title: '외대인 유형 테스트',
         description: '나는 어떤 외대인일까? 테스트로 알아보세요!',
+        period: '2026년 10월 6일(화) - 10월 12일(월)',
+        route:
+          '카드뉴스 첨부 구글폼 링크 및 @hufs_festival 계정 링크트리 & QUINQUATRIA 홈페이지 참조',
+        cta: '테스트 하러 가기',
       },
-      photoContest: { title: '사진 콘테스트', description: '축제의 순간을 찍어 응모해 보세요!' },
+      photoContest: {
+        title: '사진 콘테스트',
+        description: '축제의 순간을 찍어 응모해 보세요!',
+        period: '2026년 10월 7일(수) - 10월 12일(월)',
+        route:
+          '카드뉴스 첨부 구글폼 링크 및 @hufs_festival 계정 링크트리 & QUINQUATRIA 홈페이지 참조',
+        cta: '응모하러 가기',
+        prizesLabel: '상품 안내',
+        prizes: [
+          { rank: '1등', name: '스페셜 후드티 (BOO ver.)' },
+          { rank: '2등', name: 'HUFS 후드집업' },
+          { rank: '3등', name: 'BOO 키링' },
+        ],
+      },
     },
   },
   lostItems: {
@@ -130,9 +149,6 @@ export const ko = {
       copyLink: '링크 복사',
       /** 복사 뒤 버튼 글자가 잠깐 이 문구로 바뀐다 */
       linkCopied: '복사했어요',
-      /** 메뉴 설명이 잘렸을 때 끝에 붙어 펼친다 */
-      more: '더보기',
-      less: '접기',
       /** 클립보드가 막혀 복사도 못 했을 때 잠깐 보인다 */
       copyFailed: '링크를 복사하지 못했어요',
     },
