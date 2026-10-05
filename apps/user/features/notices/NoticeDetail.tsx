@@ -1,4 +1,5 @@
 import { contentLang } from '@/shared/i18n/locales'
+import { LinkedText } from '@/shared/linked-text/LinkedText'
 import { formatSeoulTime } from '@/shared/time/format-seoul-time'
 import type { Notice } from './notice'
 import { NoticePhotos } from './NoticePhotos'
@@ -21,9 +22,9 @@ export function NoticeDetail({ notice }: { notice: Notice }) {
             {formatSeoulTime(notice.created_at, { withDate: true })}
           </time>
         </header>
-        {/* 백오피스에서 넣은 줄바꿈을 그대로 살리고, 긴 주소는 칸 안에서 끊는다 */}
+        {/* 백오피스에서 넣은 줄바꿈을 그대로 살리고, 긴 주소는 칸 안에서 끊고 눌러 연다 */}
         <p lang={lang} className="px-[5px] pt-3 leading-[1.18] whitespace-pre-line wrap-break-word">
-          {notice.content}
+          <LinkedText text={notice.content} />
         </p>
       </article>
     </div>
