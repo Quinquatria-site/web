@@ -56,9 +56,29 @@ export const zh: Messages = {
     important: '重要',
   },
   online: {
+    period: '活动时间',
+    route: '参与方式',
     items: {
-      quiz: { title: '外大人类型测试', description: '我是哪种外大人？来测试一下吧！' },
-      photoContest: { title: '摄影大赛', description: '拍下庆典的精彩瞬间来参赛吧！' },
+      quiz: {
+        title: '外大人类型测试',
+        description: '我是哪种外大人？来测试一下吧！',
+        period: '2026年10月6日(周二) - 10月12日(周一)',
+        route: '卡片新闻附带的谷歌表单链接、@hufs_festival 账号 Linktree 及 QUINQUATRIA 官网',
+        cta: '去测试',
+      },
+      photoContest: {
+        title: '摄影大赛',
+        description: '拍下庆典的精彩瞬间来参赛吧！',
+        period: '2026年10月7日(周三) - 10月12日(周一)',
+        route: '卡片新闻附带的谷歌表单链接、@hufs_festival 账号 Linktree 及 QUINQUATRIA 官网',
+        cta: '去参赛',
+        prizesLabel: '奖品',
+        prizes: [
+          { rank: '一等奖', name: '特别款卫衣 (BOO ver.)' },
+          { rank: '二等奖', name: 'HUFS 拉链卫衣' },
+          { rank: '三等奖', name: 'BOO 钥匙扣' },
+        ],
+      },
     },
   },
   lostItems: {

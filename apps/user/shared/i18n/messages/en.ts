@@ -62,12 +62,31 @@ export const en: Messages = {
     important: 'Important',
   },
   online: {
+    period: 'Period',
+    route: 'How to join',
     items: {
       quiz: {
         title: 'HUFS Type Test',
         description: 'What kind of HUFS student are you? Find out!',
+        period: 'Oct 6 (Tue) - Oct 12 (Mon), 2026',
+        route:
+          'Google Form link in the card news, the @hufs_festival Linktree & the QUINQUATRIA website',
+        cta: 'Take the test',
       },
-      photoContest: { title: 'Photo Contest', description: 'Capture a festival moment and enter!' },
+      photoContest: {
+        title: 'Photo Contest',
+        description: 'Capture a festival moment and enter!',
+        period: 'Oct 7 (Wed) - Oct 12 (Mon), 2026',
+        route:
+          'Google Form link in the card news, the @hufs_festival Linktree & the QUINQUATRIA website',
+        cta: 'Enter the contest',
+        prizesLabel: 'Prizes',
+        prizes: [
+          { rank: '1st', name: 'Special Hoodie (BOO ver.)' },
+          { rank: '2nd', name: 'HUFS Zip-up Hoodie' },
+          { rank: '3rd', name: 'BOO Keyring' },
+        ],
+      },
     },
   },
   lostItems: {

@@ -1,6 +1,7 @@
 import type { ResolvingMetadata } from 'next'
-import { ONLINE_CONTENTS } from '@/features/online/online-contents'
-import { OnlineContentCard } from '@/features/online/OnlineContentCard'
+import { ONLINE_HREF } from '@/features/online/online-contents'
+import { PhotoContestCard } from '@/features/online/PhotoContestCard'
+import { QuizCard } from '@/features/online/QuizCard'
 import { DuskBackground } from '@/shared/background/DuskBackground'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
@@ -21,11 +22,12 @@ export default async function OnlinePage() {
       <DuskBackground />
       <PageTitle title={pages.online} />
       <ul className="flex flex-col gap-3 px-5 pt-4">
-        {ONLINE_CONTENTS.map(({ key, href }) => (
-          <li key={key}>
-            <OnlineContentCard href={href} {...online.items[key]} />
-          </li>
-        ))}
+        <li>
+          <QuizCard href={ONLINE_HREF.quiz} online={online} />
+        </li>
+        <li>
+          <PhotoContestCard href={ONLINE_HREF.photoContest} online={online} />
+        </li>
       </ul>
     </>
   )
