@@ -104,10 +104,10 @@ export function PlaceSearch({
 
   return (
     <div className="absolute inset-0 z-[1001]">
-      <div aria-hidden onClick={onClose} className="absolute inset-0 bg-bg-inverse/25" />
+      {/* 어둡게 덮지 않는다. iOS 26 은 키보드 막대 뒤를 덮개 밖 원래 지도로 칠해 덮개 색과 어긋난 띠가 생긴다 */}
+      <div aria-hidden onClick={onClose} className="absolute inset-0" />
       {/* 목록이 도크 밑으로 들어가지 않게 도크 높이만큼 비운다 */}
       <div className="pointer-events-none relative flex max-h-full flex-col gap-2 px-[17px] pt-3 pb-(--dock-space) text-on-map-control">
-        {/* form·type="search"·enterKeyHint 는 모바일 키보드 자동완성 막대 뒤에 띠를 남겨 단독 입력으로 둔다 */}
         <div role="search" className="pointer-events-auto flex items-center gap-2.5">
           <label className="flex h-11 min-w-0 flex-1 items-center gap-2 rounded-xl border border-map-control-border bg-map-control/92 px-3 shadow-[0_1px_4px_var(--color-map-control-glow)]">
             <SearchIcon className="size-5 shrink-0" />
