@@ -131,7 +131,7 @@ export const ko = {
       resultTitle: '‘{query}’ 검색 결과',
       /** 검색어가 비었을 때 보이는 안내 */
       tip: '학과 이름이나 부스 이름으로 찾을 수 있어요.',
-      tipExample: '예: 태국, 총학생회',
+      tipExample: '예: 태국학과',
       /** {query} 에 친 검색어가 들어간다 */
       empty: '‘{query}’에 맞는 곳이 없어요.',
       emptyHint: '이름 일부만 쳐 보세요.',

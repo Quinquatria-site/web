@@ -1,11 +1,13 @@
 'use client'
 
-import { LayoutGroup } from 'motion/react'
-import { type ReactNode, useState } from 'react'
+import { LayoutGroup, motion, useReducedMotion } from 'motion/react'
+import { type ReactNode, useEffect, useRef, useState } from 'react'
 import {
   BottomSheet,
   BottomSheetDescription,
   BottomSheetTitle,
+  SLIDE,
+  useBottomSheetStep,
 } from '@/shared/bottom-sheet/BottomSheet'
 import { useCloseWatcher } from '@/shared/history/useCloseWatcher'
 import { contentLang } from '@/shared/i18n/locales'
@@ -18,8 +20,11 @@ import { PLACE_BG } from './place-colors'
 import { PLACE_PHOTO_HEIGHT, PlacePhotos } from './PlacePhotos'
 import { ShareLinkButton } from './ShareLinkButton'
 
-/** 시트 1단계 높이. 이름·운영·시간·위치 아래 사진 줄까지 보인다 */
+/** 시트 1단계 높이. 2줄 이름·운영·시간·위치 아래 사진 줄까지 보이고, 이름이 1줄이면 남는 만큼 소개 글이 이어 보인다 */
 export const PLACE_SHEET_PEEK = 197 + PLACE_PHOTO_HEIGHT
+
+// 1단계 이름의 최대 높이. text-2xl(24) 에 줄 높이 1.2 로 두 줄이다
+const TITLE_PEEK_MAX_HEIGHT = 24 * 1.2 * 2
 
 /** 이름 옆 카테고리 뱃지. 마커와 같은 고유 색을 깐다 */
 export function PlaceBadge({ place }: { place: MapPlace }) {
@@ -43,16 +48,46 @@ function PlaceSummary({ place }: { place: MapPlace }) {
     { key: 'hours', term: sheet.hours, value: placeHours(place) },
     { key: 'location', term: sheet.location, value: label },
   ].filter((row) => row.value)
+  const name = place.name ?? places[place.code]
+  const peek = useBottomSheetStep() === 'peek'
+  // 움직임 줄이기를 켠 사람에게는 이름 칸이 바로 바뀐다
+  const reduce = useReducedMotion()
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  // 잘리지 않은 이름 높이. 1단계 칸은 이 값과 두 줄 중 작은 쪽이라 1줄 이름은 빈 줄 없이 정보가 붙는다
+  const [fullHeight, setFullHeight] = useState<number | null>(null)
+  useEffect(() => {
+    const title = titleRef.current
+    if (!title) return
+    // 말줄임 중에도 scrollHeight 는 잘린 줄까지 센다. 시트 폭이 바뀌어 줄 수가 달라지면 다시 잰다
+    const observer = new ResizeObserver(() => setFullHeight(title.scrollHeight))
+    observer.observe(title)
+    return () => observer.disconnect()
+  }, [name])
 
   return (
-    <div className="flex flex-col gap-3 px-2">
-      <BottomSheetTitle lang={lang} className="text-2xl leading-[normal] font-semibold">
-        {/* 번역이 없어 이름이 비면 목록·검색처럼 종류 이름으로 채운다 */}
-        {place.name ?? places[place.code]}
-      </BottomSheetTitle>
-      <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-1.5 px-2">
+      {/* 1단계에선 이름을 2줄까지 보이고 넘치면 자른다. 끝까지 올리면 시트와 같은 스프링으로 늘어나 전부 보인다 */}
+      <motion.div
+        initial={false}
+        animate={{
+          height:
+            peek && fullHeight !== null ? Math.min(fullHeight, TITLE_PEEK_MAX_HEIGHT) : 'auto',
+        }}
+        transition={reduce ? { duration: 0 } : SLIDE}
+        className="overflow-hidden"
+      >
+        <BottomSheetTitle
+          ref={titleRef}
+          lang={lang}
+          className={`text-2xl leading-[1.2] font-semibold ${peek ? 'line-clamp-2' : ''}`}
+        >
+          {/* 번역이 없어 이름이 비면 목록·검색처럼 종류 이름으로 채운다 */}
+          {name}
+        </BottomSheetTitle>
+      </motion.div>
+      <div className="flex flex-col gap-2.5">
         <BottomSheetDescription asChild>
-          <dl className="flex flex-col gap-2 leading-[1.18]">
+          <dl className="flex flex-col gap-1 leading-[1.18]">
             {rows.map((row) => (
               <div key={row.key} className="flex gap-3">
                 <dt className="text-text-muted">{row.term}</dt>
