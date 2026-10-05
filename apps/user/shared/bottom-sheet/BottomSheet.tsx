@@ -150,7 +150,31 @@ function SheetPanel({
 
   useEffect(() => {
     const body = bodyRef.current
-    if (step !== 'full' || !body || !height) return
+    if (!body || !height) return
+    if (step === 'peek') {
+      let startX = 0
+      let startY = 0
+      const onTouchStart = (event: TouchEvent) => {
+        if (event.touches.length !== 1) return
+        startX = event.touches[0].clientX
+        startY = event.touches[0].clientY
+      }
+      // 접힌 시트를 끌어 올리는 세로 손짓이 브라우저 스크롤이나 뒤 지도로 전달되지 않게 한다
+      const onTouchMove = (event: TouchEvent) => {
+        if (event.touches.length !== 1) return
+        const { clientX, clientY } = event.touches[0]
+        if (Math.abs(clientY - startY) < Math.abs(clientX - startX)) return
+        if (event.cancelable) event.preventDefault()
+        event.stopPropagation()
+      }
+      body.addEventListener('touchstart', onTouchStart, { passive: true })
+      body.addEventListener('touchmove', onTouchMove, { passive: false })
+      return () => {
+        body.removeEventListener('touchstart', onTouchStart)
+        body.removeEventListener('touchmove', onTouchMove)
+      }
+    }
+
     let startX = 0
     let startY = 0
     let decided = false
