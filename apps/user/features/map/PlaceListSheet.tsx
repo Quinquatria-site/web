@@ -154,6 +154,7 @@ export function PlaceListSheet({
       hidden={hidden}
       peekHeight={PLACE_SHEET_PEEK}
       fullHeight={fullHeight}
+      dismissFromFull
       // 끝까지 올려도 위 칩으로 목록을 바꿀 수 있게 뒤 화면을 막지 않는다
       blockBehind={false}
       onClose={onClose}

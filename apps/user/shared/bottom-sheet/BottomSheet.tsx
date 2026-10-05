@@ -28,15 +28,6 @@ const SLIDE = { type: 'spring', bounce: 0, duration: 0.35 } as const
 // 손을 뗀 속도로 이만큼(초) 더 미끄러진 자리에서 가장 가까운 단계에 붙인다
 const PROJECTION = 0.2
 
-function swallowNextClick() {
-  const swallow = (event: MouseEvent) => {
-    event.stopPropagation()
-    event.preventDefault()
-  }
-  addEventListener('click', swallow, { capture: true, once: true })
-  setTimeout(() => removeEventListener('click', swallow, { capture: true }), 100)
-}
-
 interface SheetProps {
   onClose: () => void
   /** 지도를 움직이는 동안처럼 닫지 않고 잠깐 아래로 숨긴다 */
@@ -49,6 +40,8 @@ interface SheetProps {
   revealKey?: unknown
   /** 2단계 높이. 위에 늘 보여야 하는 것이 있으면 줄인다. 안 주면 80dvh */
   fullHeight?: string
+  /** 2단계에서도 아래로 충분히 끌면 1단계를 거치지 않고 닫는다 */
+  dismissFromFull?: boolean
   /** 2단계에서 드러난 뒤 화면을 막아 누르면 닫는다. 끄면 뒤 화면을 계속 만질 수 있다 */
   blockBehind?: boolean
   /** 손잡이 줄 왼쪽에 닫기와 마주 보게 띄우는 요소. 2단계에서 본문이 스크롤돼도 늘 보인다 */
@@ -91,6 +84,7 @@ function SheetPanel({
   peekHeight,
   revealKey,
   fullHeight,
+  dismissFromFull = false,
   blockBehind = true,
   headerStart,
   children,
@@ -142,14 +136,17 @@ function SheetPanel({
   const settle = (velocityY: number) => {
     const projected = y.get() + velocityY * PROJECTION
     // 2단계에서 세게 내려도 한 번에 닫히지 않고 1단계에 멈춘다. 1단계가 없으면 바로 닫힌다
-    const stops = !hasPeek ? [0, height] : step === 'full' ? [0, peekY] : [0, peekY, height]
+    const stops = !hasPeek
+      ? [0, height]
+      : step === 'full'
+        ? dismissFromFull
+          ? [0, peekY, height]
+          : [0, peekY]
+        : [0, peekY, height]
     const nearest = stops.reduce((a, b) =>
       Math.abs(b - projected) < Math.abs(a - projected) ? b : a,
     )
-    if (nearest === height) {
-      swallowNextClick()
-      return onClose()
-    }
+    if (nearest === height) return onClose()
     const next: Step = nearest === 0 ? 'full' : 'peek'
     // 같은 단계면 target 이 그대로라 effect 가 돌지 않아 직접 되돌린다
     if (next === step) animate(y, target, SLIDE)
@@ -189,6 +186,7 @@ function SheetPanel({
 
     let startX = 0
     let startY = 0
+    let startScrollTop = 0
     let decided = false
     let originY: number | null = null
     let originSheetY = 0
@@ -204,6 +202,7 @@ function SheetPanel({
       if (event.touches.length > 1) return abandon()
       startX = event.touches[0].clientX
       startY = event.touches[0].clientY
+      startScrollTop = body.scrollTop
       decided = false
       originY = null
       samples = []
@@ -214,14 +213,17 @@ function SheetPanel({
       if (event.touches.length > 1) return abandon()
       const { clientX, clientY } = event.touches[0]
       if (originY === null) {
-        // 첫 움직임에서 한 번만 정한다. 가로 손짓(사진 넘기기)·막을 수 없는 손짓은 끝까지 브라우저에 맡긴다
+        // 아래 손짓은 본문을 먼저 맨 위까지 스크롤하고, 남은 움직임부터 시트가 이어받는다
         if (decided) return
-        decided = true
         const dy = clientY - startY
-        if (!event.cancelable || body.scrollTop > 0 || dy <= 0 || Math.abs(clientX - startX) > dy)
+        if (!event.cancelable || dy <= 0 || Math.abs(clientX - startX) > dy) {
+          decided = true
           return
+        }
+        if (body.scrollTop > 0) return
+        decided = true
         y.stop()
-        originY = clientY
+        originY = startY + startScrollTop
         originSheetY = y.get()
       }
       event.preventDefault()
