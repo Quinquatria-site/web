@@ -94,6 +94,7 @@ function PlaceRow({
 export function PlaceListSheet({
   open,
   places,
+  totalCount,
   filter,
   query,
   searching,
@@ -105,6 +106,8 @@ export function PlaceListSheet({
   open: boolean
   /** 칩으로 거른 장소. 지도 마커와 같은 배열이다 */
   places: MapPlace[]
+  /** 칩으로 거르기 전 장소 수. 검색 결과를 칩으로 거른 동안 몇 곳이 빠졌는지 보인다 */
+  totalCount: number
   filter: ReadonlySet<PlaceCode>
   /** 검색창에 친 글자. 있으면 제목이 검색 결과가 되고 걸린 글자를 굵게 한다 */
   query: string
@@ -176,7 +179,9 @@ export function PlaceListSheet({
             {title}
           </BottomSheetTitle>
           <span className="text-sm text-text-muted">
-            {map.list.count.replace('{count}', String(places.length))}
+            {(trimmed && filter.size ? map.list.countOf : map.list.count)
+              .replace('{total}', String(totalCount))
+              .replace('{count}', String(places.length))}
           </span>
         </div>
         {searching && !trimmed && (

@@ -169,6 +169,7 @@ export function MapView({
       <PlaceListSheet
         open={listOpen}
         places={visiblePlaces}
+        totalCount={matched.length}
         filter={filter}
         query={query}
         searching={searching}

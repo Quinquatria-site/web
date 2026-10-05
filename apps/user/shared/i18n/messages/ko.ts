@@ -101,6 +101,8 @@ export const ko = {
     list: {
       /** {count} 에 목록에 든 장소 수가 들어간다 */
       count: '{count}곳',
+      /** 검색 결과를 칩으로 거른 동안. {total} 에 거르기 전, {count} 에 남은 장소 수가 들어간다 */
+      countOf: '{total}곳 중 {count}곳',
     },
     search: {
       open: '장소 검색',

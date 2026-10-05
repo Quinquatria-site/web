@@ -99,6 +99,8 @@ export const zh: Messages = {
     list: {
       /** {count} 에 목록에 든 장소 수가 들어간다 */
       count: '{count} 个',
+      /** 검색 결과를 칩으로 거른 동안. {total} 에 거르기 전, {count} 에 남은 장소 수가 들어간다 */
+      countOf: '{total} 个中的 {count} 个',
     },
     search: {
       open: '搜索场所',
