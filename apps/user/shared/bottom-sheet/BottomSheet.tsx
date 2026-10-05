@@ -266,6 +266,9 @@ function SheetPanel({
         asChild
         // 1단계에서 다른 마커·필터를 눌러도 닫히지 않고 내용만 바뀌게 바깥 누름을 무시한다
         onInteractOutside={(event) => event.preventDefault()}
+        // 열 때 닫기 버튼으로, 닫을 때 앞 요소로 포커스를 옮기지 않는다. 옮기면 검색 입력칸의 키보드가 내려가거나 다시 올라온다
+        onOpenAutoFocus={(event) => event.preventDefault()}
+        onCloseAutoFocus={(event) => event.preventDefault()}
       >
         <motion.section
           ref={sheetRef}
