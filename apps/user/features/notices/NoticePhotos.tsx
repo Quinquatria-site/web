@@ -7,33 +7,41 @@ import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
 const photoName = (alt: string, images: string[], i: number) =>
   images.length > 1 ? `${alt} ${i + 1}` : alt
 
-// 비율을 읽기 전의 틀. 카드뉴스는 대부분 인스타 피드(4:5)로 올라온다
-const FALLBACK_ASPECT = 4 / 5
-
-// 폭은 본문에 맞추고 높이를 원본 비율대로 둬서 카드뉴스가 잘리지 않는다
-function NoticePhoto({ src, alt }: { src: string; alt: string }) {
-  const [aspect, setAspect] = useState(FALLBACK_ASPECT)
-  return (
-    <li style={{ aspectRatio: aspect }} className="w-full overflow-hidden rounded-lg">
-      <ZoomablePhoto
-        src={src}
-        alt={alt}
-        sizes="(max-width: 480px) 90vw, 430px"
-        onLoad={({ currentTarget: { naturalWidth, naturalHeight } }) => {
-          if (naturalWidth && naturalHeight) setAspect(naturalWidth / naturalHeight)
-        }}
-      />
-    </li>
-  )
-}
-
-/** 공지 사진. 올린 순서대로 본문 폭에 세로로 쌓고, 누르면 크게 본다 */
+/** 공지 사진 캐러셀. 화면 폭을 채운 3:4 틀을 옆으로 넘기고, 비율이 다른 사진은 자르지 않고 여백을 두며, 누르면 크게 본다 */
 export function NoticePhotos({ images, alt }: { images: string[]; alt: string }) {
+  const [current, setCurrent] = useState(0)
   return (
-    <ul aria-label={alt} className="flex flex-col gap-3 px-[5px] pt-6">
-      {images.map((src, i) => (
-        <NoticePhoto key={src} src={src} alt={photoName(alt, images, i)} />
-      ))}
-    </ul>
+    <div className="flex flex-col items-center gap-3">
+      {/* 총학 인스타 카드뉴스가 3:4 라 틀을 그 비율로 고정한다. 포커스를 받으면 방향키로 넘긴다 */}
+      <ul
+        tabIndex={0}
+        aria-label={alt}
+        onScroll={({ currentTarget: { scrollLeft, clientWidth } }) =>
+          setCurrent(Math.round(scrollLeft / (clientWidth || 1)))
+        }
+        className="flex w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none]"
+      >
+        {images.map((src, i) => (
+          <li key={src} className="aspect-[3/4] w-full shrink-0 snap-center snap-always">
+            <ZoomablePhoto
+              src={src}
+              alt={photoName(alt, images, i)}
+              sizes="(max-width: 480px) 100vw, 480px"
+              contain
+            />
+          </li>
+        ))}
+      </ul>
+      {images.length > 1 && (
+        <div aria-hidden className="flex gap-1.5">
+          {images.map((src, i) => (
+            <span
+              key={src}
+              className={`size-1.5 rounded-full bg-secondary ${i === current ? '' : 'opacity-25'}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   )
 }

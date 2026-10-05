@@ -7,7 +7,7 @@ import type { PerformanceType } from '@quen/schema/entities/performance'
 import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
-import { ZoomablePhoto } from '@/shared/photo/ZoomablePhoto'
+import { Photo } from '@/shared/photo/Photo'
 import placeholderImage from './images/performance-placeholder.png'
 import { MODAL_IMAGE_SIZES, type Performance } from './performance'
 
@@ -58,7 +58,7 @@ function ModalPhoto({
       className="overflow-hidden rounded-xl"
     >
       {/* 미리 받아 둔 사진을 그대로 쓰도록 sizes 는 시간표의 미리 받기와 같다 */}
-      <ZoomablePhoto
+      <Photo
         src={src}
         alt={title}
         sizes={MODAL_IMAGE_SIZES}

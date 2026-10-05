@@ -15,6 +15,7 @@ export function ZoomablePhoto({
   alt,
   sizes,
   bare,
+  contain,
   onLoad,
 }: {
   src: string | null
@@ -22,6 +23,8 @@ export function ZoomablePhoto({
   sizes: string
   /** 투명한 사진 뒤로 부모 배경이 비치게 한다 */
   bare?: boolean
+  /** 자르지 않고 틀 안에 맞춘다 */
+  contain?: boolean
   onLoad?: ComponentProps<typeof Photo>['onLoad']
 }) {
   const { photoViewer } = getMessages(useLocale())
@@ -47,7 +50,7 @@ export function ZoomablePhoto({
         }}
         className="block size-full cursor-zoom-in"
       >
-        <Photo src={src} alt={alt} sizes={sizes} bare={bare} onLoad={onLoad} />
+        <Photo src={src} alt={alt} sizes={sizes} bare={bare} contain={contain} onLoad={onLoad} />
       </button>
     </PhotoViewer>
   )
