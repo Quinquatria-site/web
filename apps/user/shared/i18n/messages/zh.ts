@@ -41,6 +41,7 @@ export const zh: Messages = {
       likelionInstagram: 'LIKELION instagram',
       council: '韩国外国语大学首尔校区第60届总学生会“鲜明”',
       councilInstagram: '鲜明 instagram',
+      developers: '开发团队介绍',
     },
   },
   pages: {
@@ -52,9 +53,13 @@ export const zh: Messages = {
     lostItemDetail: '失物详情',
     goods: 'QUINQUATRIA 周边',
     online: '线上内容',
+    developers: '开发团队介绍',
   },
   notices: {
     important: '重要',
+  },
+  developers: {
+    description: '认识打造 QUINQUATRIA 网站的 LIKELION 开发团队。',
   },
   online: {
     period: '活动时间',

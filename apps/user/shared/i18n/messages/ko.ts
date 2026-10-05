@@ -40,6 +40,7 @@ export const ko = {
       likelionInstagram: '멋쟁이사자처럼 instagram',
       council: '한국외대 서울캠퍼스 제60대 총학생회 ‘선명’',
       councilInstagram: '선명 instagram',
+      developers: '개발진 소개',
     },
   },
   pages: {
@@ -51,9 +52,13 @@ export const ko = {
     lostItemDetail: '분실물 상세',
     goods: 'QUINQUATRIA 굿즈',
     online: '온라인 콘텐츠',
+    developers: '개발진 소개',
   },
   notices: {
     important: '중요',
+  },
+  developers: {
+    description: 'QUINQUATRIA 웹을 만든 멋쟁이사자처럼 개발진을 소개해요.',
   },
   online: {
     period: '진행 기간',
