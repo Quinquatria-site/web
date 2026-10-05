@@ -39,6 +39,7 @@ export const en: Messages = {
         description: 'Lost items will be posted after the festival.',
       },
       goods: { title: 'QUINQUATRIA Goods', description: 'Meet the 2026 festival goods!' },
+      online: { title: 'Online Content', description: 'Enjoy the festival beyond campus!' },
     },
     credits: {
       likelion: 'LIKELION HUFS (Seoul)',
@@ -55,9 +56,19 @@ export const en: Messages = {
     lostItems: 'Lost & Found',
     lostItemDetail: 'Lost Item',
     goods: 'QUINQUATRIA Goods',
+    online: 'Online Content',
   },
   notices: {
     important: 'Important',
+  },
+  online: {
+    items: {
+      quiz: {
+        title: 'HUFS Type Test',
+        description: 'What kind of HUFS student are you? Find out!',
+      },
+      photoContest: { title: 'Photo Contest', description: 'Capture a festival moment and enter!' },
+    },
   },
   lostItems: {
     contactNotice: 'For lost item inquiries, contact the Student Council!',
