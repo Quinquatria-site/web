@@ -1,32 +1,32 @@
 'use client'
 
-import { motion, useTransform, type MotionValue } from 'motion/react'
-import { clamp01 } from '../scene'
+import { motion } from 'motion/react'
 
-/** 별 점 하나. 켜질 때 고리가 퍼지고, 스크롤하면 별빛이 되어 자기 카드가 설 가운데 자리로 날아가 사라진다 */
+/** 별 점 하나. 켜질 때 고리가 퍼지고, 카드로 넘어가면 별빛이 되어 자기 카드가 설 가운데 자리로 날아가 사라진다 */
 export function Spark({
-  enter,
   at,
   dx,
   dy,
+  entered,
   reduce,
 }: {
-  enter: MotionValue<number>
   at: number
   dx: number
   dy: number
+  entered: boolean
   reduce: boolean
 }) {
-  // 카드는 크기를 바꾸면 비싸서, 스크롤에 붙어 움직이는 건 이 작은 점뿐이다
-  const flight = useTransform(enter, (e) => (reduce ? 0 : clamp01(e / 0.6)))
-  const x = useTransform(flight, (f) => f * dx)
-  const y = useTransform(flight, (f) => f * dy)
-  const opacity = useTransform(enter, (e) =>
-    reduce ? (e > 0.15 ? 0 : 1) : 1 - clamp01((e - 0.55) / 0.3),
-  )
-
   return (
-    <motion.div className="will-change-transform" style={{ x, y, opacity }}>
+    <div
+      style={{
+        transform: entered && !reduce ? `translate(${dx}px, ${dy}px)` : undefined,
+        opacity: entered ? 0 : 1,
+        // 날아가는 동안은 보이다가 카드가 나타날 즈음 꺼진다
+        transition: reduce
+          ? 'none'
+          : 'transform 0.9s cubic-bezier(.22,1,.36,1), opacity 0.3s ease-out 0.6s',
+      }}
+    >
       <motion.span
         className="absolute -top-2.5 -left-2.5 size-5 rounded-full border border-(--beige-yellow)"
         initial={{ opacity: 0 }}
@@ -41,6 +41,6 @@ export function Spark({
           reduce ? { duration: 0 } : { type: 'spring', stiffness: 500, damping: 12, delay: at }
         }
       />
-    </motion.div>
+    </div>
   )
 }

@@ -1,27 +1,26 @@
 'use client'
 
-import { motion, type MotionValue } from 'motion/react'
+import { motion } from 'motion/react'
 import { NODES } from '../scene'
-import { nodeAt } from './timing'
+import { fadeOut, nodeAt } from './timing'
 
 /** 별 점을 차례로 잇는 선. 다음 점이 켜지기 직전에 그 점까지 선이 자란다 */
 export function ConstellationLines({
   size,
-  opacity,
+  entered,
   reduce,
 }: {
   size: { width: number; height: number }
-  opacity: MotionValue<number>
+  entered: boolean
   reduce: boolean
 }) {
   if (size.width === 0) return null
   const points = NODES.map((node) => [size.width / 2 + node.x, node.y * size.height])
 
   return (
-    <motion.svg
-      className="absolute inset-0 size-full overflow-visible"
+    <svg
+      className={`absolute inset-0 size-full overflow-visible ${fadeOut(entered)}`}
       viewBox={`0 0 ${size.width} ${size.height}`}
-      style={{ opacity }}
     >
       {points.slice(1).map(([x, y], i) => (
         <motion.path
@@ -35,6 +34,6 @@ export function ConstellationLines({
           transition={reduce ? { duration: 0 } : { delay: nodeAt(i + 1) - 0.4, duration: 0.45 }}
         />
       ))}
-    </motion.svg>
+    </svg>
   )
 }

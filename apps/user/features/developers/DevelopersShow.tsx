@@ -1,19 +1,18 @@
 'use client'
 
-import { useReducedMotion, useTransform } from 'motion/react'
-import { useRef, type ReactNode } from 'react'
+import { useReducedMotion, useScroll } from 'motion/react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { cinzel } from '@/shared/fonts'
 import { paperlogy } from '@/shared/fonts/paperlogy'
 import { BackText } from './backdrop/BackText'
 import { ProgressBar } from './backdrop/ProgressBar'
 import { CardTrack } from './card/CardTrack'
 import { Constellation } from './constellation/Constellation'
+import { ENTER_AT } from './constellation/timing'
 import type { Member } from './members'
-import { CARD_STEP, scrollScreens } from './scene'
-import { useShowProgress } from './useShowProgress'
 import { useStageSize } from './useStageSize'
 
-/** 별자리 인트로 뒤 가로 카드로 이어지는 개발진 소개. 감싼 높이만큼 스크롤하는 동안 화면은 고정된다 */
+/** 별자리를 그린 뒤 별빛이 카드로 바뀌고, 그 자리에서 카드를 옆으로 밀어 넘기는 개발진 소개. 한 화면 안에서 끝난다 */
 export function DevelopersShow({
   title,
   organization,
@@ -25,47 +24,47 @@ export function DevelopersShow({
   members: Member[]
   departments: Record<Member['id'], string>
 }) {
-  const wrapRef = useRef<HTMLDivElement>(null)
-  const pinRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLUListElement>(null)
   const reduce = useReducedMotion() ?? false
-  const count = members.length
-  const span = CARD_STEP * (count - 1)
-
   const size = useStageSize(stageRef)
-  const { enter, cards, introGone, reached } = useShowProgress(wrapRef, pinRef, count)
-  const backOpacity = useTransform(enter, (e) => (e - 0.6) / 0.4)
+  const { scrollXProgress } = useScroll({ container: trackRef })
+
+  // 별자리를 다 그리면 별빛이 카드로 바뀐다. 기다리기 싫으면 무대를 눌러 바로 넘긴다
+  const [entered, setEntered] = useState(false)
+  useEffect(() => {
+    const timer = setTimeout(() => setEntered(true), ENTER_AT * 1000)
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
+    // 세로로는 스크롤하지 않는 한 화면이라 main 의 도크 여백을 되돌려 페이지가 밀리지 않게 한다
     <div
-      ref={wrapRef}
-      className={`${cinzel.variable} ${paperlogy.variable} relative text-text-inverse`}
-      style={{ height: `${(1 + scrollScreens(count)) * 100}svh` }}
+      className={`${cinzel.variable} ${paperlogy.variable} relative -mb-(--dock-space) h-[calc(100svh-env(safe-area-inset-top))] overflow-hidden text-text-inverse`}
     >
-      <div ref={pinRef} className="sticky top-0 h-svh overflow-hidden">
-        {title}
-        <div ref={stageRef} className="absolute inset-x-0 top-(--page-title-height) bottom-0">
-          <Constellation
-            names={members.map((member) => member.name)}
-            positions={members.map((member) => member.position)}
-            organization={organization}
-            size={size}
-            enter={enter}
-            still={introGone}
-            reduce={reduce}
-          />
-          <BackText cards={cards} opacity={backOpacity} />
-          <CardTrack
-            members={members}
-            departments={departments}
-            enter={enter}
-            cards={cards}
-            span={span}
-            reached={reached}
-            reduce={reduce}
-          />
-          <ProgressBar cards={cards} opacity={backOpacity} />
-        </div>
+      {title}
+      <div
+        ref={stageRef}
+        onClick={() => setEntered(true)}
+        className="absolute inset-x-0 top-(--page-title-height) bottom-0"
+      >
+        <Constellation
+          names={members.map((member) => member.name)}
+          positions={members.map((member) => member.position)}
+          organization={organization}
+          size={size}
+          entered={entered}
+          reduce={reduce}
+        />
+        <BackText progress={scrollXProgress} shown={entered} />
+        <CardTrack
+          ref={trackRef}
+          members={members}
+          departments={departments}
+          entered={entered}
+          reduce={reduce}
+        />
+        <ProgressBar progress={scrollXProgress} shown={entered} />
       </div>
     </div>
   )

@@ -1,7 +1,7 @@
 'use client'
 
-import { motion, type MotionValue } from 'motion/react'
-import { introTransition } from './timing'
+import { motion } from 'motion/react'
+import { fadeOut, introTransition } from './timing'
 
 /** 별 점 옆 이름과 포지션. 점 반대쪽에서 흐림을 벗으며 다가온다 */
 export function StarLabel({
@@ -9,20 +9,19 @@ export function StarLabel({
   position,
   side,
   at,
-  opacity,
+  entered,
   reduce,
 }: {
   name: string
   position: string
   side: 'left' | 'right'
   at: number
-  opacity: MotionValue<number>
+  entered: boolean
   reduce: boolean
 }) {
   return (
-    <motion.div
-      className={`absolute -top-3 font-cinzel text-[17px] tracking-[0.06em] whitespace-nowrap [text-shadow:0_0_12px_rgb(249_163_66/0.6)] ${side === 'right' ? 'left-4' : 'right-4 text-right'}`}
-      style={{ opacity }}
+    <div
+      className={`absolute -top-3 font-cinzel text-[17px] tracking-[0.06em] whitespace-nowrap [text-shadow:0_0_12px_rgb(249_163_66/0.6)] ${side === 'right' ? 'left-4' : 'right-4 text-right'} ${fadeOut(entered)}`}
     >
       <motion.div
         initial={{
@@ -38,6 +37,6 @@ export function StarLabel({
           {position}
         </small>
       </motion.div>
-    </motion.div>
+    </div>
   )
 }

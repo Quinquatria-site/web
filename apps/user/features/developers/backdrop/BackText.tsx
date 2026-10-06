@@ -8,18 +8,16 @@ const LINE =
   'absolute left-0 font-cinzel text-[130px] leading-none font-bold whitespace-nowrap text-transparent will-change-transform'
 
 /** 카드 뒤에 깔리는 큰 외곽선 글자 두 줄. 카드를 넘기면 서로 반대로 다른 속도로 흐른다 */
-export function BackText({
-  cards,
-  opacity,
-}: {
-  cards: MotionValue<number>
-  opacity: MotionValue<number>
-}) {
-  const upperX = useTransform(cards, (c) => -200 + c * 300)
-  const lowerX = useTransform(cards, (c) => -c * 400)
+export function BackText({ progress, shown }: { progress: MotionValue<number>; shown: boolean }) {
+  // 범위로 이어 주면 지원하는 브라우저에서는 JS 없이 스크롤 타임라인으로 돈다
+  const upperX = useTransform(progress, [0, 1], [-200, 100])
+  const lowerX = useTransform(progress, [0, 1], [0, -400])
 
   return (
-    <motion.div aria-hidden className="pointer-events-none" style={{ opacity }}>
+    <div
+      aria-hidden
+      className={`pointer-events-none transition-opacity duration-700 ${shown ? '' : 'opacity-0'}`}
+    >
       <motion.p
         className={`${LINE} [-webkit-text-stroke:1px_rgb(253_235_184/0.22)]`}
         style={{ top: '6%', x: upperX }}
@@ -32,6 +30,6 @@ export function BackText({
       >
         {TEXT}
       </motion.p>
-    </motion.div>
+    </div>
   )
 }

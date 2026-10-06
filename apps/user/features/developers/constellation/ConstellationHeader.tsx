@@ -1,22 +1,21 @@
 'use client'
 
-import { motion, type MotionValue } from 'motion/react'
-import { introTransition } from './timing'
+import { motion } from 'motion/react'
+import { fadeOut, introTransition } from './timing'
 
 /** 별자리 위 "Made by" 와 단체명. 글자가 흐림에서 또렷해지며 차례로 나타난다 */
 export function ConstellationHeader({
   organization,
-  opacity,
+  entered,
   reduce,
 }: {
   organization: string
-  opacity: MotionValue<number>
+  entered: boolean
   reduce: boolean
 }) {
   return (
-    <motion.div
-      className="absolute inset-x-0 top-6 flex flex-col items-center gap-2 text-center text-base"
-      style={{ opacity }}
+    <div
+      className={`absolute inset-x-0 top-6 flex flex-col items-center gap-2 text-center text-base ${fadeOut(entered)}`}
     >
       <p className="font-cinzel tracking-[0.12em]">
         {[...'Made by'].map((char, i) => (
@@ -40,6 +39,6 @@ export function ConstellationHeader({
       >
         {organization}
       </motion.p>
-    </motion.div>
+    </div>
   )
 }
