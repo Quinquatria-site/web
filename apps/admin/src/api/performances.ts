@@ -1,6 +1,6 @@
 import type { LanguageCode } from '@quen/schema/common/language'
 import type { PerformanceType } from '@quen/schema/entities/performance'
-import type { Performance } from '../mocks/types'
+import type { Performance } from '../types'
 import { request } from './client'
 import { BACKOFFICE_BASE } from './config'
 import { listAll } from './list'

@@ -6,7 +6,7 @@ import { List, ListButtonItem, ListDivider } from 'seed-design/ui/list'
 import { ListHeader } from 'seed-design/ui/list-header'
 import { homeAlerts, type AlertTone, type HomeAlert } from '../lib/homeAlerts'
 import { parseAtParam, useNow } from '../lib/useNow'
-import { useStoreVersion } from '../mocks/store'
+import { useStoreVersion } from '../store'
 import styles from './AlertsRoute.module.css'
 
 const TONE_LABEL: Record<AlertTone, string> = { critical: '오류', warning: '경고' }

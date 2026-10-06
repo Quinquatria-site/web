@@ -3,7 +3,7 @@ import { Outlet } from 'react-router'
 import { ActionButton } from 'seed-design/ui/action-button'
 import { apiErrorText } from '../lib/apiErrorText'
 import { lastErrorId, markErrorsSurfacedAfter } from '../lib/errorLog'
-import { loadCatalog, loadLostItems, loadNotices, loadPerformances } from '../mocks/store'
+import { loadCatalog, loadLostItems, loadNotices, loadPerformances } from '../store'
 import styles from './DataGate.module.css'
 
 /** 창에 돌아올 때 다시 받는 최소 간격 */

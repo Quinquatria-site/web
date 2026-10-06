@@ -9,7 +9,7 @@ import type { NoticeTextWrite } from '../api/notices'
 import { apiErrorText } from '../lib/apiErrorText'
 import { useFormFields } from '../lib/useFormFields'
 import { ConfirmDialog, PhotoPicker } from '../ui'
-import { noticeById, removeNotice, removeNoticeTranslation, saveNotice } from '../mocks/store'
+import { noticeById, removeNotice, removeNoticeTranslation, saveNotice } from '../store'
 import {
   dateTimeLabel,
   findTranslation,
@@ -17,7 +17,7 @@ import {
   NOTICE_TYPES,
   type LanguageCode,
   type NoticeType,
-} from '../mocks/types'
+} from '../types'
 // 폼 뼈대는 공연 편집 화면과 같은 값을 쓴다 (MenuEditRoute 전례).
 // own 은 공지에만 있는 것 — 종류 설명 블록뿐이다
 import own from './NoticeEditRoute.module.css'

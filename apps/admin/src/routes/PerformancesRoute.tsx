@@ -30,7 +30,7 @@ import {
   reorderPerformances,
   setPerformanceLive,
   useStoreVersion,
-} from '../mocks/store'
+} from '../store'
 import { isApiError } from '../api'
 import {
   FESTIVAL_DATES,
@@ -41,7 +41,7 @@ import {
   PERFORMANCE_TYPES,
   type Performance,
   type PerformanceType,
-} from '../mocks/types'
+} from '../types'
 import { LangBadge } from '../ui'
 import styles from './PerformancesRoute.module.css'
 

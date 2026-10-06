@@ -8,13 +8,8 @@ import { TextField, TextFieldInput, TextFieldTextarea } from 'seed-design/ui/tex
 import type { LostItemTextWrite } from '../api/lostItems'
 import { apiErrorText } from '../lib/apiErrorText'
 import { useFormFields } from '../lib/useFormFields'
-import {
-  lostItemById,
-  removeLostItem,
-  removeLostItemTranslation,
-  saveLostItem,
-} from '../mocks/store'
-import { findTranslation, LANGUAGE_CODES, type LanguageCode } from '../mocks/types'
+import { lostItemById, removeLostItem, removeLostItemTranslation, saveLostItem } from '../store'
+import { findTranslation, LANGUAGE_CODES, type LanguageCode } from '../types'
 import { ConfirmDialog, PhotoPicker } from '../ui'
 // 공연 편집과 같은 뼈대라 스타일시트를 같이 쓴다. 공지도 이 파일을 쓰고
 // 메뉴는 장소 것을 쓴다 — 편집 화면이 서로의 스타일시트를 가져다 쓰는 관례다

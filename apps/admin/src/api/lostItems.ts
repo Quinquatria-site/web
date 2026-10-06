@@ -1,6 +1,6 @@
 import type { LanguageCode } from '@quen/schema/common/language'
 import { toKstIso } from '../lib/kst'
-import type { LostItem } from '../mocks/types'
+import type { LostItem } from '../types'
 import { request } from './client'
 import { BACKOFFICE_BASE } from './config'
 import { listAll } from './list'

@@ -1,4 +1,4 @@
-import type { CategoryCode } from '../mocks/types'
+import type { CategoryCode } from '../types'
 
 /** 지도 마커 종류. 서버 카테고리 코드와 같다 */
 export type PlaceCode = CategoryCode

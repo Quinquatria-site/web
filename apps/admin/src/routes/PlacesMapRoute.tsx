@@ -9,11 +9,11 @@ import { PLACE_NAMES } from '../map/place-label'
 import { PlaceMarker } from '../map/PlaceMarker'
 import { imageSrc } from '../lib/imageSrc'
 import { detailOf } from '../lib/placeText'
-import { categoryById } from '../mocks/categories'
-import { menusByPlace } from '../mocks/menus'
-import { PLACES } from '../mocks/places'
-import { placeById, useStoreVersion } from '../mocks/store'
-import { findTranslation, type Menu, type Place } from '../mocks/types'
+import { categoryById } from '../store/categories'
+import { menusByPlace } from '../store/menus'
+import { PLACES } from '../store/places'
+import { placeById, useStoreVersion } from '../store'
+import { findTranslation, type Menu, type Place } from '../types'
 import { BottomSheet, BottomSheetDescription, BottomSheetTitle, LangBadge, PhotoStrip } from '../ui'
 import styles from './PlacesMapRoute.module.css'
 
@@ -109,8 +109,8 @@ export function PlacesMapRoute() {
 
   // 편집·삭제가 지도와 시트에 바로 반영되게 한다
   useStoreVersion()
-  // 객체가 아니라 id 로 들고 있는다. 목 스토어는 배열을 제자리에서 바꾸고 지우기까지
-  // 해서(store.ts deletePlace), 객체를 쥐고 있으면 시트가 옛 값을 계속 보여준다
+  // 객체가 아니라 id 로 들고 있는다. 스토어는 배열을 제자리에서 바꾸고 지우기까지
+  // 해서(store 의 removePlace), 객체를 쥐고 있으면 시트가 옛 값을 계속 보여준다
   const selected = (selectedId === null ? undefined : placeById(selectedId)) ?? null
 
   // 닫히며 내려가는 동안에도 내용이 남아 있게 마지막 장소를 쥐고 있는다

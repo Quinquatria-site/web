@@ -57,7 +57,9 @@ export function StatTile({
           </span>
         )}
       </span>
-      <span className={valueVariant === 'text' ? `${styles.value} ${styles.valueText}` : styles.value}>
+      <span
+        className={valueVariant === 'text' ? `${styles.value} ${styles.valueText}` : styles.value}
+      >
         {value}
         {unit && <span className={styles.unit}>{unit}</span>}
       </span>
