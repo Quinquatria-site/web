@@ -41,6 +41,7 @@ export const zh: Messages = {
       likelionInstagram: 'LIKELION instagram',
       council: '韩国外国语大学首尔校区第60届总学生会“鲜明”',
       councilInstagram: '鲜明 instagram',
+      developers: '开发团队介绍',
     },
   },
   pages: {
@@ -52,9 +53,20 @@ export const zh: Messages = {
     lostItemDetail: '失物详情',
     goods: 'QUINQUATRIA 周边',
     online: '线上内容',
+    developers: '开发团队介绍',
   },
   notices: {
     important: '重要',
+  },
+  developers: {
+    description: '认识打造 QUINQUATRIA 网站的 LIKELION 开发团队。',
+    departments: {
+      hwangJunho: '英美文学与文化系',
+      kimJiyong: '意大利语系',
+      limJaejoon: '泰国学系',
+      kimTaeheon: 'ELLT系',
+      wiSoomin: 'ELLT系',
+    },
   },
   online: {
     period: '活动时间',
@@ -116,17 +128,17 @@ export const zh: Messages = {
     filterAll: '全部',
     zoomIn: '放大',
     zoomOut: '缩小',
+    openList: '场所列表',
     list: {
       /** {count} 에 목록에 든 장소 수가 들어간다 */
       count: '{count} 个',
-      /** 검색 결과를 칩으로 거른 동안. {total} 에 거르기 전, {count} 에 남은 장소 수가 들어간다 */
-      countOf: '{total} 个中的 {count} 个',
     },
     search: {
       open: '搜索场所',
       placeholder: '院系或摊位名称',
       clear: '清除搜索',
-      /** 목록 시트 제목. {query} 에 검색창에 친 글자가 들어간다 */
+      close: '关闭搜索',
+      /** 검색 결과 제목. {query} 에 검색창에 친 글자가 들어간다 */
       resultTitle: '“{query}”的搜索结果',
       tip: '可按院系或摊位名称搜索。',
       tipExample: '例如：泰语系',

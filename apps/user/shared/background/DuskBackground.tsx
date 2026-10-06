@@ -2,7 +2,7 @@ import Image from 'next/image'
 import duskSky from './images/dusk-sky.jpg'
 
 /** 어두운 탭 페이지 바탕. 진한 고동색 위 화면 아래에 시안의 노을 하늘을 깔아 레이아웃의 노을 물결을 덮는다 */
-export function DuskBackground() {
+export function DuskBackground({ skyOpacity = 1 }: { skyOpacity?: number }) {
   return (
     <div
       aria-hidden
@@ -15,6 +15,7 @@ export function DuskBackground() {
           alt=""
           sizes="(max-width: 480px) 100vw, 480px"
           className="block h-auto w-full"
+          style={{ opacity: skyOpacity }}
         />
         {/* 이미지 윗변 색이 바탕보다 살짝 밝아 경계가 보이지 않게 바탕색에서 풀어 준다 */}
         <span className="absolute inset-x-0 top-0 h-[12%] bg-linear-to-b from-(--dark) to-transparent" />

@@ -439,18 +439,20 @@ export default function CampusMap({
   bottomInset,
   onDragChange,
   onEmptyTap,
+  onOpenList,
 }: {
   places: MapPlace[]
   selectedId: PlaceId | null
   onSelect: (id: PlaceId) => void
   onClear: () => void
   focusRequest: FocusRequest
-  /** 지도 위를 늘 가리는 검색 막대 · 칩 층 높이 */
+  /** 지도 위를 늘 가리는 검색창 · 칩 층 높이 */
   topInset: number
   /** 장소를 고른 동안 아래를 가리는 높이. 고른 장소를 이만큼 위로 비켜 둔다 */
   bottomInset: number
   onDragChange: (dragging: boolean, zoomed: boolean, selectedAtStart: PlaceId | null) => void
   onEmptyTap: () => void
+  onOpenList: () => void
 }) {
   const selected = places.find((place) => place.id === selectedId) ?? null
 
@@ -482,7 +484,7 @@ export default function CampusMap({
       <DragWatch selectedId={selectedId} onDragChange={onDragChange} />
       <DragTolerance />
       <EmptyTap onTap={onEmptyTap} cancelKey={focusRequest.count} />
-      <MapControls />
+      <MapControls onOpenList={onOpenList} />
     </MapContainer>
   )
 }

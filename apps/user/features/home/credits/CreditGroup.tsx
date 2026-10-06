@@ -3,17 +3,17 @@ import { CreditReveal, CreditRevealItem } from './CreditReveal'
 import { LinkBadge } from '@/shared/link-badge/LinkBadge'
 import { SparkleOrnament } from '@/shared/ornament/SparkleOrnament'
 
-/** 크레딧 한 묶음. 장식 · 영문 제목 · 단체명 · 이름들 · 인스타그램 버튼을 가운데로 쌓고 스크롤해 닿으면 차례로 띄운다 */
+/** 크레딧 한 묶음. 장식 · 영문 제목 · 단체명 · 이름들 · 링크 버튼들을 가운데로 쌓고 스크롤해 닿으면 차례로 띄운다 */
 export function CreditGroup({
   title,
   organization,
   children,
-  instagram,
+  links,
 }: {
   title: string
   organization: string
   children?: ReactNode
-  instagram: { label: string; href: string }
+  links: { label: string; href: string }[]
 }) {
   return (
     <CreditReveal className="flex flex-col items-center gap-2">
@@ -32,11 +32,15 @@ export function CreditGroup({
           </div>
           {children && <CreditRevealItem>{children}</CreditRevealItem>}
         </div>
-        <CreditRevealItem>
-          <LinkBadge href={instagram.href} tone="primary">
-            {instagram.label}
-          </LinkBadge>
-        </CreditRevealItem>
+        <div className="flex flex-col items-center gap-2">
+          {links.map((link) => (
+            <CreditRevealItem key={link.href}>
+              <LinkBadge href={link.href} tone="primary">
+                {link.label}
+              </LinkBadge>
+            </CreditRevealItem>
+          ))}
+        </div>
       </div>
     </CreditReveal>
   )

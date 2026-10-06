@@ -3,6 +3,7 @@ import { cinzel } from '@/shared/fonts'
 import { paperlogy } from '@/shared/fonts/paperlogy'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
+import { localePath } from '@/shared/i18n/paths'
 import { CreditGroup } from './CreditGroup'
 import sunsetSky from './images/sunset-sky.jpg'
 
@@ -30,7 +31,8 @@ const SKY_FADE = `linear-gradient(to bottom, ${[
 
 /** 홈 맨 아래 크레딧. 만든 사람과 함께한 총학생회를 노을 하늘 위에 둔다 */
 export async function HomeCredits() {
-  const { credits } = getMessages(await getLocale()).home
+  const locale = await getLocale()
+  const { credits } = getMessages(locale).home
   return (
     // 크레딧 글꼴 변수는 이 섹션에만 달아 크레딧이 없는 페이지가 미리 받지 않게 한다
     // main 의 도크 여백만큼 아래로 늘려 노을 하늘이 화면 끝까지 닿고 위로 가기 원이 그 위에 뜬다
@@ -54,10 +56,10 @@ export async function HomeCredits() {
         <CreditGroup
           title="Made by"
           organization={credits.likelion}
-          instagram={{
-            label: credits.likelionInstagram,
-            href: 'https://www.instagram.com/likelion_hufs/',
-          }}
+          links={[
+            { label: credits.likelionInstagram, href: 'https://www.instagram.com/likelion_hufs/' },
+            { label: credits.developers, href: localePath(locale, '/developers') },
+          ]}
         >
           <ul className="flex flex-col items-center gap-1 font-cinzel text-base leading-[normal]">
             {MAKERS.map((pair) => (
@@ -75,10 +77,9 @@ export async function HomeCredits() {
         <CreditGroup
           title="In Partnership With"
           organization={credits.council}
-          instagram={{
-            label: credits.councilInstagram,
-            href: 'https://www.instagram.com/hufsstudent/',
-          }}
+          links={[
+            { label: credits.councilInstagram, href: 'https://www.instagram.com/hufsstudent/' },
+          ]}
         />
       </div>
     </footer>
