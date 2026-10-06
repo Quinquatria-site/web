@@ -2,16 +2,18 @@
 
 import dynamic from 'next/dynamic'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { dockStowStore } from '@/shared/dock/dock-stow-store'
+import { replacePath } from '@/shared/history/replace-path'
 import { localePath } from '@/shared/i18n/paths'
 import { useLocale } from '@/shared/i18n/useLocale'
 import type { FocusRequest } from './CampusMap'
 import { type MapPlace, type PlaceCode, type PlaceId } from './map-place'
 import { PlaceFilter } from './PlaceFilter'
 import { PlaceListSheet } from './PlaceListSheet'
-import { PlaceSearchBar } from './PlaceSearchBar'
+import { PlaceSearch } from './PlaceSearch'
+import { PlaceSearchButton } from './PlaceSearchButton'
 import { PLACE_SHEET_PEEK, PlaceSheet } from './PlaceSheet'
-import { searchPlaces, toQuery, toSearchable } from './search-places'
 
 // Leaflet 은 불러오는 순간 window 를 읽어서 빌드 때 굽지 않고 브라우저에서만 싣는다
 const CampusMap = dynamic(() => import('./CampusMap'), { ssr: false })
@@ -40,53 +42,49 @@ export function MapView({
     })
   }, [])
   const resetFilter = useCallback(() => setFilter(new Set()), [])
-  // 검색창에 친 글자. 있으면 지도·목록 모두 검색 결과만 두고 칩은 그 안에서 거른다
-  const [query, setQuery] = useState('')
-  const searchable = useMemo(() => toSearchable(places), [places])
-  const matched = useMemo(() => {
-    const trimmed = query.trim()
-    return trimmed ? searchPlaces(searchable, toQuery(trimmed)) : places
-  }, [places, searchable, query])
   // 마커가 목록 변화로 선택 해제를 판단해서, 필터가 그대로면 같은 배열을 넘긴다
   const visiblePlaces = useMemo(
-    () => (filter.size ? matched.filter((place) => filter.has(place.code)) : matched),
-    [matched, filter],
+    () => (filter.size ? places.filter((place) => filter.has(place.code)) : places),
+    [places, filter],
   )
   // 빈 곳을 탭해 칩·확대 버튼·도크를 걷어 낸 상태. 지도만 넓게 본다
   const [chromeHidden, setChromeHidden] = useState(false)
   // 고른 장소를 주소(/map/12)에 담아 그대로 복사해 홍보할 수 있게 한다. 기록은 쌓지 않고 주소만 갈아 끼워, 시트 열림은 선택 상태 하나로만 정한다
   const mapPath = localePath(useLocale(), '/map')
-  // 장소 목록은 검색창으로만 연다. 아무것도 치지 않으면 칩으로 거른 목록이다
+  // 칩으로 거른 장소 목록 시트. 지도 왼쪽 아래 버튼으로 연다
   const [listOpen, setListOpen] = useState(false)
-  // 검색창에 포커스가 있는지. 그동안은 키보드가 아래를 가려도 결과가 보이게 목록을 끝까지 올린다
-  const [typing, setTyping] = useState(false)
-  // 검색 결과는 목록으로만 보니, 목록을 닫으면 검색도 풀어 마커만 걸러진 채 남지 않게 한다
-  const closeList = useCallback(() => {
-    setListOpen(false)
-    setQuery('')
-  }, [])
+  const closeList = useCallback(() => setListOpen(false), [])
+  // 이름으로 장소를 찾는 전체 화면. 지도 위 검색창으로 연다
+  const [searchOpen, setSearchOpen] = useState(false)
+  const closeSearch = useCallback(() => setSearchOpen(false), [])
   const select = useCallback(
     (id: PlaceId, zoom = false) => {
       setSelectedId(id)
       setFocusRequest(({ count }) => ({ count: count + 1, zoom }))
       // 장소를 고르면 찾기·둘러보기가 끝난 것으로 보고 목록·검색과 걷어 낸 것들을 정리해 그 장소 상세만 남긴다
-      closeList()
+      setListOpen(false)
+      setSearchOpen(false)
       setChromeHidden(false)
-      const url = `${mapPath}/${id}`
-      if (location.pathname !== url) history.replaceState(null, '', url)
+      replacePath(`${mapPath}/${id}`)
     },
-    [mapPath, closeList],
+    [mapPath],
   )
   const clearSelection = useCallback(() => {
     setSelectedId(null)
-    if (location.pathname !== mapPath) history.replaceState(null, '', mapPath)
+    replacePath(mapPath)
   }, [mapPath])
-  // 검색창을 누르면 칩은 그대로 둔 채 목록을 열어, 칩으로 거른 목록에서 이름으로 더 좁힌다
-  const startSearch = () => {
+  // 목록은 칩으로 거르며 보니 걷어 낸 칩을 되돌린다
+  const openList = useCallback(() => {
     clearSelection()
-    setTyping(true)
     setChromeHidden(false)
     setListOpen(true)
+  }, [clearSelection])
+  // 아이폰은 누름 처리 안에서 입력칸에 포커스해야 키보드가 올라와서, 검색 화면을 그 자리에서 그려 포커스까지 마친다
+  const openSearch = () => {
+    clearSelection()
+    setListOpen(false)
+    setChromeHidden(false)
+    flushSync(() => setSearchOpen(true))
   }
   // 빈 곳 탭은 고른 장소나 목록이 열려 있으면 그것만 닫고, 없으면 걷어 내기를 켜고 끈다
   const handleEmptyTap = () => {
@@ -147,18 +145,14 @@ export function MapView({
           bottomInset={PLACE_SHEET_PEEK + safeBottom}
           onDragChange={handleDragChange}
           onEmptyTap={handleEmptyTap}
+          onOpenList={openList}
         />
         {/* Leaflet 판(400~1000) 위에 띄운다. 칩 사이 빈 곳은 지도를 끌 수 있게 누름을 흘려보낸다 */}
         <div
           ref={filterRef}
           className="pointer-events-none absolute inset-x-0 top-0 z-[1000] px-[17px] pt-3 transition-[translate,opacity,visibility] duration-300 ease-out in-data-[chrome=hidden]:invisible in-data-[chrome=hidden]:-translate-y-full in-data-[chrome=hidden]:opacity-0"
         >
-          <PlaceSearchBar
-            query={query}
-            onQueryChange={setQuery}
-            onFocus={startSearch}
-            onBlur={() => setTyping(false)}
-          />
+          <PlaceSearchButton onClick={openSearch} />
           <PlaceFilter selected={filter} onToggle={toggleFilter} onReset={resetFilter} />
         </div>
       </div>
@@ -166,14 +160,17 @@ export function MapView({
       <PlaceListSheet
         open={listOpen}
         places={visiblePlaces}
-        totalCount={matched.length}
         filter={filter}
-        query={query}
-        expanded={typing}
         hidden={dragging}
         fullHeight={`calc(100dvh - ${filterBottom + 8}px)`}
         onPick={(place) => select(place.id, true)}
         onClose={closeList}
+      />
+      <PlaceSearch
+        open={searchOpen}
+        places={places}
+        onPick={(place) => select(place.id, true)}
+        onClose={closeSearch}
       />
     </>
   )
