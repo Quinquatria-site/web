@@ -30,7 +30,7 @@ export function DevelopersShow({
   const size = useStageSize(stageRef)
   const { scrollXProgress } = useScroll({ container: trackRef })
 
-  // 별자리를 다 그리면 별빛이 카드로 바뀐다. 기다리기 싫으면 무대를 눌러 바로 넘긴다
+  // 별자리를 다 그리면 별빛이 카드로 바뀐다. 눌러서 건너뛸 수는 없다
   const [entered, setEntered] = useState(false)
   useEffect(() => {
     const timer = setTimeout(() => setEntered(true), ENTER_AT * 1000)
@@ -45,7 +45,6 @@ export function DevelopersShow({
       {title}
       <div
         ref={stageRef}
-        onClick={() => setEntered(true)}
         className="absolute inset-x-0 top-(--page-title-height) bottom-0"
       >
         <Constellation
