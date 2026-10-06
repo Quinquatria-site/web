@@ -16,6 +16,9 @@ export const NODES = [
   { x: -94, y: 0.76, side: 'right' },
 ] as const
 
+/** 별 점 하나의 자리와 이름이 놓이는 쪽 */
+export type StarPoint = (typeof NODES)[number]
+
 /** 카드 수만큼 넘기는 구간까지 합친 스크롤 화면 수. 감싸는 높이는 여기에 고정되는 한 화면을 더한다 */
 export function scrollScreens(count: number) {
   return INTRO_SCREENS + CARD_SCREENS * (count - 1)
