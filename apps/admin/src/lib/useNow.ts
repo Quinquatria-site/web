@@ -24,8 +24,8 @@ export function useNow(frozenAt: number | null, intervalMs = 60_000): Date {
  * "?at=2026-10-07T18:30" → 그 시각(KST). 날짜만 주면 자정으로 읽는다.
  *
  * 실제 날짜를 바꿀 수 없으니 세 국면을 확인할 수단이 필요하다. DEV 가드를
- * 걸지 않는 이유는 QA 를 프리뷰 배포(프로덕션 빌드)에서 하고 데이터가 전부
- * 인메모리 목이라 드러날 것이 없기 때문이다 — 실 API(#10)가 붙을 때 다시 볼 것.
+ * 걸지 않는 이유는 QA 를 프리뷰 배포(프로덕션 빌드)에서 하고, 이 값은 화면이
+ * 보는 시각만 바꿀 뿐 서버 데이터나 권한에는 닿지 않아 드러날 것이 없기 때문이다.
  */
 export function parseAtParam(raw: string | null): Date | null {
   if (!raw) return null

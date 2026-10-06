@@ -60,7 +60,7 @@ import {
   type NoticeType,
   type Performance,
   type Place,
-} from './types'
+} from '../types'
 
 /**
  * 도메인 데이터의 한 자리. 화면은 여기서 동기로 읽는다.
@@ -70,9 +70,8 @@ import {
  */
 
 /**
- * 목 배열은 모듈 전역이라 바꿔도 React 가 모른다. 쓰기마다 버전을 올려
- * useStoreVersion 을 구독한 화면만 다시 그린다. 실제 API 에서는 이 자리가
- * 쿼리 캐시 무효화가 된다.
+ * 캐시 배열은 모듈 전역이라 바꿔도 React 가 모른다. 쓰기마다 버전을 올려
+ * useStoreVersion 을 구독한 화면만 다시 그린다.
  */
 let version = 0
 const listeners = new Set<() => void>()
@@ -87,7 +86,7 @@ function subscribe(listener: () => void): () => void {
   return () => listeners.delete(listener)
 }
 
-/** 목 데이터가 바뀔 때마다 값이 달라진다. 목록·지도가 이걸 읽어 다시 그린다 */
+/** 캐시가 바뀔 때마다 값이 달라진다. 목록·지도가 이걸 읽어 다시 그린다 */
 export function useStoreVersion(): number {
   return useSyncExternalStore(subscribe, () => version)
 }
@@ -360,9 +359,8 @@ export async function reorderPerformances(date: string, order: number[]): Promis
 }
 
 /**
- * 공지 (§5.7). **실제 API 에 붙은 첫 도메인이다.** NOTICES 는 더 이상 목이 아니라
- * 서버 응답의 캐시다 — 로그인 뒤 DataGate 가 loadNotices 로 전부 받아 채우고, 쓰기는
- * API 를 부른 뒤 응답으로 이 배열을 고친다. 화면은 예전처럼 여기서 동기로 읽는다.
+ * 공지 (§5.7). 로그인 뒤 DataGate 가 loadNotices 로 전부 받아 채우고, 쓰기는
+ * API 를 부른 뒤 응답으로 이 배열을 고친다. 화면은 여기서 동기로 읽는다.
  *
  * 공연과 달리 순서를 손댈 수단이 없다 — 정렬 키가 서버 생성 created_at 하나뿐이라
  * 재정렬 엔드포인트 자체가 없다 (§5.1).

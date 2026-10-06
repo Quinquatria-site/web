@@ -16,7 +16,7 @@ import {
   removePerformanceTranslation,
   restorePerformanceTranslations,
   savePerformance,
-} from '../mocks/store'
+} from '../store'
 import {
   FESTIVAL_DATES,
   festivalDateLabel,
@@ -26,7 +26,7 @@ import {
   PERFORMANCE_TYPES,
   type LanguageCode,
   type PerformanceType,
-} from '../mocks/types'
+} from '../types'
 import styles from './PerformanceEditRoute.module.css'
 
 const TYPE_LABELS: Record<PerformanceType, string> = {

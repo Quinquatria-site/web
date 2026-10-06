@@ -1,4 +1,4 @@
-import { FESTIVAL_DATES, type FestivalDate } from '../mocks/types'
+import { FESTIVAL_DATES, type FestivalDate } from '../types'
 
 /**
  * 축제 달력과 KST 시각 유틸.
@@ -11,7 +11,7 @@ import { FESTIVAL_DATES, type FestivalDate } from '../mocks/types'
  * 한때 festivalPhase(before|during|after) 가 있었지만 그 값으로 화면 셋을
  * 갈라 쓰다가 "날마다 다른 화면" 이 되어 걷어냈다.
  *
- * 판정은 FESTIVAL_DATES 만 본다. 일정이 또 바뀌어도 types.ts 의 약속대로
+ * 판정은 FESTIVAL_DATES 만 본다. 일정이 또 바뀌어도 src/types.ts 의 약속대로
  * 그 배열 하나만 고치면 홈이 따라온다.
  */
 

@@ -1,7 +1,7 @@
-import { CATEGORY_CODES, type Category, type CategoryCode } from './types'
+import { CATEGORY_CODES, type Category, type CategoryCode } from '../types'
 
 /**
- * 카테고리 캐시. 서버 응답을 담아두는 자리다 — store.ts 의 loadCatalog 가 채운다.
+ * 카테고리 캐시. 서버 응답을 담아두는 자리다 — index.ts 의 loadCatalog 가 채운다.
  *
  * 화면의 순서(목록 칩·지도 범례·장소 편집 선택지)는 서버 응답 순서(`id ASC`)다.
  */

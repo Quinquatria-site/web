@@ -1,5 +1,5 @@
-import { categoryById } from '../mocks/categories'
-import { findTranslation, type Place } from '../mocks/types'
+import { categoryById } from '../store/categories'
+import { findTranslation, type Place } from '../types'
 
 /**
  * ISO datetime 에서 HH:mm 만 뽑는다. 운영 시간 표시용.

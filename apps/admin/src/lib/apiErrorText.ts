@@ -1,5 +1,5 @@
 import { isApiError, NETWORK_ERROR } from '../api'
-import { MissingCategoriesError } from '../mocks/categories'
+import { MissingCategoriesError } from '../store/categories'
 import { markErrorSurfaced } from './errorLog'
 
 /**

@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react'
 import { configureClient } from '../api'
 import { AuthContext, type LoginResult } from './authContext'
 import { issueToken, type IssuedToken } from './issueToken'
@@ -22,7 +30,9 @@ function readStored(): IssuedToken | null {
     if (!raw) return null
     const parsed = JSON.parse(raw) as Partial<IssuedToken>
     if (typeof parsed.token !== 'string' || typeof parsed.expiresAt !== 'number') return null
-    return parsed.expiresAt > Date.now() ? { token: parsed.token, expiresAt: parsed.expiresAt } : null
+    return parsed.expiresAt > Date.now()
+      ? { token: parsed.token, expiresAt: parsed.expiresAt }
+      : null
   } catch {
     return null
   }

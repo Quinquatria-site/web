@@ -9,14 +9,14 @@ import { FloatingActionButton } from 'seed-design/ui/floating-action-button'
 import { List, ListButtonItem, ListDivider } from 'seed-design/ui/list'
 import { ListHeader } from 'seed-design/ui/list-header'
 import { SnackbarAvoidOverlap } from 'seed-design/ui/snackbar'
-import { noticesByType, useStoreVersion } from '../mocks/store'
+import { noticesByType, useStoreVersion } from '../store'
 import {
   dateTimeLabel,
   findTranslation,
   hasMissingTranslations,
   missingLanguages,
   type Notice,
-} from '../mocks/types'
+} from '../types'
 import styles from './NoticesRoute.module.css'
 
 function titleOf(notice: Notice): string {
@@ -130,7 +130,7 @@ export function NoticesRoute() {
   // 저장·삭제·실행취소가 이 목록에 바로 반영되게 한다
   useStoreVersion()
 
-  // 메모하지 않는다. NOTICES 는 목 스토어가 제자리에서 바꾸는 배열이라
+  // 메모하지 않는다. NOTICES 는 스토어가 제자리에서 바꾸는 배열이라
   // 의존성으로 적을 것이 없고, 수십 건 정렬은 렌더마다 해도 싸다
   const permanent = noticesByType('PERMANENT')
   const general = noticesByType('GENERAL')
