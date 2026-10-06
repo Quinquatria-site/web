@@ -28,8 +28,8 @@ const PAGES: Record<string, readonly [string, string?]> = {
   goods: ['굿즈'],
   online: ['온라인 콘텐츠'],
   developers: ['개발진 소개'],
-  // /admin 같은 관리자 주소를 쳐 보면 학생 앱이 여기로 보낸다. 통계엔 원래 주소가 안 남는다
-  focus: ['/ko/focus (/admin 등 접속 시도)'],
+  // /admin 같은 관리자 주소를 쳐 보면 학생 앱이 여기로 보낸다. 통계엔 원래 주소가 안 남고, 이름은 카드 폭에 맞게 경로만 둔다
+  focus: ['/ko/focus'],
 }
 
 export const OTHER_PAGE = '기타'
