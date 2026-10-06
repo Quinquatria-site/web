@@ -117,17 +117,17 @@ export const ko = {
     filterAll: '전체',
     zoomIn: '확대',
     zoomOut: '축소',
+    openList: '장소 목록',
     list: {
       /** {count} 에 목록에 든 장소 수가 들어간다 */
       count: '{count}곳',
-      /** 검색 결과를 칩으로 거른 동안. {total} 에 거르기 전, {count} 에 남은 장소 수가 들어간다 */
-      countOf: '{total}곳 중 {count}곳',
     },
     search: {
       open: '장소 검색',
       placeholder: '학과나 부스 이름',
       clear: '검색어 지우기',
-      /** 목록 시트 제목. {query} 에 검색창에 친 글자가 들어간다 */
+      close: '검색 닫기',
+      /** 검색 결과 제목. {query} 에 검색창에 친 글자가 들어간다 */
       resultTitle: '‘{query}’ 검색 결과',
       /** 검색어가 비었을 때 보이는 안내 */
       tip: '학과 이름이나 부스 이름으로 찾을 수 있어요.',

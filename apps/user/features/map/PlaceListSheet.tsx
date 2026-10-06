@@ -1,103 +1,18 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
 import { BottomSheet, BottomSheetTitle } from '@/shared/bottom-sheet/BottomSheet'
-import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
-import { Photo } from '@/shared/photo/Photo'
-import { type MapPlace, type PlaceCode, placeHours, placeLabel } from './map-place'
-import { Highlight } from './Highlight'
+import type { MapPlace, PlaceCode } from './map-place'
 import { FILTER_CODES } from './PlaceFilter'
-import { PLACE_SHEET_PEEK, PlaceBadge } from './PlaceSheet'
-import { type SearchQuery, toQuery } from './search-places'
+import { PlaceRows } from './PlaceRows'
+import { PLACE_SHEET_PEEK } from './PlaceSheet'
 
-// 한 번에 더 그리는 줄 수. 장소는 이미 다 받아 두고 그리기만 나눈다
-const PAGE_SIZE = 20
-
-// 1단계에서 손잡이 줄(42)·제목 줄(40)·바닥 여백(24)을 뺀 높이. 빈 안내를 이 안 가운데에 둔다
-const EMPTY_HEIGHT = PLACE_SHEET_PEEK - 42 - 40 - 24
-
-// 결과 없음 그림. 지도 마커 모양 핀에 물음표를 넣어 그 자리에 찾는 곳이 없다는 뜻으로 읽힌다
-function EmptyPin() {
-  return (
-    <svg aria-hidden viewBox="-21 -21 42 54" className="h-16 w-[50px]">
-      <path
-        d="M0 31C-6 22-19 12-19 0A19 19 0 0 1 19 0C19 12 6 22 0 31Z"
-        className="fill-accent opacity-85"
-      />
-      <circle r="12" className="fill-bg" />
-      <text y="6" textAnchor="middle" fontSize="17" fontWeight="700" className="fill-accent">
-        ?
-      </text>
-    </svg>
-  )
-}
-
-// 검색 입력칸에 남은 포커스를 풀어 키보드를 내린다
-function blurSearch() {
-  if (document.activeElement instanceof HTMLInputElement) document.activeElement.blur()
-}
-
-// 사진 · 종류 배지와 번호 · 이름 · 운영과 시간. 누르면 그 장소 상세로 간다
-function PlaceRow({
-  place,
-  query,
-  onPick,
-}: {
-  place: MapPlace
-  query: SearchQuery
-  onPick: (place: MapPlace) => void
-}) {
-  const { places } = getMessages(useLocale()).map
-  const label = placeLabel(place)
-  const lang = contentLang(place.language_code)
-  const hours = placeHours(place)
-
-  return (
-    <li className="border-b border-sheet-divider last:border-b-0">
-      <button
-        type="button"
-        onClick={() => onPick(place)}
-        className="flex w-full gap-3 py-3 text-left"
-      >
-        <div className="size-16 shrink-0 overflow-hidden rounded-xl">
-          <Photo src={place.place_image_uri?.[0] ?? null} alt="" sizes="64px" />
-        </div>
-        <div className="flex min-w-0 flex-1 flex-col justify-center">
-          <div className="flex items-center gap-1.5">
-            <PlaceBadge place={place} />
-            {label && <span className="text-xs font-semibold text-text-muted">{label}</span>}
-          </div>
-          {/* 번역이 없어 이름이 비면 종류 이름으로 채운다 */}
-          <p lang={lang} className="mt-1 line-clamp-2 text-[15px] leading-snug font-semibold">
-            <Highlight text={place.name ?? places[place.code]} query={query} />
-          </p>
-          {(place.host_college || hours) && (
-            <p className="mt-0.5 truncate text-[13px] text-text-muted">
-              {place.host_college && (
-                <span lang={lang}>
-                  <Highlight text={place.host_college} query={query} />
-                </span>
-              )}
-              {place.host_college && hours && ' · '}
-              {hours}
-            </p>
-          )}
-        </div>
-      </button>
-    </li>
-  )
-}
-
-/** 상단 칩(검색 중이면 검색 결과 안에서 칩)에 맞는 장소 목록 시트. 끝까지 내리면 20곳씩 더 그리고, 줄을 누르면 상세로 간다 */
+/** 상단 칩에 맞는 장소 목록 시트. 끝까지 펼쳐 열고, 줄을 누르면 상세로 간다 */
 export function PlaceListSheet({
   open,
   places,
-  totalCount,
   filter,
-  query,
-  expanded,
   hidden,
   fullHeight,
   onPick,
@@ -106,13 +21,7 @@ export function PlaceListSheet({
   open: boolean
   /** 칩으로 거른 장소. 지도 마커와 같은 배열이다 */
   places: MapPlace[]
-  /** 칩으로 거르기 전 장소 수. 검색 결과를 칩으로 거른 동안 몇 곳이 빠졌는지 보인다 */
-  totalCount: number
   filter: ReadonlySet<PlaceCode>
-  /** 검색창에 친 글자. 있으면 제목이 검색 결과가 되고 걸린 글자를 굵게 한다 */
-  query: string
-  /** 검색창에 포커스가 있는 동안. 키보드가 아래를 가려도 결과가 보이게 끝까지 올린다 */
-  expanded: boolean
   hidden: boolean
   /** 끝까지 올렸을 때 높이. 칩 줄 아래에서 멈춰 칩을 계속 누를 수 있게 한다 */
   fullHeight: string
@@ -120,45 +29,11 @@ export function PlaceListSheet({
   onClose: () => void
 }) {
   const { map } = getMessages(useLocale())
-  const trimmed = query.trim()
-  const searchQuery = useMemo(() => toQuery(trimmed), [trimmed])
-  const title = trimmed
-    ? map.search.resultTitle.replace('{query}', trimmed)
-    : filter.size
-      ? FILTER_CODES.filter((code) => filter.has(code))
-          .map((code) => map.places[code])
-          .join(', ')
-      : map.filterAll
-
-  // 칩·검색이 바뀌거나 다시 열면 목록이 새로 시작하니 처음 20곳만 다시 그린다
-  const [count, setCount] = useState(PAGE_SIZE)
-  const [countedPlaces, setCountedPlaces] = useState(places)
-  const [wasOpen, setWasOpen] = useState(open)
-  if (places !== countedPlaces || open !== wasOpen) {
-    setCountedPlaces(places)
-    setWasOpen(open)
-    setCount(PAGE_SIZE)
-  }
-  // 열린 채 목록이 바뀌면 이전 스크롤 자리에 남지 않게 맨 위로 올린다
-  const listRef = useRef<HTMLUListElement>(null)
-  useEffect(() => {
-    listRef.current?.closest('[data-step]')?.scrollTo({ top: 0 })
-  }, [countedPlaces])
-
-  // 시트 본문은 포털로 한 박자 늦게 붙어서, ref 객체 대신 붙는 순간 받는 콜백 ref 로 잡는다
-  const [sentinel, setSentinel] = useState<HTMLLIElement | null>(null)
-  const hasMore = count < places.length
-  useEffect(() => {
-    if (!sentinel) return
-    // 1단계에선 본문이 잘려 끝이 보이지 않으니, 끌어 올려 끝까지 내렸을 때만 늘어난다
-    const observer = new IntersectionObserver(
-      ([entry]) => entry.isIntersecting && setCount((n) => n + PAGE_SIZE),
-      { rootMargin: '0px 0px 200px 0px' },
-    )
-    observer.observe(sentinel)
-    return () => observer.disconnect()
-    // 늘린 뒤에도 끝이 보이는 채면 감시를 새로 걸어야 다시 알려 준다
-  }, [sentinel, count])
+  const title = filter.size
+    ? FILTER_CODES.filter((code) => filter.has(code))
+        .map((code) => map.places[code])
+        .join(', ')
+    : map.filterAll
 
   return (
     <BottomSheet
@@ -167,53 +42,21 @@ export function PlaceListSheet({
       peekHeight={PLACE_SHEET_PEEK}
       fullHeight={fullHeight}
       dismissFromFull
-      expanded={expanded}
+      expanded
       // 끝까지 올려도 위 칩으로 목록을 바꿀 수 있게 뒤 화면을 막지 않는다
       blockBehind={false}
       onClose={onClose}
     >
-      {/* 목록을 밀면 훑어보려는 것이라 키보드를 내려 가려진 결과를 드러낸다 */}
-      <div onTouchMove={blurSearch}>
-        <div className="flex items-baseline gap-1.5 px-2 pb-1">
-          <BottomSheetTitle className="text-lg leading-[normal] font-semibold">
-            {title}
-          </BottomSheetTitle>
-          <span className="text-sm text-text-muted">
-            {(trimmed && filter.size ? map.list.countOf : map.list.count)
-              .replace('{total}', String(totalCount))
-              .replace('{count}', String(places.length))}
-          </span>
-        </div>
-        {!trimmed && (
-          <p className="px-2 pb-1 text-sm leading-normal text-text-muted">
-            {map.search.tip}
-            <span className="block text-[13px]">{map.search.tipExample}</span>
-          </p>
-        )}
-        {places.length === 0 ? (
-          <div
-            style={{ minHeight: EMPTY_HEIGHT }}
-            className="flex flex-col items-center justify-center gap-3 text-center font-medium"
-          >
-            <EmptyPin />
-            <div className="flex flex-col gap-1.5">
-              <p className="text-lg leading-[1.2] font-semibold break-keep text-secondary">
-                {map.search.empty.replace('{query}', trimmed)}
-              </p>
-              <p className="leading-[1.32] text-text-muted">{map.search.emptyHint}</p>
-            </div>
-          </div>
-        ) : (
-          <ul ref={listRef} className="px-2">
-            {places.slice(0, count).map((place) => (
-              <PlaceRow key={place.id} place={place} query={searchQuery} onPick={onPick} />
-            ))}
-            {/* 줄이 늘 때 브라우저가 이 끝을 기준으로 스크롤을 붙들면 끝이 계속 보여 한 번에 다 그려진다 */}
-            {hasMore && (
-              <li ref={setSentinel} aria-hidden className="h-px [overflow-anchor:none]" />
-            )}
-          </ul>
-        )}
+      <div className="flex items-baseline gap-1.5 px-2 pb-1">
+        <BottomSheetTitle className="text-lg leading-[normal] font-semibold">
+          {title}
+        </BottomSheetTitle>
+        <span className="text-sm text-text-muted">
+          {map.list.count.replace('{count}', String(places.length))}
+        </span>
+      </div>
+      <div className="px-2">
+        <PlaceRows places={places} onPick={onPick} />
       </div>
     </BottomSheet>
   )
