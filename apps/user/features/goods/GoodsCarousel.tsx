@@ -45,7 +45,8 @@ export function GoodsCarousel({ goods }: { goods: Goods[] }) {
   const shift = reduced ? 0 : 40
 
   return (
-    <section className="relative w-full max-w-[331px]">
+    // 사진이 정사각형이라 폭이 곧 높이다. 세로가 짧은 폰에서 카드가 화면을 다 덮지 않게 화면 높이로도 폭을 묶는다
+    <section className="relative w-full max-w-[min(331px,40svh)]">
       {/* 뒤에 비스듬히 겹친 빈 카드 두 장. 더미처럼 보이게 하는 꾸밈이다 */}
       <div aria-hidden className={`${CARD_FRAME} absolute inset-0 -rotate-3`} />
       <div aria-hidden className={`${CARD_FRAME} absolute inset-0 rotate-3`} />

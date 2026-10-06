@@ -4,7 +4,7 @@ import kimJiyong from './images/kim-jiyong.webp'
 import kimTaeheon from './images/kim-taeheon.webp'
 import limJaejoon from './images/lim-jaejoon.webp'
 import wiSoomin from './images/wi-soomin.webp'
-import type { SnsLink } from './SnsLinks'
+import type { SnsLink } from './card/SnsLinks'
 
 /** 개발진 한 명. 학과는 언어마다 달라 messages 의 developers.departments 에 같은 id 로 둔다 */
 export type Member = {

@@ -20,11 +20,17 @@ import { PLACE_BG } from './place-colors'
 import { PLACE_PHOTO_HEIGHT, PlacePhotos } from './PlacePhotos'
 import { ShareLinkButton } from './ShareLinkButton'
 
-/** 시트 1단계 높이. 2줄 이름·운영·시간·위치 아래 사진 줄까지 보이고, 이름이 1줄이면 남는 만큼 소개 글이 이어 보인다 */
+/** 가장 큰 1단계 높이(2줄 이름·정보 3줄·사진 줄). 장소를 재기 전 첫 높이이자 장소 목록 시트·지도 여백의 기준이다 */
 export const PLACE_SHEET_PEEK = 197 + PLACE_PHOTO_HEIGHT
 
 // 1단계 이름의 최대 높이. text-2xl(24) 에 줄 높이 1.2 로 두 줄이다
 const TITLE_PEEK_MAX_HEIGHT = 24 * 1.2 * 2
+
+// 1단계를 사진 줄(없으면 정보 줄) 바로 아래에서 끊으려고 더하는 칸들. 손잡이 줄 42, 이름 아래 gap-1.5, 사진 위 gap-2.5, 끝 여백
+const SHEET_HANDLE = 42
+const TITLE_GAP = 6
+const PHOTO_GAP = 10
+const PEEK_BOTTOM = 8
 
 /** 이름 옆 카테고리 뱃지. 마커와 같은 고유 색을 깐다 */
 export function PlaceBadge({ place }: { place: MapPlace }) {
@@ -39,7 +45,13 @@ export function PlaceBadge({ place }: { place: MapPlace }) {
 }
 
 // 1단계에 보이는 이름·운영 정보·사진과 이어지는 설명. 값이 없는 줄(편의시설의 운영·위치, 시간 없는 프론트 장소의 운영 시간)은 뺀다
-function PlaceSummary({ place }: { place: MapPlace }) {
+function PlaceSummary({
+  place,
+  onPeekHeight,
+}: {
+  place: MapPlace
+  onPeekHeight: (height: number) => void
+}) {
   const { sheet, places } = getMessages(useLocale()).map
   const label = placeLabel(place)
   const lang = contentLang(place.language_code)
@@ -64,6 +76,25 @@ function PlaceSummary({ place }: { place: MapPlace }) {
     return () => observer.disconnect()
   }, [name])
 
+  // 정보 줄은 긴 값이 접히면 높아진다. 단계가 바뀌어도 높이가 그대로라 시트가 오르내리는 중에 1단계 목표가 흔들리지 않는다
+  const infoRef = useRef<HTMLDListElement>(null)
+  const [infoHeight, setInfoHeight] = useState<number | null>(null)
+  useEffect(() => {
+    const info = infoRef.current
+    if (!info) return
+    const observer = new ResizeObserver(() => setInfoHeight(info.offsetHeight))
+    observer.observe(info)
+    return () => observer.disconnect()
+  }, [])
+
+  const hasPhotos = (place.place_image_uri?.length ?? 0) > 0
+  useEffect(() => {
+    if (fullHeight === null || infoHeight === null) return
+    const title = Math.min(fullHeight, TITLE_PEEK_MAX_HEIGHT)
+    const photos = hasPhotos ? PHOTO_GAP + PLACE_PHOTO_HEIGHT : 0
+    onPeekHeight(SHEET_HANDLE + title + TITLE_GAP + infoHeight + photos + PEEK_BOTTOM)
+  }, [fullHeight, infoHeight, hasPhotos, onPeekHeight])
+
   return (
     <div className="flex flex-col gap-1.5 px-2">
       {/* 1단계에선 이름을 2줄까지 보이고 넘치면 자른다. 끝까지 올리면 시트와 같은 스프링으로 늘어나 전부 보인다 */}
@@ -87,7 +118,7 @@ function PlaceSummary({ place }: { place: MapPlace }) {
       </motion.div>
       <div className="flex flex-col gap-2.5">
         <BottomSheetDescription asChild>
-          <dl className="flex flex-col gap-1 leading-[1.18]">
+          <dl ref={infoRef} className="flex flex-col gap-1 leading-[1.18]">
             {rows.map((row) => (
               <div key={row.key} className="flex gap-3">
                 <dt className="text-text-muted">{row.term}</dt>
@@ -127,11 +158,17 @@ function SheetSection({ title, children }: { title: string; children: ReactNode 
 }
 
 // 시트 본문 전체. 1단계는 사진 줄까지 보이고, 끌어 올리면 설명·메뉴가 이어진다
-function PlaceDetails({ place }: { place: MapPlace }) {
+function PlaceDetails({
+  place,
+  onPeekHeight,
+}: {
+  place: MapPlace
+  onPeekHeight: (height: number) => void
+}) {
   const { sheet } = getMessages(useLocale()).map
   return (
     <div className="flex flex-col gap-5">
-      <PlaceSummary place={place} />
+      <PlaceSummary place={place} onPeekHeight={onPeekHeight} />
       {place.menus.length > 0 && (
         <SheetSection title={sheet.menu}>
           {/* 한 칸이 펼쳐지면 아래 칸들도 같이 재어 밀려 내려가게 묶는다 */}
@@ -163,12 +200,14 @@ export function PlaceSheet({
   if (place && place !== shown) setShown(place)
   const current = place ?? shown
   useCloseWatcher(place !== null, onClose)
+  // 장소마다 사진 줄(없으면 정보 줄) 아래에서 끊어 소개 글이 1단계에 비치지 않게 한다
+  const [peekHeight, setPeekHeight] = useState(PLACE_SHEET_PEEK)
 
   return (
     <BottomSheet
       open={place !== null}
       hidden={hidden}
-      peekHeight={PLACE_SHEET_PEEK}
+      peekHeight={peekHeight}
       // 장소 주소는 기록 없이 갈아 끼우기만 해서, 뒤로 가기는 기록 대신 CloseWatcher 로 받는다
       closeOnBack={false}
       revealKey={place?.id}
@@ -183,7 +222,7 @@ export function PlaceSheet({
         )
       }
     >
-      {current && <PlaceDetails place={current} />}
+      {current && <PlaceDetails place={current} onPeekHeight={setPeekHeight} />}
     </BottomSheet>
   )
 }
