@@ -19,9 +19,9 @@ import { MAP_HEIGHT, MAP_WIDTH, placePoint, type Point } from '../map/campus'
 import { PlaceArea } from '../map/PlaceArea'
 import { PlaceMarker } from '../map/PlaceMarker'
 import { placeLabel, sequenceHint } from '../map/place-label'
-import { CATEGORIES, categoryById } from '../mocks/categories'
-import { menusByPlace } from '../mocks/menus'
-import { PLACES } from '../mocks/places'
+import { CATEGORIES, categoryById } from '../store/categories'
+import { menusByPlace } from '../store/menus'
+import { PLACES } from '../store/places'
 import {
   placeById,
   removePlace,
@@ -29,8 +29,8 @@ import {
   restorePlaceTranslations,
   savePlace,
   useStoreVersion,
-} from '../mocks/store'
-import { FESTIVAL_DATES, findTranslation, LANGUAGE_CODES, type LanguageCode } from '../mocks/types'
+} from '../store'
+import { FESTIVAL_DATES, findTranslation, LANGUAGE_CODES, type LanguageCode } from '../types'
 import styles from './PlaceEditRoute.module.css'
 
 /*

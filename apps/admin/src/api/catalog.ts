@@ -1,7 +1,7 @@
 import type { LanguageCode } from '@quen/schema/common/language'
 import type { PlaceVertex } from '@quen/schema/entities/place'
 import { toKstIso } from '../lib/kst'
-import type { Category, Menu, Place } from '../mocks/types'
+import type { Category, Menu, Place } from '../types'
 import { request } from './client'
 import { BACKOFFICE_BASE } from './config'
 import { listAll } from './list'

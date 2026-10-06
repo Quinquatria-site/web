@@ -1,7 +1,7 @@
 import type { LanguageCode } from '@quen/schema/common/language'
 import type { NoticeType } from '@quen/schema/entities/notice'
 import { toKstIso } from '../lib/kst'
-import type { Notice } from '../mocks/types'
+import type { Notice } from '../types'
 import { request } from './client'
 import { BACKOFFICE_BASE } from './config'
 import { listAll } from './list'

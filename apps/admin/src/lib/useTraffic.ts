@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ApiError, fetchTraffic, type Traffic } from '../api'
-import { FESTIVAL_DATES } from '../mocks/types'
+import { FESTIVAL_DATES } from '../types'
 
 /**
  * 축제 기간의 학생 앱 방문 통계. 홈의 "학생 앱 방문" 카드와 방문 통계 화면이 쓴다.

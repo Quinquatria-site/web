@@ -136,17 +136,17 @@ export const en: Messages = {
     filterAll: 'All',
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom out',
+    openList: 'Place list',
     list: {
       /** {count} 에 목록에 든 장소 수가 들어간다 */
       count: '{count} places',
-      /** 검색 결과를 칩으로 거른 동안. {total} 에 거르기 전, {count} 에 남은 장소 수가 들어간다 */
-      countOf: '{count} of {total} places',
     },
     search: {
       open: 'Search places',
       placeholder: 'Department or booth name',
       clear: 'Clear search',
-      /** 목록 시트 제목. {query} 에 검색창에 친 글자가 들어간다 */
+      close: 'Close search',
+      /** 검색 결과 제목. {query} 에 검색창에 친 글자가 들어간다 */
       resultTitle: 'Results for ‘{query}’',
       tip: 'Search by department or booth name.',
       tipExample: 'e.g. Thai Studies',

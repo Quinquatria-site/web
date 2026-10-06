@@ -1,5 +1,5 @@
 import { Badge } from '@seed-design/react'
-import { missingLanguages, type LanguageCode } from '../../mocks/types'
+import { missingLanguages, type LanguageCode } from '../../types'
 
 export interface LangBadgeProps {
   /** 번역 배열. 장소·공연·분실물이 모두 같은 모양을 쓴다 (§5.1) */

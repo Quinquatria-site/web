@@ -26,7 +26,7 @@ import {
   vitalGrade,
 } from '../lib/trafficStats'
 import { useTraffic } from '../lib/useTraffic'
-import { festivalDateLabel, festivalDayLabel, FESTIVAL_DATES } from '../mocks/types'
+import { festivalDateLabel, festivalDayLabel, FESTIVAL_DATES } from '../types'
 import { CongestionBadge, Meter, MeterGroup, TimeChart } from '../ui'
 import styles from './AnalyticsRoute.module.css'
 

@@ -1,5 +1,5 @@
-import { noticesByType } from '../mocks/store'
-import { FESTIVAL_DATES, festivalDayLabel, findTranslation, type Performance } from '../mocks/types'
+import { noticesByType } from '../store'
+import { FESTIVAL_DATES, festivalDayLabel, findTranslation, type Performance } from '../types'
 import { kstDateString } from './festivalTime'
 import { latestGeneralBroken, liveNow, performanceCountByDate } from './homeStats'
 

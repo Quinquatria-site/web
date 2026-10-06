@@ -1,4 +1,4 @@
-import type { Performance, PerformanceType } from '../mocks/types'
+import type { Performance, PerformanceType } from '../types'
 
 /**
  * 학생 앱 일정표의 공연 칸 순서와 시각. 학생 앱은 공연을 종류별 고정 칸에 넣어 보여주므로

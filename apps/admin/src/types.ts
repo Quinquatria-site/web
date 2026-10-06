@@ -4,8 +4,8 @@
  * 두고 완성 이름은 앱이 짓는다 (packages/schema/CLAUDE.md). Backoffice 는 모든 언어의
  * 번역을 `translations[]` 로 받으므로 `WithTranslations<Base, Text, parent>` 다.
  *
- * 필드는 서버와 같은 snake_case 다. 이 타입이 곧 응답 형태라서, 실제 API 가 붙을 때
- * 화면 코드를 다시 짜지 않아도 된다. datetime 은 UTC offset 이 포함된 ISO 8601 이다 (§2.2).
+ * 필드는 서버와 같은 snake_case 다. 이 타입이 곧 응답 형태다.
+ * datetime 은 UTC offset 이 포함된 ISO 8601 이다 (§2.2).
  *
  * 아래에 남은 것은 스키마가 앱 몫으로 정한 것들이다 — 축제 날짜, 라벨 포맷,
  * 번역 찾기·누락 검사. 서버 enum 이나 번역 타입을 여기서 다시 정의하면 린트가 막는다.
@@ -41,7 +41,7 @@ export type Menu = WithTranslations<MenuBase, MenuText, 'menu'>
  * 명세는 YYYY-MM-DD 형식만 규정하지만(§5.6), 이틀짜리 축제라 화면에서는
  * 날짜 입력칸 대신 일차 선택으로 받는다.
  *
- * 축제는 **10/7(수)~10/8(목)** 로 확정됐다. 장소 목의 운영 시간도 10/7 기준이다.
+ * 축제는 **10/7(수)~10/8(목)** 로 확정됐다.
  * 한때 10/6~10/7 로 적혀 있었는데 그것이 잘못 정해진 값이었다 (2026-09-24 정정).
  *
  * 문서는 아직 안 따라왔다 — PRD §0 은 "10/6~8 중 이틀 (화·수·목)" 이고 부록 A-6 은
@@ -128,9 +128,7 @@ export function missingLanguages(translations: { language_code: LanguageCode }[]
  * 빠진 언어 사용자에게는 이 항목이 목록에서 아예 사라지므로(§2.4), 이 판정에
  * 걸린 것들이 곧 "지금 외국인에게 안 보이는 것" 목록이다.
  */
-export function hasMissingTranslations(
-  translations: { language_code: LanguageCode }[],
-): boolean {
+export function hasMissingTranslations(translations: { language_code: LanguageCode }[]): boolean {
   return missingLanguages(translations).length > 0
 }
 

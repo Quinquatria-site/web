@@ -15,8 +15,8 @@ import {
   removeMenuTranslation,
   restoreMenuTranslations,
   saveMenu,
-} from '../mocks/store'
-import { findTranslation, LANGUAGE_CODES, type LanguageCode } from '../mocks/types'
+} from '../store'
+import { findTranslation, LANGUAGE_CODES, type LanguageCode } from '../types'
 import styles from './PlaceEditRoute.module.css'
 
 const fieldKey = (field: 'name' | 'desc', lang: LanguageCode) => `${field}_${lang}` as const

@@ -36,7 +36,7 @@ import {
   trafficUnavailableText,
 } from '../lib/trafficStats'
 import { useTraffic } from '../lib/useTraffic'
-import { lostItemsByReturned, performancesByDate, useStoreVersion } from '../mocks/store'
+import { lostItemsByReturned, performancesByDate, useStoreVersion } from '../store'
 import {
   dateTimeLabel,
   festivalDayLabel,
@@ -45,7 +45,7 @@ import {
   type LostItem,
   type Notice,
   type Performance,
-} from '../mocks/types'
+} from '../types'
 import {
   CongestionBadge,
   QuickAction,

@@ -1,10 +1,10 @@
-import { CATEGORIES } from '../mocks/categories'
-import { LOST_ITEMS } from '../mocks/lostItems'
-import { menusByPlace } from '../mocks/menus'
-import { NOTICES } from '../mocks/notices'
-import { PERFORMANCES } from '../mocks/performances'
-import { PLACES } from '../mocks/places'
-import { noticesByType, performancesByDate } from '../mocks/store'
+import { CATEGORIES } from '../store/categories'
+import { LOST_ITEMS } from '../store/lostItems'
+import { menusByPlace } from '../store/menus'
+import { NOTICES } from '../store/notices'
+import { PERFORMANCES } from '../store/performances'
+import { PLACES } from '../store/places'
+import { noticesByType, performancesByDate } from '../store'
 import {
   FESTIVAL_DATES,
   findTranslation,
@@ -13,7 +13,7 @@ import {
   type Notice,
   type Performance,
   type Place,
-} from '../mocks/types'
+} from '../types'
 import { isOpenAt } from './placeHours'
 
 /**
