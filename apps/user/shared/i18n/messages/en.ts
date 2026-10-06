@@ -47,6 +47,7 @@ export const en: Messages = {
       likelionInstagram: 'LIKELION instagram',
       council: 'HUFS Seoul Campus 60th Student Council ‘Seonmyeong’',
       councilInstagram: 'Seonmyeong instagram',
+      developers: 'Meet the Developers',
     },
   },
   pages: {
@@ -58,9 +59,20 @@ export const en: Messages = {
     lostItemDetail: 'Lost Item',
     goods: 'QUINQUATRIA Goods',
     online: 'Online Content',
+    developers: 'Meet the Developers',
   },
   notices: {
     important: 'Important',
+  },
+  developers: {
+    description: 'Meet the LIKELION team behind the QUINQUATRIA web.',
+    departments: {
+      hwangJunho: 'Department of English Literature and Culture',
+      kimJiyong: 'Department of Italian',
+      limJaejoon: 'Department of Thai Studies',
+      kimTaeheon: 'ELLT',
+      wiSoomin: 'ELLT',
+    },
   },
   online: {
     period: 'Period',
