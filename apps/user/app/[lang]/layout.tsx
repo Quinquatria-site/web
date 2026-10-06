@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
 import { SunsetBackground } from '@/shared/background/SunsetBackground'
@@ -64,6 +65,7 @@ export default async function RootLayout({ children }: LayoutProps<'/[lang]'>) {
             strategy="afterInteractive"
           />
         )}
+        <Analytics />
       </body>
     </html>
   )
