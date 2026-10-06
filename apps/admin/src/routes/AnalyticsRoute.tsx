@@ -72,8 +72,13 @@ export function AnalyticsRoute() {
   const todayPeakSlot = series.indexOf(todayPeak)
   const nowSlot = slotOf(now)
 
-  // 조회 기간은 useTraffic 이 정한다 (지금은 축제 전 며칠을 임시로 포함)
-  const days = dailyTotals(traffic.buckets, rangeDates(traffic.range.from, traffic.range.to))
+  // 조회 기간은 useTraffic 이 정한다 (축제 전날 밤부터)
+  const days = dailyTotals(
+    traffic.buckets,
+    rangeDates(traffic.range.from, traffic.range.to),
+    traffic.range.start,
+  )
+  const startTime = startTimeLabel(traffic.range.start)
   const maxDayVisits = Math.max(0, ...days.map((day) => day.visits))
   const pages = pageGroups(traffic.paths)
   const locales = localeShares(traffic.paths)
@@ -124,13 +129,17 @@ export function AnalyticsRoute() {
 
       <Card
         title="날짜별 방문"
-        count={`${festivalDateLabel(traffic.range.from)} ~ ${festivalDateLabel(traffic.range.to)}`}
+        count={`${festivalDateLabel(traffic.range.from)}${startTime ? ` ${startTime}` : ''} ~ ${festivalDateLabel(traffic.range.to)}`}
       >
         <MeterGroup>
           {days.map((day) => (
             <Meter
               key={day.date}
-              label={dayLabel(day.date)}
+              label={
+                startTime && day.date === traffic.range.from
+                  ? `${dayLabel(day.date)} (${startTime}~)`
+                  : dayLabel(day.date)
+              }
               value={day.visits}
               max={maxDayVisits}
               valueLabel={`방문 ${formatCount(day.visits)} · 조회 ${formatCount(day.pageViews)}`}
@@ -305,6 +314,13 @@ function dayLabel(date: string): string {
   return FESTIVAL_DATES.some((day) => day === date)
     ? festivalDayLabel(date)
     : festivalDateLabel(date)
+}
+
+/** 첫날 세기 시작한 시각을 "21시" 처럼. 자정부터 셌으면 붙일 것이 없어 null */
+function startTimeLabel(start: string): string | null {
+  const time = kstTimeString(new Date(start))
+  if (time === '00:00') return null
+  return time.endsWith(':00') ? `${Number(time.slice(0, 2))}시` : time
 }
 
 /** KST 하루 안에서 몇 번째 15분 칸인가 */

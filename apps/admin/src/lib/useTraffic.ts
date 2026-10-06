@@ -5,7 +5,8 @@ import { FESTIVAL_DATES } from '../types'
 /**
  * 축제 기간의 학생 앱 방문 통계. 홈의 "학생 앱 방문" 카드와 방문 통계 화면이 쓴다.
  *
- * 기간은 축제 이틀이다 (지금은 임시로 앞당겨 둠 — 아래 PREVIEW_DAYS_BEFORE).
+ * 기간은 축제 전날 밤(PRE_OPEN_TIME)부터 마지막 날까지다. 전야에 미리 들어와 보는
+ * 학생까지 세되, 그 전 며칠의 테스트·준비 조회는 섞지 않는다.
  * 날짜는 FESTIVAL_DATES 한 곳에서 가져와 함수에
  * 넘긴다 — 함수 쪽에 날짜를 또 적으면 두 벌이 되어 한쪽만 고쳐질 수 있다.
  *
@@ -29,16 +30,11 @@ export interface TrafficSnapshot {
 
 const MIN_INTERVAL_MS = 30_000
 
-/**
- * TODO(축제 전 임시): 축제 첫날(10/7) 전에 0 으로 되돌린다.
- *
- * **임시.** 축제 전에도 실제 숫자를 보려고 시작 며칠 전(10/2)부터 조회한다.
- * 축제 이틀만 보려면 0 으로 되돌린다. 화면은 range 를 따라가므로 여기만 고치면 된다.
- */
-const PREVIEW_DAYS_BEFORE = 5
+/** 축제 전날 이 시각(KST)부터 센다 */
+const PRE_OPEN_TIME = '21:00'
 
 const DAY_MS = 24 * 60 * 60 * 1000
-const FROM = new Date(Date.parse(`${FESTIVAL_DATES[0]}T00:00:00Z`) - PREVIEW_DAYS_BEFORE * DAY_MS)
+const FROM = new Date(Date.parse(`${FESTIVAL_DATES[0]}T00:00:00Z`) - DAY_MS)
   .toISOString()
   .slice(0, 10)
 const TO = FESTIVAL_DATES[FESTIVAL_DATES.length - 1]
@@ -61,7 +57,7 @@ export function useTraffic({ poll }: TrafficOptions = {}): TrafficSnapshot {
     lastRunAt.current = now
 
     // setState 는 응답 콜백 안에서만 한다. effect 가 부르는 함수라 동기로 부르면 린트가 막는다
-    fetchTraffic(FROM, TO).then(
+    fetchTraffic(FROM, TO, PRE_OPEN_TIME).then(
       (next) => {
         if (!mounted.current) return
         setTraffic(next)

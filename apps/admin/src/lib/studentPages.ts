@@ -26,6 +26,10 @@ const PAGES: Record<string, readonly [string, string?]> = {
   notices: ['공지', '공지 상세'],
   'lost-items': ['분실물 찾기', '분실물 상세'],
   goods: ['굿즈'],
+  online: ['온라인 콘텐츠'],
+  developers: ['개발진 소개'],
+  // /admin 같은 관리자 주소를 쳐 보면 학생 앱이 여기로 보낸다. 통계엔 원래 주소가 안 남는다
+  focus: ['/ko/focus (/admin 등 접속 시도)'],
 }
 
 export const OTHER_PAGE = '기타'

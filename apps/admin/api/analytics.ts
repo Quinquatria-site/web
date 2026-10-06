@@ -57,7 +57,7 @@ interface VitalsSummary {
 }
 
 interface Traffic {
-  range: { from: string; to: string }
+  range: { from: string; to: string; start: string }
   today: string
   generatedAt: string
   buckets: { start: string; pageViews: number; visits: number }[]
@@ -196,6 +196,15 @@ function kstMidnight(date: string): number {
   return Date.parse(`${date}T00:00:00Z`) - KST_OFFSET_MS
 }
 
+/** "21:00" → 자정부터의 밀리초. 형식이 틀리거나 범위를 넘으면 null */
+function timeOfDayMs(time: string): number | null {
+  const match = /^(\d{2}):(\d{2})$/.exec(time)
+  if (!match) return null
+  const [hours, minutes] = [Number(match[1]), Number(match[2])]
+  if (hours > 23 || minutes > 59) return null
+  return (hours * 60 + minutes) * 60 * 1000
+}
+
 function kstDate(ms: number): string {
   return new Date(ms + KST_OFFSET_MS).toISOString().slice(0, 10)
 }
@@ -230,16 +239,22 @@ export async function GET(request: Request): Promise<Response> {
   const params = new URL(request.url).searchParams
   const from = params.get('from') ?? ''
   const to = params.get('to') ?? ''
+  // 첫날을 이 시각(KST)부터 센다. 없으면 자정부터
+  const start = params.get('start') ?? '00:00'
 
   if (!DATE_PATTERN.test(from) || !DATE_PATTERN.test(to)) {
     return fail(400, 'INVALID_PARAMETER', 'from, to 는 YYYY-MM-DD 여야 합니다.')
   }
-  const rangeStart = kstMidnight(from)
+  const startMs = timeOfDayMs(start)
+  if (startMs === null) {
+    return fail(400, 'INVALID_PARAMETER', 'start 는 HH:mm 이어야 합니다.')
+  }
   const rangeEnd = kstMidnight(to) + DAY_MS
-  const days = (rangeEnd - rangeStart) / DAY_MS
+  const days = (rangeEnd - kstMidnight(from)) / DAY_MS
   if (Number.isNaN(days) || days < 1 || days > MAX_DAYS) {
     return fail(400, 'INVALID_PARAMETER', `from <= to, 최대 ${MAX_DAYS}일이어야 합니다.`)
   }
+  const rangeStart = kstMidnight(from) + startMs
 
   const token = process.env.CF_API_TOKEN
   const accountTag = process.env.CF_ACCOUNT_ID
@@ -298,7 +313,7 @@ export async function GET(request: Request): Promise<Response> {
 
   const recent = account?.vitalsRecent?.[0]
   const traffic: Traffic = {
-    range: { from, to },
+    range: { from, to, start: iso(rangeStart) },
     today,
     generatedAt: iso(now),
     buckets: [...buckets.values()].sort((a, b) => a.start.localeCompare(b.start)),

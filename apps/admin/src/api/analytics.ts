@@ -35,8 +35,8 @@ export interface VitalsSummary {
  * 원자료에 가깝다 — 합계·혼잡도·페이지 이름은 src/lib/trafficStats.ts 가 만든다.
  */
 export interface Traffic {
-  /** 조회 기간 (KST). 보통 축제 이틀 */
-  range: { from: string; to: string }
+  /** 조회 기간 (KST 날짜). start 는 첫날 세기 시작한 시각 (ISO) */
+  range: { from: string; to: string; start: string }
   /** 함수가 본 KST 오늘. 축제 밖이어도 "지금" 은 이 날 기준이다 */
   today: string
   /** 함수가 Cloudflare 를 부른 시각 (ISO). CDN 캐시 때문에 최대 1분 전일 수 있다 */
@@ -63,8 +63,8 @@ export const ANALYTICS_UNCONFIGURED = 'ANALYTICS_UNCONFIGURED'
 
 const TIMEOUT_MS = 15_000
 
-export async function fetchTraffic(from: string, to: string): Promise<Traffic> {
-  const query = new URLSearchParams({ from, to })
+export async function fetchTraffic(from: string, to: string, start?: string): Promise<Traffic> {
+  const query = new URLSearchParams({ from, to, ...(start ? { start } : {}) })
   let res: Response
   try {
     res = await fetch(`/api/analytics?${query}`, { signal: AbortSignal.timeout(TIMEOUT_MS) })

@@ -30,10 +30,21 @@ export interface DailyTotal {
   visits: number
 }
 
-/** 날짜별 합계 (KST). 방문이 없는 날도 0 으로 한 줄 세운다 — 화면이 일차마다 같은 자리를 갖게 */
-export function dailyTotals(buckets: Bucket[], dates: readonly string[]): DailyTotal[] {
+/**
+ * 날짜별 합계 (KST). 방문이 없는 날도 0 으로 한 줄 세운다 — 화면이 일차마다 같은 자리를 갖게.
+ *
+ * since(ISO)를 주면 그보다 이른 칸은 뺀다. 칸에는 조회 기간 말고도 "오늘" 하루 전체가
+ * 섞여 오므로, 첫날을 밤부터 세는 기간이면 이것 없이는 첫날 낮 조회까지 더해진다.
+ */
+export function dailyTotals(
+  buckets: Bucket[],
+  dates: readonly string[],
+  since?: string,
+): DailyTotal[] {
   const totals = new Map(dates.map((date) => [date, { date, pageViews: 0, visits: 0 }]))
+  const sinceMs = since ? Date.parse(since) : -Infinity
   for (const bucket of buckets) {
+    if (Date.parse(bucket.start) < sinceMs) continue
     const total = totals.get(kstDateString(new Date(bucket.start)))
     if (!total) continue
     total.pageViews += bucket.pageViews
