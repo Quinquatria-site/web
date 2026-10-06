@@ -60,6 +60,13 @@ export const zh: Messages = {
   },
   developers: {
     description: '认识打造 QUINQUATRIA 网站的 LIKELION 开发团队。',
+    departments: {
+      hwangJunho: '英美文学与文化系',
+      kimJiyong: '意大利语系',
+      limJaejoon: '泰国学系',
+      kimTaeheon: 'ELLT系',
+      wiSoomin: 'ELLT系',
+    },
   },
   online: {
     period: '活动时间',

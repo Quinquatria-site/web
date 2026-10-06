@@ -1,4 +1,6 @@
 import type { ResolvingMetadata } from 'next'
+import { DevelopersShow } from '@/features/developers/DevelopersShow'
+import { MEMBERS } from '@/features/developers/members'
 import { DuskBackground } from '@/shared/background/DuskBackground'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
@@ -22,12 +24,18 @@ export async function generateMetadata(
 
 /** 개발진 소개. 홈 크레딧에서 한 단계 들어오는 페이지라 도크는 뒤로 가기 원이 된다 */
 export default async function DevelopersPage() {
-  const { pages } = getMessages(await getLocale())
+  const { pages, developers, home } = getMessages(await getLocale())
 
   return (
     <>
-      <DuskBackground />
-      <PageTitle title={pages.developers} />
+      {/* 밝은 노을 위에서 별자리 이름이 묻혀 이 페이지만 하늘을 가라앉힌다 */}
+      <DuskBackground skyOpacity={0.65} />
+      <DevelopersShow
+        title={<PageTitle title={pages.developers} />}
+        organization={home.credits.likelion}
+        members={MEMBERS}
+        departments={developers.departments}
+      />
     </>
   )
 }

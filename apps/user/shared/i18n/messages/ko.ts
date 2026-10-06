@@ -59,6 +59,13 @@ export const ko = {
   },
   developers: {
     description: 'QUINQUATRIA 웹을 만든 멋쟁이사자처럼 개발진을 소개해요.',
+    departments: {
+      hwangJunho: '영미문학·문화학과',
+      kimJiyong: '이탈리아어과',
+      limJaejoon: '태국학과',
+      kimTaeheon: 'ELLT학과',
+      wiSoomin: 'ELLT학과',
+    },
   },
   online: {
     period: '진행 기간',

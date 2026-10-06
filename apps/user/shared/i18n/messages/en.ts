@@ -66,6 +66,13 @@ export const en: Messages = {
   },
   developers: {
     description: 'Meet the LIKELION team behind the QUINQUATRIA web.',
+    departments: {
+      hwangJunho: 'Department of English Literature and Culture',
+      kimJiyong: 'Department of Italian',
+      limJaejoon: 'Department of Thai Studies',
+      kimTaeheon: 'ELLT',
+      wiSoomin: 'ELLT',
+    },
   },
   online: {
     period: 'Period',
