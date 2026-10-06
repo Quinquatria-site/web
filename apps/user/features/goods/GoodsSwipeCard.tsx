@@ -45,7 +45,8 @@ export function GoodsSwipeCard({
       dragElastic={0.3}
       onDragEnd={onDragEnd}
       // 사진의 그림 끌기가 밀기를 가로채지 않게 막는다
-      className="relative rotate-1 touch-pan-y [&_img]:pointer-events-none"
+      // 미끄러지고 끌리는 동안 Safari 가 카드를 매 프레임 다시 그리지 않게 레이어로 미리 올린다
+      className="relative rotate-1 touch-pan-y will-change-transform [&_img]:pointer-events-none"
     >
       {children}
     </motion.div>
