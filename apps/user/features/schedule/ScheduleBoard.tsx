@@ -15,7 +15,7 @@ export function ScheduleBoard({
   liveDay: number | null
   liveAnchor: string | null
 }) {
-  const [day, setDay] = useState(liveDay ?? 0)
+  const [day, setDay] = useState(liveDay ?? 1)
   // 매번 새 객체라 같은 카드를 두 번 눌러도 다시 스크롤한다
   const [scrollRequest, setScrollRequest] = useState<{ id: string } | null>(null)
 
