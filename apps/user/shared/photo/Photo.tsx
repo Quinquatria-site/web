@@ -3,7 +3,7 @@ import type { SyntheticEvent } from 'react'
 import { assetUrl } from './asset-url'
 import athenaEmblem from './images/athena-emblem.png'
 
-/** 사진 자리. 부모를 꽉 채우고, 사진이 없으면 흐린 아테나 문양을 대신 보여 준다. 모서리는 부모가 자른다. src 는 주소나 API 의 S3 key */
+/** 사진 자리. 부모를 꽉 채우고, 사진이 없으면 흐린 아테나 문양을 대신 보여 준다. 모서리는 부모가 자른다. src 는 주소나 public/images 아래를 가리키는 S3 key */
 export function Photo({
   src,
   alt,

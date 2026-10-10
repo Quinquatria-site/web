@@ -3,7 +3,7 @@ import { preload } from 'react-dom'
 import { assetUrl } from '@/shared/photo/asset-url'
 import { MODAL_IMAGE_SIZES, type Performance } from './performance'
 
-/** 공연 사진을 HTML 머리에서 미리 받게 한다. 모달은 열 때 사진을 그려서, 미리 받지 않으면 누른 뒤에야 S3 에서 받기 시작한다 */
+/** 공연 사진을 HTML 머리에서 미리 받게 한다. 모달은 열 때 사진을 그려서, 미리 받지 않으면 누른 뒤에야 받기 시작한다 */
 export function PerformanceImagePreload({ performances }: { performances: Performance[] }) {
   performances.forEach(({ image_uri }) => {
     if (!image_uri) return

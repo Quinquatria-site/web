@@ -19,8 +19,9 @@ export async function generateMetadata(
   return listShareMetadata(parent, await getLocale(), 'schedule', '/schedule')
 }
 
+// 공연 중을 떠 둔 응답으로 고정해 시점이 바뀌어도 배너가 그대로라 다시 굽지 않는다. 백엔드가 있을 때 쓰던 설정
 // 배너가 굽는 시각으로 축제 시점을 고르므로, 시점이 바뀐 뒤 늦어도 이만큼 지나 다시 굽는다
-export const revalidate = 300
+// export const revalidate = 300
 
 /** 일정표 탭. 배너와 두 날치 타임라인을 미리 그려 두고, 탭만 브라우저에서 고른다 */
 export default async function SchedulePage() {

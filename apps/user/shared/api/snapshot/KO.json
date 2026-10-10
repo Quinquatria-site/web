@@ -1,0 +1,4835 @@
+{
+  "/categories?page=1&size=100": {
+    "items": [
+      {
+        "id": 1,
+        "code": "PUB",
+        "category_icon_uri": null,
+        "language_code": "KO",
+        "name": "주점"
+      },
+      {
+        "id": 2,
+        "code": "BOOTH",
+        "category_icon_uri": null,
+        "language_code": "KO",
+        "name": "부스"
+      },
+      {
+        "id": 3,
+        "code": "FOODTRUCK",
+        "category_icon_uri": null,
+        "language_code": "KO",
+        "name": "푸드트럭"
+      },
+      {
+        "id": 4,
+        "code": "MEDI",
+        "category_icon_uri": null,
+        "language_code": "KO",
+        "name": "의무실"
+      },
+      {
+        "id": 5,
+        "code": "TRASHCAN",
+        "category_icon_uri": null,
+        "language_code": "KO",
+        "name": "쓰레기통"
+      },
+      {
+        "id": 6,
+        "code": "PHOTOBOOTH",
+        "category_icon_uri": null,
+        "language_code": "KO",
+        "name": "포토부스"
+      },
+      {
+        "id": 7,
+        "code": "ENTRANCE",
+        "category_icon_uri": null,
+        "language_code": "KO",
+        "name": "무대 출입구"
+      },
+      {
+        "id": 8,
+        "code": "BRACELET",
+        "category_icon_uri": null,
+        "language_code": "KO",
+        "name": "팔찌"
+      },
+      {
+        "id": 9,
+        "code": "PROMOTION",
+        "category_icon_uri": null,
+        "language_code": "KO",
+        "name": "프로모션"
+      }
+    ],
+    "page": 1,
+    "size": 100,
+    "total": 9
+  },
+  "/notices/10": {
+    "id": 10,
+    "type": "PERMANENT",
+    "created_at": "2026-10-03T17:41:31.039097Z",
+    "notice_image_uri": [
+      "images/notice/8f5394cb-a6e2-4cbb-8022-d16ab445a0ac.webp",
+      "images/notice/791370e3-0fa3-41e9-8c61-e1b892f57020.webp",
+      "images/notice/4935ea58-f32c-4d51-b008-dc5b04dbe345.webp",
+      "images/notice/9323ab3e-b13f-4b93-8512-f6c9ed3e941c.webp",
+      "images/notice/031e0911-3f40-4be0-8b53-b5049197d102.webp",
+      "images/notice/b168632f-60cb-4d98-9fa6-7cfa044895ef.webp",
+      "images/notice/0a30de6d-4ad9-4be5-80ad-7122a3370288.webp",
+      "images/notice/eadfc4d7-f4ab-4a8e-b221-7237fc38bd5a.webp",
+      "images/notice/85030953-c24a-4fb2-97df-611417ca6341.webp"
+    ],
+    "language_code": "KO",
+    "title": "안전한 무대 관람을 위한 안내 사항",
+    "content": "[🌅 2026 QUINQUATRIA : Twilight 안전한 무대 관람을 위한 안내 사항 🌅]\n\n안녕하십니까, 학우 여러분.\n한국외국어대학교 서울캠퍼스 제60대 총학생회 ‘선명’입니다.\n\n안전한 대동제와 무대 관람을 위하여 반입 금지 물품, 무대 관람 유의 사항, 입 퇴장 동선 및 유의사항, 응급 상황 발생 시 대처 방안을 안내 드립니다.\n\n자세한 내용은 카드뉴스를 참고 부탁드립니다.\n\n📌 무대 입장 시간\n- 출입구1 (외대인 팔찌 착용자) : 입장 시작 시간 15:00 ~\n- 출입구2 (외부인/외대인 팔찌 미착용자) : 입장 시작 시간 19:00 ~\n* 입장 방법과 관련된 자세한 사항은 [외대인 존 운영 및 무대 입장 안내 카드뉴스]를 참고해 주십시오.\n\n📌 무대 관람 유의 사항\n1. 공연장 내에서 반입 금지 물품 소지가 적발될 시 즉시 퇴장 조치가 이루어집니다.\n2. 공연 도중 건강상의 문제가 있을 경우, 그 즉시 현장 STAFF를 찾아주시거나 손을 머리 위로 들어 X자 표시를 만들어주시기 바랍니다.\n3. 앞사람과 거리를 유지하며 무대를 관람해 주시기 바랍니다.\n4. 현장 STAFF의 판단 하에 안전에 위협이 있다고 판단되는 경우 입장이 제한될 수 있습니다.\n\n📌 중앙 부스 및 무대 의무실 운영\n- 중앙 부스 (진실의 거울 옆)\n- 무대 의무실 (무대 입구 좌측)\n\n안전한 퀸쿠아트리아를 위하여 최선을 다하겠습니다.\n\n💡 문의 사항\n📌 총학생회 카카오톡 채널 : hufsstudent\n📌 총학생회 이메일 : hufsstudent60@gmail.com"
+  },
+  "/notices/8": {
+    "id": 8,
+    "type": "PERMANENT",
+    "created_at": "2026-10-03T06:25:22.159806Z",
+    "notice_image_uri": [
+      "images/notice/65921b12-a004-4c0b-8b95-8516ff23d0ff.webp",
+      "images/notice/343ca051-a192-4d28-89fe-e95a6192baa8.webp",
+      "images/notice/15dbbd4b-0a8f-4c92-85be-4591398b5683.webp",
+      "images/notice/db54800f-ce1d-4bb1-bc87-ba40cd980bd2.webp"
+    ],
+    "language_code": "KO",
+    "title": "외대인 팔찌 수령 방법 안내",
+    "content": "[🌅 2026 QUINQUATRIA : Twilight 외대인 팔찌 수령 방법 안내 🌅]\n\n안녕하십니까, 학우 여러분.\n한국외국어대학교 서울캠퍼스 제60대 총학생회 ‘선명’입니다.\n\n학우분들의 원활한 무대 입장 및 관람을 위하여\n이번 대동제에서는 외대인 팔찌 제도을 운영합니다.\n\n📌 외대인 팔찌 수령 시간\n- 서울캠퍼스 학부생 : 11:00 ~ 무대 종료 시\n- 기타 외대인 : 15:00 ~ 무대 종료 시\n\n📌 외대인 팔찌 수령 장소 : 미네르바 컴플렉스(오바마홀) 지하 2층 수령 창구\n\n자세한 사항은 본 카드뉴스를 참고해주시길 바랍니다.\n총학생회는 서울캠퍼스 학우 여러분의 권리 보장과 원활한 대동제 진행을 위하여 최선을 다하겠습니다.\n\n감사합니다.\n\n💡 문의 사항\n📌 총학생회 카카오톡 채널 : hufsstudent\n📌 총학생회 이메일 : hufsstudent60@gmail.com"
+  },
+  "/notices/permanent?size=100": {
+    "items": [
+      {
+        "id": 10,
+        "type": "PERMANENT",
+        "created_at": "2026-10-03T17:41:31.039097Z",
+        "notice_image_uri": [
+          "images/notice/8f5394cb-a6e2-4cbb-8022-d16ab445a0ac.webp",
+          "images/notice/791370e3-0fa3-41e9-8c61-e1b892f57020.webp",
+          "images/notice/4935ea58-f32c-4d51-b008-dc5b04dbe345.webp",
+          "images/notice/9323ab3e-b13f-4b93-8512-f6c9ed3e941c.webp",
+          "images/notice/031e0911-3f40-4be0-8b53-b5049197d102.webp",
+          "images/notice/b168632f-60cb-4d98-9fa6-7cfa044895ef.webp",
+          "images/notice/0a30de6d-4ad9-4be5-80ad-7122a3370288.webp",
+          "images/notice/eadfc4d7-f4ab-4a8e-b221-7237fc38bd5a.webp",
+          "images/notice/85030953-c24a-4fb2-97df-611417ca6341.webp"
+        ],
+        "language_code": "KO",
+        "title": "안전한 무대 관람을 위한 안내 사항",
+        "content": "[🌅 2026 QUINQUATRIA : Twilight 안전한 무대 관람을 위한 안내 사항 🌅]\n\n안녕하십니까, 학우 여러분.\n한국외국어대학교 서울캠퍼스 제60대 총학생회 ‘선명’입니다.\n\n안전한 대동제와 무대 관람을 위하여 반입 금지 물품, 무대 관람 유의 사항, 입 퇴장 동선 및 유의사항, 응급 상황 발생 시 대처 방안을 안내 드립니다.\n\n자세한 내용은 카드뉴스를 참고 부탁드립니다.\n\n📌 무대 입장 시간\n- 출입구1 (외대인 팔찌 착용자) : 입장 시작 시간 15:00 ~\n- 출입구2 (외부인/외대인 팔찌 미착용자) : 입장 시작 시간 19:00 ~\n* 입장 방법과 관련된 자세한 사항은 [외대인 존 운영 및 무대 입장 안내 카드뉴스]를 참고해 주십시오.\n\n📌 무대 관람 유의 사항\n1. 공연장 내에서 반입 금지 물품 소지가 적발될 시 즉시 퇴장 조치가 이루어집니다.\n2. 공연 도중 건강상의 문제가 있을 경우, 그 즉시 현장 STAFF를 찾아주시거나 손을 머리 위로 들어 X자 표시를 만들어주시기 바랍니다.\n3. 앞사람과 거리를 유지하며 무대를 관람해 주시기 바랍니다.\n4. 현장 STAFF의 판단 하에 안전에 위협이 있다고 판단되는 경우 입장이 제한될 수 있습니다.\n\n📌 중앙 부스 및 무대 의무실 운영\n- 중앙 부스 (진실의 거울 옆)\n- 무대 의무실 (무대 입구 좌측)\n\n안전한 퀸쿠아트리아를 위하여 최선을 다하겠습니다.\n\n💡 문의 사항\n📌 총학생회 카카오톡 채널 : hufsstudent\n📌 총학생회 이메일 : hufsstudent60@gmail.com"
+      },
+      {
+        "id": 8,
+        "type": "PERMANENT",
+        "created_at": "2026-10-03T06:25:22.159806Z",
+        "notice_image_uri": [
+          "images/notice/65921b12-a004-4c0b-8b95-8516ff23d0ff.webp",
+          "images/notice/343ca051-a192-4d28-89fe-e95a6192baa8.webp",
+          "images/notice/15dbbd4b-0a8f-4c92-85be-4591398b5683.webp",
+          "images/notice/db54800f-ce1d-4bb1-bc87-ba40cd980bd2.webp"
+        ],
+        "language_code": "KO",
+        "title": "외대인 팔찌 수령 방법 안내",
+        "content": "[🌅 2026 QUINQUATRIA : Twilight 외대인 팔찌 수령 방법 안내 🌅]\n\n안녕하십니까, 학우 여러분.\n한국외국어대학교 서울캠퍼스 제60대 총학생회 ‘선명’입니다.\n\n학우분들의 원활한 무대 입장 및 관람을 위하여\n이번 대동제에서는 외대인 팔찌 제도을 운영합니다.\n\n📌 외대인 팔찌 수령 시간\n- 서울캠퍼스 학부생 : 11:00 ~ 무대 종료 시\n- 기타 외대인 : 15:00 ~ 무대 종료 시\n\n📌 외대인 팔찌 수령 장소 : 미네르바 컴플렉스(오바마홀) 지하 2층 수령 창구\n\n자세한 사항은 본 카드뉴스를 참고해주시길 바랍니다.\n총학생회는 서울캠퍼스 학우 여러분의 권리 보장과 원활한 대동제 진행을 위하여 최선을 다하겠습니다.\n\n감사합니다.\n\n💡 문의 사항\n📌 총학생회 카카오톡 채널 : hufsstudent\n📌 총학생회 이메일 : hufsstudent60@gmail.com"
+      }
+    ],
+    "page": 1,
+    "size": 100,
+    "total": 2
+  },
+  "/notices?size=100": {
+    "items": [],
+    "page": 1,
+    "size": 100,
+    "total": 0
+  },
+  "/performances?size=100": {
+    "items": [
+      {
+        "id": 2,
+        "type": "STUDENT",
+        "image_uri": "images/performance/0c655a96-9252-4065-b856-438f112d2da4.webp",
+        "date": "2026-10-07",
+        "seq": 1,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "01. 한국외대풍물패연합회",
+        "description": "한국외대풍물패연합회는 고창농악을 전수 받아서 활동하며, 교내외 다양한 공연을 통해서 우리의 가락을 알리고 있습니다.\n\n신명나는 외풍연의 공연을 즐겁게 즐겨주세요~!"
+      },
+      {
+        "id": 1,
+        "type": "STUDENT",
+        "image_uri": "images/performance/b04438ba-b4af-4617-999a-bfc149bf3bd0.webp",
+        "date": "2026-10-07",
+        "seq": 2,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "02. 새물결",
+        "description": "한국외대에 새로운 물결을 불러일으키는 새물결!\n이번엔 감동의 물결을 일으키러 나왔습니다!"
+      },
+      {
+        "id": 3,
+        "type": "SPECIAL",
+        "image_uri": "images/performance/71613f58-b6cc-4ebc-bf1c-1e384962c2f5.webp",
+        "date": "2026-10-07",
+        "seq": 3,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "FBS 듀엣 가요제 : 조화",
+        "description": "🎤 노을빛 속, 두 목소리가 이루는 조화\n\n낮과 밤이 교차하는 아득한 순간,\n서로 다른 두 목소리가 어우러져 노을빛보다 깊은 조화를 피워냅니다.\n\n과연 여러분의 마음을 울릴 듀엣은 누구일까요?\n\n이번 가요제는 100% 현장 투표로 우승팀이 결정됩니다.\n\n황혼의 끝을 함께 밝혀줄 여러분의 관심과 참여를 기다립니다.\n\n📌 일시 : 2026년 10월 7일(수) 20:00\n📌 장소 : 한국외국어대학교 서울캠퍼스 운동장\n\n* 본 가요제는 한국외국어대학교 서울캠퍼스 제60대 총학생회 ‘선명’과 외대교육방송국 FBS가 함께합니다."
+      },
+      {
+        "id": 5,
+        "type": "ARTIST",
+        "image_uri": "images/performance/221060cd-6362-4a96-b758-d1ec3f0f7acb.webp",
+        "date": "2026-10-07",
+        "seq": 4,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "FIFTY FIFTY",
+        "description": ""
+      },
+      {
+        "id": 6,
+        "type": "ARTIST",
+        "image_uri": "images/performance/7cebe488-1123-4a99-bb9f-5e6e169815af.webp",
+        "date": "2026-10-07",
+        "seq": 5,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "Chang Kiha",
+        "description": ""
+      },
+      {
+        "id": 7,
+        "type": "ARTIST",
+        "image_uri": "images/performance/0c163d58-077c-4535-ac4c-bdcc5de5b028.webp",
+        "date": "2026-10-07",
+        "seq": 6,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "SIMON DOMINIC",
+        "description": ""
+      },
+      {
+        "id": 14,
+        "type": "STUDENT",
+        "image_uri": "images/performance/b963327d-18b7-4c01-9519-2bf246cde37a.png",
+        "date": "2026-10-07",
+        "seq": 7,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "03. 소울스테이션",
+        "description": "안녕하세요, 한국외대 유일 재즈 동아리 소울스테이션 입니다.\n재즈 음악을 기반으로 차별화된 음악을 하는 동아리입니다.\n부원을 상시 모집하고 있으니 많은 관심 부탁드립니다!\n\n이번 공연은 보컬이 없는 구성이지만\n악기로도 노래할 수 있다는 것을 보여드리겠습니다.\n\n곡 중간에 나오는 악기 솔로들은 모두 즉흥연주입니다.\n지금 이 순간에만 유일하게 들을 수 있는 연주에 빠져보세요!"
+      },
+      {
+        "id": 15,
+        "type": "STUDENT",
+        "image_uri": "images/performance/8d4b17d4-8f71-4465-816e-6e13a7f5628f.webp",
+        "date": "2026-10-07",
+        "seq": 8,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "04. 에팡이",
+        "description": "중앙 밴드 동아리 f.a. 출신, 팀 에팡이.\n\n가을 저녁에 가장 어울리는, 퀸쿠아의 밤을 빛낼 특별한 셋리스트로 준비했습니다."
+      },
+      {
+        "id": 16,
+        "type": "STUDENT",
+        "image_uri": "images/performance/80e6b6d7-8f19-4b46-97e6-290a83781002.webp",
+        "date": "2026-10-07",
+        "seq": 9,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "05. 선봉네어",
+        "description": "작년에는 없었던 이름, 선봉 네어과.\n올해는 우리가 직접 나섭니다.\n\n긴 말 대신 무대로 보여드리겠습니다.\n이번 축제, 제대로 즐겨주세요."
+      },
+      {
+        "id": 17,
+        "type": "STUDENT",
+        "image_uri": "images/performance/0b6c38a0-358e-4252-ba17-acb2b555f3a5.webp",
+        "date": "2026-10-07",
+        "seq": 10,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "06. 쏜애플 부계정",
+        "description": "저희는 쏜애플을 사랑해서 결성된 팀이고,\n밴드 사운드와 무대에 빠져들도록 좋은 퍼포먼스 보여드리겠습니다.\n\n학우분들 중 쏜팡이 분들이 계시다면\n부끄러워하지 마시고 뛰어봅시다.\n\n잘 모르시는 분들도 리듬에 맞춰서 즐겨주시면 좋겠습니다."
+      },
+      {
+        "id": 18,
+        "type": "STUDENT",
+        "image_uri": "images/performance/45b55eef-f207-4931-92fa-99a56584ac81.png",
+        "date": "2026-10-07",
+        "seq": 11,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "07. JANE",
+        "description": "K-POP, 코레오, 힙합 등 다양한 장르의 댄스를\n모두 다루는 재주꾼들의 모임이자,\n\n축제 분위기를 한껏 띄울 만큼 멋진 퍼포먼스를 보여주는\n한국외대의 유일무이한 중앙댄스동아리 JANE입니다."
+      },
+      {
+        "id": 19,
+        "type": "STUDENT",
+        "image_uri": "images/performance/4e487494-f372-4dfc-8b38-b3c478660ecd.webp",
+        "date": "2026-10-07",
+        "seq": 12,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "08. 무단투기",
+        "description": "외인부대 중앙락밴드동아리 '외인부대'에서\n이번 축제를 위해 결성된 팀 '무단투기'입니다.\n\n관객들한테 신나는 음악과 흥을 무단투기하겠다는 의미로\n팀명을 정하였습니다."
+      },
+      {
+        "id": 8,
+        "type": "ARTIST",
+        "image_uri": "images/performance/e42a3574-e489-4d7a-aaa7-fb6d2475d80b.webp",
+        "date": "2026-10-08",
+        "seq": 1,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "ONEW",
+        "description": ""
+      },
+      {
+        "id": 9,
+        "type": "ARTIST",
+        "image_uri": "images/performance/d5a84a26-775a-4421-b7e4-db5b4881e1ec.webp",
+        "date": "2026-10-08",
+        "seq": 2,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "Redoor",
+        "description": ""
+      },
+      {
+        "id": 10,
+        "type": "ARTIST",
+        "image_uri": "images/performance/77049c07-06c6-4192-8e36-e567eeb5dd0c.webp",
+        "date": "2026-10-08",
+        "seq": 3,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "WAYF BOYS",
+        "description": ""
+      },
+      {
+        "id": 11,
+        "type": "ARTIST",
+        "image_uri": "images/performance/8cf89958-6d34-4e5c-8a63-bdbbed1e3a37.webp",
+        "date": "2026-10-08",
+        "seq": 4,
+        "is_live": true,
+        "language_code": "KO",
+        "title": "ALLDAY PROJECT",
+        "description": ""
+      },
+      {
+        "id": 12,
+        "type": "SPECIAL",
+        "image_uri": "images/performance/f11b20f3-09a1-454d-a4ac-a5da1bd61343.webp",
+        "date": "2026-10-08",
+        "seq": 5,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "응원제 : 동화",
+        "description": "[🌅 2026 QUINQUATRIA: Twilight 응원제 : 동화 📣]\n\n안녕하세요, 한국외국어대학교 응원예술위원회입니다.\n\n오는 10월 8일, 응원예술위원회가 만드는 두 번째 응원제가 개최됩니다 ✨\n\n응원예술위원회의 퍼포먼스와 음악을 통해 학우 여러분 모두 하나 되는 특별한 시간에 함께해주세요!\n\n많은 관심과 참여 부탁드립니다 🩵\n\n🗓️ 2026.10.8.(목) 19:30-20:30\n📍 한국외국어대학교 서울캠퍼스 운동장"
+      },
+      {
+        "id": 13,
+        "type": "STUDENT",
+        "image_uri": "images/performance/5a3d5dca-5de0-46f6-9fbb-fba543c6f612.png",
+        "date": "2026-10-08",
+        "seq": 6,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "01. In Spades",
+        "description": "중앙동아리 노래나래에서 만나 다양하고 각기 다른 삶을 살아온 학생들이 하나로 모여 강렬하고 밀도있는,\n팀명인 In Spades와 같은 몰입되는 경험을 선사하고자 모이게 된 밴드입니다."
+      },
+      {
+        "id": 20,
+        "type": "STUDENT",
+        "image_uri": "images/performance/5879d3b5-cf47-4358-984c-ed14a33ac2e5.jpg",
+        "date": "2026-10-08",
+        "seq": 7,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "02. 송유현이유명해지러박찬진이도와주러옴",
+        "description": "여러분 사실 오늘 여러분들이 인스타를 통해 알고계시는\n게스트 외, 초특급게스트 두 분이 출연하신다고 합니다.\n\n이분들로 말할거 같으면 무려 카스의 공식 홍보대사로\n여름을 뒤집어 놓았는데요. 외대에서 카모와 함께 유명...\n해지고 싶은 베트남어과 학생회장 송유현,\n\n그리고 1학기 퀸쿠아를 뒤집고 이제 진짜 쉬려고 했으나\n송유현의 부탁으로 잠깐 랩하러온 그냥 박찬진의 무대가 있겠습니다"
+      },
+      {
+        "id": 21,
+        "type": "STUDENT",
+        "image_uri": "images/performance/2591faff-c8cd-426f-b478-7e8be31f3e81.webp",
+        "date": "2026-10-08",
+        "seq": 8,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "03. 와쿠와쿠",
+        "description": "\"드럼 구합니다\" 구인글로 시작한 밴드가 여기까지 왔습니다.\n우리가 설레서 두근두근한건지 떨려서 두근두근한건지 모르겠지만 두근두근 와쿠와쿠 상태입니다!\n\n관객들의 심장도 빨리 뛰게 만들어보겠습니다!"
+      },
+      {
+        "id": 22,
+        "type": "STUDENT",
+        "image_uri": "images/performance/642d6e3f-9052-4f8b-b4bf-4735470f4f77.jpg",
+        "date": "2026-10-08",
+        "seq": 9,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "04. 산책",
+        "description": "외대라는 공간에 가장 어울리는 무대"
+      },
+      {
+        "id": 23,
+        "type": "STUDENT",
+        "image_uri": "images/performance/8971a490-ee98-4dec-84c0-6714c3f0b907.webp",
+        "date": "2026-10-08",
+        "seq": 10,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "05. 외인부대",
+        "description": "뜨거운 락스피릿으로 외대를 뒤흔들겠다는 다섯 명이\n무대를 준비하고 있습니다. 긴 말이 필요가 없는 팀이죠?\n\n우리 외대를 대표할 유서깊은 중앙락밴드동아리 외인부대입니다!"
+      },
+      {
+        "id": 24,
+        "type": "STUDENT",
+        "image_uri": "images/performance/25dd70ee-2e71-4acd-8833-99e8d75ff0c0.webp",
+        "date": "2026-10-08",
+        "seq": 11,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "06. 교수님들",
+        "description": "영어교육과의 교수님이 되고 싶은 두 영교 청년"
+      },
+      {
+        "id": 25,
+        "type": "STUDENT",
+        "image_uri": "images/performance/762c80c5-359a-43f4-b3b6-5f62992091cd.webp",
+        "date": "2026-10-08",
+        "seq": 12,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "07. NO SKY",
+        "description": "쇠맛 사운드, 파상풍 조심하세요"
+      },
+      {
+        "id": 26,
+        "type": "STUDENT",
+        "image_uri": "images/performance/798aabfa-6f97-4a13-9c2d-571782cb5496.jpg",
+        "date": "2026-10-08",
+        "seq": 13,
+        "is_live": false,
+        "language_code": "KO",
+        "title": "08. F.A.",
+        "description": "몽환적인 밴드 사운드로 시작해서, 유쾌하고 트렌디한 훅, \n그리고 강렬하고 날 선 모던룩까지 모두 한 자리에서 만나보실 수 있는 셋리스트를 준비했습니다.\n\n무대에 올라오는 순간 별도 멘트 없이 곧바로 음악이 시작되니,\n조명이 켜지면 사운드에 그대로 집중해 주시길 바랍니다.\n\n지금 바로 만나보시죠!"
+      }
+    ],
+    "page": 1,
+    "size": 100,
+    "total": 25
+  },
+  "/places/1": {
+    "id": 1,
+    "category_id": 2,
+    "category_sequence": 101,
+    "is_polygon": false,
+    "x": 430.5,
+    "y": 887.5,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/f533f44b-698b-4939-8aa1-66762ea6fdb7.webp"],
+    "language_code": "KO",
+    "name": "DIS so BAD!",
+    "host_college": "제22대 국제학부 학생회 'UNITIS'",
+    "description": "[국제학부 학생회 부스 \"DIS so Bad\" 운영안내]\n♠️운에 모든 걸 걸어보시겠습니까?\n\n안녕하세요, 제22대 국제학부 학생회, UNITIS입니다\n2026년 하반기 퀸쿠아트리아를 맞아, DIS so Bad 부스를 운영할 예정입니다. 많은 관심 바랍니다.\n\n♠️일시: 퀸쿠아트리아 양일\n♠️장소: 국제학사 옆 A-1",
+    "menus": [
+      {
+        "id": 3,
+        "place_id": 1,
+        "image_url": null,
+        "price": 3500,
+        "language_code": "KO",
+        "name": "나쵸에 미쵸",
+        "description": "나쵸 고민하는 사람과 먹고 있는 사람. 누가 더 행복할까요~??"
+      },
+      {
+        "id": 4,
+        "place_id": 1,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "벌꿀맥주",
+        "description": "sweet so bad!한 무알콜 벌꿀맥주"
+      },
+      {
+        "id": 5,
+        "place_id": 1,
+        "image_url": null,
+        "price": 500,
+        "language_code": "KO",
+        "name": "카드게임",
+        "description": "업앤다운/블랙잭"
+      },
+      {
+        "id": 6,
+        "place_id": 1,
+        "image_url": null,
+        "price": 500,
+        "language_code": "KO",
+        "name": "슬롯머신",
+        "description": "랜덤게임을 즐겨보세요!"
+      }
+    ]
+  },
+  "/places/10": {
+    "id": 10,
+    "category_id": 2,
+    "category_sequence": 110,
+    "is_polygon": false,
+    "x": 533,
+    "y": 751,
+    "area": null,
+    "start_hour": "2026-10-07T02:30:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/dcd32038-dee0-4a39-b694-283e2d100be9.webp"],
+    "language_code": "KO",
+    "name": "사대시네마 : <짜파구리 먹고 갈 결심> 절찬상영중",
+    "host_college": "제39대 사회과학대학 비상대책위원회 ‘비상’",
+    "description": "[사회과학대학 부스 '사대시네마' 운영 안내]\n\n안녕하세요, 제39대 사회과학대학 비상대책위원회 <비상>입니다. \n사회대 부스 '사대시네마: <짜파구리 먹고 갈 결심> 절찬상영중' 운영 안내드립니다.\n\n\n🎬🍿 사대시네마: <짜파구리 먹고 갈 결심> 절찬상영중 🍿🎞️\n\n- 일시: 2026년 10월 7일(수) - 10월 8일(목) 11:30~18:00\n- 부스 위치: A-10\n\n< 메뉴 >\n- 제시카 외동딸 통일사회 짜파구리(짜파구리) \n- 대패학개론(대패삼겹살)\n- SET 1. 대패삼겹살과 함께: 단백질과 면(짜파구리+대패삼겹살 세트) \n- SET 2. 콤보세트(짜파구리+대패삼겹살+에이드 1종 세트) \n\n- 토핑) 불닭소스\n- 토핑) 치즈\n- 토핑) 파김치 \n\n- 아바타: 에이드의 길(블루레몬에이드)\n- 모히또 가서 몰디브 한 잔~(라임모히또에이드)\n\n< 이벤트 > \n- 영화 이모지 퀴즈 🤔\n- 영화 포스터 퀴즈 🎥\n- 묻고 더블로 가!: 종이뽑기🎟️ \n\n\n🍿 이벤트 참여 시 팝콘을 증정 드립니다 🍿\n\n'사대시네마' 많은 관심과 방문 부탁드립니다!🤎\n\n\n기타 문의: 사회과학대학 비상대책위원회 인스타그램 @hufs.socialscience",
+    "menus": [
+      {
+        "id": 94,
+        "place_id": 10,
+        "image_url": null,
+        "price": 3500,
+        "language_code": "KO",
+        "name": "제시카 외동딸 통일사회 짜파구리(짜파구리)",
+        "description": "봉준호 감독도 먹고 반한 그 맛! 짜파게티와 너구리의 완벽한 통일사회"
+      },
+      {
+        "id": 95,
+        "place_id": 10,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "대패학개론(대패삼겹살)",
+        "description": "“우리 모두에게는 첫 대패가 있었다.” 노릇하게 구워낸 대패삼겹살에 누구나 한 번쯤 경험한 첫사랑의 맛을 담았습니다."
+      },
+      {
+        "id": 96,
+        "place_id": 10,
+        "image_url": null,
+        "price": 6000,
+        "language_code": "KO",
+        "name": "SET 1. 대패삼겹살과 함께: 단백질과 면(짜파구리+대패삼겹살 세트)",
+        "description": "단백질과 면, 그 인연의 시작. 짜파구리와 대패삼겹살을 한 번에, 두 주연이 만나 완성한 든든한 한 끼"
+      },
+      {
+        "id": 97,
+        "place_id": 10,
+        "image_url": null,
+        "price": 8500,
+        "language_code": "KO",
+        "name": "SET 2. 콤보세트(짜파구리+대패삼겹살+에이드 1종)",
+        "description": "'사대시네마' 대표 메뉴!! 짜파구리부터 대패삼겹살, 그리고 시원한 에이드까지~~ 먹고, 마시고 모든 장르를 한 번에 즐기실 수 있습니다."
+      },
+      {
+        "id": 98,
+        "place_id": 10,
+        "image_url": null,
+        "price": 500,
+        "language_code": "KO",
+        "name": "토핑) 불닭소스",
+        "description": "매운맛이 필요한 순간, 짜파구리 속 한 방울의 반전"
+      },
+      {
+        "id": 99,
+        "place_id": 10,
+        "image_url": null,
+        "price": 500,
+        "language_code": "KO",
+        "name": "토핑) 치즈",
+        "description": "짜파구리의 엔딩을 바꾸는 한 장. 고소하고 부드러운 치즈로 완성하는 특별한 결말"
+      },
+      {
+        "id": 100,
+        "place_id": 10,
+        "image_url": null,
+        "price": 1000,
+        "language_code": "KO",
+        "name": "토핑) 파김치",
+        "description": "주연을 더욱 빛나게 하는 명품 조연. 짜파구리와 대패삼겹살에 아삭하고 알싸한 한 장면을 더하다."
+      },
+      {
+        "id": 101,
+        "place_id": 10,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "아바타: 에이드의 길(블루레몬에이드)",
+        "description": "푸른빛을 따라 새로운 맛의 세계로. 상큼한 레몬과 청량한 에이드가 선사하는 아바타: 에이드의 길"
+      },
+      {
+        "id": 102,
+        "place_id": 10,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "모히또 가서 몰디브 한 잔~(라임모히또에이드)",
+        "description": "“모히또 가서 몰디브 한 잔~” 상큼한 라임과 청량함을 한 잔에 담아 잠시 떠나는 우리만의 몰디브"
+      }
+    ]
+  },
+  "/places/11": {
+    "id": 11,
+    "category_id": 2,
+    "category_sequence": 111,
+    "is_polygon": false,
+    "x": 559,
+    "y": 750,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/dfc6ea1b-79e0-4212-95ae-d5e305cc758f.webp"],
+    "language_code": "KO",
+    "name": "몽태솔로지만 소세지는 먹고싶어",
+    "host_college": "제18대 몽골어과 학생회 'KHAN'",
+    "description": "🎆 2026 QUINQUATRIA 몽골어과 부스 🎇\n\n🇲🇳 \"몽태솔로지만 소세지는 먹고싶어\" 🌭 \n\n먹으러 왔다가 번호까지 따이는 부스.\n소세지, 대패삼겹, 그리고 운명의 짝까지 준비했습니다.💘  \n\n🍴 MENU\n• 소세지 꼬치 - 2500₩\n• 대패삼겹숙주볶음 - 4000₩ \n\n💌 몽골 MBTI 번호팅\n몽골 특색을 담은 MBTI 유형에 따라\n운명의 짝을 매칭해드립니다! \n(음식 구매 시 1000₩, 미구매 시 2000₩)\n\n\"네가 별 보고 싶다고 했잖아?\n그럼 나 번호팅 이런 거 안 했어, 너랑 몽골 갔어.\" \n\n💕이번 퀸쿠아트리아에서 운명의 짝을 찾아가세요!💞\n\n📍장소: 진실의 거울 앞  | A-11",
+    "menus": [
+      {
+        "id": 103,
+        "place_id": 11,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "소세지 꼬치",
+        "description": "유목민의 생명력을 담은 든든한 소세지를 경험해보세요.  한입 먹으면 세계 정복 가능"
+      },
+      {
+        "id": 104,
+        "place_id": 11,
+        "image_url": null,
+        "price": 4000,
+        "language_code": "KO",
+        "name": "대패삼겹숙주볶음",
+        "description": "사막의 뜨거운 열기를 머금은 대패삼겹살에 초원의 아삭함을 닮은 숙주를 더했습니다. 한입에 펼쳐지는 몽골의 대자연을 느껴보세요."
+      },
+      {
+        "id": 105,
+        "place_id": 11,
+        "image_url": null,
+        "price": 2000,
+        "language_code": "KO",
+        "name": "몽골 MBTI 번호팅",
+        "description": "몽골어과에서 직접 고안한 4가지의 몽골 MBTI를 통해 나의 타입을 알아보고 운명의 상대를 만나보세요.(음식 구매 시 1000₩)"
+      }
+    ]
+  },
+  "/places/12": {
+    "id": 12,
+    "category_id": 2,
+    "category_sequence": 112,
+    "is_polygon": false,
+    "x": 584,
+    "y": 750,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/06906537-343e-4042-b990-92aff44be143.webp"],
+    "language_code": "KO",
+    "name": "엄마가 모르셔서 그렇지 요즘은 다 로띠 먹어요",
+    "host_college": "제60대 태국학과 학생회",
+    "description": "🇹🇭2026 QUINQUATRIA 태국학과 부스 안내🇹🇭\n\n“엄마가 모르셔서 그렇지 요즘은 다들 로띠 먹어요.”\n\n그래서 로띠가 대체 뭔데? 🤔\n로띠는 얇게 펼친 반죽을 바삭하게 구워 달콤한 바나나, 초코소스 그리고 연유를 듬뿍 올린 태국식 크레페예요🍌\n\n📌 부스 위치 | 진실의 거울 앞 A-12\n\n📌 메뉴 | 로띠 — 3,500원\n                타이 밀크티 — 2,500원\n\n바삭달콤 로띠 한 입, 시원달달 타이 밀크티 한 잔!\n로: 로띠 먹으러 태국학과 부스로\n띠: 띠어오세요! 🏃",
+    "menus": [
+      {
+        "id": 106,
+        "place_id": 12,
+        "image_url": null,
+        "price": 4000,
+        "language_code": "KO",
+        "name": "로띠",
+        "description": "사왓디캅~ 로띠캅~"
+      },
+      {
+        "id": 107,
+        "place_id": 12,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "타이 밀크티",
+        "description": "태국 왕복 항공권 50만원 vs 타이 밀크티 2,500원"
+      }
+    ]
+  },
+  "/places/13": {
+    "id": 13,
+    "category_id": 2,
+    "category_sequence": 113,
+    "is_polygon": false,
+    "x": 607,
+    "y": 750,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/9cef1221-963e-4b7d-8031-4e3fe869f0b5.webp"],
+    "language_code": "KO",
+    "name": "마인 미고랭 거래소",
+    "host_college": "제44대 말레이·인도네시아어과 학생회 'Maju Bersama'",
+    "description": "🌴🍜 [퀸쿠아트리아 말레이·인도네시아어과 부스 운영 안내] 🇲🇾🇮🇩\n\n안녕하세요, 한국외국어대학교 말레이·인도네시아어과입니다!\n 이번 퀸쿠아트리아 행사에서 맛있는 미고랭과 시원한 음료를 함께 즐길 수 있는 부스를 운영합니다. 🎉\n\n📅 일시: 10월 7일(수) ~ 10월 8일(목)\n ⏰ 운영 시간: 13:00 ~ 18:00\n\n🍜 판매 메뉴\n • 미고랭 + 음료 세트 5,000원\n • 미고랭 단품 4,500원\n\n🎮 세트 구매 시 특별 게임 참여 가능!\n 게임에서 승리하면 500원 할인 혜택까지 받아가실 수 있습니다! 💸✨\n\n맛있는 미고랭도 먹고, 게임도 즐기고, 할인까지 받을 수 있는 기회!\n 퀸쿠아트리아에 방문하시는 학우 여러분의 많은 관심과 참여 부탁드립니다. ❤️\n\n말레이·인도네시아어과 부스에서 만나요! 🇲🇾🇮🇩",
+    "menus": [
+      {
+        "id": 108,
+        "place_id": 13,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "🎮 도전! 500원 깎을랭",
+        "description": "세트 구매 시 참여 가능 게임에서 성공하면 500원 할인! 맛있는 미고랭도 먹고 할인에도 도전해보세요."
+      },
+      {
+        "id": 109,
+        "place_id": 13,
+        "image_url": null,
+        "price": 5000,
+        "language_code": "KO",
+        "name": "🥤 미고랭 먹고 마실랭 세트",
+        "description": "미고랭과 시원한 음료를 함께 즐길 수 있는 세트! 세트 구매 시 특별 게임에도 참여할 수 있습니다."
+      },
+      {
+        "id": 110,
+        "place_id": 13,
+        "image_url": null,
+        "price": 4500,
+        "language_code": "KO",
+        "name": "🍜 미고랭 먹고 갈랭?",
+        "description": "인도네시아의 대표적인 볶음면 미고랭! 달콤짭짤한 소스와 쫄깃한 면으로 인도네시아의 맛을 즐겨보세요."
+      }
+    ]
+  },
+  "/places/14": {
+    "id": 14,
+    "category_id": 2,
+    "category_sequence": 205,
+    "is_polygon": false,
+    "x": 340,
+    "y": 535,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T11:00:00Z",
+    "place_image_uri": ["images/place/48b6c176-40bb-46f6-b7c3-bace52d804a9.webp"],
+    "language_code": "KO",
+    "name": "자기야~ 전 먹으러 올래말래 맛있긴 해~",
+    "host_college": "제1대 자유전공학부(서울) 비상대책위원회",
+    "description": "[2026 QUINQUATRIA : Twilight 자유전공학부 부스 운영 안내]\n\n안녕하세요, 한국외국어대학교 제1대 자유전공학부(서울) 비상대책위원회입니다.\n\n10월 7일 수요일, 10월 8일 목요일 자유전공학부(서울) 부스를 운영합니다! \n학우 여러분의 많은 관심과 성원 부탁드립니다!\n\n🗓️ 일시: 2026년 10월 7일(수) - 8일(목) 11:00~20:00\n📍장소: 한국외국어대학교 서울캠퍼스 B구역 5번\n📩문의: 제1대 자유전공학부(서울) 비상대책위원회 인스타그램 @hufs_openmajor",
+    "menus": [
+      {
+        "id": 171,
+        "place_id": 14,
+        "image_url": null,
+        "price": 4000,
+        "language_code": "KO",
+        "name": "불닭전을 후딱 내오거라~",
+        "description": "한 입 먹고 안 맵네 했다면 이미 늦었소"
+      },
+      {
+        "id": 173,
+        "place_id": 14,
+        "image_url": null,
+        "price": 4000,
+        "language_code": "KO",
+        "name": "옥수수에 치즈를 듬뿍 넣어오너라~",
+        "description": "콘치즈전 네 이놈, 네가 감히 이렇게 쭉쭉 늘어나느냐"
+      },
+      {
+        "id": 175,
+        "place_id": 14,
+        "image_url": null,
+        "price": 4000,
+        "language_code": "KO",
+        "name": "감자전 하나 맛깔나게 부쳐오거라~",
+        "description": "감자전에 베이컨을 얹었으니, 그 맛이 가히 절경이도다"
+      },
+      {
+        "id": 176,
+        "place_id": 14,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "무알콜 막걸리 한 사발 대령하거라~",
+        "description": "이 막걸리 한 잔 취하지 않고 기분이 좋지 아니한가"
+      }
+    ]
+  },
+  "/places/15": {
+    "id": 15,
+    "category_id": 2,
+    "category_sequence": 206,
+    "is_polygon": false,
+    "x": 372,
+    "y": 535,
+    "area": null,
+    "start_hour": "2026-10-07T03:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/9f2c6126-c734-4d9c-b310-cf34d7ac0193.webp"],
+    "language_code": "KO",
+    "name": "도합 포티나인의 추억 속 컵떡볶이",
+    "host_college": "제60대 아시아언어문화대학 학생회 '운율'",
+    "description": "[아시아언어문화대학 학생회 부스 “도합 포티나인의 추억 속 컵떡볶이” 안내]\n\n안녕하세요, \n제60대 아시아언어문화대학 학생회 “운율”입니다.\n학교 앞 분식집에서 하나씩 사 먹던 컵떡볶이,\n빼먹을 수 없는 시원한 콜라 슬러쉬, \n친구들과 나눠 먹으며 웃었던 그때의 기억까지\n\n도합 포티나인(49)의 아대장단이\n추억 속 익숙한 맛을 한 컵에 담아  여러분을 기다립니다!\n\n🌶️ 컵떡볶이 : 3,500원\n🥤슬러쉬: 2,000원\n\n📍 장소: 잔디광장 앞 아시아언어문화대학 부스 B-6 \n🗓️ 일시: 10.07.(WED) ~ 10.08.(THU) 12:00~18:00 \n📩 문의: 아시아언어문화대학 학생회 인스타그램 @hufs_asia",
+    "menus": [
+      {
+        "id": 179,
+        "place_id": 15,
+        "image_url": null,
+        "price": 3500,
+        "language_code": "KO",
+        "name": "컵떡볶이",
+        "description": "익숙한 추억 속 그 맛! 그때의 감성을 다시 느껴보세요~"
+      },
+      {
+        "id": 180,
+        "place_id": 15,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "슬러쉬",
+        "description": "머리 띵~하게 시원한 콜라맛 슬러쉬!"
+      }
+    ]
+  },
+  "/places/16": {
+    "id": 16,
+    "category_id": 2,
+    "category_sequence": 207,
+    "is_polygon": false,
+    "x": 403,
+    "y": 535,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/877387cd-96c4-4579-936e-b276824918f1.jpg"],
+    "language_code": "KO",
+    "name": "히비카와: 일대 섬의 비밀",
+    "host_college": "제17대 일본학대학 학생회 '히비'",
+    "description": "🌴2026 퀸쿠아트리아 일본학대학 부스 ‘히비카와: 일대 섬의 비밀’🌴\n\n[부스 안내편] \n\n안녕하십니까, 일본학대학 학우 여러분. 제17대 일본학대학 학생회 ‘일본학대학의 매일을 만들다, 히비(日々)’🌠입니다.\n\n올해를 장식할 대망의 2026 퀸쿠아트리아!\n이번 퀸쿠아트리아에서 일본학대학 학생회는 ‘치이카와’를 컨셉으로 부스를 운영합니다.\n\n맛있는 음식과 재밌는 이벤트가 준비되어 있으니 기대해 주시기 바랍니다.\n\n자세한 내용은 카드뉴스를 참고해주시기를 바라며, 추후에 올라오는 카드뉴스에도 많은 관심 부탁드립니다.\n\n🐹 부스 운영 날짜: 2026.10.07 (월) - 10.08 (화)\n🐱 부스 운영 시간: 양일 11:00 - 18:00\n🐰 부스 위치: 잔디 광장과 붉은 광장 사이 (B-7) \n\n| 문의사항\n- 일본학대학 홍보소통국 국원 송지원(010-5054-0877)\n- 제17대 일본학대학 학생회 ’히비‘ 인스타그램 DM",
+    "menus": [
+      {
+        "id": 181,
+        "place_id": 16,
+        "image_url": null,
+        "price": 6000,
+        "language_code": "KO",
+        "name": "우사기의 ‘우나야’끼소바",
+        "description": "우사기의 텐션을 담아 볶아낸 특별한 야끼소바! 한입 먹으면 ”우나야하!“하고 외치게 되는 마법의 맛"
+      },
+      {
+        "id": 182,
+        "place_id": 16,
+        "image_url": null,
+        "price": 5500,
+        "language_code": "KO",
+        "name": "하치와레가 토벌해서 산 오코노미야끼",
+        "description": "열심히 토벌하고 받은 보수로 산 소중한 오코노미야끼 바삭한 겉면과 푹신한 속을 한입 가득 먹으면 “이거…최고잖아!”"
+      },
+      {
+        "id": 183,
+        "place_id": 16,
+        "image_url": null,
+        "price": 9000,
+        "language_code": "KO",
+        "name": "우사기의 ‘우나야’끼소바 + 무알콜 맥주 set",
+        "description": "우사기의 텐션을 담아 볶아낸 특별한 야끼소바! 한입 먹으면 ”우나야하!“하고 외치게 되는 마법의 맛"
+      },
+      {
+        "id": 184,
+        "place_id": 16,
+        "image_url": null,
+        "price": 8000,
+        "language_code": "KO",
+        "name": "하치와레가 토벌해서 산 오코노미야끼 + 무알콜 맥주 set",
+        "description": "열심히 토벌하고 받은 보수로 산 소중한 오코노미야끼 바삭한 겉면과 푹신한 속을 한입 가득 먹으면 “이거…최고잖아!”"
+      },
+      {
+        "id": 185,
+        "place_id": 16,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "맛있’당고 (2pcs)",
+        "description": "쫀득쫀득한 꼬치경단 위로 짭조름하고 달콤한 마성의 소스가 듬뿍! 치이카와 친구들과 오순도순 나눠 먹으면 맛있...당고!"
+      },
+      {
+        "id": 186,
+        "place_id": 16,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "치이카와가 사랑하는 말차라떼 (*아이스크림 추가 0.5)",
+        "description": "조금 쌉쌀한 맛이 나지만 부드러운 우유와 만나 치이카와도 한 모금에 빵긋 웃게 만드는 힐링 포션 (치이카와는 아이스크림을 추가하기도!)"
+      },
+      {
+        "id": 187,
+        "place_id": 16,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "랏코가 나눠주는 메론소다 (*아이스크림 추가 0.5)",
+        "description": "1위 랭커 랏코가 나눠주는 메론소다! 톡 쏘는 청량한 초록빛 소다가 기운 나게 해주는 것 같기도 (아이스크림을 추가하면 더 달콤하고 기운이 난다는데 랏코의 1위 비결..?)"
+      },
+      {
+        "id": 188,
+        "place_id": 16,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "쿠리만쥬의 시원한 맥쥬",
+        "description": "한 모금 들이켜고 미간을 찌푸리며 \"하아~!\"  축제의 갈증을 날려버릴 쿠리만쥬의 시원한 생명수 (※무알콜 주의)"
+      },
+      {
+        "id": 189,
+        "place_id": 16,
+        "image_url": null,
+        "price": 2000,
+        "language_code": "KO",
+        "name": "가챠 이벤트",
+        "description": "귀여운 치이카와 상품이 한가득 준비되어 있는 가챠 이벤트!"
+      }
+    ]
+  },
+  "/places/17": {
+    "id": 17,
+    "category_id": 2,
+    "category_sequence": 208,
+    "is_polygon": false,
+    "x": 436,
+    "y": 535,
+    "area": null,
+    "start_hour": "2026-10-07T03:00:00Z",
+    "end_hour": "2026-10-07T11:00:00Z",
+    "place_image_uri": ["images/place/5fc381cc-0688-4645-83c9-b3496e7b3802.jpg"],
+    "language_code": "KO",
+    "name": "꼬치 My heart~ Baby",
+    "host_college": "제38대 중국학대학 학생회 ʻ유성(流星)’",
+    "description": "💫2026 QUINQUATRIA: Twilight 중국학대학 부스 소개 💫\n\n안녕하십니까, 제38대 중국학대학 학생회 유성입니다! \n\n2026 QUINQUATRIA: Twilight 중국학대학 부스 ‘꼬치 My Heart~ Baby’를 진행합니다.\n\n🗓️일시: 2026년 10월 7일(수) -10월 8일 (2일간)\n⏱️시간: 12:00 ~ 19:00 \n📍장소: B구역 8번 부스\n\n메뉴 소개🥄\n🍢 양꼬치 My Heart (양꼬치)\n🌽 옥수수에 꼬치다 (옥수수꼬치)\n🍧 슬러쉬 Catch [빙홍차/콜라]\n🥡 사랑의 set를 당겨봐 [양꼬치 2 + 옥수수꼬치 1 + 슬러쉬 1]\n\n프로그램 소개🕹️\n🏮 소원등 만들기 \n🍀 운세카드 증정 \n\n학우 분들의 많은 관심과 참여 부탁드립니다!\n\n📨문의\n중국학대학 퀸쿠아트리아 TF장 권다윤 (010-5717-4394)\n중국학대학 학생회장 윤현서 (010-4007-3046)",
+    "menus": [
+      {
+        "id": 170,
+        "place_id": 17,
+        "image_url": null,
+        "price": 1000,
+        "language_code": "KO",
+        "name": "양꼬치 My Heart",
+        "description": "양꼬치 (1개) [시즈닝 쯔란, 마라, 뿌링클]"
+      },
+      {
+        "id": 172,
+        "place_id": 17,
+        "image_url": null,
+        "price": 500,
+        "language_code": "KO",
+        "name": "옥수수에 꼬치다",
+        "description": "수수꼬치 (2개)  [시즈닝 쯔란, 마라, 뿌링클]"
+      },
+      {
+        "id": 174,
+        "place_id": 17,
+        "image_url": null,
+        "price": 1500,
+        "language_code": "KO",
+        "name": "슬러쉬 Catch",
+        "description": "슬러쉬[빙홍차 / 콜라]"
+      },
+      {
+        "id": 177,
+        "place_id": 17,
+        "image_url": null,
+        "price": 3500,
+        "language_code": "KO",
+        "name": "사랑의 SET를 당겨봐",
+        "description": "양꼬치 2개 + 옥수수꼬치 1개 + 슬러쉬 1개 (1인 set)"
+      },
+      {
+        "id": 178,
+        "place_id": 17,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "소원등 만들기 체험",
+        "description": "5,000원 이상 구매시 체험권 증정 / 2,000원 체험권 구매 가능 운세카드 증정 이벤트 - SET 구매 시 인원 수만큼 증정"
+      }
+    ]
+  },
+  "/places/18": {
+    "id": 18,
+    "category_id": 2,
+    "category_sequence": 209,
+    "is_polygon": false,
+    "x": 467,
+    "y": 535,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T13:00:00Z",
+    "place_image_uri": ["images/place/03855713-9aec-4d54-84ed-c6563fc052e1.webp"],
+    "language_code": "KO",
+    "name": "나는 선생이고, 너는 왁뿌볼이야",
+    "host_college": "제42대 사범대학 학생회 'ELEV'",
+    "description": "[사범대학 학생회 퀸쿠아트리아 부스 '나는 선생이고, 너는 왁뿌볼이야' 운영 안내]\n\n📢[학사공지] <2026 QUINQUATRIA : Twilight> 사범대학 부스 운영 공고\n\n안녕하세요, 제42대 사범대학 학생회 <ELEV>입니다.\n<2026 QUINQUATRIA : Twilight>에서 10월 7~8일 양일간 사범대학 학생회 부스 '나는 선생이고, 너는 왁뿌볼이야'를 운영합니다. 학우 여러분의 많은 관심과 방문 부탁드립니다!!\n\n📅일시 : 2026년 10월 7~8일(수~목) 양일간 13:00~22:00(상황에 따라 조기 마감될 수 있음)\n🚩장소 : 한국외국어대학교 서울캠퍼스 B-9부스(잔디광장 인근)\n📧문의 : 사범대학 학생회 인스타그램 @hufs_edu",
+    "menus": [
+      {
+        "id": 162,
+        "place_id": 18,
+        "image_url": null,
+        "price": 1500,
+        "language_code": "KO",
+        "name": "<사랑의 짝뿌볼>",
+        "description": "왁뿌 컬러테스트로 나의 연애 유형을 알아보고, 마음에 드는 프로필을 선택하면 200% 매칭 보장! 지금 바로 나와 이어질 짝뿌볼을 찾아보세요. 💗 -식음료 구매 시 : 1,000원 -식음료 미구매 시 : 1,500원"
+      },
+      {
+        "id": 164,
+        "place_id": 18,
+        "image_url": null,
+        "price": 2000,
+        "language_code": "KO",
+        "name": "<왁뿌볼 뿌수러 왁!>",
+        "description": "공 하나 뿌셨더니 스트레스가 날아간다? 안 할 이유가 없네! -처음 체험 : 2,000원 -재체험 : 1,500원"
+      },
+      {
+        "id": 167,
+        "place_id": 18,
+        "image_url": null,
+        "price": 5000,
+        "language_code": "KO",
+        "name": "<타코야 왜 걸어> (워킹타코)",
+        "description": "타코가 걸어다니는 게 아니라, 내가 걸어다니며 먹는 이색체험! 먹다 보면 타코인지 나쵸인지 내 인생인지 구분이 안 됩니다."
+      },
+      {
+        "id": 168,
+        "place_id": 18,
+        "image_url": null,
+        "price": 7000,
+        "language_code": "KO",
+        "name": "<타코야 왜 걸어> (세트 : 워킹타코 + 레몬에이드)",
+        "description": "타코가 걸어다니는 게 아니라, 내가 걸어다니며 먹는 이색체험! 먹다 보면 타코인지 나쵸인지 내 인생인지 구분이 안 됩니다."
+      },
+      {
+        "id": 169,
+        "place_id": 18,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "<레몬이 왜 에이드>",
+        "description": "레몬에 탄산수를 부었더니 레몬에이드가 되었습니다. 이보다 더 확실한 창업 성공 사례는 없습니다."
+      }
+    ]
+  },
+  "/places/2": {
+    "id": 2,
+    "category_id": 2,
+    "category_sequence": 102,
+    "is_polygon": false,
+    "x": 403,
+    "y": 868,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/f6f4bc0d-4122-4b01-8dce-5064eeed2c9d.webp"],
+    "language_code": "KO",
+    "name": "마카롱 말먹하고 학점 날먹",
+    "host_college": "제38대 행정학과 학생회 ʻ평행’",
+    "description": "[행정과 그레텔 : 마카롱 하우스 | 2026 QUINQUATRIA: Twilight]\n\n민주행정 학우 여러분 안녕하십니까, 제38대 행정학과 학생회 ‘평행‘입니다.\n\nQUINQUATRIA: Twilight의 행정학과 부스 운영 정보를 안내합니다!\n\n🍭 부스 명: 마카롱 말먹하고 학점 날먹\n🍭 부스 위치: 국제학사 앞 A-2\n🍭 운영 일자: 10.7(수) ~ 10.8(목)\n🍭 운영 시간: 11:00 ~ 18:00\n\n🩷메뉴: 마카롱 말먹\n\n🥛흰 우유, 딸기 우유, 바나나 우유 선택 가능!\n🍪미쯔, 콘푸로스트, 그래놀라 토핑 추가 가능!\n\n🍬마카롱 말먹에 토핑 추가 시!\n🍬구매 후 사진을 촬영하여 @hufs_pa 태그와 함께 스토리 업로드 시!\n🍋팅글 레몬 애사비 소다 증정🍋\n\n\n📞문의📞\n학생회장 서유진 010-4983-1027\n한국외대 행정학과 인스타그램 @hufs_pa",
+    "menus": [
+      {
+        "id": 70,
+        "place_id": 2,
+        "image_url": null,
+        "price": 3900,
+        "language_code": "KO",
+        "name": "마카롱 말먹",
+        "description": "촉촉하고 달달한 마카롱을 우유에 말아먹는 최고의 디저트, ‘마카롱 말먹’!"
+      },
+      {
+        "id": 71,
+        "place_id": 2,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "흰 우유",
+        "description": "튜닝의 끝은 순정! 기본 ‘흰 우유’"
+      },
+      {
+        "id": 72,
+        "place_id": 2,
+        "image_url": null,
+        "price": 500,
+        "language_code": "KO",
+        "name": "바나나 우유",
+        "description": "마카롱의 풍미를 더해줄 수 있는 ‘바나나 우유’"
+      },
+      {
+        "id": 73,
+        "place_id": 2,
+        "image_url": null,
+        "price": 500,
+        "language_code": "KO",
+        "name": "딸기 우유",
+        "description": "마카롱을 더 달달하게 만들어줄 ‘딸기 우유’"
+      },
+      {
+        "id": 74,
+        "place_id": 2,
+        "image_url": null,
+        "price": 300,
+        "language_code": "KO",
+        "name": "[토핑] 미쯔",
+        "description": "초코맛이 더해져 마카롱에 달달함을 더해주는 ‘미쯔’"
+      },
+      {
+        "id": 75,
+        "place_id": 2,
+        "image_url": null,
+        "price": 300,
+        "language_code": "KO",
+        "name": "[토핑] 콘푸로스트",
+        "description": "설탕 코팅이 되어 우유와 더욱 잘 어울리는 ‘콘푸로스트’"
+      },
+      {
+        "id": 76,
+        "place_id": 2,
+        "image_url": null,
+        "price": 300,
+        "language_code": "KO",
+        "name": "[토핑] 그래놀라",
+        "description": "달달한 마카롱에 바삭한 식감을 더해주는 근본 씨리얼 ‘그래놀라’"
+      }
+    ]
+  },
+  "/places/20": {
+    "id": 20,
+    "category_id": 2,
+    "category_sequence": 301,
+    "is_polygon": false,
+    "x": 501.5,
+    "y": 728,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T07:00:00Z",
+    "place_image_uri": null,
+    "language_code": "KO",
+    "name": "한국외대 기념품점",
+    "host_college": "지식출판콘텐츠원",
+    "description": "- 기념품 판매",
+    "menus": []
+  },
+  "/places/21": {
+    "id": 21,
+    "category_id": 2,
+    "category_sequence": 302,
+    "is_polygon": false,
+    "x": 612,
+    "y": 728,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": [
+      "images/place/33e05c56-8571-41fc-87cc-73505d4f69d6.webp",
+      "images/place/2bc18b88-6362-4e7d-95a2-f12ceb96a763.webp",
+      "images/place/4ba718d9-bb95-4503-92b9-399736220c73.webp",
+      "images/place/c0b72702-30b6-49f9-ae25-7079a1199bfe.webp"
+    ],
+    "language_code": "KO",
+    "name": "총학생회 중앙 부스",
+    "host_college": "제60대 총학생회 '선명'",
+    "description": "",
+    "menus": []
+  },
+  "/places/22": {
+    "id": 22,
+    "category_id": 2,
+    "category_sequence": 303,
+    "is_polygon": false,
+    "x": 635,
+    "y": 728,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T08:00:00Z",
+    "place_image_uri": [
+      "images/place/168cb492-be6f-44ee-bd65-c2968156b571.webp",
+      "images/place/4b4f012c-3af8-4eda-ad43-be8cc34de80c.webp",
+      "images/place/2c8fd7b5-b873-4273-964e-59c49842e721.webp",
+      "images/place/6494b878-3b94-478f-b1c2-8faef09c27ee.webp",
+      "images/place/7d4672dd-b7dd-4064-b4ed-01cde4ccf00f.webp",
+      "images/place/3abfb759-3cb0-4337-8a28-a7241ea7a4f3.webp",
+      "images/place/78c32dcf-2ec4-4d0a-8644-b83718954e7a.webp"
+    ],
+    "language_code": "KO",
+    "name": "QUINQUATRIA 굿즈 부스",
+    "host_college": "제60대 총학생회 '선명'",
+    "description": "- 축제 굿즈 판매",
+    "menus": []
+  },
+  "/places/23": {
+    "id": 23,
+    "category_id": 2,
+    "category_sequence": 304,
+    "is_polygon": false,
+    "x": 659,
+    "y": 728,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T08:00:00Z",
+    "place_image_uri": [
+      "images/place/41a6e429-110e-439b-af58-4e6217aba462.webp",
+      "images/place/3174ceae-2012-49a5-a671-9ea9c510b94b.webp",
+      "images/place/fb9087f9-98be-4ad7-abeb-c375e8f1d1fc.webp",
+      "images/place/215af81e-22ba-46ab-8573-3655ad9445d4.webp",
+      "images/place/1c798925-e8f1-4c93-b0f3-8c68973a3e05.webp",
+      "images/place/6967766e-39de-4eed-8e22-5a3c2861e546.webp"
+    ],
+    "language_code": "KO",
+    "name": "총학생회 콘텐츠 부스",
+    "host_college": "제60대 총학생회 '선명'",
+    "description": "[콘텐츠 안내]\n\n- A Piece of Twilight : 커스텀 비즈 파우치\n마음에 드는 비즈를 선택하여 나만의 Twilight를 작은 파우지 속에 담아보세요!\n\n- Take a Chance : 사과 스택 게임\n17초 안에 3개의 사과를 쌓으세요!\n\n📌 운영 시간 : 양일 11:00 ~ 17:00\n📌 운영 장소 : C4\n📌 이용 시 유의사항\n- 사과 스택 게임은 1인 1회 참여를 원칙으로 합니다.\n- 커스텀 비즈 파우치는 원하는 비즈 및 파츠 5~6개를 선택하여 제작할 수 있습니다.\n- 사과 스택 게임 성공 시 BOO 특별 파츠가 제공됩니다.\n- 현장 상황 및 대기 인원에 따라 참여 시간이 지연될 수 있습니다.\n- 안전한 운영을 위해 현장 안내에 협조 부탁드립니다.",
+    "menus": []
+  },
+  "/places/24": {
+    "id": 24,
+    "category_id": 2,
+    "category_sequence": 305,
+    "is_polygon": false,
+    "x": 682,
+    "y": 757,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/9222e2bd-8bdc-44db-8d2f-6d7dc71a287b.webp"],
+    "language_code": "KO",
+    "name": "우리 무슨 ʻ싸이’야?",
+    "host_college": "제2대 Social Science&AI융합학부 학생회 'ON'",
+    "description": "[Social Science&AI 융합학부 학생회 부스 ‘우리 무슨 싸이야?’ 운영 안내]\n\n🔮 天生緣分(천생연분), 사주로 미리 보고 가시오\n\n안녕하세요, 한국외국어대학교 제2대 Social Science&AI 융합학부 학생회 〈ON〉입니다. <Quinquatria:twilight> 기간 동안 사주 기반 소개팅 부스 ‘우리 무슨 싸이야?’를 운영합니다. 나와 잘 맞는 인연이 궁금하다면, 사주로 풀어드립니다. 그리고 그 순간을 기록할 수 있는 ‘포토부스’도 운영합니다. 많은 관심과 방문 부탁드립니다! 🧧\n\n📅 일시: 2026년 10월 8일(목)~9일(금) 11:00~18:00\n 📍 장소: 한국외국어대학교 서울캠퍼스 진실의 거울 앞 \n✉️ 문의: 한국외국어대학교 Social Science&AI 융합학부 인스타그램 @hufs_ssai",
+    "menus": [
+      {
+        "id": 111,
+        "place_id": 24,
+        "image_url": null,
+        "price": 1500,
+        "language_code": "KO",
+        "name": "사주 기반 소개팅 부스",
+        "description": "생년월일시를 바탕으로 궁합과 인연운을 풀어드리고 이를 바탕으로 한 번호팅을 진행합니다"
+      },
+      {
+        "id": 112,
+        "place_id": 24,
+        "image_url": null,
+        "price": 1000,
+        "language_code": "KO",
+        "name": "네컷 촬영",
+        "description": "SSAI만의 조선 민화 감성 프레임으로 특별한 순간을 남겨드립니다"
+      }
+    ]
+  },
+  "/places/25": {
+    "id": 25,
+    "category_id": 2,
+    "category_sequence": 306,
+    "is_polygon": false,
+    "x": 701,
+    "y": 757,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/ae9d93ba-5114-4959-8b9c-f7ab7bd70728.webp"],
+    "language_code": "KO",
+    "name": "팬싸에~서 누가 돌아왔게~~? -코어편-",
+    "host_college": "제60대 국제통상학과 학생회 'CO:er'",
+    "description": "[국제통상학과 부스 \"팬싸에~서 누가 돌아왔게~~?\" 운영 안내]\n\n✨2026 퀸쿠아트리아 국제통상학과 부스✨\n: '팬싸에~서 누가 돌아왔게~~?'\n\n📍PLACE \n: C-6 (본관 앞)\n \n📝MENU\n- REDRED 에이드 ❤️ (자몽 에이드)\n- GREENGREEN 에이드 💚 (청포도 에이드)\n- 마틴이 먹고 키 2M까지 큰 오레오 크로플 🍫\n- 제임스가 먹고 영크크 8번 춘 사과잼 크로플 🍏\n\n🎁EVENT \n- 코어티스 팬사인회\n- 번호팅 이벤트",
+    "menus": [
+      {
+        "id": 113,
+        "place_id": 25,
+        "image_url": null,
+        "price": 2000,
+        "language_code": "KO",
+        "name": "REDRED 에이드",
+        "description": "그냥 평범한 자몽 에이드입니다."
+      },
+      {
+        "id": 114,
+        "place_id": 25,
+        "image_url": "images/menu/f2b1bb07-5db9-4080-8a48-7deb1e27c5f6.jpg",
+        "price": 2000,
+        "language_code": "KO",
+        "name": "GREENGREEN 에이드",
+        "description": "그냥 평범한 청포도 에이드입니다."
+      },
+      {
+        "id": 115,
+        "place_id": 25,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "마틴이 먹고 키 2M까지 큰 오레오 크로플",
+        "description": "사실 키가 안 클 수도 있습니다."
+      },
+      {
+        "id": 116,
+        "place_id": 25,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "제임스가 먹고 영크크 8번 춘 사과잼 크로플",
+        "description": "영크크를 안 출 수도 있습니다."
+      },
+      {
+        "id": 117,
+        "place_id": 25,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "코어티스 팬사인회",
+        "description": "코르티스 짝퉁 주의... 🚨(식음료 미구매자 참여 가능)"
+      },
+      {
+        "id": 118,
+        "place_id": 25,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "번호팅 이벤트",
+        "description": "당신의 엄&안을 찾아보세요 👀 (식음료 구매 시 참여 가능)"
+      }
+    ]
+  },
+  "/places/26": {
+    "id": 26,
+    "category_id": 2,
+    "category_sequence": 307,
+    "is_polygon": false,
+    "x": 723,
+    "y": 757,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/5840470b-60d2-4f46-b52b-108c758f15d9.webp"],
+    "language_code": "KO",
+    "name": "♡ 포근포근 달콤해 둥글둥글 부푸는 마음! 내 꿈은 상경대 파티시엘 ♡",
+    "host_college": "제44대 상경대학 학생회 '늘상'",
+    "description": "[2026 하반기 QUINQUATRIA 상경대학 부스 안내]\n안녕하세요. 한국외대 제44대 상경대학 학생회 늘상입니다. 👩‍🍳🧑‍🍳\n\n한국외국어대학교 QUINQUATRIA 72주년을 맞아 여러분께 상경대학 부스 <♡ 포근포근 달콤해 둥글둥글 부푸는 마음! 내 꿈은 상경대 파티시엘 ♡>를 선보입니다!\n\n< 메뉴 >\n1️⃣ 🧆두쫀쿠 왁뿌볼 🧆\n[₩2,500]\n2️⃣🍓딸기 이튼메스🍓\n[₩3,000]\n3️⃣🍪오레오 이튼메스🍪\n[₩3,000]\n4️⃣🍓딸기 오레오 이튼메스🍪\n[₩3,500]\n\n< 프로그램 >\n어느덧 가을이 다가왔지만 아직도 옆구리가 시린 당신!!! 상경대학 부스에서 준비한 ❤️블라인드 데이트❤️ 프로그램에 참여하여 철저한 알고리즘으로 매칭된 최적의 상대를 만나보세요!\n\n또한 ‼️최고 수익률 200배‼️ 일확천금을 노릴 수 있는 상경대학 전통의💰로또 프로그램💰도 준비되어 있으니 많은 관심과 방문 부탁드리겠습니다!\n\n자세한 내용은 카드뉴스를 참고해 주세요. 많은 관심 부탁드립니다! 🩷\n\n📍축제 일시 : 2026년 10월 7일(수) ~ 8일(목)\n📍부스 운영 시간 : 양일 11시~18시 운영\n📍부스 위치 : 본관 앞 C-7 상경대학 부스",
+    "menus": [
+      {
+        "id": 119,
+        "place_id": 26,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "1️⃣ 🧆두쫀쿠 왁뿌볼 🧆",
+        "description": "와그작 빠그작 두쫀쿠 왁뿌볼!"
+      },
+      {
+        "id": 120,
+        "place_id": 26,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "2️⃣🍓딸기 이튼메스🍓",
+        "description": "달콤상큼 딸기와 함께하는 딸기 이튼메스!"
+      },
+      {
+        "id": 121,
+        "place_id": 26,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "3️⃣🍪오레오 이튼메스🍪",
+        "description": "달콤바삭 오레오가 퐁당 오레오 이튼메스! → 10명"
+      },
+      {
+        "id": 122,
+        "place_id": 26,
+        "image_url": "images/menu/7604473e-a882-4d06-b4c5-7a9ec3f28be2.jpg",
+        "price": 3500,
+        "language_code": "KO",
+        "name": "4️⃣🍓딸기 오레오 이튼메스🍪",
+        "description": "딸기와 오레오를 한 번에! 딸기 오레오 믹스 이튼메스!"
+      }
+    ]
+  },
+  "/places/27": {
+    "id": 27,
+    "category_id": 2,
+    "category_sequence": 308,
+    "is_polygon": false,
+    "x": 683,
+    "y": 731,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/516fccbd-f428-4066-b252-bed357408914.jpg"],
+    "language_code": "KO",
+    "name": "볶음너구리 한마리 몰고가세요~",
+    "host_college": "제18대 경영대학 학생회 ʻ비전’",
+    "description": "🍜경영대학 학생회 부스 [볶음너구리 한마리 몰고가세요~] 운영 안내 🍜\n\n안녕하십니까, 제18대 경영대학 학생회 ‘경영대의 무한한 가능성을 향해, 비전’입니다.\n2026 QUINQUATRIA: Twilight에서 경영대학 부스를 운영합니다! 학우 여러분들의 많은 관심과 참여 부탁드립니다 ☺️\n\n운영 일시 | 10. 07.(수) - 10. 08.(목) 13:00~18:00\n부스 위치 | C-8 (본관 앞)\n\n📞 문의: 카카오톡 플러스친구 ‘한국외대 경영대학 학생회’",
+    "menus": [
+      {
+        "id": 66,
+        "place_id": 27,
+        "image_url": null,
+        "price": 4000,
+        "language_code": "KO",
+        "name": "볶음너구리",
+        "description": "오직 경영대학 부스에서만 맛볼 수 있는 특별한 메뉴 🍜 매콤하고 감칠맛 가득한 볶음너구리 한마리 몰고가세요~"
+      },
+      {
+        "id": 67,
+        "place_id": 27,
+        "image_url": null,
+        "price": 1500,
+        "language_code": "KO",
+        "name": "토핑: 대패삼겹살",
+        "description": "취향에 따라 추가해 볶음너구리를 더욱 푸짐하게 즐기실 수 있습니다"
+      },
+      {
+        "id": 68,
+        "place_id": 27,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "라면 번호팅 🍜",
+        "description": "볶음너구리 먹고, 같은 라면 취향의 인연을 찾아보세요 💌"
+      },
+      {
+        "id": 69,
+        "place_id": 27,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "너구리의 풍선가게 🎪",
+        "description": "귀여운 요술풍선을 눈앞에서 바로 만들어드립니다! 너구리의 풍선가게 OPEN 💗"
+      }
+    ]
+  },
+  "/places/28": {
+    "id": 28,
+    "category_id": 2,
+    "category_sequence": 309,
+    "is_polygon": false,
+    "x": 704,
+    "y": 731,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/3c43b12b-f455-4e3f-a63d-5deefe0bd9f4.webp"],
+    "language_code": "KO",
+    "name": "슈의 불닭쌈가게: 입술은 타고 번호는 따고",
+    "host_college": "제2대 Language&AI융합학부 학생회",
+    "description": "🌶️💌 슈의 불닭쌈가게: 입술은 타고, 번호는 따고\n🔥 불닭쌈 먹고, 마음에 드는 동물상 번호까지 GET!\n안녕하세요, Language & AI 융합학부 학생회입니다.\n이번 축제에서 Language & AI 융합학부가\n「슈의 불닭쌈가게: 입술은 타고, 번호는 따고」 부스를 운영합니다!\n쫀득한 라이스페이퍼에 매콤한 불닭을 싸 먹는 불닭쌈🌶️과\nAI로 나의 동물상을 알아보고 원하는 동물상의 번호를 찾아보는 AI 동물상 번호팅💌을 준비했습니다.\n🌶️ 불닭쌈  \n- 반 봉지 (3조각) : 4,000원\n- 한 봉지 (6조각) : 7,000원\n- 치즈 추가 : +500원(반 봉지) , +1,000원(한 봉지)\n🐶 AI 동물상 번호팅  \n- 내 번호 넣기 : 1,000원\n- 원하는 번호 뽑기 : 1,000원\n- AI 테스트를 원하지 않는 경우 직접 동물상을 선택할 수 있습니다!\n🎁 불닭쌈 또는 번호팅 중 하나만 참여해도 타투 스티커를 드립니다!\n입술은 타고, 번호는 따고🔥💌\n맛있는 불닭쌈과 재미있는 번호팅이 준비된 「슈의 불닭쌈가게」에 많은 관심과 참여 부탁드립니다!",
+    "menus": [
+      {
+        "id": 62,
+        "place_id": 28,
+        "image_url": null,
+        "price": 4000,
+        "language_code": "KO",
+        "name": "🌶️ 불닭쌈 반 봉지(3조각)",
+        "description": "쫀득한 라이스페이퍼에 매콤한 불닭볶음면을 싸 먹는 한입 불닭쌈입니다. 취향에 따라 체다치즈를 추가해 더욱 맛있게 즐길 수 있습니다."
+      },
+      {
+        "id": 63,
+        "place_id": 28,
+        "image_url": null,
+        "price": 7000,
+        "language_code": "KO",
+        "name": "🌶️ 불닭쌈 한 봉지(6조각)",
+        "description": "쫀득한 라이스페이퍼에 매콤한 불닭볶음면을 싸 먹는 한입 불닭쌈입니다. 취향에 따라 체다치즈를 추가해 더욱 맛있게 즐길 수 있습니다."
+      },
+      {
+        "id": 64,
+        "place_id": 28,
+        "image_url": null,
+        "price": 1000,
+        "language_code": "KO",
+        "name": "🐶 AI 동물상 번호팅",
+        "description": "AI 동물상 테스트로 자신의 동물상을 알아본 뒤 인적사항을 남기거나, 원하는 동물상의 상대를 골라 번호를 뽑아갈 수 있는 번호팅 콘텐츠입니다. AI 테스트를 원하지 않을 경우 직접 동물상을 선택할 수도 있습니다."
+      },
+      {
+        "id": 65,
+        "place_id": 28,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "🎨 타투 스티커",
+        "description": "불닭쌈 또는 AI 동물상 번호팅 중 하나만 참여해도 원하는 타투 스티커를 받아 자유롭게 꾸밀 수 있습니다."
+      }
+    ]
+  },
+  "/places/29": {
+    "id": 29,
+    "category_id": 2,
+    "category_sequence": 310,
+    "is_polygon": false,
+    "x": 724,
+    "y": 731,
+    "area": null,
+    "start_hour": "2026-10-07T02:30:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/a7af1e47-f65e-4593-8b87-393a51064d60.jpg"],
+    "language_code": "KO",
+    "name": "집 나간 오디세우스도 돌아오는 엘디세이",
+    "host_college": "제13대 Language&Diplomacy학부 학생회 'soLiD'",
+    "description": "🌊[집 나간 오디세우스도 돌아오는 엘디세이]⚓️\n\n안녕하세요, 한국외국어대학교 제13대 LD학부 학생회 soLiD입니다. 가을을 맞이하여 열리는 2026 QUINQUATRIA: Twilight 에서 \"집 나간 오디세우스도 돌아오는 엘디세이\" LD학부 축제 부스를 운영합니다!\n\n📣오디세우스, 보고 있나!\n10년간 집을 돌아오지 못한 오디세우스도 당-장 돌아오게 할 만큼 매혹적인 음료와 오디세이 속 여러 미션 이벤트가 준비되어 있습니다. 과제와 시험의 바다에서 피신할 매혹적인 안식처! 학우분들의 많은 관심 부탁드립니다!\n\n📅 일시: 2026년 10월 7일 - 8일 11:30 ~ 18:00\n📍 장소: C-10 (본관 앞)\n☎️문의사항: 2026 퀸쿠아트리아 TF 팀장 최은아(010-7271-3395)",
+    "menus": [
+      {
+        "id": 57,
+        "place_id": 29,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "(Ice) 아프로디테의 황금사과에이드",
+        "description": "미의 여신도 반하게 할 황금 사과의 상큼함!"
+      },
+      {
+        "id": 58,
+        "place_id": 29,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "(Ice) 포세이돈의 분노 블루레몬에이드",
+        "description": "포세이돈의 분노처럼 짜릿한 레몬의 청량감!"
+      },
+      {
+        "id": 59,
+        "place_id": 29,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "(Ice) 망각의 로토스 에이드",
+        "description": "들이키는 순간 고통을 망각하게 되는 환상적인 샤인머스캣의 달콤함!"
+      },
+      {
+        "id": 60,
+        "place_id": 29,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "(Hot) 파리스의 황금사과차",
+        "description": "아름다운 당신에게 파리스가 바치는 따뜻한 온기!"
+      },
+      {
+        "id": 61,
+        "place_id": 29,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "(Hot) 키클롭스의 눈동자에 Cheers",
+        "description": "눈 하나 마저 감기게 할 딥한 핫초코!"
+      }
+    ]
+  },
+  "/places/3": {
+    "id": 3,
+    "category_id": 2,
+    "category_sequence": 103,
+    "is_polygon": false,
+    "x": 421.2,
+    "y": 838.8,
+    "area": null,
+    "start_hour": "2026-10-07T03:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/3cc9c396-debd-47b1-ba38-0c565ebead80.webp"],
+    "language_code": "KO",
+    "name": "안녕하세요두바이와플입니다잘부탁드립니다",
+    "host_college": "제42대 아랍어과 학생회",
+    "description": "📍 아랍어과 부스\n\n두바이를 안 가도, 두바이 와플은 먹을 수 있다! 🧇\n\n바삭한 와플 속에 고소한 피스타치오 크림과 바삭한 카다이프를 듬뿍 담았습니다.\n\n아랍어과에서 준비한 특별한 한입의 중동 여행 ✈️\n이번 축제, 두바이 와플과 함께 아랍의 맛을 만나보세요!",
+    "menus": [
+      {
+        "id": 77,
+        "place_id": 3,
+        "image_url": null,
+        "price": 4000,
+        "language_code": "KO",
+        "name": "두바이와플",
+        "description": "바삭하게 구운 와플 안에 피스타치오 크림과 카다이프를 넣고 초콜릿을 곁들였습니다."
+      }
+    ]
+  },
+  "/places/30": {
+    "id": 30,
+    "category_id": 2,
+    "category_sequence": 311,
+    "is_polygon": false,
+    "x": 770,
+    "y": 710,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/ba6b4412-9c58-4c4e-ad0c-59b2c7e959ed.webp"],
+    "language_code": "KO",
+    "name": "홍시…… 이 떡… 임자 있나요?",
+    "host_college": "제41대 영어대학 학생회 '영화'",
+    "description": "🍁 [영어대학 학생회 ‘영화’ 2026 하반기 QUINQUATRIA 부스 안내]\n애국외대, 민족외영! \n안녕십니까, 제 41대 영어대학 학생회 ‘영화’입니다.\n\n이번 축제에서 여러분의 입맛을 사로잡을 특별한 디저트 부스를 준비했습니다. 고소한 버터에 노릇노릇하게 구운 크림기정떡, 진한 흑임자 라떼, 달콤상큼한 홍시 코코넛 에이드까지!\n축제에서 맛있는 디저트와 함께 즐거운 시간 보내고 가실 수 있도록 열심히 준비했으니 학우 여러분의 많은 관심과 방문 부탁드립니다!\n\n📅 일시: 2026년 10월 7일-8일 13:00-18:00\n📍 장소: 한국외국어대학교 서울캠퍼스 본관 앞 C-11 부스",
+    "menus": [
+      {
+        "id": 7,
+        "place_id": 30,
+        "image_url": null,
+        "price": 1500,
+        "language_code": "KO",
+        "name": "🥛우유크림 기정떡",
+        "description": "부드러운 우유크림이 가득 들어간 시그니처 메뉴!"
+      },
+      {
+        "id": 8,
+        "place_id": 30,
+        "image_url": null,
+        "price": 1500,
+        "language_code": "KO",
+        "name": "🍫초코크림 기정떡",
+        "description": "달달한 초콜릿으로 만든 크림이 가득 들어간 스테디셀러 메뉴!"
+      },
+      {
+        "id": 9,
+        "place_id": 30,
+        "image_url": null,
+        "price": 1500,
+        "language_code": "KO",
+        "name": "🍵말차크림 기정떡",
+        "description": "말차와 부드러운 크림의 조합으로 말차 러버들의 취향을 저격한 메뉴!"
+      },
+      {
+        "id": 10,
+        "place_id": 30,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "🧆두바이 기정떡",
+        "description": "고소한 피스타치오와 바삭한 카다이프가 환상적으로 어우러지는 인기 최고 메뉴!"
+      },
+      {
+        "id": 11,
+        "place_id": 30,
+        "image_url": null,
+        "price": 1500,
+        "language_code": "KO",
+        "name": "🍓딸기크림 기정떡",
+        "description": "딸기 크림과 쫀득한 떡의 만남을 한입 가득 느낄 수 있는 메뉴!"
+      },
+      {
+        "id": 12,
+        "place_id": 30,
+        "image_url": null,
+        "price": 1500,
+        "language_code": "KO",
+        "name": "🧈앙버터 기정떡",
+        "description": "달콤한 팥앙금과 고소한 버터를 한입에 즐길 수 있는 달콤고소한 메뉴!"
+      },
+      {
+        "id": 13,
+        "place_id": 30,
+        "image_url": null,
+        "price": 3500,
+        "language_code": "KO",
+        "name": "🧋흑임자 라떼",
+        "description": "고소한 흑임자와 부드러운 우유가 어우러진 달콤고소한 음료!"
+      },
+      {
+        "id": 14,
+        "place_id": 30,
+        "image_url": null,
+        "price": 3500,
+        "language_code": "KO",
+        "name": "🍹홍시 코코넛 에이드",
+        "description": "달콤한 홍시와 코코넛 젤리가 들어간 음료!"
+      }
+    ]
+  },
+  "/places/31": {
+    "id": 31,
+    "category_id": 2,
+    "category_sequence": 312,
+    "is_polygon": false,
+    "x": 792,
+    "y": 731,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/980b79df-22fb-4454-8bc4-2a525a3d81e3.webp"],
+    "language_code": "KO",
+    "name": "오지후라이의 마법사",
+    "host_college": "제20대 영어통번역학과 학생회 'WITH'",
+    "description": "[🧙‍♂️영어통번역학과 부스 “오지후라이의 마법사” 운영 안내🧙‍♂️]\n\n✨당신의 가장 빛나는 순간을 함께 만들어갈, WITH✨\n\n애국외대! 한국외국어대학교 학우 여러분 안녕하십니까. 제20대 영어통번역학과 학생회 <WITH> 입니다. 오즈의 마법사를 모티브로 한 영어통번역학과의 특별한 축제 부스, “오지후라이의 마법사”를 소개합니다!\n\n🍟 오지후라이의 마법\n바삭한 감자튀김에 녹진한 체다치즈 소스와 베이컨 토핑까지! 한 입 맛보면 자꾸만 손이 가는 마법 같은 맛을 경험해보세요.\n\n🥤마법사의 마법물약\n코카콜라와 스프라이트, 그리고 얼음컵까지 준비 완료! 느끼함을 싹 날려주는 시원한 탄산 마법으로 오지후라이를 더욱 맛있게 즐겨보세요.\n\n📱순간이동 주문서 \n링크와 QR을 통한 간편한 온라인 주문 서비스! 줄 서서 기다릴 필요 없이 원하는 위치에서 배달로 편하게 받아보세요.\n\n📸 기억 저장 마법\n나만의네컷 X 영어통번역학과만의 특별한 이동식 포토부스! 축제에서의 소중한 순간을 네컷 속에 봉인해 간직해보세요.\n\n🤤 영어통번역학과 부스에서 감법사와 함께 펼쳐지는 신비로운 마법의 세계를 만나보세요!\n\n☎️문의사항\n제20대 영어통번역학과 학생회 인스타그램 @hufs_eicc",
+    "menus": [
+      {
+        "id": 53,
+        "place_id": 31,
+        "image_url": null,
+        "price": 4000,
+        "language_code": "KO",
+        "name": "🍟 오지후라이의 마법",
+        "description": "바삭한 감자튀김에 녹진한 체다치즈 소스와 베이컨 토핑까지! 한 입 맛보면 자꾸만 손이 가는 마법 같은 맛을 경험해보세요."
+      },
+      {
+        "id": 54,
+        "place_id": 31,
+        "image_url": null,
+        "price": 2000,
+        "language_code": "KO",
+        "name": "🥤마법사의 마법물약",
+        "description": "코카콜라와 스프라이트, 그리고 얼음컵까지 준비 완료! 느끼함을 싹 날려주는 시원한 탄산 마법으로 오지후라이를 더욱 맛있게 즐겨보세요."
+      },
+      {
+        "id": 55,
+        "place_id": 31,
+        "image_url": null,
+        "price": 1000,
+        "language_code": "KO",
+        "name": "📱순간이동 주문서",
+        "description": "링크와 QR을 통한 간편한 온라인 주문 서비스! 줄 서서 기다릴 필요 없이 원하는 위치에서 배달로 편하게 받아보세요."
+      },
+      {
+        "id": 56,
+        "place_id": 31,
+        "image_url": null,
+        "price": 1000,
+        "language_code": "KO",
+        "name": "📸 기억 저장 마법",
+        "description": "나만의네컷 X 영어통번역학과만의 특별한 이동식 포토부스! 축제에서의 소중한 순간을 네컷 속에 봉인해 간직해보세요."
+      }
+    ]
+  },
+  "/places/32": {
+    "id": 32,
+    "category_id": 2,
+    "category_sequence": 401,
+    "is_polygon": false,
+    "x": 995,
+    "y": 941,
+    "area": null,
+    "start_hour": "2026-10-07T03:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/e0adf1fc-08c8-4d52-a290-4d08262c8105.webp"],
+    "language_code": "KO",
+    "name": "L 사이즈 솜사탕 들고 T 안나게 네 번호 슬쩍 떼어갈게<3",
+    "host_college": "제11대 Language&Trade학부 학생회 'reLaTe'",
+    "description": "[LT학부 QUINQUATRIA : Twilight 부스 안내]\n\n🦝 2026년 올해 솔로인지 벌써 280일 지남…\n나: 솜씻LT 됨 🧽💦\n\n올해도 280일 넘게 솔로라고 걱정하지 마세요!\nL사이즈 솜사탕 들고 T안나게 번호 떼어가면 새로운 사랑(혹은 우정!)이 찾아올지도 모르니까요 🍭✨\n\n안녕하세요, 제11대 LT학부 학생회 reLaTe입니다!\n10월 7일(수)부터 8일(목)까지, Quinquatria D-1번 부스에서 LT학부 학생회 부스를 운영합니다.\n몽글몽글한 솜사탕과 재밌는 이벤트가 준비되어 있으니 많은 관심과 방문 부탁드립니다!\n\n🗓 운영 일시: 2026년 10월 7일(수) ~ 8일(목) 12:00 ~ 18:00\n📍 위치: D-1번 부스\n🏷 부스명: L사이즈 솜사탕 들고 T안나게 네 번호 슬쩍 떼어갈게 <3\n🎈 프로그램: 번호팅/친구팅, LoTto, 솜사탕 판매\n\n달콤한 솜사탕부터 인연 만들기, 대박 로또의 기회까지! 모든 걸 한 번에 얻어가세요 🍭💫",
+    "menus": [
+      {
+        "id": 46,
+        "place_id": 32,
+        "image_url": null,
+        "price": 2000,
+        "language_code": "KO",
+        "name": "번호팅 & 친구팅",
+        "description": "· 그냥 어색하게 연락만 하는 번호팅은 이제 그만! 재미있는 연락 미션으로 한층 더 흥미진진해진 번호팅 📱 번호팅 가격 : 붙일 때 1000원, 떼기만 할 때 2000원, 둘 다 2000원 · 연애 말고 우정! 든든한 캠퍼스 절친을 찾고 싶다면 친구팅으로 모여라 🤝 친구팅 가격 : 2000원"
+      },
+      {
+        "id": 47,
+        "place_id": 32,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "LoTto",
+        "description": "· \"로\"맨틱한 캠퍼스 라이프를 상상하시나요? · \"또\" 속으셨습니다. 인생은 한 방이에요! 🎟️"
+      },
+      {
+        "id": 48,
+        "place_id": 32,
+        "image_url": null,
+        "price": 1500,
+        "language_code": "KO",
+        "name": "몽실몽실 솜사탕",
+        "description": "· 올겨울 시린 옆구리를 따뜻하고 달콤하게 채워줄 L사이즈 솜사탕 ☁️ 가격 : 1500원 프로그램 참여시 500원 할인"
+      }
+    ]
+  },
+  "/places/33": {
+    "id": 33,
+    "category_id": 2,
+    "category_sequence": 402,
+    "is_polygon": false,
+    "x": 1033,
+    "y": 941,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/48840520-cecb-40f8-88ba-ceda3b968973.webp"],
+    "language_code": "KO",
+    "name": "오늘 밤은 네딱하게",
+    "host_college": "제38대 네덜란드어과 학생회 'PATHOS'",
+    "description": "[네덜란드어과 학생회 부스 '오늘 밤은 네딱하게' 운영 안내]\n\n안녕하세요, 한국외국어대학교 제38대 네덜란드어과 학생회 'PATHOS'입니다. 10/7~10/8 양일간 2026 하반기 퀸쿠아트리아  네덜란드어과 부스를 운영합니다. 학우 여러분들의 많은 관심과 방문 부탁드립니다!  \n\n* 두 개 이상 메뉴 주문 시 1000원 할인/ 네 개 이상 메뉴 주문 시 2000원 할인\n\n📅 일시: 2026년 10/7~10/8 13시~18시\n🚩 위치: 인문과학관 분수대 앞(D-2)\n❓️문의: 학생회장 최원석(010-3036-3051)",
+    "menus": [
+      {
+        "id": 39,
+        "place_id": 33,
+        "image_url": null,
+        "price": 3500,
+        "language_code": "KO",
+        "name": "치즈 크래커",
+        "description": "치즈와 꿀을 올린 네덜란드식 크래커"
+      },
+      {
+        "id": 40,
+        "place_id": 33,
+        "image_url": null,
+        "price": 4500,
+        "language_code": "KO",
+        "name": "감자튀김&너겟",
+        "description": "술 안주로 제격인 감자튀김과 너겟"
+      },
+      {
+        "id": 41,
+        "place_id": 33,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "미피 맥주",
+        "description": "네덜란드의 전통 캐릭터인 미피가 결합된 무알콜 맥주"
+      },
+      {
+        "id": 42,
+        "place_id": 33,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "미피의 초록색 눈물",
+        "description": "미피의 초록색 눈물을 모아 만든 무알콜 청포도 하이볼"
+      },
+      {
+        "id": 43,
+        "place_id": 33,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "미피의 빨간색 눈물",
+        "description": "미피의 빨간색 눈물을 모아 만든 무알콜 자몽 하이볼"
+      },
+      {
+        "id": 44,
+        "place_id": 33,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "미피의 주황색 눈물",
+        "description": "미피의 주황색 눈물을 모아 만든 무알콜 오렌지 하이볼"
+      },
+      {
+        "id": 45,
+        "place_id": 33,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "미피의 노란색 눈물",
+        "description": "미피의 노란색 눈물을 모아 만든 무알콜 망고 하이볼"
+      }
+    ]
+  },
+  "/places/34": {
+    "id": 34,
+    "category_id": 2,
+    "category_sequence": 403,
+    "is_polygon": false,
+    "x": 1068,
+    "y": 941,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/4ae9144b-d467-4a77-b401-a877cf983b65.webp"],
+    "language_code": "KO",
+    "name": "에스파 랑 츄러스 먹을래?",
+    "host_college": "제39대 스페인어과 학생회 'ADELANTE'",
+    "description": "[스페인어과 2026 QUINQUATRIA : TWILIGHT 부스 운영 안내]\n\n🇪🇸 ¡Viva España! 축제에서 만나는 작은 스페인\n\n안녕하세요, 제39대 스페인어과 학생회 ADELANTE입니다.\n\n2026 QUINQUATRIA : TWILIGHT를 맞아 스페인의 맛과 즐거움을 담은 부스를 운영합니다.\n\n바삭하고 달콤한 츄러스와 상큼한 무알코올 상그리아부터, 스페인 국가대표 유니폼을 향한 축구공 게임과 새로운 인연을 만나는 ‘에스파(냐) 번호팅’까지 준비했습니다.\n\n츄러스 또는 상그리아를 구매하시면 축구공 게임 또는 번호팅에 무료로 참여하실 수 있습니다. 스페인어과 부스에서 맛있는 간식과 함께 특별한 축제의 추억을 만들어 보세요!\n\n학우 여러분의 많은 관심과 방문 부탁드립니다.\n\n📅 일시: 10월 7일(수)~10월 8일(목), 양일 13:00~18:00  \n📍 장소: 인문과학관 앞 D-3 부스  \n📩 문의: 스페인어과 학생회 인스타그램 @hufs_spanish",
+    "menus": [
+      {
+        "id": 34,
+        "place_id": 34,
+        "image_url": null,
+        "price": 4500,
+        "language_code": "KO",
+        "name": "츄러스+초코디핑",
+        "description": "바삭한 식감에 달콤함을 더한 스페인 대표 간식! 츄러스 한 입으로 스페인의 달콤한 맛을 만나 보세요."
+      },
+      {
+        "id": 35,
+        "place_id": 34,
+        "image_url": null,
+        "price": 3500,
+        "language_code": "KO",
+        "name": "무알콜 상그리아",
+        "description": "상큼한 과일이 어우러진 스페인 대표 음료! 무알콜로 시원하고 가볍게 즐겨 보세요."
+      },
+      {
+        "id": 36,
+        "place_id": 34,
+        "image_url": null,
+        "price": 6000,
+        "language_code": "KO",
+        "name": "츄러스 + 상그리아 세트",
+        "description": "달콤한 츄러스와 상큼한 상그리아를 한 번에! 단품 합계 8,000원에서 무려 25% 할인된 가격으로 만나 보세요."
+      },
+      {
+        "id": 37,
+        "place_id": 34,
+        "image_url": null,
+        "price": 1000,
+        "language_code": "KO",
+        "name": "축구공 어디까지 올라가는 거예요?",
+        "description": "축구공을 발로 차서 경사로 위로 올려 보세요! 공이 멈춘 위치에 따라 점수를 획득하며, 높은 점수를 기록한 참가자에게 상품을 드립니다. 1등 상품인 스페인 국가대표 유니폼에 도전해 보세요!"
+      },
+      {
+        "id": 38,
+        "place_id": 34,
+        "image_url": null,
+        "price": 1000,
+        "language_code": "KO",
+        "name": "에스파(냐) 번호팅",
+        "description": "사진을 보고 마음에 드는 상대를 선택하는 번호팅! 스페인어과 부스에서 새로운 인연을 만날 기회를 잡아 보세요."
+      }
+    ]
+  },
+  "/places/35": {
+    "id": 35,
+    "category_id": 2,
+    "category_sequence": 404,
+    "is_polygon": false,
+    "x": 1107,
+    "y": 941,
+    "area": null,
+    "start_hour": "2026-10-07T03:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/df82c765-4a26-435d-b984-356102c179fb.webp"],
+    "language_code": "KO",
+    "name": "벌컥벌컥, 땡겨땡겨, I just choke on 옥토버",
+    "host_college": "제40대 독일어과 비상대책위원회",
+    "description": "🇩🇪2026 하반기 QUINQUATRIA 독일어과 부스 “벌컥벌컥, 땡겨땡겨, I just choke on 옥토버” 운영 안내🇩🇪\n\n 안녕하십니까, 한국외국어대학교 독일어과 제40대 비상대책위원회입니다.\n 2026 QUINQUATRIA : Twilight에서 10월 7일(수)-10월 8일(목) 양일간 독일어과 부스 “벌컥벌컥, 땡겨땡겨, I just choke on 옥토버”를 운영합니다. 학우 여러분들의 많은 관심과 방문 부탁드립니다!\n\n📆일시: 2026년 10월 7일(수)-10월 8일(목) 12:00-18:00\n📌장소: 한국외국어대학교 서울캠퍼스 인문과학관 앞 4번 부스\n\n❗️콘텐츠 <맥주 빨리 마시기> 참여를 희망하시는 경우, 실물 신분증(주민등록증, 운전면허증 등)을 반드시 지참해주시기 바랍니다.\n\n📢기타 문의\n제40대 비상대책위원회 위원장 이준 : 010-4893-1321",
+    "menus": [
+      {
+        "id": 31,
+        "place_id": 35,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "이 부어스트 누가 구워스트?",
+        "description": "독일 소시지 \"부어스트\"의 본고장 튀링겐에서 전해 내려오는 정통 구운 소시지의 풍미를 느껴보세요."
+      },
+      {
+        "id": 32,
+        "place_id": 35,
+        "image_url": null,
+        "price": 4000,
+        "language_code": "KO",
+        "name": "내가 다른 건 다 참아도 콜팝 이건 진짜 못참겠다",
+        "description": "부어스트와 음료를 한 번에 즐기실 수 있습니다 (음료는 콜라, 레몬 주스 중 택 1)"
+      },
+      {
+        "id": 33,
+        "place_id": 35,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "맥주 빨리 마시기 \"맥주 마시다가 한우 받은 썰 푼다\"",
+        "description": "한우 세트, 치킨 등 다양한 상품이 기다리고 있습니다.?"
+      }
+    ]
+  },
+  "/places/36": {
+    "id": 36,
+    "category_id": 2,
+    "category_sequence": 405,
+    "is_polygon": false,
+    "x": 1145,
+    "y": 941,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": null,
+    "language_code": "KO",
+    "name": "넌 이어과의 lemon tang",
+    "host_college": "제39대 이탈리아어과 학생회 'Onda'",
+    "description": "[2026 QUINQUATRIA : Twilight 이탈리아어과 부스 소개]\n\n하나되는 이탈리아어과 학우 여러분 안녕하십니까, 제39대 이탈리아어과 학생회 ‘Onda'입니다. \n\n2026 QUINQUATRIA : Twilight의 이탈리아어과 부스 “넌 이어과의 lemon tang”을 소개해드립니다.\n학우분들의 많은 관심과 참여 부탁드립니다. 감사합니다.\n\n🍋부스명 :  넌 이어과의 lemon tang\n\n🍋부스 위치 : 인문과학관 앞 부스\n\n🍋운영 날짜 및 시간 : 2026.10.07 (수) ~ 2026.10.08 (목) 11:00 ~ 18:00\n\n🍋식/음료 : 피아디나 샌드위치, 미니 도넛, 블루레몬에이드\n\n🍋콘텐츠 \n- 레몬 농부의 레몬 수확 대작전! : 레몬농부가 되어 눈을 가리고 레몬 수확에 성공하면 식음료 할인 \n\n- 레몬 먹고 표정참기 : 상큼한 레몬을 먹고 일정 시간 동안 표정 변화를 참으면 식음료 할인\n\n- 레몬이 들어가는 메뉴 맞추기 : 여러가지 이탈리아 음식 사진을 보고 레몬이 들어가는 메뉴를 맞추면 식음료 할인 \n\n- 소원 거는 레몬트리 : 레몬트리에 소원을 빌어봐\n\n하나의 목표와 열정으로 움직이는 이탈리아어과의 하나의 파도, 제39대 이탈리아어과 학생회 ‘Onda’🌊",
+    "menus": [
+      {
+        "id": 190,
+        "place_id": 36,
+        "image_url": null,
+        "price": 5500,
+        "language_code": "KO",
+        "name": "피아디나 샌드위치",
+        "description": "정가 5500 / 할인가 4500"
+      },
+      {
+        "id": 191,
+        "place_id": 36,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "미니도넛 (2개입)",
+        "description": "정가 2500 / 할인가 1900"
+      },
+      {
+        "id": 192,
+        "place_id": 36,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "블루레몬에이드",
+        "description": "정가 2500 / 할인가 1900"
+      }
+    ]
+  },
+  "/places/37": {
+    "id": 37,
+    "category_id": 2,
+    "category_sequence": 406,
+    "is_polygon": false,
+    "x": 1200,
+    "y": 909,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T07:00:00Z",
+    "place_image_uri": null,
+    "language_code": "KO",
+    "name": "진로취업지원센터",
+    "host_college": "대학 일자리 플러스 본부",
+    "description": "",
+    "menus": []
+  },
+  "/places/38": {
+    "id": 38,
+    "category_id": 2,
+    "category_sequence": 407,
+    "is_polygon": false,
+    "x": 1200,
+    "y": 877.5,
+    "area": null,
+    "start_hour": "2026-10-07T03:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/aaa7a78f-4721-4d5b-a335-804aa80e1f3d.webp"],
+    "language_code": "KO",
+    "name": "우리 아시아에서 만났는데 벌써 유럽이야",
+    "host_college": "서양어대학 계열대표단 X 아시아언어문화대학 계열대표단",
+    "description": "[서양어대학 X 아시아언어문화대학 계열대표단 연합 부스 운영 안내] \n\n\"우리 아시아에서 만났는데 벌써 유럽이야\" ✈️🌍\n\n안녕하세요! 서양어대학 X 아시아언어문화대학 계열 대표단입니다. \n\n2025년 한국외국어대학교 계열 모집 전형이 신설된 이래 처음으로, 가장 큰 두 단과대인 서양어대학과 아시아언어문화대학 계열이 <2026 QUINQUATRIA : Twilight>에서 연합 부스를 운영합니다! \n\n유럽&아시아의 맛있는 식음료 🥪🍹, 경품이 걸린 미니게임 🎲🎁, 두근두근 설레는 번호팅 💌💘까지 풍성하고 알찬 콘텐츠를 준비했습니다!\n\n학우 여러분들의 많은 관심과 방문 부탁드립니다! 💙❤️\n\n🗓️ 일시\n\n2026.10.07(수) ~ 2026.10.08(목) 12:00 ~ 18:00\n\n📍 장소\n\n한국외국어대학교 교수학습개발원 건물 앞 부스\n\n📞 문의\n\n서양어대학 계열대표단 인스타그램 @hufs_western_union\n\n아시아언어문화대학 계열대표단 인스타그램 @hufs_asia_cfl",
+    "menus": [
+      {
+        "id": 26,
+        "place_id": 38,
+        "image_url": null,
+        "price": 4000,
+        "language_code": "KO",
+        "name": "반미 단품",
+        "description": "아시아의 풍성한 맛을 가진 베트남의 음식 반미 (고수 제외 가능)"
+      },
+      {
+        "id": 27,
+        "place_id": 38,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "시트러스 에이드 단품",
+        "description": "유럽 지중해의 상큼하고 시원한 시트러스 에이드"
+      },
+      {
+        "id": 28,
+        "place_id": 38,
+        "image_url": null,
+        "price": 5500,
+        "language_code": "KO",
+        "name": "반미&시트러스 에이드 세트",
+        "description": ""
+      },
+      {
+        "id": 29,
+        "place_id": 38,
+        "image_url": null,
+        "price": 1000,
+        "language_code": "KO",
+        "name": "병뚜껑 날리기 게임",
+        "description": "나의 환승 목적지는? 병뚜껑을 지도 위로 톡 날려보세요! 병뚜껑이 멈춘 곳이 오늘의 환승 목적지! 게임에 참여하고 상품 뽑기권을 받아 경품을 획득하세요!"
+      },
+      {
+        "id": 30,
+        "place_id": 38,
+        "image_url": null,
+        "price": 1000,
+        "language_code": "KO",
+        "name": "환승 매칭 번호팅",
+        "description": "환승 목적지를 찾았다면, 이번에는 NEW로 환승할 차례! 계열 연합 부스에서 당신의 설레는 인연을 만나보세요!"
+      }
+    ]
+  },
+  "/places/39": {
+    "id": 39,
+    "category_id": 2,
+    "category_sequence": 408,
+    "is_polygon": false,
+    "x": 1200.4,
+    "y": 840.6,
+    "area": null,
+    "start_hour": "2026-10-07T02:30:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/6a2ab47d-93a8-4d92-9144-59001874fa49.webp"],
+    "language_code": "KO",
+    "name": "미컴과 함께라멘 ♡",
+    "host_college": "제38대 미디어커뮤니케이션학부 학생회 '은하'",
+    "description": "안녕하십니까, 한국외대 미디어커뮤니케이션학부 제38대 학생회 ‘은하’입니다. 한국외대 가을 축제 「QUINQUATRIA: Twilight」에서 10월 7일(수) ~ 10월 8일(목) 이틀간, 부스 \"미컴과 함께라멘\"을 운영합니다. 많은 관심과 방문 부탁드립니다!\n\n일시 - 2026년 10월 7일(수) ~ 10월 8일(목)\n장소 - 한국외대 서울캠퍼스 교수학습개발원 앞 D-8\n문의 - 미디어커뮤니케이션학부 학생회 인스타그램 @hufs_mecomm",
+    "menus": [
+      {
+        "id": 128,
+        "place_id": 39,
+        "image_url": null,
+        "price": 5500,
+        "language_code": "KO",
+        "name": "신형만씨가 그리워할 된장버터옥수수라멘",
+        "description": "미소라멘 베이스에 풍부함을 더해줄 옥수수와 버터의 조화는 35세 회사원도 눈물을 흘리게 만듭니다."
+      },
+      {
+        "id": 129,
+        "place_id": 39,
+        "image_url": null,
+        "price": 5000,
+        "language_code": "KO",
+        "name": "봉미선씨의 깔끔단백 미소라멘",
+        "description": "신형만씨가 술을 마신 다음날에 항상 봉미선씨가 해주던 라멘입니다. 깔끔하지만 풍부한 감칠맛으로 속을 따뜻하게 데워줍니다"
+      },
+      {
+        "id": 130,
+        "place_id": 39,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "짱구가 초코비급으로 좋아하는 우주가 들어간 은하 라무네 에이드",
+        "description": "외계인 덩덩이가 선물해주고간 은하가 담긴 과일 라무네 에이드입니다."
+      }
+    ]
+  },
+  "/places/4": {
+    "id": 4,
+    "category_id": 2,
+    "category_sequence": 104,
+    "is_polygon": false,
+    "x": 442.9,
+    "y": 813.1,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/75af4bb0-69a1-4973-ae75-0b939be64a3d.webp"],
+    "language_code": "KO",
+    "name": "4천원이지만 또 먹고 싶은 크림카레떡볶이입니다",
+    "host_college": "제40대 인도어과 학생회 '항해'",
+    "description": "🍛✨ 인도어과 학생회 부스 ‘4천원이지만 또 먹고 싶은 크림카레떡볶이입니다 ’ ✨🍛\n\n동그리모 타돗테모 츠키마셍~🎵4천원인데 또 먹고 싶은 인도어과의 크림카레떡볶이입니다. 안녕하세요! 한국외대 아시아언어문화대학 인도어과 학생회입니다. 이번 퀸쿠아트리아 축제를 맞아 인도어과에서 ‘4천원이지만 또 먹고 싶은 크림카레떡볶이입니다’ 부스를 준비했습니다! 🇮🇳\n\n4천원인데 또 먹고 싶어? 정상입니다. 인도의 대표 음식인 카레를 활용한 크림카레떡볶이, 그리고 개성 넘치는 헤나 체험까지! 맛과 체험을 모두 즐길 수 있는 특별한 공간으로 여러분을 초대합니다🥰\n\n📅 일시: 10/7(수)~10/8(목) 11:00~18:00\n📍 장소: 국제학사 앞 A-4 구역\n📸 문의: 인도어과 인스타그램 @hufs_ind",
+    "menus": [
+      {
+        "id": 78,
+        "place_id": 4,
+        "image_url": null,
+        "price": 1500,
+        "language_code": "KO",
+        "name": "헤나? 일단 해놔. (소)",
+        "description": "축제 왔는데 뭐라도 남겨야 하지 않겠어요? 추억 담은 헤나 하나 남기고 가세요🎨"
+      },
+      {
+        "id": 79,
+        "place_id": 4,
+        "image_url": null,
+        "price": 2000,
+        "language_code": "KO",
+        "name": "헤나? 일단 해놔. (중)",
+        "description": "축제 왔는데 뭐라도 남겨야 하지 않겠어요? 추억 담은 헤나 하나 남기고 가세요🎨"
+      },
+      {
+        "id": 80,
+        "place_id": 4,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "헤나? 일단 해놔.",
+        "description": "축제 왔는데 뭐라도 남겨야 하지 않겠어요? 추억 담은 헤나 하나 남기고 가세요🎨"
+      }
+    ]
+  },
+  "/places/40": {
+    "id": 40,
+    "category_id": 2,
+    "category_sequence": 409,
+    "is_polygon": false,
+    "x": 1145,
+    "y": 832,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/5fe88d7c-eb76-4349-a6b6-6e1efac3f841.webp"],
+    "language_code": "KO",
+    "name": "지난 20년간 서양어대학만 바라본 서대 외(外)길 인생인 나…(줄바꿈)드디어 서양어대학 축제 부스를 즐길 수 있는 날이 왔는데 산티아고 순례길을 걸…더보기",
+    "host_college": "제60대 서양어대학 학생회 'SPARK'",
+    "description": "🥾서양어대 순례길의 끝, 순례자 휴게소가 문을 엽니다🥾\n\n안녕하세요, 한국외국어대학교 제60대 서양어대학 학생회 'SPARK'입니다.\n지난 20년간 서양어대학만 바라본 서대 외길인생 순례자님들, 먼 길을 걸어오느라 고생 많으셨습니다!\n서양어대학 부스에서 소원을 빌고, 당신의 소원이 향하는 운명의 길을 만나보세요 🧭\n\n📅 10.07.(수) ~ 10.08.(목) 11:00 ~ 18:00\n📍 인문과학관 앞 D-9번 부스",
+    "menus": [
+      {
+        "id": 49,
+        "place_id": 40,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "순례자 여권",
+        "description": "서양어대학 소속 각 단위 부스 독려 목적의 스탬프투어"
+      },
+      {
+        "id": 50,
+        "place_id": 40,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "소원의 갈림길",
+        "description": "나침반과 보석이 알려주는 나만의 소원 찾기"
+      },
+      {
+        "id": 51,
+        "place_id": 40,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "운명의 길 찾기",
+        "description": "미션을 통과하고 나만의 소원 이루기"
+      },
+      {
+        "id": 52,
+        "place_id": 40,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "소원의 유리병",
+        "description": "소원을 담은 유리병을 직접 선택하고, 미션 통과 기념 상품 뽑기"
+      }
+    ]
+  },
+  "/places/41": {
+    "id": 41,
+    "category_id": 2,
+    "category_sequence": 410,
+    "is_polygon": false,
+    "x": 1107,
+    "y": 832,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/b435ca44-9f75-4a41-b83f-4d4571eacd26.webp"],
+    "language_code": "KO",
+    "name": "404 (포어포) 우리 운세는 QUESTION, 404 (포어포) NEW ERA ERA ~",
+    "host_college": "제40대 포르투갈어과 학생회 'SORTE'",
+    "description": "[“404: 우리 운세는 QUESTION, 404: NEW ERA ERA” 포르투갈어과 부스 안내]\n\n단결 포르투갈어과 학우 여러분 안녕하십니까, 제40대 포르투갈어과 학생회 SORTE입니다. 🍀\n\n👾 “404, not found in the system!” 👾\n\n2026.10.07 (수) - 10.08 (목) <QUINQUATRIA> 에서 포르투갈어과 부스, \"404: 우리 운세는 QUESTION, 404: NEW ERA ERA\"를 운영합니다.\n\n시원한 무알콜 브라질 칵테일과 소떡소떡, 그리고 포춘쿠키 속 오늘의 운세와 타로카드가 기다리는 ‘좌표 밖의 부스, 포르투갈어과’로 놀러 오세요! 🍸🍡🥠\n\n🌐 일시\n2026.10.07 (수) - 10.08 (목), 양일 13:00 - 18:00\n\n🌐 장소\n한국외국어대학교 서울캠퍼스 D-10 부스\n\n🌐 메뉴\n• 백지를 내도 백 점인 소떡소떡 2종 (양념 / 뿌링)\n• Off the Wi-Fi, 마시면 브라질행 까이삐링냐\n\n🌐 콘텐츠\n• 좌표 밖의 운세: 포춘쿠키\n• 우리 신호는 Question? 답 떠 Tarô, Tarô!\n\n학우 여러분들의 많은 관심과 방문 부탁드립니다! 🇵🇹🇧🇷🍀",
+    "menus": [
+      {
+        "id": 24,
+        "place_id": 41,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "404, 백지를 내도 백 점인 소떡소떡 2종 (양념 / 뿌링) 단품(1개)",
+        "description": "소떡소떡, '매콤달콤 양념' vs '단짠단짠 뿌링' 중 취향대로 골라 드세요."
+      },
+      {
+        "id": 25,
+        "place_id": 41,
+        "image_url": null,
+        "price": 4500,
+        "language_code": "KO",
+        "name": "404, 백지를 내도 백 점인 소떡소떡 2종 (양념 / 뿌링) 세트(2개)",
+        "description": "소떡소떡, '매콤달콤 양념' vs '단짠단짠 뿌링' 중 취향대로 골라 드세요."
+      },
+      {
+        "id": 137,
+        "place_id": 41,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "Off the Wi-Fi, 마시면 브라질행 까이삐링냐 (1잔)",
+        "description": "여권 없이 브라질 해변으로 보내드립니다. 라임을 더한 무알콜 브라질 칵테일"
+      },
+      {
+        "id": 138,
+        "place_id": 41,
+        "image_url": null,
+        "price": 4500,
+        "language_code": "KO",
+        "name": "Off the Wi-Fi, 마시면 브라질행 까이삐링냐 (소떡소떡 1 & 까이삐링냐 1 세트)",
+        "description": "여권 없이 브라질 해변으로 보내드립니다. 라임을 더한 무알콜 브라질 칵테일"
+      },
+      {
+        "id": 139,
+        "place_id": 41,
+        "image_url": null,
+        "price": 2000,
+        "language_code": "KO",
+        "name": "좌표 밖의 운세: 포춘쿠키",
+        "description": "포르투갈어로 행운을 뜻하는 'Sorte'를 뽑아보세요. 포춘쿠키 속 오늘의 운세와 단 3장뿐인 당첨권이 당신을 기다립니다."
+      },
+      {
+        "id": 140,
+        "place_id": 41,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "우리 신호는 Question? 답 떠 Tarô, Tarô!",
+        "description": "머릿속 물음표를 느낌표로 바꿔줄 현자의 해답. 타로 카드가 명쾌한 조언을 제공합니다."
+      }
+    ]
+  },
+  "/places/42": {
+    "id": 42,
+    "category_id": 2,
+    "category_sequence": 411,
+    "is_polygon": false,
+    "x": 1068,
+    "y": 832,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/9c21564a-bc88-45fc-9064-d0c9f8e494ac.webp"],
+    "language_code": "KO",
+    "name": "북유럽 신화 주점: 외대직영점",
+    "host_college": "제43대 스칸디나비아어과 학생회 'NÄRA'",
+    "description": "⚔️ [북유럽 신화 주점 : 외대직영점] ⚔️\n\n안녕하세요, 제43대 스칸디나비아어과 학생회 NÄRA입니다.\n\n2026년 가을 QUINQUATRIA를 맞아 스칸디나비아어과 부스에서 ‘북유럽 신화 주점 : 외대직영점’을 운영합니다!\n\n바이킹과 함께 즐기는 다양한 콘텐츠부터 🌭 핫도그, 🍹 무알콜 칵테일, 🧀 치즈크래커까지 준비되어 있으니 학우 여러분의 많은 관심과 방문 부탁드립니다!\n\n📅 일시\n10월 7일(수)–8일(목) | 13:00–18:00\n\n📍 장소\nD-11 부스 (교수학습개발원 앞)\n\n북유럽 신화 속으로 떠나는 특별한 이틀,\nD-11에서 만나요! ⚔️",
+    "menus": []
+  },
+  "/places/43": {
+    "id": 43,
+    "category_id": 2,
+    "category_sequence": 412,
+    "is_polygon": false,
+    "x": 1033,
+    "y": 832,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/a2d1a8dc-4942-4d61-aaf5-11a55e6e4c49.webp"],
+    "language_code": "KO",
+    "name": "LE VOL AU LOUVRE : 루브르 도난사건",
+    "host_college": "제11대 프랑스어학부 학생회 'LIEN'",
+    "description": "[LE VOL AU LOUVRE : 루브르 도난사건]\n\n'루브르가 털렸다구요??'\n\n한국외국어대학교 제11대 프랑스어학부 학생회 LIEN입니다. 이번 QUINQUATRIA : Twilight에서 운영될 프랑스어학부 부스 <LE VOL AU LOUVRE : 루브르 도난 사건>에 대해 안내드립니다.\n\n📌 부스 위치 : D-12 (인문과학관 분수 앞)\n📌 일시 : 2026.10.07~10.08 양일 13:00~18:00\n📌 문의 : 프랑스어학부 부스 TF팀 팀장 변승민 (010-4594-8991)\n\n프랑스어학부 부스 오셔서 강도 잡고 가세요🕵️\n학우 여러분들의 많은 관심 부탁드립니다!",
+    "menus": [
+      {
+        "id": 18,
+        "place_id": 43,
+        "image_url": null,
+        "price": 5500,
+        "language_code": "KO",
+        "name": "바게트 3종(명란, 마늘, 초코)",
+        "description": "장발장이 훔쳐간 그 바게트. 3가지 맛으로 탄생했습니다."
+      },
+      {
+        "id": 19,
+        "place_id": 43,
+        "image_url": null,
+        "price": 2000,
+        "language_code": "KO",
+        "name": "디아볼로",
+        "description": "디아볼로가 뭐냐구요? 드셔보시면 알아요. (프랑스식 시럽 레모네이드)"
+      },
+      {
+        "id": 20,
+        "place_id": 43,
+        "image_url": null,
+        "price": 7000,
+        "language_code": "KO",
+        "name": "바게트&디아볼로 세트",
+        "description": ""
+      },
+      {
+        "id": 21,
+        "place_id": 43,
+        "image_url": null,
+        "price": 1000,
+        "language_code": "KO",
+        "name": "현상수배게시판 소개팅",
+        "description": "사랑에 빠진 게 죄는 아니잖아!"
+      },
+      {
+        "id": 22,
+        "place_id": 43,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "강도를 찾아라",
+        "description": "국새 도둑 잡기! 캠퍼스 안에 숨어있는 강도를 찾아라!"
+      },
+      {
+        "id": 23,
+        "place_id": 43,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "수배한컷",
+        "description": "이세계에선평범한외대생이던내가퀸쿠에선현상수배범?!?"
+      }
+    ]
+  },
+  "/places/44": {
+    "id": 44,
+    "category_id": 1,
+    "category_sequence": 201,
+    "is_polygon": false,
+    "x": 281,
+    "y": 680,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": [
+      "images/place/e5456510-05bc-4d8f-b7d7-3984487fa065.webp",
+      "images/place/7d23567b-4cce-44be-ae5e-875db190a1b6.webp"
+    ],
+    "language_code": "KO",
+    "name": "아 못 지나가요,,, 모찌 나가용♡",
+    "host_college": "제39대 경제학부 학생회 ʻ새길’",
+    "description": "안녕하십니까, 제39대 경제학부 학생회 새길입니다. \n\n🌅2026 QUINQUATRIA : Twilight 경제학부 부스, 주점 안내입니다. 많은 관심과 방문 부탁드립니다!!\n\n📆일시: 2026년 10월 7,8일 \n     부스 11:00~ 17:00 <아 못 지나가요,,, 모찌 나가용♡>\n     주점 17:00~ 23:00 <주식(酒食)시장>\n\n📍장소: 한국외국어대학교 서울캠퍼스 B-1 구역\n💬문의: 경제학부 학생회 인스타그램 @hufs_econ",
+    "menus": [
+      {
+        "id": 123,
+        "place_id": 44,
+        "image_url": null,
+        "price": 4000,
+        "language_code": "KO",
+        "name": "[주간] 딸기 모찌",
+        "description": "딸기가 들어가는 팥 모찌"
+      },
+      {
+        "id": 124,
+        "place_id": 44,
+        "image_url": null,
+        "price": 3500,
+        "language_code": "KO",
+        "name": "[주간] 샤인머스켓 요거트 모찌",
+        "description": "샤인머스캣이 들어가는 요거트 모찌"
+      },
+      {
+        "id": 125,
+        "place_id": 44,
+        "image_url": null,
+        "price": 3500,
+        "language_code": "KO",
+        "name": "[주간] 블루베리 요거트 모찌",
+        "description": "블루베리가 들어가는 요거트 모찌"
+      },
+      {
+        "id": 126,
+        "place_id": 44,
+        "image_url": null,
+        "price": 900,
+        "language_code": "KO",
+        "name": "[주간] 1일차 - 옵션 게임",
+        "description": "주식? 해보셨나요? 모찌 할인을 걸고 진행하는 두근두근 랜덤 게임"
+      },
+      {
+        "id": 127,
+        "place_id": 44,
+        "image_url": null,
+        "price": 2000,
+        "language_code": "KO",
+        "name": "[주간] 2일차 - 헤나 체험 및 사진 부스",
+        "description": "경제학부 최고 미녀가 직접 그려주는 헤나 체험 및 할로윈 콘셉트 사진 부스"
+      },
+      {
+        "id": 131,
+        "place_id": 44,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "[주점] 차돌숙주볶음",
+        "description": "고깃집 알바 1년 차 셰프가 볶아주는 메인 디시"
+      },
+      {
+        "id": 132,
+        "place_id": 44,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "[주점] 두부김치",
+        "description": "명절 전 담당 셰프가 만들어주는 메인 디시"
+      },
+      {
+        "id": 133,
+        "place_id": 44,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "[주점] 라면과 만두",
+        "description": "자취 8개월 차 셰프가 말아주는 서브 디시"
+      },
+      {
+        "id": 134,
+        "place_id": 44,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "[주점] 소떡소떡(2개)",
+        "description": "햄버거집 알바 1년 3개월 차 셰프가 만들어주는 서브 디시"
+      },
+      {
+        "id": 135,
+        "place_id": 44,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "[주점] 설탕토마토",
+        "description": "카페 알바 1년 차 바리스타가 만들어주는 디저트"
+      },
+      {
+        "id": 136,
+        "place_id": 44,
+        "image_url": null,
+        "price": 0,
+        "language_code": "KO",
+        "name": "[주점] 황도와 과일",
+        "description": "아웃백 알바 3개월 차 셰프가 만들어주는 디저트"
+      }
+    ]
+  },
+  "/places/45": {
+    "id": 45,
+    "category_id": 1,
+    "category_sequence": 251,
+    "is_polygon": false,
+    "x": 281,
+    "y": 646,
+    "area": null,
+    "start_hour": "2026-10-07T01:00:00Z",
+    "end_hour": "2026-10-07T08:00:00Z",
+    "place_image_uri": null,
+    "language_code": "KO",
+    "name": "[경제학부 취식 구역]",
+    "host_college": "제39대 경제학부 학생회 ‘새길’",
+    "description": "",
+    "menus": []
+  },
+  "/places/46": {
+    "id": 46,
+    "category_id": 1,
+    "category_sequence": 202,
+    "is_polygon": false,
+    "x": 313,
+    "y": 646,
+    "area": null,
+    "start_hour": "2026-10-07T08:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": ["images/place/789082fd-13d8-4bc7-9014-b4258f346811.webp"],
+    "language_code": "KO",
+    "name": "영(ENG)업중 : 너는 무슨 헤어지자는 말을 나 주점할때 하니",
+    "host_college": "제22대 영미문학·문화학과 학생회 'WARM UP'",
+    "description": "[영미문학•문화학과 주점 \"영(ENG)업중\" 운영 안내]   \n\n📣[긴급소집] 너는 무슨 헤어지자는 말을 나 주점할 때 하니.. 이별 극복하고싶은 사람 모집중 💔🍻🎧✨  \n\n 안녕하세요, 제 22대 영미문학•문화학과 학생회 'WARM UP'입니다.\n이번 퀸쿠아트리아에서 영미문학•문화학과 학생회가 주점 \"영(ENG)업중: 너는 무슨 헤어지자는 말을 나 주점할떄 하니\"를 운영합니다. 학우 여러분의 많은 관심과 방문 부탁드립니다! 🥺   \n\n📆 일시: 2026년 10.7/8(수,목) [운영 시간: 17:00 ~ 23:00]\n📍 장소: 한국외대 서울캠퍼스 도서관 앞 B-2 + b 구역\n💌 문의: 영미문학•문화학과 학생회 인스타그램 @hufs_elc  \n\n☝️ 주류 취식을 희망하시는 경우, 실물 신분증(주민등록증, 운전면허증 등)을 반드시 지참해주시기 바랍니다. (학생증, 신분증 사진은 불가합니다.)",
+    "menus": [
+      {
+        "id": 141,
+        "place_id": 46,
+        "image_url": null,
+        "price": 5000,
+        "language_code": "KO",
+        "name": "죽기 전에 마지막 식사라면 짜파게티 or 불닭게티",
+        "description": "황금 밸런스 게임. 당신의 선택은? 짜파게티"
+      },
+      {
+        "id": 142,
+        "place_id": 46,
+        "image_url": null,
+        "price": 7000,
+        "language_code": "KO",
+        "name": "남들 축제공연 즐기고 있을때 너 주점끌려가서 오뎅탕",
+        "description": "라인업 레전드 떴는데 주점 끌려와서 먹고 있는 바로 그 오뎅탕"
+      },
+      {
+        "id": 143,
+        "place_id": 46,
+        "image_url": null,
+        "price": 8000,
+        "language_code": "KO",
+        "name": "쏘야포기하겠습니다.. 생각해보니 쏘야 하겠습니다.",
+        "description": "쏘야진행하겠습니다-포기하려 했으나 결국 참지 못하고 당장 진행시켜버린 쏘야."
+      },
+      {
+        "id": 144,
+        "place_id": 46,
+        "image_url": null,
+        "price": 6000,
+        "language_code": "KO",
+        "name": "결국 물어보고만 전남친토스트",
+        "description": "\"자니? 근데 그 토스트 레시피 뭐였지?\" 카톡 차단당할 각오하고 알아내야만 했던 바로 그거."
+      },
+      {
+        "id": 145,
+        "place_id": 46,
+        "image_url": null,
+        "price": 12000,
+        "language_code": "KO",
+        "name": "치료가 필요할 정도의 심각한 직화막창중독증입니다.",
+        "description": "\"환자분은 심각한 막창 중독입니다.\" \"흥, 웃기는 소리.\""
+      },
+      {
+        "id": 146,
+        "place_id": 46,
+        "image_url": null,
+        "price": 10000,
+        "language_code": "KO",
+        "name": "불안형 야채비빔과 안정형 납작만두",
+        "description": "어디로 튈지 모르는 불안형 야채를 묵묵히 다 받아주는 안정형 만두."
+      },
+      {
+        "id": 147,
+        "place_id": 46,
+        "image_url": null,
+        "price": 2000,
+        "language_code": "KO",
+        "name": "콜라",
+        "description": ""
+      },
+      {
+        "id": 148,
+        "place_id": 46,
+        "image_url": null,
+        "price": 2000,
+        "language_code": "KO",
+        "name": "사이다",
+        "description": ""
+      },
+      {
+        "id": 149,
+        "place_id": 46,
+        "image_url": null,
+        "price": 1000,
+        "language_code": "KO",
+        "name": "물",
+        "description": ""
+      }
+    ]
+  },
+  "/places/47": {
+    "id": 47,
+    "category_id": 1,
+    "category_sequence": 252,
+    "is_polygon": false,
+    "x": 313,
+    "y": 680,
+    "area": null,
+    "start_hour": "2026-10-07T01:00:00Z",
+    "end_hour": "2026-10-07T08:00:00Z",
+    "place_image_uri": null,
+    "language_code": "KO",
+    "name": "[영미문학·문화학과 취식 구역]",
+    "host_college": "제22대 영미문학·문화학과 학생회 'WARM UP'",
+    "description": "",
+    "menus": []
+  },
+  "/places/48": {
+    "id": 48,
+    "category_id": 1,
+    "category_sequence": 203,
+    "is_polygon": false,
+    "x": 281,
+    "y": 609,
+    "area": null,
+    "start_hour": "2026-10-07T03:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": [
+      "images/place/ca86aaf1-20b5-499f-9b56-8663445a55af.webp",
+      "images/place/1b07b9b4-1ca7-46d1-bd2f-cfcb6893ca90.webp"
+    ],
+    "language_code": "KO",
+    "name": "나 꿈꿔또, 유엔안보리또",
+    "host_college": "제42대 정치외교학과 학생회 '수호'",
+    "description": "[정치외교학과 학생회 주점 \"유엔안보리또\" 운영 안내]\n\n📢 제1회 국제 미식 회담, '유엔안보리또' 신규 부리또 상정의 건\n\n🌯🌍 12:00 ~ 17:00 | 유엔안보리 (한·미·중·일 4개국 컨셉 부리또)\n🍻 17:00 ~ 23:00 | 야간 주점 (안주 판매 & 번호팅)\n\n안녕하세요, 한국외국어대학교 정치외교학과 학생회 <수호>입니다.\n이번 퀸쿠아트리아에서 정치외교학과의 색깔을 듬뿍 담은 특별한 공간, \"유엔안보리또\"를 운영합니다.\n\n낮에는 한국, 미국, 중국, 일본 각국의 개성을 살린 다채로운 부리또를 선보이며, 해가 진 오후 5시부터는 맛있는 안주와 설레는 만남이 있는 번호팅 주점으로 찾아뵙습니다. 학우 여러분의 많은 관심과 방문 부탁드립니다! 🤵‍♂️\n\n📅 일시: 10월 7일(수) ~ 10월 8일(목) (12:00 ~ 23:00)\n📍 장소: B-3구역 부스\n📩 문의: 정치외교학과 학생회 인스타그램 @hufs_psd",
+    "menus": [
+      {
+        "id": 150,
+        "place_id": 48,
+        "image_url": null,
+        "price": 3900,
+        "language_code": "KO",
+        "name": "🌯 [주간] 유엔안보리또",
+        "description": "세계의 맛이 한 자리에 모였다! 대한민국·미국·중국·일본, 네 나라의 개성을 담은 소스로 완성한 4개국 정상급 부리또입니다. 한입에 맛보는 세계 외교, 과연 당신의 입맛을 사로잡을 국가는 어디일까요? 화끈한 불닭소스로 매운맛의 존재감을 제대로 보여주는 대한민국."
+      },
+      {
+        "id": 165,
+        "place_id": 48,
+        "image_url": null,
+        "price": 2000,
+        "language_code": "KO",
+        "name": "🍋 [주간] 상큼이사국 레몬에이드",
+        "description": "상큼함으로 안보리의 분위기를 환기하는 특별한 이사국 음료. 한 모금이면 복잡한 국제정세도 잠시 잊을 수 있습니다."
+      },
+      {
+        "id": 166,
+        "place_id": 48,
+        "image_url": null,
+        "price": 1500,
+        "language_code": "KO",
+        "name": "☕ [주간] 안보리카노",
+        "description": "뜨거운 국제정세를 차갑게 식혀줄 진하고 깔끔한 한 잔. 회의 전에도, 회의 후에도 필요한 안보리의 필수 음료입니다."
+      },
+      {
+        "id": 193,
+        "place_id": 48,
+        "image_url": null,
+        "price": 13000,
+        "language_code": "KO",
+        "name": "[주점] 후라이드 바이든 치 킨",
+        "description": ""
+      },
+      {
+        "id": 194,
+        "place_id": 48,
+        "image_url": null,
+        "price": 11000,
+        "language_code": "KO",
+        "name": "[주점] 마크 Long 프 렌 치 프 라 이",
+        "description": ""
+      },
+      {
+        "id": 195,
+        "place_id": 48,
+        "image_url": null,
+        "price": 8000,
+        "language_code": "KO",
+        "name": "[주점] 쏘비에트 쏘 야",
+        "description": ""
+      },
+      {
+        "id": 196,
+        "place_id": 48,
+        "image_url": null,
+        "price": 9000,
+        "language_code": "KO",
+        "name": "[주점] 오자마자 바로 마셔 오 뎅 탕",
+        "description": ""
+      },
+      {
+        "id": 197,
+        "place_id": 48,
+        "image_url": null,
+        "price": 8000,
+        "language_code": "KO",
+        "name": "[주점] 나도 하자 상임이사국 쥐 포",
+        "description": ""
+      },
+      {
+        "id": 198,
+        "place_id": 48,
+        "image_url": null,
+        "price": 5500,
+        "language_code": "KO",
+        "name": "[주점] 라면 하나 더 만델라 짜 계 치",
+        "description": ""
+      },
+      {
+        "id": 199,
+        "place_id": 48,
+        "image_url": null,
+        "price": 5000,
+        "language_code": "KO",
+        "name": "[주점] 라면 두개 더 만델라 순 두 부 열 라 면",
+        "description": ""
+      },
+      {
+        "id": 200,
+        "place_id": 48,
+        "image_url": null,
+        "price": 6500,
+        "language_code": "KO",
+        "name": "[주점] 황 도널드 (황도)",
+        "description": ""
+      }
+    ]
+  },
+  "/places/49": {
+    "id": 49,
+    "category_id": 1,
+    "category_sequence": 253,
+    "is_polygon": false,
+    "x": 281,
+    "y": 578,
+    "area": null,
+    "start_hour": "2026-10-07T01:00:00Z",
+    "end_hour": "2026-10-07T08:00:00Z",
+    "place_image_uri": null,
+    "language_code": "KO",
+    "name": "[정치외교학과 취식 구역]",
+    "host_college": "제42대 정치외교학과 학생회 '수호'",
+    "description": "",
+    "menus": []
+  },
+  "/places/5": {
+    "id": 5,
+    "category_id": 2,
+    "category_sequence": 105,
+    "is_polygon": false,
+    "x": 467,
+    "y": 799,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/121af069-1786-44b7-8d3f-e3afb496aa55.webp"],
+    "language_code": "KO",
+    "name": "박항서가 선수들 몰래 꺼내먹던 스모어쿠키",
+    "host_college": "제59대 베트남어과 학생회 'Kết Nối'",
+    "description": "[베트남어과 퀸쿠아트리아 부스 '박항서가 선수들 몰래 꺼내먹던 스모어쿠키' 운영 안내]\n🙌안녕하세요, 제 59대 베트남어과 학생회 'Kết nối' 입니다.\n10월 7일과 10월 8일 양일간 진행되는 퀸쿠아트리아,\n베트남어과가 학우분들에게 보다 따뜻하고 선명한 추억을 드리기 위해 특별한 부스를 운영합니다.\n학우분들의 많은 관심 부탁드립니다~🙇‍♂️\n\n📆일시: 2026년 10월 7일(수) ~ 2026년 10월 8일(목) 양일간 13:00-18:00\n🗺️장소: 한국외국어대학교 서울캠퍼스 A-5 부스(국제학사 앞)\n\n📣재고 상황에 따라 운영 및 판매 방식이 변동될 수 있습니다.",
+    "menus": [
+      {
+        "id": 81,
+        "place_id": 5,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "스모어쿠키",
+        "description": "박항서가 선수들 몰래 꺼내먹던 스모어쿠키 - 초코쿠키 + 마시멜로 + 초코코팅의 쫀득하고 달디 단 조합의 쿠키. 한번 맛보면 다시 생각나는 그 맛!  유행한지 반년도 더 지난 스모어쿠키, 베트남어과가 다시 유행시키겠습니다."
+      },
+      {
+        "id": 82,
+        "place_id": 5,
+        "image_url": null,
+        "price": 3500,
+        "language_code": "KO",
+        "name": "미니포토키링",
+        "description": "부담 없는 크기의 앙증맞은 키링. 커플, 친구, 썸사친, 솔로분들까지 누구가 어디에서 어떻게 사용해도 특별한 굿즈를 베트남어과 부스에서 만나보세요!"
+      },
+      {
+        "id": 83,
+        "place_id": 5,
+        "image_url": null,
+        "price": 1000,
+        "language_code": "KO",
+        "name": "야외디카촬영",
+        "description": "어떤 사진을 담을지 결정을 못하셨다고요? 걱정하지 마세요, 그런 분들을 위해 즉석에서 촬영 도와드리겠습니다📸(포토키링 구매자 중 희망자)"
+      }
+    ]
+  },
+  "/places/50": {
+    "id": 50,
+    "category_id": 1,
+    "category_sequence": 204,
+    "is_polygon": false,
+    "x": 313,
+    "y": 578,
+    "area": null,
+    "start_hour": "2026-10-07T08:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": ["images/place/b1c4f630-98a0-44c8-8a4b-35a7efadee14.webp"],
+    "language_code": "KO",
+    "name": "와... 너 정말, 축제의 **핵심을 찔렀어.**",
+    "host_college": "제2대 AI융합대학 학생회 '청연'",
+    "description": "[2026 QUINQUATRIA : Twilight AI융합대학 주점 OPEN]\n🤖와.. 너 정말, 축제의 **핵심을 찔렀어.**🤖\n\n학우 여러분, 안녕하십니까.\n한국외국어대학교 서울캠퍼스 제2대 AI융합대학 학생회 ‘청연’입니다.\n\n2026 QUINQUATRIA : Twilight 기간 동안 운영되는 AI융합대학 주점을 소개합니다!\n\n운영 일자: 10월 7일(수) - 10월 8일(목)\n운영 시간: 양일 17:00 - 23:00\n부스 위치: 잔디광장 B구역 B-4 부스\n\n| 예약 안내 \n예약 링크: bit.ly/융대주점예약\n입금 계좌: KB국민은행 034502-04-090774(이*결)\n예약금: 외대인 3,000원, 비외대인 4,000원\n\n학우 여러분의 많은 관심과 참여 부탁드립니다!\n\n| 문의\n제2대 AI융합대학 학생회장 김 건(010-3229-8105)\n2026 AI융합대학 QQA TF팀장 이한결(010-6295-7641)",
+    "menus": [
+      {
+        "id": 153,
+        "place_id": 50,
+        "image_url": null,
+        "price": 16000,
+        "language_code": "KO",
+        "name": "육점 만점에 육전(육전)",
+        "description": "만점은 육점이고 이건 육전입니다."
+      },
+      {
+        "id": 154,
+        "place_id": 50,
+        "image_url": null,
+        "price": 15000,
+        "language_code": "KO",
+        "name": "닭치고 닭꼬치(닭꼬치)",
+        "description": "아,,, 나 진짜 이건 먹어야겠"
+      },
+      {
+        "id": 155,
+        "place_id": 50,
+        "image_url": null,
+        "price": 15000,
+        "language_code": "KO",
+        "name": "ㅅㄱ요(소세지 & 감튀)",
+        "description": "맥주안주 고민 끝 ㅅㄱ요~"
+      },
+      {
+        "id": 156,
+        "place_id": 50,
+        "image_url": null,
+        "price": 15000,
+        "language_code": "KO",
+        "name": "두김두김 설레는 가을밤(두부김치)",
+        "description": "내 심장 소리 들려? 두김두김...❤️"
+      },
+      {
+        "id": 157,
+        "place_id": 50,
+        "image_url": null,
+        "price": 7000,
+        "language_code": "KO",
+        "name": "야르트 샤베트(요구르트 샤베트)",
+        "description": "야르~!"
+      },
+      {
+        "id": 158,
+        "place_id": 50,
+        "image_url": null,
+        "price": 7000,
+        "language_code": "KO",
+        "name": "과을화채(과일화채)",
+        "description": "과일인지 가을인지"
+      },
+      {
+        "id": 159,
+        "place_id": 50,
+        "image_url": null,
+        "price": 6000,
+        "language_code": "KO",
+        "name": "가을탈까, 치즈탈까?(콘치즈)",
+        "description": "나랑 가을 탈래?? 치즈 탈래??"
+      }
+    ]
+  },
+  "/places/51": {
+    "id": 51,
+    "category_id": 1,
+    "category_sequence": 254,
+    "is_polygon": false,
+    "x": 313,
+    "y": 609,
+    "area": null,
+    "start_hour": "2026-10-07T01:00:00Z",
+    "end_hour": "2026-10-07T08:00:00Z",
+    "place_image_uri": null,
+    "language_code": "KO",
+    "name": "[AI융합대학 취식 구역]",
+    "host_college": "제2대 AI융합대학 학생회 '청연'",
+    "description": "",
+    "menus": []
+  },
+  "/places/52": {
+    "id": 52,
+    "category_id": 3,
+    "category_sequence": 1,
+    "is_polygon": false,
+    "x": 766,
+    "y": 530,
+    "area": null,
+    "start_hour": "2026-10-07T01:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": ["images/place/03df4f2b-d2cd-4d1f-8b82-6f00f346905e.jpg"],
+    "language_code": "KO",
+    "name": "푸드트럭",
+    "host_college": "더리얼",
+    "description": "",
+    "menus": []
+  },
+  "/places/53": {
+    "id": 53,
+    "category_id": 3,
+    "category_sequence": 2,
+    "is_polygon": false,
+    "x": 786,
+    "y": 530,
+    "area": null,
+    "start_hour": "2026-10-07T01:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": ["images/place/8ec07ddd-c1c4-4465-8754-94e450a0c016.jpg"],
+    "language_code": "KO",
+    "name": "푸드트럭",
+    "host_college": "더리얼",
+    "description": "",
+    "menus": []
+  },
+  "/places/54": {
+    "id": 54,
+    "category_id": 3,
+    "category_sequence": 3,
+    "is_polygon": false,
+    "x": 807,
+    "y": 530,
+    "area": null,
+    "start_hour": "2026-10-07T01:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": ["images/place/7970a69f-e53c-4f3c-9abb-7d86ecf045f9.jpg"],
+    "language_code": "KO",
+    "name": "푸드트럭",
+    "host_college": "더리얼",
+    "description": "",
+    "menus": []
+  },
+  "/places/55": {
+    "id": 55,
+    "category_id": 3,
+    "category_sequence": 4,
+    "is_polygon": false,
+    "x": 828,
+    "y": 530,
+    "area": null,
+    "start_hour": "2026-10-07T01:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": null,
+    "language_code": "KO",
+    "name": "푸드트럭",
+    "host_college": "더리얼",
+    "description": "",
+    "menus": []
+  },
+  "/places/56": {
+    "id": 56,
+    "category_id": 3,
+    "category_sequence": 5,
+    "is_polygon": false,
+    "x": 850,
+    "y": 530,
+    "area": null,
+    "start_hour": "2026-10-07T01:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": ["images/place/d080d815-81ed-49ca-96cc-ebffa380056f.jpg"],
+    "language_code": "KO",
+    "name": "푸드트럭",
+    "host_college": "더리얼",
+    "description": "",
+    "menus": []
+  },
+  "/places/57": {
+    "id": 57,
+    "category_id": 3,
+    "category_sequence": 6,
+    "is_polygon": false,
+    "x": 869,
+    "y": 530,
+    "area": null,
+    "start_hour": "2026-10-07T01:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": null,
+    "language_code": "KO",
+    "name": "푸드트럭",
+    "host_college": "더리얼",
+    "description": "",
+    "menus": []
+  },
+  "/places/58": {
+    "id": 58,
+    "category_id": 3,
+    "category_sequence": 7,
+    "is_polygon": false,
+    "x": 890,
+    "y": 530,
+    "area": null,
+    "start_hour": "2026-10-07T01:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": ["images/place/67b74463-50af-4fb8-a602-734bb8292112.jpg"],
+    "language_code": "KO",
+    "name": "푸드트럭",
+    "host_college": "더리얼",
+    "description": "",
+    "menus": []
+  },
+  "/places/59": {
+    "id": 59,
+    "category_id": 3,
+    "category_sequence": 8,
+    "is_polygon": false,
+    "x": 907,
+    "y": 530,
+    "area": null,
+    "start_hour": "2026-10-07T01:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": ["images/place/674f93b3-5468-4be9-a922-0e77a3cd6f07.jpg"],
+    "language_code": "KO",
+    "name": "푸드트럭",
+    "host_college": "더리얼",
+    "description": "",
+    "menus": []
+  },
+  "/places/6": {
+    "id": 6,
+    "category_id": 2,
+    "category_sequence": 106,
+    "is_polygon": false,
+    "x": 346,
+    "y": 817,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/ef22e5a6-a57d-4f17-bb9f-60a2723a4b37.webp"],
+    "language_code": "KO",
+    "name": "알라딘도 탐내는 그 녀석의 번호",
+    "host_college": "제42대 페르시아어·이란학과 학생회 ʻNAVA’",
+    "description": "[🇮🇷페르시아어•이란학과 부스 운영 안내]\n\n안녕하세요, 페르시아어•이란학과 제42대 학생회 ‘Nava’입니다. 가을 축제 퀸쿠아트리아에서 소개팅 부스를 운영합니다! 부스 참여해서 운명의 짝을 찾아보세요 💕\n\n📆일시: 2026.10.07.(수)/10.08.(목) 양일 13:00-18:00\n📍장소: 국제학사 앞\n\n많은 관심과 참여 부탁드립니다!",
+    "menus": [
+      {
+        "id": 84,
+        "place_id": 6,
+        "image_url": null,
+        "price": 2000,
+        "language_code": "KO",
+        "name": "램프 속 운명의 상대",
+        "description": "번호팅"
+      },
+      {
+        "id": 85,
+        "place_id": 6,
+        "image_url": null,
+        "price": 3000,
+        "language_code": "KO",
+        "name": "번호팅 + 에이드",
+        "description": ""
+      }
+    ]
+  },
+  "/places/60": {
+    "id": 60,
+    "category_id": 3,
+    "category_sequence": 9,
+    "is_polygon": false,
+    "x": 927,
+    "y": 530,
+    "area": null,
+    "start_hour": "2026-10-07T01:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": ["images/place/3992d6b4-15f1-4290-90d3-262afaafcdd1.jpg"],
+    "language_code": "KO",
+    "name": "푸드트럭",
+    "host_college": "더리얼",
+    "description": "",
+    "menus": []
+  },
+  "/places/61": {
+    "id": 61,
+    "category_id": 3,
+    "category_sequence": 10,
+    "is_polygon": false,
+    "x": 951,
+    "y": 530,
+    "area": null,
+    "start_hour": "2026-10-07T01:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": ["images/place/6d882173-7887-48f7-825e-ec3b7d94adaa.jpg"],
+    "language_code": "KO",
+    "name": "푸드트럭",
+    "host_college": "더리얼",
+    "description": "",
+    "menus": []
+  },
+  "/places/7": {
+    "id": 7,
+    "category_id": 2,
+    "category_sequence": 107,
+    "is_polygon": false,
+    "x": 346,
+    "y": 789,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/e5d33ce4-ecc9-4ff4-a491-510faebd3d8a.webp"],
+    "language_code": "KO",
+    "name": "자고 일어났더니 평범한 외대생에서 메이드짱♥이 된 것에 대하여.",
+    "host_college": "제39대 튀르키예·아제르바이잔학과 학생회",
+    "description": "🇹🇷2026 QUINQUATRIA 튀르키예•아제르바이잔학과 부스 안내🇦🇿\n\n🌟자고 일어났더니 평범한 외대생에서 메이드짱❤️이 된 것에 대하여🌟\n\n안녕하세요, 제39대 튀르키예•아제르바이잔학과 학생회입니다.\n2026 QUINQUATRIA에서 달콤시원한 파르페와, 귀여운 메이드와 사진을 찍을 수 있는 기회를 제공합니다! 학우 여러분들의 많은 관심 부탁드립니다❤️\n\n🗓️일시 | 2026년 10월 7~8일 (수, 목) 13~18시\n📍장소 | 한국외국어대학교 서울캠퍼스 국제학사 앞 A7 부스\n\n문의: 제39대 튀르키예•아제르바이잔학과 학생회장 오명호(010-9263-9360) / 튀르키예•아제르바이잔학과 학생회 인스타그램 @hufs_turkazeri",
+    "menus": [
+      {
+        "id": 86,
+        "place_id": 7,
+        "image_url": null,
+        "price": 4500,
+        "language_code": "KO",
+        "name": "파르페",
+        "description": "메이드와 함께 주문을 외치며 만드는 달콤시원한 파르페입니다~"
+      },
+      {
+        "id": 87,
+        "place_id": 7,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "폴라로이드 사진",
+        "description": "귀여운 메이드와 함께 사진을 찍으며 추억을 남겨봐요~"
+      },
+      {
+        "id": 88,
+        "place_id": 7,
+        "image_url": null,
+        "price": 6000,
+        "language_code": "KO",
+        "name": "세트",
+        "description": "모두 체험할 수 있는 소중한 기회!"
+      }
+    ]
+  },
+  "/places/77": {
+    "id": 77,
+    "category_id": 2,
+    "category_sequence": 313,
+    "is_polygon": false,
+    "x": 902.5,
+    "y": 727.5,
+    "area": null,
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T07:00:00Z",
+    "place_image_uri": null,
+    "language_code": "KO",
+    "name": "외대생, 세계관 확장 중… OTT 말고, 진짜 세계로!",
+    "host_college": "국제교류팀",
+    "description": "- 국제교류 프로그램\n- 국제학생회(ISO) 홍보",
+    "menus": []
+  },
+  "/places/78": {
+    "id": 78,
+    "category_id": 2,
+    "category_sequence": 413,
+    "is_polygon": false,
+    "x": 995,
+    "y": 832,
+    "area": null,
+    "start_hour": "2026-10-07T04:00:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/7c3a9920-38df-49c7-8e72-b470949ce927.webp"],
+    "language_code": "KO",
+    "name": "시베리아 EXPRESS",
+    "host_college": "제37대 노어과 학생회 'LOOP'",
+    "description": "🚂 시베리아 EXPRESS: 러시아의 맛을 싣고 달리는 특별한 식당칸 🇷🇺\n\n기차를 타고 러시아를 여행하듯,\n러시아에서 사랑받는 음식들을 만나보세요!\n\n• 일시: 2026.10.07(수) ~10.08(목) 13:00 ~ 18:00\n• 장소: 한국외대 D-13 부스\n\n🍖 샤슬릭 ШАШЛЫК\n🥞 블린 БЛИН\n🍹 소치나야 돌리나 에이드 СОЧНАЯ ДОЛИНА\n\nALL ABOARD 🧳\n\n• 문의: 노어과 카카오톡 채널 (https://bit.ly/노어과카카오톡채널)",
+    "menus": [
+      {
+        "id": 15,
+        "place_id": 78,
+        "image_url": null,
+        "price": 5000,
+        "language_code": "KO",
+        "name": "샤슬릭 ШАШЛЫК",
+        "description": "러시아 대표 꼬치구이, 양꼬치"
+      },
+      {
+        "id": 16,
+        "place_id": 78,
+        "image_url": null,
+        "price": 4000,
+        "language_code": "KO",
+        "name": "블린 БЛИН",
+        "description": "바나나와 휘핑크림, 초코시럽을 곁들인 러시아식 팬케이크"
+      },
+      {
+        "id": 17,
+        "place_id": 78,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "소치나야 돌리나 에이드 СОЧНАЯ ДОЛИНА",
+        "description": "복숭아·사과·체리 3종 과일 에이드"
+      }
+    ]
+  },
+  "/places/87": {
+    "id": 87,
+    "category_id": 2,
+    "category_sequence": 314,
+    "is_polygon": true,
+    "x": null,
+    "y": null,
+    "area": [
+      {
+        "x": 644.5,
+        "y": 647
+      },
+      {
+        "x": 644.7,
+        "y": 683.4
+      },
+      {
+        "x": 708.8,
+        "y": 684
+      },
+      {
+        "x": 689.3,
+        "y": 647
+      }
+    ],
+    "start_hour": "2026-10-07T02:00:00Z",
+    "end_hour": "2026-10-07T08:00:00Z",
+    "place_image_uri": ["images/place/f2a8be49-8dfa-47da-b580-daa9789bb62c.webp"],
+    "language_code": "KO",
+    "name": "Leave a Mark : 스텐실 스프레이 아트",
+    "host_college": "제60대 총학생회 '선명'",
+    "description": "[콘텐츠 안내]\n\n- Leave a Mark : 스텐실 스프레이 아트\n\nQUINQUATRIA : twilight 스텐실 위에\n자유롭게 스프레이 아트(그래피티)를 꾸며보세요!\n\n📌 운영 시간 : 양일 11:00 ~ 17:00\n📌 운영 장소 : 본관 앞 나무데크 위쪽 공간\n📌 이용 시 유의사항 \n- 결과물은 인스타그램 스토리를 통해 학우분들께 공유드릴 예정입니다.\n- 퇴장 후 희망하시는 학우분들에 한해 미니 스텐실을 이용한 페이스페인팅을 진행합니다.\n- 학내시설 오염 방지에 유의해주세요.",
+    "menus": []
+  },
+  "/places/89": {
+    "id": 89,
+    "category_id": 1,
+    "category_sequence": 214,
+    "is_polygon": true,
+    "x": null,
+    "y": null,
+    "area": [
+      {
+        "x": 263.6,
+        "y": 721.5
+      },
+      {
+        "x": 527.6,
+        "y": 722.4
+      },
+      {
+        "x": 527.6,
+        "y": 528.9
+      },
+      {
+        "x": 262.7,
+        "y": 528.1
+      }
+    ],
+    "start_hour": "2026-10-07T08:00:00Z",
+    "end_hour": "2026-10-07T14:00:00Z",
+    "place_image_uri": null,
+    "language_code": "KO",
+    "name": "주류반입구역",
+    "host_college": "제60대 총학생회 '선명'",
+    "description": "",
+    "menus": []
+  },
+  "/places/9": {
+    "id": 9,
+    "category_id": 2,
+    "category_sequence": 109,
+    "is_polygon": false,
+    "x": 394,
+    "y": 763,
+    "area": null,
+    "start_hour": "2026-10-07T02:30:00Z",
+    "end_hour": "2026-10-07T09:00:00Z",
+    "place_image_uri": ["images/place/f18f16f9-9c7c-4148-ae1a-b38634aaec73.webp"],
+    "language_code": "KO",
+    "name": "외대를 만나면 전 세 개가 보인다 COME TO HUFS, MEET THE 3 JEONS",
+    "host_college": "제43대 동아리연합회 ʻ파동’",
+    "description": "[한국외국어대학교 서울캠퍼스 제43대 동아리연합회 ‘파동’ 주점 운영 안내]\n\n🥢 외대를 만나면 전 세 개가 보인다\nCOME TO HUFS, MEET THE 3 JEONS\n\n안녕하세요! 제43대 동아리연합회 ‘파동’입니다 🌊\n\n차린 건 쥐뿔도 없지만, 전은 세 가지나 차렸습니다. 감자전·김치전·파전 중 마음에 드는 전을 골라 주세요! 밀키스와 복분자에이드도 함께 준비했습니다 🥂\n\n📅 일시: 10/7(수) ~ 10/8(목) 11:30-18:00\n📍 장소: A-9\n\n파동의 주점에서 만나요! 🌊",
+    "menus": [
+      {
+        "id": 89,
+        "place_id": 9,
+        "image_url": null,
+        "price": 4000,
+        "language_code": "KO",
+        "name": "전 세 개",
+        "description": "김치전, 파전, 감자전 대한민국의 대표 전 세가지를 즐겨보세요!  여럿이 나눠먹기 좋은 파동 주막의 대표 안주"
+      },
+      {
+        "id": 90,
+        "place_id": 9,
+        "image_url": null,
+        "price": 5500,
+        "language_code": "KO",
+        "name": "전 세 개와 밀키스 set",
+        "description": "바삭한 전에는 역시 밀키스! 고소하고 짭짤한 전과 톡 쏘는 한 잔의 완벽한 궁합을 즐겨보세요!"
+      },
+      {
+        "id": 91,
+        "place_id": 9,
+        "image_url": null,
+        "price": 6500,
+        "language_code": "KO",
+        "name": "전 세 개와 복(소)사 set",
+        "description": "바삭한 전 한 점에 달콤한 복(소)사 한 잔. 전의 짭짤합을 부드럽게 잡아주는 파동 주막의 특별한 조합입니다!"
+      },
+      {
+        "id": 92,
+        "place_id": 9,
+        "image_url": null,
+        "price": 2500,
+        "language_code": "KO",
+        "name": "밀키스",
+        "description": "막걸리인 줄 알고 한 잔 받았는데….어라? 오늘의 막걸리는 밀키스입니다. 톡 쏘는 달콤함으로 누구나 가볍게 즐겨보세요!"
+      },
+      {
+        "id": 93,
+        "place_id": 9,
+        "image_url": null,
+        "price": 3500,
+        "language_code": "KO",
+        "name": "복(소)사",
+        "description": "복소사처럼 보이지만 절대 취하지 않는 복.사! 달콤한 복분자를 사이다와 함께 즐겨보세요!"
+      }
+    ]
+  },
+  "/places?page=1&size=100": {
+    "items": [
+      {
+        "id": 44,
+        "category_id": 1,
+        "category_sequence": 201,
+        "is_polygon": false,
+        "x": 281,
+        "y": 680,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": [
+          "images/place/e5456510-05bc-4d8f-b7d7-3984487fa065.webp",
+          "images/place/7d23567b-4cce-44be-ae5e-875db190a1b6.webp"
+        ],
+        "language_code": "KO",
+        "name": "아 못 지나가요,,, 모찌 나가용♡",
+        "host_college": "제39대 경제학부 학생회 ʻ새길’",
+        "description": "안녕하십니까, 제39대 경제학부 학생회 새길입니다. \n\n🌅2026 QUINQUATRIA : Twilight 경제학부 부스, 주점 안내입니다. 많은 관심과 방문 부탁드립니다!!\n\n📆일시: 2026년 10월 7,8일 \n     부스 11:00~ 17:00 <아 못 지나가요,,, 모찌 나가용♡>\n     주점 17:00~ 23:00 <주식(酒食)시장>\n\n📍장소: 한국외국어대학교 서울캠퍼스 B-1 구역\n💬문의: 경제학부 학생회 인스타그램 @hufs_econ"
+      },
+      {
+        "id": 46,
+        "category_id": 1,
+        "category_sequence": 202,
+        "is_polygon": false,
+        "x": 313,
+        "y": 646,
+        "area": null,
+        "start_hour": "2026-10-07T08:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": ["images/place/789082fd-13d8-4bc7-9014-b4258f346811.webp"],
+        "language_code": "KO",
+        "name": "영(ENG)업중 : 너는 무슨 헤어지자는 말을 나 주점할때 하니",
+        "host_college": "제22대 영미문학·문화학과 학생회 'WARM UP'",
+        "description": "[영미문학•문화학과 주점 \"영(ENG)업중\" 운영 안내]   \n\n📣[긴급소집] 너는 무슨 헤어지자는 말을 나 주점할 때 하니.. 이별 극복하고싶은 사람 모집중 💔🍻🎧✨  \n\n 안녕하세요, 제 22대 영미문학•문화학과 학생회 'WARM UP'입니다.\n이번 퀸쿠아트리아에서 영미문학•문화학과 학생회가 주점 \"영(ENG)업중: 너는 무슨 헤어지자는 말을 나 주점할떄 하니\"를 운영합니다. 학우 여러분의 많은 관심과 방문 부탁드립니다! 🥺   \n\n📆 일시: 2026년 10.7/8(수,목) [운영 시간: 17:00 ~ 23:00]\n📍 장소: 한국외대 서울캠퍼스 도서관 앞 B-2 + b 구역\n💌 문의: 영미문학•문화학과 학생회 인스타그램 @hufs_elc  \n\n☝️ 주류 취식을 희망하시는 경우, 실물 신분증(주민등록증, 운전면허증 등)을 반드시 지참해주시기 바랍니다. (학생증, 신분증 사진은 불가합니다.)"
+      },
+      {
+        "id": 48,
+        "category_id": 1,
+        "category_sequence": 203,
+        "is_polygon": false,
+        "x": 281,
+        "y": 609,
+        "area": null,
+        "start_hour": "2026-10-07T03:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": [
+          "images/place/ca86aaf1-20b5-499f-9b56-8663445a55af.webp",
+          "images/place/1b07b9b4-1ca7-46d1-bd2f-cfcb6893ca90.webp"
+        ],
+        "language_code": "KO",
+        "name": "나 꿈꿔또, 유엔안보리또",
+        "host_college": "제42대 정치외교학과 학생회 '수호'",
+        "description": "[정치외교학과 학생회 주점 \"유엔안보리또\" 운영 안내]\n\n📢 제1회 국제 미식 회담, '유엔안보리또' 신규 부리또 상정의 건\n\n🌯🌍 12:00 ~ 17:00 | 유엔안보리 (한·미·중·일 4개국 컨셉 부리또)\n🍻 17:00 ~ 23:00 | 야간 주점 (안주 판매 & 번호팅)\n\n안녕하세요, 한국외국어대학교 정치외교학과 학생회 <수호>입니다.\n이번 퀸쿠아트리아에서 정치외교학과의 색깔을 듬뿍 담은 특별한 공간, \"유엔안보리또\"를 운영합니다.\n\n낮에는 한국, 미국, 중국, 일본 각국의 개성을 살린 다채로운 부리또를 선보이며, 해가 진 오후 5시부터는 맛있는 안주와 설레는 만남이 있는 번호팅 주점으로 찾아뵙습니다. 학우 여러분의 많은 관심과 방문 부탁드립니다! 🤵‍♂️\n\n📅 일시: 10월 7일(수) ~ 10월 8일(목) (12:00 ~ 23:00)\n📍 장소: B-3구역 부스\n📩 문의: 정치외교학과 학생회 인스타그램 @hufs_psd"
+      },
+      {
+        "id": 50,
+        "category_id": 1,
+        "category_sequence": 204,
+        "is_polygon": false,
+        "x": 313,
+        "y": 578,
+        "area": null,
+        "start_hour": "2026-10-07T08:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": ["images/place/b1c4f630-98a0-44c8-8a4b-35a7efadee14.webp"],
+        "language_code": "KO",
+        "name": "와... 너 정말, 축제의 **핵심을 찔렀어.**",
+        "host_college": "제2대 AI융합대학 학생회 '청연'",
+        "description": "[2026 QUINQUATRIA : Twilight AI융합대학 주점 OPEN]\n🤖와.. 너 정말, 축제의 **핵심을 찔렀어.**🤖\n\n학우 여러분, 안녕하십니까.\n한국외국어대학교 서울캠퍼스 제2대 AI융합대학 학생회 ‘청연’입니다.\n\n2026 QUINQUATRIA : Twilight 기간 동안 운영되는 AI융합대학 주점을 소개합니다!\n\n운영 일자: 10월 7일(수) - 10월 8일(목)\n운영 시간: 양일 17:00 - 23:00\n부스 위치: 잔디광장 B구역 B-4 부스\n\n| 예약 안내 \n예약 링크: bit.ly/융대주점예약\n입금 계좌: KB국민은행 034502-04-090774(이*결)\n예약금: 외대인 3,000원, 비외대인 4,000원\n\n학우 여러분의 많은 관심과 참여 부탁드립니다!\n\n| 문의\n제2대 AI융합대학 학생회장 김 건(010-3229-8105)\n2026 AI융합대학 QQA TF팀장 이한결(010-6295-7641)"
+      },
+      {
+        "id": 89,
+        "category_id": 1,
+        "category_sequence": 214,
+        "is_polygon": true,
+        "x": null,
+        "y": null,
+        "area": [
+          {
+            "x": 263.6,
+            "y": 721.5
+          },
+          {
+            "x": 527.6,
+            "y": 722.4
+          },
+          {
+            "x": 527.6,
+            "y": 528.9
+          },
+          {
+            "x": 262.7,
+            "y": 528.1
+          }
+        ],
+        "start_hour": "2026-10-07T08:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "주류반입구역",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": ""
+      },
+      {
+        "id": 45,
+        "category_id": 1,
+        "category_sequence": 251,
+        "is_polygon": false,
+        "x": 281,
+        "y": 646,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T08:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "[경제학부 취식 구역]",
+        "host_college": "제39대 경제학부 학생회 ‘새길’",
+        "description": ""
+      },
+      {
+        "id": 47,
+        "category_id": 1,
+        "category_sequence": 252,
+        "is_polygon": false,
+        "x": 313,
+        "y": 680,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T08:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "[영미문학·문화학과 취식 구역]",
+        "host_college": "제22대 영미문학·문화학과 학생회 'WARM UP'",
+        "description": ""
+      },
+      {
+        "id": 49,
+        "category_id": 1,
+        "category_sequence": 253,
+        "is_polygon": false,
+        "x": 281,
+        "y": 578,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T08:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "[정치외교학과 취식 구역]",
+        "host_college": "제42대 정치외교학과 학생회 '수호'",
+        "description": ""
+      },
+      {
+        "id": 51,
+        "category_id": 1,
+        "category_sequence": 254,
+        "is_polygon": false,
+        "x": 313,
+        "y": 609,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T08:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "[AI융합대학 취식 구역]",
+        "host_college": "제2대 AI융합대학 학생회 '청연'",
+        "description": ""
+      },
+      {
+        "id": 1,
+        "category_id": 2,
+        "category_sequence": 101,
+        "is_polygon": false,
+        "x": 430.5,
+        "y": 887.5,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/f533f44b-698b-4939-8aa1-66762ea6fdb7.webp"],
+        "language_code": "KO",
+        "name": "DIS so BAD!",
+        "host_college": "제22대 국제학부 학생회 'UNITIS'",
+        "description": "[국제학부 학생회 부스 \"DIS so Bad\" 운영안내]\n♠️운에 모든 걸 걸어보시겠습니까?\n\n안녕하세요, 제22대 국제학부 학생회, UNITIS입니다\n2026년 하반기 퀸쿠아트리아를 맞아, DIS so Bad 부스를 운영할 예정입니다. 많은 관심 바랍니다.\n\n♠️일시: 퀸쿠아트리아 양일\n♠️장소: 국제학사 옆 A-1"
+      },
+      {
+        "id": 2,
+        "category_id": 2,
+        "category_sequence": 102,
+        "is_polygon": false,
+        "x": 403,
+        "y": 868,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/f6f4bc0d-4122-4b01-8dce-5064eeed2c9d.webp"],
+        "language_code": "KO",
+        "name": "마카롱 말먹하고 학점 날먹",
+        "host_college": "제38대 행정학과 학생회 ʻ평행’",
+        "description": "[행정과 그레텔 : 마카롱 하우스 | 2026 QUINQUATRIA: Twilight]\n\n민주행정 학우 여러분 안녕하십니까, 제38대 행정학과 학생회 ‘평행‘입니다.\n\nQUINQUATRIA: Twilight의 행정학과 부스 운영 정보를 안내합니다!\n\n🍭 부스 명: 마카롱 말먹하고 학점 날먹\n🍭 부스 위치: 국제학사 앞 A-2\n🍭 운영 일자: 10.7(수) ~ 10.8(목)\n🍭 운영 시간: 11:00 ~ 18:00\n\n🩷메뉴: 마카롱 말먹\n\n🥛흰 우유, 딸기 우유, 바나나 우유 선택 가능!\n🍪미쯔, 콘푸로스트, 그래놀라 토핑 추가 가능!\n\n🍬마카롱 말먹에 토핑 추가 시!\n🍬구매 후 사진을 촬영하여 @hufs_pa 태그와 함께 스토리 업로드 시!\n🍋팅글 레몬 애사비 소다 증정🍋\n\n\n📞문의📞\n학생회장 서유진 010-4983-1027\n한국외대 행정학과 인스타그램 @hufs_pa"
+      },
+      {
+        "id": 3,
+        "category_id": 2,
+        "category_sequence": 103,
+        "is_polygon": false,
+        "x": 421.2,
+        "y": 838.8,
+        "area": null,
+        "start_hour": "2026-10-07T03:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/3cc9c396-debd-47b1-ba38-0c565ebead80.webp"],
+        "language_code": "KO",
+        "name": "안녕하세요두바이와플입니다잘부탁드립니다",
+        "host_college": "제42대 아랍어과 학생회",
+        "description": "📍 아랍어과 부스\n\n두바이를 안 가도, 두바이 와플은 먹을 수 있다! 🧇\n\n바삭한 와플 속에 고소한 피스타치오 크림과 바삭한 카다이프를 듬뿍 담았습니다.\n\n아랍어과에서 준비한 특별한 한입의 중동 여행 ✈️\n이번 축제, 두바이 와플과 함께 아랍의 맛을 만나보세요!"
+      },
+      {
+        "id": 4,
+        "category_id": 2,
+        "category_sequence": 104,
+        "is_polygon": false,
+        "x": 442.9,
+        "y": 813.1,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/75af4bb0-69a1-4973-ae75-0b939be64a3d.webp"],
+        "language_code": "KO",
+        "name": "4천원이지만 또 먹고 싶은 크림카레떡볶이입니다",
+        "host_college": "제40대 인도어과 학생회 '항해'",
+        "description": "🍛✨ 인도어과 학생회 부스 ‘4천원이지만 또 먹고 싶은 크림카레떡볶이입니다 ’ ✨🍛\n\n동그리모 타돗테모 츠키마셍~🎵4천원인데 또 먹고 싶은 인도어과의 크림카레떡볶이입니다. 안녕하세요! 한국외대 아시아언어문화대학 인도어과 학생회입니다. 이번 퀸쿠아트리아 축제를 맞아 인도어과에서 ‘4천원이지만 또 먹고 싶은 크림카레떡볶이입니다’ 부스를 준비했습니다! 🇮🇳\n\n4천원인데 또 먹고 싶어? 정상입니다. 인도의 대표 음식인 카레를 활용한 크림카레떡볶이, 그리고 개성 넘치는 헤나 체험까지! 맛과 체험을 모두 즐길 수 있는 특별한 공간으로 여러분을 초대합니다🥰\n\n📅 일시: 10/7(수)~10/8(목) 11:00~18:00\n📍 장소: 국제학사 앞 A-4 구역\n📸 문의: 인도어과 인스타그램 @hufs_ind"
+      },
+      {
+        "id": 5,
+        "category_id": 2,
+        "category_sequence": 105,
+        "is_polygon": false,
+        "x": 467,
+        "y": 799,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/121af069-1786-44b7-8d3f-e3afb496aa55.webp"],
+        "language_code": "KO",
+        "name": "박항서가 선수들 몰래 꺼내먹던 스모어쿠키",
+        "host_college": "제59대 베트남어과 학생회 'Kết Nối'",
+        "description": "[베트남어과 퀸쿠아트리아 부스 '박항서가 선수들 몰래 꺼내먹던 스모어쿠키' 운영 안내]\n🙌안녕하세요, 제 59대 베트남어과 학생회 'Kết nối' 입니다.\n10월 7일과 10월 8일 양일간 진행되는 퀸쿠아트리아,\n베트남어과가 학우분들에게 보다 따뜻하고 선명한 추억을 드리기 위해 특별한 부스를 운영합니다.\n학우분들의 많은 관심 부탁드립니다~🙇‍♂️\n\n📆일시: 2026년 10월 7일(수) ~ 2026년 10월 8일(목) 양일간 13:00-18:00\n🗺️장소: 한국외국어대학교 서울캠퍼스 A-5 부스(국제학사 앞)\n\n📣재고 상황에 따라 운영 및 판매 방식이 변동될 수 있습니다."
+      },
+      {
+        "id": 6,
+        "category_id": 2,
+        "category_sequence": 106,
+        "is_polygon": false,
+        "x": 346,
+        "y": 817,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/ef22e5a6-a57d-4f17-bb9f-60a2723a4b37.webp"],
+        "language_code": "KO",
+        "name": "알라딘도 탐내는 그 녀석의 번호",
+        "host_college": "제42대 페르시아어·이란학과 학생회 ʻNAVA’",
+        "description": "[🇮🇷페르시아어•이란학과 부스 운영 안내]\n\n안녕하세요, 페르시아어•이란학과 제42대 학생회 ‘Nava’입니다. 가을 축제 퀸쿠아트리아에서 소개팅 부스를 운영합니다! 부스 참여해서 운명의 짝을 찾아보세요 💕\n\n📆일시: 2026.10.07.(수)/10.08.(목) 양일 13:00-18:00\n📍장소: 국제학사 앞\n\n많은 관심과 참여 부탁드립니다!"
+      },
+      {
+        "id": 7,
+        "category_id": 2,
+        "category_sequence": 107,
+        "is_polygon": false,
+        "x": 346,
+        "y": 789,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/e5d33ce4-ecc9-4ff4-a491-510faebd3d8a.webp"],
+        "language_code": "KO",
+        "name": "자고 일어났더니 평범한 외대생에서 메이드짱♥이 된 것에 대하여.",
+        "host_college": "제39대 튀르키예·아제르바이잔학과 학생회",
+        "description": "🇹🇷2026 QUINQUATRIA 튀르키예•아제르바이잔학과 부스 안내🇦🇿\n\n🌟자고 일어났더니 평범한 외대생에서 메이드짱❤️이 된 것에 대하여🌟\n\n안녕하세요, 제39대 튀르키예•아제르바이잔학과 학생회입니다.\n2026 QUINQUATRIA에서 달콤시원한 파르페와, 귀여운 메이드와 사진을 찍을 수 있는 기회를 제공합니다! 학우 여러분들의 많은 관심 부탁드립니다❤️\n\n🗓️일시 | 2026년 10월 7~8일 (수, 목) 13~18시\n📍장소 | 한국외국어대학교 서울캠퍼스 국제학사 앞 A7 부스\n\n문의: 제39대 튀르키예•아제르바이잔학과 학생회장 오명호(010-9263-9360) / 튀르키예•아제르바이잔학과 학생회 인스타그램 @hufs_turkazeri"
+      },
+      {
+        "id": 9,
+        "category_id": 2,
+        "category_sequence": 109,
+        "is_polygon": false,
+        "x": 394,
+        "y": 763,
+        "area": null,
+        "start_hour": "2026-10-07T02:30:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/f18f16f9-9c7c-4148-ae1a-b38634aaec73.webp"],
+        "language_code": "KO",
+        "name": "외대를 만나면 전 세 개가 보인다 COME TO HUFS, MEET THE 3 JEONS",
+        "host_college": "제43대 동아리연합회 ʻ파동’",
+        "description": "[한국외국어대학교 서울캠퍼스 제43대 동아리연합회 ‘파동’ 주점 운영 안내]\n\n🥢 외대를 만나면 전 세 개가 보인다\nCOME TO HUFS, MEET THE 3 JEONS\n\n안녕하세요! 제43대 동아리연합회 ‘파동’입니다 🌊\n\n차린 건 쥐뿔도 없지만, 전은 세 가지나 차렸습니다. 감자전·김치전·파전 중 마음에 드는 전을 골라 주세요! 밀키스와 복분자에이드도 함께 준비했습니다 🥂\n\n📅 일시: 10/7(수) ~ 10/8(목) 11:30-18:00\n📍 장소: A-9\n\n파동의 주점에서 만나요! 🌊"
+      },
+      {
+        "id": 10,
+        "category_id": 2,
+        "category_sequence": 110,
+        "is_polygon": false,
+        "x": 533,
+        "y": 751,
+        "area": null,
+        "start_hour": "2026-10-07T02:30:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/dcd32038-dee0-4a39-b694-283e2d100be9.webp"],
+        "language_code": "KO",
+        "name": "사대시네마 : <짜파구리 먹고 갈 결심> 절찬상영중",
+        "host_college": "제39대 사회과학대학 비상대책위원회 ‘비상’",
+        "description": "[사회과학대학 부스 '사대시네마' 운영 안내]\n\n안녕하세요, 제39대 사회과학대학 비상대책위원회 <비상>입니다. \n사회대 부스 '사대시네마: <짜파구리 먹고 갈 결심> 절찬상영중' 운영 안내드립니다.\n\n\n🎬🍿 사대시네마: <짜파구리 먹고 갈 결심> 절찬상영중 🍿🎞️\n\n- 일시: 2026년 10월 7일(수) - 10월 8일(목) 11:30~18:00\n- 부스 위치: A-10\n\n< 메뉴 >\n- 제시카 외동딸 통일사회 짜파구리(짜파구리) \n- 대패학개론(대패삼겹살)\n- SET 1. 대패삼겹살과 함께: 단백질과 면(짜파구리+대패삼겹살 세트) \n- SET 2. 콤보세트(짜파구리+대패삼겹살+에이드 1종 세트) \n\n- 토핑) 불닭소스\n- 토핑) 치즈\n- 토핑) 파김치 \n\n- 아바타: 에이드의 길(블루레몬에이드)\n- 모히또 가서 몰디브 한 잔~(라임모히또에이드)\n\n< 이벤트 > \n- 영화 이모지 퀴즈 🤔\n- 영화 포스터 퀴즈 🎥\n- 묻고 더블로 가!: 종이뽑기🎟️ \n\n\n🍿 이벤트 참여 시 팝콘을 증정 드립니다 🍿\n\n'사대시네마' 많은 관심과 방문 부탁드립니다!🤎\n\n\n기타 문의: 사회과학대학 비상대책위원회 인스타그램 @hufs.socialscience"
+      },
+      {
+        "id": 11,
+        "category_id": 2,
+        "category_sequence": 111,
+        "is_polygon": false,
+        "x": 559,
+        "y": 750,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/dfc6ea1b-79e0-4212-95ae-d5e305cc758f.webp"],
+        "language_code": "KO",
+        "name": "몽태솔로지만 소세지는 먹고싶어",
+        "host_college": "제18대 몽골어과 학생회 'KHAN'",
+        "description": "🎆 2026 QUINQUATRIA 몽골어과 부스 🎇\n\n🇲🇳 \"몽태솔로지만 소세지는 먹고싶어\" 🌭 \n\n먹으러 왔다가 번호까지 따이는 부스.\n소세지, 대패삼겹, 그리고 운명의 짝까지 준비했습니다.💘  \n\n🍴 MENU\n• 소세지 꼬치 - 2500₩\n• 대패삼겹숙주볶음 - 4000₩ \n\n💌 몽골 MBTI 번호팅\n몽골 특색을 담은 MBTI 유형에 따라\n운명의 짝을 매칭해드립니다! \n(음식 구매 시 1000₩, 미구매 시 2000₩)\n\n\"네가 별 보고 싶다고 했잖아?\n그럼 나 번호팅 이런 거 안 했어, 너랑 몽골 갔어.\" \n\n💕이번 퀸쿠아트리아에서 운명의 짝을 찾아가세요!💞\n\n📍장소: 진실의 거울 앞  | A-11"
+      },
+      {
+        "id": 12,
+        "category_id": 2,
+        "category_sequence": 112,
+        "is_polygon": false,
+        "x": 584,
+        "y": 750,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/06906537-343e-4042-b990-92aff44be143.webp"],
+        "language_code": "KO",
+        "name": "엄마가 모르셔서 그렇지 요즘은 다 로띠 먹어요",
+        "host_college": "제60대 태국학과 학생회",
+        "description": "🇹🇭2026 QUINQUATRIA 태국학과 부스 안내🇹🇭\n\n“엄마가 모르셔서 그렇지 요즘은 다들 로띠 먹어요.”\n\n그래서 로띠가 대체 뭔데? 🤔\n로띠는 얇게 펼친 반죽을 바삭하게 구워 달콤한 바나나, 초코소스 그리고 연유를 듬뿍 올린 태국식 크레페예요🍌\n\n📌 부스 위치 | 진실의 거울 앞 A-12\n\n📌 메뉴 | 로띠 — 3,500원\n                타이 밀크티 — 2,500원\n\n바삭달콤 로띠 한 입, 시원달달 타이 밀크티 한 잔!\n로: 로띠 먹으러 태국학과 부스로\n띠: 띠어오세요! 🏃"
+      },
+      {
+        "id": 13,
+        "category_id": 2,
+        "category_sequence": 113,
+        "is_polygon": false,
+        "x": 607,
+        "y": 750,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/9cef1221-963e-4b7d-8031-4e3fe869f0b5.webp"],
+        "language_code": "KO",
+        "name": "마인 미고랭 거래소",
+        "host_college": "제44대 말레이·인도네시아어과 학생회 'Maju Bersama'",
+        "description": "🌴🍜 [퀸쿠아트리아 말레이·인도네시아어과 부스 운영 안내] 🇲🇾🇮🇩\n\n안녕하세요, 한국외국어대학교 말레이·인도네시아어과입니다!\n 이번 퀸쿠아트리아 행사에서 맛있는 미고랭과 시원한 음료를 함께 즐길 수 있는 부스를 운영합니다. 🎉\n\n📅 일시: 10월 7일(수) ~ 10월 8일(목)\n ⏰ 운영 시간: 13:00 ~ 18:00\n\n🍜 판매 메뉴\n • 미고랭 + 음료 세트 5,000원\n • 미고랭 단품 4,500원\n\n🎮 세트 구매 시 특별 게임 참여 가능!\n 게임에서 승리하면 500원 할인 혜택까지 받아가실 수 있습니다! 💸✨\n\n맛있는 미고랭도 먹고, 게임도 즐기고, 할인까지 받을 수 있는 기회!\n 퀸쿠아트리아에 방문하시는 학우 여러분의 많은 관심과 참여 부탁드립니다. ❤️\n\n말레이·인도네시아어과 부스에서 만나요! 🇲🇾🇮🇩"
+      },
+      {
+        "id": 14,
+        "category_id": 2,
+        "category_sequence": 205,
+        "is_polygon": false,
+        "x": 340,
+        "y": 535,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T11:00:00Z",
+        "place_image_uri": ["images/place/48b6c176-40bb-46f6-b7c3-bace52d804a9.webp"],
+        "language_code": "KO",
+        "name": "자기야~ 전 먹으러 올래말래 맛있긴 해~",
+        "host_college": "제1대 자유전공학부(서울) 비상대책위원회",
+        "description": "[2026 QUINQUATRIA : Twilight 자유전공학부 부스 운영 안내]\n\n안녕하세요, 한국외국어대학교 제1대 자유전공학부(서울) 비상대책위원회입니다.\n\n10월 7일 수요일, 10월 8일 목요일 자유전공학부(서울) 부스를 운영합니다! \n학우 여러분의 많은 관심과 성원 부탁드립니다!\n\n🗓️ 일시: 2026년 10월 7일(수) - 8일(목) 11:00~20:00\n📍장소: 한국외국어대학교 서울캠퍼스 B구역 5번\n📩문의: 제1대 자유전공학부(서울) 비상대책위원회 인스타그램 @hufs_openmajor"
+      },
+      {
+        "id": 15,
+        "category_id": 2,
+        "category_sequence": 206,
+        "is_polygon": false,
+        "x": 372,
+        "y": 535,
+        "area": null,
+        "start_hour": "2026-10-07T03:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/9f2c6126-c734-4d9c-b310-cf34d7ac0193.webp"],
+        "language_code": "KO",
+        "name": "도합 포티나인의 추억 속 컵떡볶이",
+        "host_college": "제60대 아시아언어문화대학 학생회 '운율'",
+        "description": "[아시아언어문화대학 학생회 부스 “도합 포티나인의 추억 속 컵떡볶이” 안내]\n\n안녕하세요, \n제60대 아시아언어문화대학 학생회 “운율”입니다.\n학교 앞 분식집에서 하나씩 사 먹던 컵떡볶이,\n빼먹을 수 없는 시원한 콜라 슬러쉬, \n친구들과 나눠 먹으며 웃었던 그때의 기억까지\n\n도합 포티나인(49)의 아대장단이\n추억 속 익숙한 맛을 한 컵에 담아  여러분을 기다립니다!\n\n🌶️ 컵떡볶이 : 3,500원\n🥤슬러쉬: 2,000원\n\n📍 장소: 잔디광장 앞 아시아언어문화대학 부스 B-6 \n🗓️ 일시: 10.07.(WED) ~ 10.08.(THU) 12:00~18:00 \n📩 문의: 아시아언어문화대학 학생회 인스타그램 @hufs_asia"
+      },
+      {
+        "id": 16,
+        "category_id": 2,
+        "category_sequence": 207,
+        "is_polygon": false,
+        "x": 403,
+        "y": 535,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/877387cd-96c4-4579-936e-b276824918f1.jpg"],
+        "language_code": "KO",
+        "name": "히비카와: 일대 섬의 비밀",
+        "host_college": "제17대 일본학대학 학생회 '히비'",
+        "description": "🌴2026 퀸쿠아트리아 일본학대학 부스 ‘히비카와: 일대 섬의 비밀’🌴\n\n[부스 안내편] \n\n안녕하십니까, 일본학대학 학우 여러분. 제17대 일본학대학 학생회 ‘일본학대학의 매일을 만들다, 히비(日々)’🌠입니다.\n\n올해를 장식할 대망의 2026 퀸쿠아트리아!\n이번 퀸쿠아트리아에서 일본학대학 학생회는 ‘치이카와’를 컨셉으로 부스를 운영합니다.\n\n맛있는 음식과 재밌는 이벤트가 준비되어 있으니 기대해 주시기 바랍니다.\n\n자세한 내용은 카드뉴스를 참고해주시기를 바라며, 추후에 올라오는 카드뉴스에도 많은 관심 부탁드립니다.\n\n🐹 부스 운영 날짜: 2026.10.07 (월) - 10.08 (화)\n🐱 부스 운영 시간: 양일 11:00 - 18:00\n🐰 부스 위치: 잔디 광장과 붉은 광장 사이 (B-7) \n\n| 문의사항\n- 일본학대학 홍보소통국 국원 송지원(010-5054-0877)\n- 제17대 일본학대학 학생회 ’히비‘ 인스타그램 DM"
+      },
+      {
+        "id": 17,
+        "category_id": 2,
+        "category_sequence": 208,
+        "is_polygon": false,
+        "x": 436,
+        "y": 535,
+        "area": null,
+        "start_hour": "2026-10-07T03:00:00Z",
+        "end_hour": "2026-10-07T11:00:00Z",
+        "place_image_uri": ["images/place/5fc381cc-0688-4645-83c9-b3496e7b3802.jpg"],
+        "language_code": "KO",
+        "name": "꼬치 My heart~ Baby",
+        "host_college": "제38대 중국학대학 학생회 ʻ유성(流星)’",
+        "description": "💫2026 QUINQUATRIA: Twilight 중국학대학 부스 소개 💫\n\n안녕하십니까, 제38대 중국학대학 학생회 유성입니다! \n\n2026 QUINQUATRIA: Twilight 중국학대학 부스 ‘꼬치 My Heart~ Baby’를 진행합니다.\n\n🗓️일시: 2026년 10월 7일(수) -10월 8일 (2일간)\n⏱️시간: 12:00 ~ 19:00 \n📍장소: B구역 8번 부스\n\n메뉴 소개🥄\n🍢 양꼬치 My Heart (양꼬치)\n🌽 옥수수에 꼬치다 (옥수수꼬치)\n🍧 슬러쉬 Catch [빙홍차/콜라]\n🥡 사랑의 set를 당겨봐 [양꼬치 2 + 옥수수꼬치 1 + 슬러쉬 1]\n\n프로그램 소개🕹️\n🏮 소원등 만들기 \n🍀 운세카드 증정 \n\n학우 분들의 많은 관심과 참여 부탁드립니다!\n\n📨문의\n중국학대학 퀸쿠아트리아 TF장 권다윤 (010-5717-4394)\n중국학대학 학생회장 윤현서 (010-4007-3046)"
+      },
+      {
+        "id": 18,
+        "category_id": 2,
+        "category_sequence": 209,
+        "is_polygon": false,
+        "x": 467,
+        "y": 535,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T13:00:00Z",
+        "place_image_uri": ["images/place/03855713-9aec-4d54-84ed-c6563fc052e1.webp"],
+        "language_code": "KO",
+        "name": "나는 선생이고, 너는 왁뿌볼이야",
+        "host_college": "제42대 사범대학 학생회 'ELEV'",
+        "description": "[사범대학 학생회 퀸쿠아트리아 부스 '나는 선생이고, 너는 왁뿌볼이야' 운영 안내]\n\n📢[학사공지] <2026 QUINQUATRIA : Twilight> 사범대학 부스 운영 공고\n\n안녕하세요, 제42대 사범대학 학생회 <ELEV>입니다.\n<2026 QUINQUATRIA : Twilight>에서 10월 7~8일 양일간 사범대학 학생회 부스 '나는 선생이고, 너는 왁뿌볼이야'를 운영합니다. 학우 여러분의 많은 관심과 방문 부탁드립니다!!\n\n📅일시 : 2026년 10월 7~8일(수~목) 양일간 13:00~22:00(상황에 따라 조기 마감될 수 있음)\n🚩장소 : 한국외국어대학교 서울캠퍼스 B-9부스(잔디광장 인근)\n📧문의 : 사범대학 학생회 인스타그램 @hufs_edu"
+      },
+      {
+        "id": 20,
+        "category_id": 2,
+        "category_sequence": 301,
+        "is_polygon": false,
+        "x": 501.5,
+        "y": 728,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T07:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "한국외대 기념품점",
+        "host_college": "지식출판콘텐츠원",
+        "description": "- 기념품 판매"
+      },
+      {
+        "id": 21,
+        "category_id": 2,
+        "category_sequence": 302,
+        "is_polygon": false,
+        "x": 612,
+        "y": 728,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": [
+          "images/place/33e05c56-8571-41fc-87cc-73505d4f69d6.webp",
+          "images/place/2bc18b88-6362-4e7d-95a2-f12ceb96a763.webp",
+          "images/place/4ba718d9-bb95-4503-92b9-399736220c73.webp",
+          "images/place/c0b72702-30b6-49f9-ae25-7079a1199bfe.webp"
+        ],
+        "language_code": "KO",
+        "name": "총학생회 중앙 부스",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": ""
+      },
+      {
+        "id": 22,
+        "category_id": 2,
+        "category_sequence": 303,
+        "is_polygon": false,
+        "x": 635,
+        "y": 728,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T08:00:00Z",
+        "place_image_uri": [
+          "images/place/168cb492-be6f-44ee-bd65-c2968156b571.webp",
+          "images/place/4b4f012c-3af8-4eda-ad43-be8cc34de80c.webp",
+          "images/place/2c8fd7b5-b873-4273-964e-59c49842e721.webp",
+          "images/place/6494b878-3b94-478f-b1c2-8faef09c27ee.webp",
+          "images/place/7d4672dd-b7dd-4064-b4ed-01cde4ccf00f.webp",
+          "images/place/3abfb759-3cb0-4337-8a28-a7241ea7a4f3.webp",
+          "images/place/78c32dcf-2ec4-4d0a-8644-b83718954e7a.webp"
+        ],
+        "language_code": "KO",
+        "name": "QUINQUATRIA 굿즈 부스",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": "- 축제 굿즈 판매"
+      },
+      {
+        "id": 23,
+        "category_id": 2,
+        "category_sequence": 304,
+        "is_polygon": false,
+        "x": 659,
+        "y": 728,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T08:00:00Z",
+        "place_image_uri": [
+          "images/place/41a6e429-110e-439b-af58-4e6217aba462.webp",
+          "images/place/3174ceae-2012-49a5-a671-9ea9c510b94b.webp",
+          "images/place/fb9087f9-98be-4ad7-abeb-c375e8f1d1fc.webp",
+          "images/place/215af81e-22ba-46ab-8573-3655ad9445d4.webp",
+          "images/place/1c798925-e8f1-4c93-b0f3-8c68973a3e05.webp",
+          "images/place/6967766e-39de-4eed-8e22-5a3c2861e546.webp"
+        ],
+        "language_code": "KO",
+        "name": "총학생회 콘텐츠 부스",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": "[콘텐츠 안내]\n\n- A Piece of Twilight : 커스텀 비즈 파우치\n마음에 드는 비즈를 선택하여 나만의 Twilight를 작은 파우지 속에 담아보세요!\n\n- Take a Chance : 사과 스택 게임\n17초 안에 3개의 사과를 쌓으세요!\n\n📌 운영 시간 : 양일 11:00 ~ 17:00\n📌 운영 장소 : C4\n📌 이용 시 유의사항\n- 사과 스택 게임은 1인 1회 참여를 원칙으로 합니다.\n- 커스텀 비즈 파우치는 원하는 비즈 및 파츠 5~6개를 선택하여 제작할 수 있습니다.\n- 사과 스택 게임 성공 시 BOO 특별 파츠가 제공됩니다.\n- 현장 상황 및 대기 인원에 따라 참여 시간이 지연될 수 있습니다.\n- 안전한 운영을 위해 현장 안내에 협조 부탁드립니다."
+      },
+      {
+        "id": 24,
+        "category_id": 2,
+        "category_sequence": 305,
+        "is_polygon": false,
+        "x": 682,
+        "y": 757,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/9222e2bd-8bdc-44db-8d2f-6d7dc71a287b.webp"],
+        "language_code": "KO",
+        "name": "우리 무슨 ʻ싸이’야?",
+        "host_college": "제2대 Social Science&AI융합학부 학생회 'ON'",
+        "description": "[Social Science&AI 융합학부 학생회 부스 ‘우리 무슨 싸이야?’ 운영 안내]\n\n🔮 天生緣分(천생연분), 사주로 미리 보고 가시오\n\n안녕하세요, 한국외국어대학교 제2대 Social Science&AI 융합학부 학생회 〈ON〉입니다. <Quinquatria:twilight> 기간 동안 사주 기반 소개팅 부스 ‘우리 무슨 싸이야?’를 운영합니다. 나와 잘 맞는 인연이 궁금하다면, 사주로 풀어드립니다. 그리고 그 순간을 기록할 수 있는 ‘포토부스’도 운영합니다. 많은 관심과 방문 부탁드립니다! 🧧\n\n📅 일시: 2026년 10월 8일(목)~9일(금) 11:00~18:00\n 📍 장소: 한국외국어대학교 서울캠퍼스 진실의 거울 앞 \n✉️ 문의: 한국외국어대학교 Social Science&AI 융합학부 인스타그램 @hufs_ssai"
+      },
+      {
+        "id": 25,
+        "category_id": 2,
+        "category_sequence": 306,
+        "is_polygon": false,
+        "x": 701,
+        "y": 757,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/ae9d93ba-5114-4959-8b9c-f7ab7bd70728.webp"],
+        "language_code": "KO",
+        "name": "팬싸에~서 누가 돌아왔게~~? -코어편-",
+        "host_college": "제60대 국제통상학과 학생회 'CO:er'",
+        "description": "[국제통상학과 부스 \"팬싸에~서 누가 돌아왔게~~?\" 운영 안내]\n\n✨2026 퀸쿠아트리아 국제통상학과 부스✨\n: '팬싸에~서 누가 돌아왔게~~?'\n\n📍PLACE \n: C-6 (본관 앞)\n \n📝MENU\n- REDRED 에이드 ❤️ (자몽 에이드)\n- GREENGREEN 에이드 💚 (청포도 에이드)\n- 마틴이 먹고 키 2M까지 큰 오레오 크로플 🍫\n- 제임스가 먹고 영크크 8번 춘 사과잼 크로플 🍏\n\n🎁EVENT \n- 코어티스 팬사인회\n- 번호팅 이벤트"
+      },
+      {
+        "id": 26,
+        "category_id": 2,
+        "category_sequence": 307,
+        "is_polygon": false,
+        "x": 723,
+        "y": 757,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/5840470b-60d2-4f46-b52b-108c758f15d9.webp"],
+        "language_code": "KO",
+        "name": "♡ 포근포근 달콤해 둥글둥글 부푸는 마음! 내 꿈은 상경대 파티시엘 ♡",
+        "host_college": "제44대 상경대학 학생회 '늘상'",
+        "description": "[2026 하반기 QUINQUATRIA 상경대학 부스 안내]\n안녕하세요. 한국외대 제44대 상경대학 학생회 늘상입니다. 👩‍🍳🧑‍🍳\n\n한국외국어대학교 QUINQUATRIA 72주년을 맞아 여러분께 상경대학 부스 <♡ 포근포근 달콤해 둥글둥글 부푸는 마음! 내 꿈은 상경대 파티시엘 ♡>를 선보입니다!\n\n< 메뉴 >\n1️⃣ 🧆두쫀쿠 왁뿌볼 🧆\n[₩2,500]\n2️⃣🍓딸기 이튼메스🍓\n[₩3,000]\n3️⃣🍪오레오 이튼메스🍪\n[₩3,000]\n4️⃣🍓딸기 오레오 이튼메스🍪\n[₩3,500]\n\n< 프로그램 >\n어느덧 가을이 다가왔지만 아직도 옆구리가 시린 당신!!! 상경대학 부스에서 준비한 ❤️블라인드 데이트❤️ 프로그램에 참여하여 철저한 알고리즘으로 매칭된 최적의 상대를 만나보세요!\n\n또한 ‼️최고 수익률 200배‼️ 일확천금을 노릴 수 있는 상경대학 전통의💰로또 프로그램💰도 준비되어 있으니 많은 관심과 방문 부탁드리겠습니다!\n\n자세한 내용은 카드뉴스를 참고해 주세요. 많은 관심 부탁드립니다! 🩷\n\n📍축제 일시 : 2026년 10월 7일(수) ~ 8일(목)\n📍부스 운영 시간 : 양일 11시~18시 운영\n📍부스 위치 : 본관 앞 C-7 상경대학 부스"
+      },
+      {
+        "id": 27,
+        "category_id": 2,
+        "category_sequence": 308,
+        "is_polygon": false,
+        "x": 683,
+        "y": 731,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/516fccbd-f428-4066-b252-bed357408914.jpg"],
+        "language_code": "KO",
+        "name": "볶음너구리 한마리 몰고가세요~",
+        "host_college": "제18대 경영대학 학생회 ʻ비전’",
+        "description": "🍜경영대학 학생회 부스 [볶음너구리 한마리 몰고가세요~] 운영 안내 🍜\n\n안녕하십니까, 제18대 경영대학 학생회 ‘경영대의 무한한 가능성을 향해, 비전’입니다.\n2026 QUINQUATRIA: Twilight에서 경영대학 부스를 운영합니다! 학우 여러분들의 많은 관심과 참여 부탁드립니다 ☺️\n\n운영 일시 | 10. 07.(수) - 10. 08.(목) 13:00~18:00\n부스 위치 | C-8 (본관 앞)\n\n📞 문의: 카카오톡 플러스친구 ‘한국외대 경영대학 학생회’"
+      },
+      {
+        "id": 28,
+        "category_id": 2,
+        "category_sequence": 309,
+        "is_polygon": false,
+        "x": 704,
+        "y": 731,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/3c43b12b-f455-4e3f-a63d-5deefe0bd9f4.webp"],
+        "language_code": "KO",
+        "name": "슈의 불닭쌈가게: 입술은 타고 번호는 따고",
+        "host_college": "제2대 Language&AI융합학부 학생회",
+        "description": "🌶️💌 슈의 불닭쌈가게: 입술은 타고, 번호는 따고\n🔥 불닭쌈 먹고, 마음에 드는 동물상 번호까지 GET!\n안녕하세요, Language & AI 융합학부 학생회입니다.\n이번 축제에서 Language & AI 융합학부가\n「슈의 불닭쌈가게: 입술은 타고, 번호는 따고」 부스를 운영합니다!\n쫀득한 라이스페이퍼에 매콤한 불닭을 싸 먹는 불닭쌈🌶️과\nAI로 나의 동물상을 알아보고 원하는 동물상의 번호를 찾아보는 AI 동물상 번호팅💌을 준비했습니다.\n🌶️ 불닭쌈  \n- 반 봉지 (3조각) : 4,000원\n- 한 봉지 (6조각) : 7,000원\n- 치즈 추가 : +500원(반 봉지) , +1,000원(한 봉지)\n🐶 AI 동물상 번호팅  \n- 내 번호 넣기 : 1,000원\n- 원하는 번호 뽑기 : 1,000원\n- AI 테스트를 원하지 않는 경우 직접 동물상을 선택할 수 있습니다!\n🎁 불닭쌈 또는 번호팅 중 하나만 참여해도 타투 스티커를 드립니다!\n입술은 타고, 번호는 따고🔥💌\n맛있는 불닭쌈과 재미있는 번호팅이 준비된 「슈의 불닭쌈가게」에 많은 관심과 참여 부탁드립니다!"
+      },
+      {
+        "id": 29,
+        "category_id": 2,
+        "category_sequence": 310,
+        "is_polygon": false,
+        "x": 724,
+        "y": 731,
+        "area": null,
+        "start_hour": "2026-10-07T02:30:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/a7af1e47-f65e-4593-8b87-393a51064d60.jpg"],
+        "language_code": "KO",
+        "name": "집 나간 오디세우스도 돌아오는 엘디세이",
+        "host_college": "제13대 Language&Diplomacy학부 학생회 'soLiD'",
+        "description": "🌊[집 나간 오디세우스도 돌아오는 엘디세이]⚓️\n\n안녕하세요, 한국외국어대학교 제13대 LD학부 학생회 soLiD입니다. 가을을 맞이하여 열리는 2026 QUINQUATRIA: Twilight 에서 \"집 나간 오디세우스도 돌아오는 엘디세이\" LD학부 축제 부스를 운영합니다!\n\n📣오디세우스, 보고 있나!\n10년간 집을 돌아오지 못한 오디세우스도 당-장 돌아오게 할 만큼 매혹적인 음료와 오디세이 속 여러 미션 이벤트가 준비되어 있습니다. 과제와 시험의 바다에서 피신할 매혹적인 안식처! 학우분들의 많은 관심 부탁드립니다!\n\n📅 일시: 2026년 10월 7일 - 8일 11:30 ~ 18:00\n📍 장소: C-10 (본관 앞)\n☎️문의사항: 2026 퀸쿠아트리아 TF 팀장 최은아(010-7271-3395)"
+      },
+      {
+        "id": 30,
+        "category_id": 2,
+        "category_sequence": 311,
+        "is_polygon": false,
+        "x": 770,
+        "y": 710,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/ba6b4412-9c58-4c4e-ad0c-59b2c7e959ed.webp"],
+        "language_code": "KO",
+        "name": "홍시…… 이 떡… 임자 있나요?",
+        "host_college": "제41대 영어대학 학생회 '영화'",
+        "description": "🍁 [영어대학 학생회 ‘영화’ 2026 하반기 QUINQUATRIA 부스 안내]\n애국외대, 민족외영! \n안녕십니까, 제 41대 영어대학 학생회 ‘영화’입니다.\n\n이번 축제에서 여러분의 입맛을 사로잡을 특별한 디저트 부스를 준비했습니다. 고소한 버터에 노릇노릇하게 구운 크림기정떡, 진한 흑임자 라떼, 달콤상큼한 홍시 코코넛 에이드까지!\n축제에서 맛있는 디저트와 함께 즐거운 시간 보내고 가실 수 있도록 열심히 준비했으니 학우 여러분의 많은 관심과 방문 부탁드립니다!\n\n📅 일시: 2026년 10월 7일-8일 13:00-18:00\n📍 장소: 한국외국어대학교 서울캠퍼스 본관 앞 C-11 부스"
+      },
+      {
+        "id": 31,
+        "category_id": 2,
+        "category_sequence": 312,
+        "is_polygon": false,
+        "x": 792,
+        "y": 731,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/980b79df-22fb-4454-8bc4-2a525a3d81e3.webp"],
+        "language_code": "KO",
+        "name": "오지후라이의 마법사",
+        "host_college": "제20대 영어통번역학과 학생회 'WITH'",
+        "description": "[🧙‍♂️영어통번역학과 부스 “오지후라이의 마법사” 운영 안내🧙‍♂️]\n\n✨당신의 가장 빛나는 순간을 함께 만들어갈, WITH✨\n\n애국외대! 한국외국어대학교 학우 여러분 안녕하십니까. 제20대 영어통번역학과 학생회 <WITH> 입니다. 오즈의 마법사를 모티브로 한 영어통번역학과의 특별한 축제 부스, “오지후라이의 마법사”를 소개합니다!\n\n🍟 오지후라이의 마법\n바삭한 감자튀김에 녹진한 체다치즈 소스와 베이컨 토핑까지! 한 입 맛보면 자꾸만 손이 가는 마법 같은 맛을 경험해보세요.\n\n🥤마법사의 마법물약\n코카콜라와 스프라이트, 그리고 얼음컵까지 준비 완료! 느끼함을 싹 날려주는 시원한 탄산 마법으로 오지후라이를 더욱 맛있게 즐겨보세요.\n\n📱순간이동 주문서 \n링크와 QR을 통한 간편한 온라인 주문 서비스! 줄 서서 기다릴 필요 없이 원하는 위치에서 배달로 편하게 받아보세요.\n\n📸 기억 저장 마법\n나만의네컷 X 영어통번역학과만의 특별한 이동식 포토부스! 축제에서의 소중한 순간을 네컷 속에 봉인해 간직해보세요.\n\n🤤 영어통번역학과 부스에서 감법사와 함께 펼쳐지는 신비로운 마법의 세계를 만나보세요!\n\n☎️문의사항\n제20대 영어통번역학과 학생회 인스타그램 @hufs_eicc"
+      },
+      {
+        "id": 77,
+        "category_id": 2,
+        "category_sequence": 313,
+        "is_polygon": false,
+        "x": 902.5,
+        "y": 727.5,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T07:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "외대생, 세계관 확장 중… OTT 말고, 진짜 세계로!",
+        "host_college": "국제교류팀",
+        "description": "- 국제교류 프로그램\n- 국제학생회(ISO) 홍보"
+      },
+      {
+        "id": 87,
+        "category_id": 2,
+        "category_sequence": 314,
+        "is_polygon": true,
+        "x": null,
+        "y": null,
+        "area": [
+          {
+            "x": 644.5,
+            "y": 647
+          },
+          {
+            "x": 644.7,
+            "y": 683.4
+          },
+          {
+            "x": 708.8,
+            "y": 684
+          },
+          {
+            "x": 689.3,
+            "y": 647
+          }
+        ],
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T08:00:00Z",
+        "place_image_uri": ["images/place/f2a8be49-8dfa-47da-b580-daa9789bb62c.webp"],
+        "language_code": "KO",
+        "name": "Leave a Mark : 스텐실 스프레이 아트",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": "[콘텐츠 안내]\n\n- Leave a Mark : 스텐실 스프레이 아트\n\nQUINQUATRIA : twilight 스텐실 위에\n자유롭게 스프레이 아트(그래피티)를 꾸며보세요!\n\n📌 운영 시간 : 양일 11:00 ~ 17:00\n📌 운영 장소 : 본관 앞 나무데크 위쪽 공간\n📌 이용 시 유의사항 \n- 결과물은 인스타그램 스토리를 통해 학우분들께 공유드릴 예정입니다.\n- 퇴장 후 희망하시는 학우분들에 한해 미니 스텐실을 이용한 페이스페인팅을 진행합니다.\n- 학내시설 오염 방지에 유의해주세요."
+      },
+      {
+        "id": 32,
+        "category_id": 2,
+        "category_sequence": 401,
+        "is_polygon": false,
+        "x": 995,
+        "y": 941,
+        "area": null,
+        "start_hour": "2026-10-07T03:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/e0adf1fc-08c8-4d52-a290-4d08262c8105.webp"],
+        "language_code": "KO",
+        "name": "L 사이즈 솜사탕 들고 T 안나게 네 번호 슬쩍 떼어갈게<3",
+        "host_college": "제11대 Language&Trade학부 학생회 'reLaTe'",
+        "description": "[LT학부 QUINQUATRIA : Twilight 부스 안내]\n\n🦝 2026년 올해 솔로인지 벌써 280일 지남…\n나: 솜씻LT 됨 🧽💦\n\n올해도 280일 넘게 솔로라고 걱정하지 마세요!\nL사이즈 솜사탕 들고 T안나게 번호 떼어가면 새로운 사랑(혹은 우정!)이 찾아올지도 모르니까요 🍭✨\n\n안녕하세요, 제11대 LT학부 학생회 reLaTe입니다!\n10월 7일(수)부터 8일(목)까지, Quinquatria D-1번 부스에서 LT학부 학생회 부스를 운영합니다.\n몽글몽글한 솜사탕과 재밌는 이벤트가 준비되어 있으니 많은 관심과 방문 부탁드립니다!\n\n🗓 운영 일시: 2026년 10월 7일(수) ~ 8일(목) 12:00 ~ 18:00\n📍 위치: D-1번 부스\n🏷 부스명: L사이즈 솜사탕 들고 T안나게 네 번호 슬쩍 떼어갈게 <3\n🎈 프로그램: 번호팅/친구팅, LoTto, 솜사탕 판매\n\n달콤한 솜사탕부터 인연 만들기, 대박 로또의 기회까지! 모든 걸 한 번에 얻어가세요 🍭💫"
+      },
+      {
+        "id": 33,
+        "category_id": 2,
+        "category_sequence": 402,
+        "is_polygon": false,
+        "x": 1033,
+        "y": 941,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/48840520-cecb-40f8-88ba-ceda3b968973.webp"],
+        "language_code": "KO",
+        "name": "오늘 밤은 네딱하게",
+        "host_college": "제38대 네덜란드어과 학생회 'PATHOS'",
+        "description": "[네덜란드어과 학생회 부스 '오늘 밤은 네딱하게' 운영 안내]\n\n안녕하세요, 한국외국어대학교 제38대 네덜란드어과 학생회 'PATHOS'입니다. 10/7~10/8 양일간 2026 하반기 퀸쿠아트리아  네덜란드어과 부스를 운영합니다. 학우 여러분들의 많은 관심과 방문 부탁드립니다!  \n\n* 두 개 이상 메뉴 주문 시 1000원 할인/ 네 개 이상 메뉴 주문 시 2000원 할인\n\n📅 일시: 2026년 10/7~10/8 13시~18시\n🚩 위치: 인문과학관 분수대 앞(D-2)\n❓️문의: 학생회장 최원석(010-3036-3051)"
+      },
+      {
+        "id": 34,
+        "category_id": 2,
+        "category_sequence": 403,
+        "is_polygon": false,
+        "x": 1068,
+        "y": 941,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/4ae9144b-d467-4a77-b401-a877cf983b65.webp"],
+        "language_code": "KO",
+        "name": "에스파 랑 츄러스 먹을래?",
+        "host_college": "제39대 스페인어과 학생회 'ADELANTE'",
+        "description": "[스페인어과 2026 QUINQUATRIA : TWILIGHT 부스 운영 안내]\n\n🇪🇸 ¡Viva España! 축제에서 만나는 작은 스페인\n\n안녕하세요, 제39대 스페인어과 학생회 ADELANTE입니다.\n\n2026 QUINQUATRIA : TWILIGHT를 맞아 스페인의 맛과 즐거움을 담은 부스를 운영합니다.\n\n바삭하고 달콤한 츄러스와 상큼한 무알코올 상그리아부터, 스페인 국가대표 유니폼을 향한 축구공 게임과 새로운 인연을 만나는 ‘에스파(냐) 번호팅’까지 준비했습니다.\n\n츄러스 또는 상그리아를 구매하시면 축구공 게임 또는 번호팅에 무료로 참여하실 수 있습니다. 스페인어과 부스에서 맛있는 간식과 함께 특별한 축제의 추억을 만들어 보세요!\n\n학우 여러분의 많은 관심과 방문 부탁드립니다.\n\n📅 일시: 10월 7일(수)~10월 8일(목), 양일 13:00~18:00  \n📍 장소: 인문과학관 앞 D-3 부스  \n📩 문의: 스페인어과 학생회 인스타그램 @hufs_spanish"
+      },
+      {
+        "id": 35,
+        "category_id": 2,
+        "category_sequence": 404,
+        "is_polygon": false,
+        "x": 1107,
+        "y": 941,
+        "area": null,
+        "start_hour": "2026-10-07T03:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/df82c765-4a26-435d-b984-356102c179fb.webp"],
+        "language_code": "KO",
+        "name": "벌컥벌컥, 땡겨땡겨, I just choke on 옥토버",
+        "host_college": "제40대 독일어과 비상대책위원회",
+        "description": "🇩🇪2026 하반기 QUINQUATRIA 독일어과 부스 “벌컥벌컥, 땡겨땡겨, I just choke on 옥토버” 운영 안내🇩🇪\n\n 안녕하십니까, 한국외국어대학교 독일어과 제40대 비상대책위원회입니다.\n 2026 QUINQUATRIA : Twilight에서 10월 7일(수)-10월 8일(목) 양일간 독일어과 부스 “벌컥벌컥, 땡겨땡겨, I just choke on 옥토버”를 운영합니다. 학우 여러분들의 많은 관심과 방문 부탁드립니다!\n\n📆일시: 2026년 10월 7일(수)-10월 8일(목) 12:00-18:00\n📌장소: 한국외국어대학교 서울캠퍼스 인문과학관 앞 4번 부스\n\n❗️콘텐츠 <맥주 빨리 마시기> 참여를 희망하시는 경우, 실물 신분증(주민등록증, 운전면허증 등)을 반드시 지참해주시기 바랍니다.\n\n📢기타 문의\n제40대 비상대책위원회 위원장 이준 : 010-4893-1321"
+      },
+      {
+        "id": 36,
+        "category_id": 2,
+        "category_sequence": 405,
+        "is_polygon": false,
+        "x": 1145,
+        "y": 941,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "넌 이어과의 lemon tang",
+        "host_college": "제39대 이탈리아어과 학생회 'Onda'",
+        "description": "[2026 QUINQUATRIA : Twilight 이탈리아어과 부스 소개]\n\n하나되는 이탈리아어과 학우 여러분 안녕하십니까, 제39대 이탈리아어과 학생회 ‘Onda'입니다. \n\n2026 QUINQUATRIA : Twilight의 이탈리아어과 부스 “넌 이어과의 lemon tang”을 소개해드립니다.\n학우분들의 많은 관심과 참여 부탁드립니다. 감사합니다.\n\n🍋부스명 :  넌 이어과의 lemon tang\n\n🍋부스 위치 : 인문과학관 앞 부스\n\n🍋운영 날짜 및 시간 : 2026.10.07 (수) ~ 2026.10.08 (목) 11:00 ~ 18:00\n\n🍋식/음료 : 피아디나 샌드위치, 미니 도넛, 블루레몬에이드\n\n🍋콘텐츠 \n- 레몬 농부의 레몬 수확 대작전! : 레몬농부가 되어 눈을 가리고 레몬 수확에 성공하면 식음료 할인 \n\n- 레몬 먹고 표정참기 : 상큼한 레몬을 먹고 일정 시간 동안 표정 변화를 참으면 식음료 할인\n\n- 레몬이 들어가는 메뉴 맞추기 : 여러가지 이탈리아 음식 사진을 보고 레몬이 들어가는 메뉴를 맞추면 식음료 할인 \n\n- 소원 거는 레몬트리 : 레몬트리에 소원을 빌어봐\n\n하나의 목표와 열정으로 움직이는 이탈리아어과의 하나의 파도, 제39대 이탈리아어과 학생회 ‘Onda’🌊"
+      },
+      {
+        "id": 37,
+        "category_id": 2,
+        "category_sequence": 406,
+        "is_polygon": false,
+        "x": 1200,
+        "y": 909,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T07:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "진로취업지원센터",
+        "host_college": "대학 일자리 플러스 본부",
+        "description": ""
+      },
+      {
+        "id": 38,
+        "category_id": 2,
+        "category_sequence": 407,
+        "is_polygon": false,
+        "x": 1200,
+        "y": 877.5,
+        "area": null,
+        "start_hour": "2026-10-07T03:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/aaa7a78f-4721-4d5b-a335-804aa80e1f3d.webp"],
+        "language_code": "KO",
+        "name": "우리 아시아에서 만났는데 벌써 유럽이야",
+        "host_college": "서양어대학 계열대표단 X 아시아언어문화대학 계열대표단",
+        "description": "[서양어대학 X 아시아언어문화대학 계열대표단 연합 부스 운영 안내] \n\n\"우리 아시아에서 만났는데 벌써 유럽이야\" ✈️🌍\n\n안녕하세요! 서양어대학 X 아시아언어문화대학 계열 대표단입니다. \n\n2025년 한국외국어대학교 계열 모집 전형이 신설된 이래 처음으로, 가장 큰 두 단과대인 서양어대학과 아시아언어문화대학 계열이 <2026 QUINQUATRIA : Twilight>에서 연합 부스를 운영합니다! \n\n유럽&아시아의 맛있는 식음료 🥪🍹, 경품이 걸린 미니게임 🎲🎁, 두근두근 설레는 번호팅 💌💘까지 풍성하고 알찬 콘텐츠를 준비했습니다!\n\n학우 여러분들의 많은 관심과 방문 부탁드립니다! 💙❤️\n\n🗓️ 일시\n\n2026.10.07(수) ~ 2026.10.08(목) 12:00 ~ 18:00\n\n📍 장소\n\n한국외국어대학교 교수학습개발원 건물 앞 부스\n\n📞 문의\n\n서양어대학 계열대표단 인스타그램 @hufs_western_union\n\n아시아언어문화대학 계열대표단 인스타그램 @hufs_asia_cfl"
+      },
+      {
+        "id": 39,
+        "category_id": 2,
+        "category_sequence": 408,
+        "is_polygon": false,
+        "x": 1200.4,
+        "y": 840.6,
+        "area": null,
+        "start_hour": "2026-10-07T02:30:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/6a2ab47d-93a8-4d92-9144-59001874fa49.webp"],
+        "language_code": "KO",
+        "name": "미컴과 함께라멘 ♡",
+        "host_college": "제38대 미디어커뮤니케이션학부 학생회 '은하'",
+        "description": "안녕하십니까, 한국외대 미디어커뮤니케이션학부 제38대 학생회 ‘은하’입니다. 한국외대 가을 축제 「QUINQUATRIA: Twilight」에서 10월 7일(수) ~ 10월 8일(목) 이틀간, 부스 \"미컴과 함께라멘\"을 운영합니다. 많은 관심과 방문 부탁드립니다!\n\n일시 - 2026년 10월 7일(수) ~ 10월 8일(목)\n장소 - 한국외대 서울캠퍼스 교수학습개발원 앞 D-8\n문의 - 미디어커뮤니케이션학부 학생회 인스타그램 @hufs_mecomm"
+      },
+      {
+        "id": 40,
+        "category_id": 2,
+        "category_sequence": 409,
+        "is_polygon": false,
+        "x": 1145,
+        "y": 832,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/5fe88d7c-eb76-4349-a6b6-6e1efac3f841.webp"],
+        "language_code": "KO",
+        "name": "지난 20년간 서양어대학만 바라본 서대 외(外)길 인생인 나…(줄바꿈)드디어 서양어대학 축제 부스를 즐길 수 있는 날이 왔는데 산티아고 순례길을 걸…더보기",
+        "host_college": "제60대 서양어대학 학생회 'SPARK'",
+        "description": "🥾서양어대 순례길의 끝, 순례자 휴게소가 문을 엽니다🥾\n\n안녕하세요, 한국외국어대학교 제60대 서양어대학 학생회 'SPARK'입니다.\n지난 20년간 서양어대학만 바라본 서대 외길인생 순례자님들, 먼 길을 걸어오느라 고생 많으셨습니다!\n서양어대학 부스에서 소원을 빌고, 당신의 소원이 향하는 운명의 길을 만나보세요 🧭\n\n📅 10.07.(수) ~ 10.08.(목) 11:00 ~ 18:00\n📍 인문과학관 앞 D-9번 부스"
+      },
+      {
+        "id": 41,
+        "category_id": 2,
+        "category_sequence": 410,
+        "is_polygon": false,
+        "x": 1107,
+        "y": 832,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/b435ca44-9f75-4a41-b83f-4d4571eacd26.webp"],
+        "language_code": "KO",
+        "name": "404 (포어포) 우리 운세는 QUESTION, 404 (포어포) NEW ERA ERA ~",
+        "host_college": "제40대 포르투갈어과 학생회 'SORTE'",
+        "description": "[“404: 우리 운세는 QUESTION, 404: NEW ERA ERA” 포르투갈어과 부스 안내]\n\n단결 포르투갈어과 학우 여러분 안녕하십니까, 제40대 포르투갈어과 학생회 SORTE입니다. 🍀\n\n👾 “404, not found in the system!” 👾\n\n2026.10.07 (수) - 10.08 (목) <QUINQUATRIA> 에서 포르투갈어과 부스, \"404: 우리 운세는 QUESTION, 404: NEW ERA ERA\"를 운영합니다.\n\n시원한 무알콜 브라질 칵테일과 소떡소떡, 그리고 포춘쿠키 속 오늘의 운세와 타로카드가 기다리는 ‘좌표 밖의 부스, 포르투갈어과’로 놀러 오세요! 🍸🍡🥠\n\n🌐 일시\n2026.10.07 (수) - 10.08 (목), 양일 13:00 - 18:00\n\n🌐 장소\n한국외국어대학교 서울캠퍼스 D-10 부스\n\n🌐 메뉴\n• 백지를 내도 백 점인 소떡소떡 2종 (양념 / 뿌링)\n• Off the Wi-Fi, 마시면 브라질행 까이삐링냐\n\n🌐 콘텐츠\n• 좌표 밖의 운세: 포춘쿠키\n• 우리 신호는 Question? 답 떠 Tarô, Tarô!\n\n학우 여러분들의 많은 관심과 방문 부탁드립니다! 🇵🇹🇧🇷🍀"
+      },
+      {
+        "id": 42,
+        "category_id": 2,
+        "category_sequence": 411,
+        "is_polygon": false,
+        "x": 1068,
+        "y": 832,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/9c21564a-bc88-45fc-9064-d0c9f8e494ac.webp"],
+        "language_code": "KO",
+        "name": "북유럽 신화 주점: 외대직영점",
+        "host_college": "제43대 스칸디나비아어과 학생회 'NÄRA'",
+        "description": "⚔️ [북유럽 신화 주점 : 외대직영점] ⚔️\n\n안녕하세요, 제43대 스칸디나비아어과 학생회 NÄRA입니다.\n\n2026년 가을 QUINQUATRIA를 맞아 스칸디나비아어과 부스에서 ‘북유럽 신화 주점 : 외대직영점’을 운영합니다!\n\n바이킹과 함께 즐기는 다양한 콘텐츠부터 🌭 핫도그, 🍹 무알콜 칵테일, 🧀 치즈크래커까지 준비되어 있으니 학우 여러분의 많은 관심과 방문 부탁드립니다!\n\n📅 일시\n10월 7일(수)–8일(목) | 13:00–18:00\n\n📍 장소\nD-11 부스 (교수학습개발원 앞)\n\n북유럽 신화 속으로 떠나는 특별한 이틀,\nD-11에서 만나요! ⚔️"
+      },
+      {
+        "id": 43,
+        "category_id": 2,
+        "category_sequence": 412,
+        "is_polygon": false,
+        "x": 1033,
+        "y": 832,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/a2d1a8dc-4942-4d61-aaf5-11a55e6e4c49.webp"],
+        "language_code": "KO",
+        "name": "LE VOL AU LOUVRE : 루브르 도난사건",
+        "host_college": "제11대 프랑스어학부 학생회 'LIEN'",
+        "description": "[LE VOL AU LOUVRE : 루브르 도난사건]\n\n'루브르가 털렸다구요??'\n\n한국외국어대학교 제11대 프랑스어학부 학생회 LIEN입니다. 이번 QUINQUATRIA : Twilight에서 운영될 프랑스어학부 부스 <LE VOL AU LOUVRE : 루브르 도난 사건>에 대해 안내드립니다.\n\n📌 부스 위치 : D-12 (인문과학관 분수 앞)\n📌 일시 : 2026.10.07~10.08 양일 13:00~18:00\n📌 문의 : 프랑스어학부 부스 TF팀 팀장 변승민 (010-4594-8991)\n\n프랑스어학부 부스 오셔서 강도 잡고 가세요🕵️\n학우 여러분들의 많은 관심 부탁드립니다!"
+      },
+      {
+        "id": 78,
+        "category_id": 2,
+        "category_sequence": 413,
+        "is_polygon": false,
+        "x": 995,
+        "y": 832,
+        "area": null,
+        "start_hour": "2026-10-07T04:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": ["images/place/7c3a9920-38df-49c7-8e72-b470949ce927.webp"],
+        "language_code": "KO",
+        "name": "시베리아 EXPRESS",
+        "host_college": "제37대 노어과 학생회 'LOOP'",
+        "description": "🚂 시베리아 EXPRESS: 러시아의 맛을 싣고 달리는 특별한 식당칸 🇷🇺\n\n기차를 타고 러시아를 여행하듯,\n러시아에서 사랑받는 음식들을 만나보세요!\n\n• 일시: 2026.10.07(수) ~10.08(목) 13:00 ~ 18:00\n• 장소: 한국외대 D-13 부스\n\n🍖 샤슬릭 ШАШЛЫК\n🥞 블린 БЛИН\n🍹 소치나야 돌리나 에이드 СОЧНАЯ ДОЛИНА\n\nALL ABOARD 🧳\n\n• 문의: 노어과 카카오톡 채널 (https://bit.ly/노어과카카오톡채널)"
+      },
+      {
+        "id": 52,
+        "category_id": 3,
+        "category_sequence": 1,
+        "is_polygon": false,
+        "x": 766,
+        "y": 530,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": ["images/place/03df4f2b-d2cd-4d1f-8b82-6f00f346905e.jpg"],
+        "language_code": "KO",
+        "name": "푸드트럭",
+        "host_college": "더리얼",
+        "description": ""
+      },
+      {
+        "id": 53,
+        "category_id": 3,
+        "category_sequence": 2,
+        "is_polygon": false,
+        "x": 786,
+        "y": 530,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": ["images/place/8ec07ddd-c1c4-4465-8754-94e450a0c016.jpg"],
+        "language_code": "KO",
+        "name": "푸드트럭",
+        "host_college": "더리얼",
+        "description": ""
+      },
+      {
+        "id": 54,
+        "category_id": 3,
+        "category_sequence": 3,
+        "is_polygon": false,
+        "x": 807,
+        "y": 530,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": ["images/place/7970a69f-e53c-4f3c-9abb-7d86ecf045f9.jpg"],
+        "language_code": "KO",
+        "name": "푸드트럭",
+        "host_college": "더리얼",
+        "description": ""
+      },
+      {
+        "id": 55,
+        "category_id": 3,
+        "category_sequence": 4,
+        "is_polygon": false,
+        "x": 828,
+        "y": 530,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "푸드트럭",
+        "host_college": "더리얼",
+        "description": ""
+      },
+      {
+        "id": 56,
+        "category_id": 3,
+        "category_sequence": 5,
+        "is_polygon": false,
+        "x": 850,
+        "y": 530,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": ["images/place/d080d815-81ed-49ca-96cc-ebffa380056f.jpg"],
+        "language_code": "KO",
+        "name": "푸드트럭",
+        "host_college": "더리얼",
+        "description": ""
+      },
+      {
+        "id": 57,
+        "category_id": 3,
+        "category_sequence": 6,
+        "is_polygon": false,
+        "x": 869,
+        "y": 530,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "푸드트럭",
+        "host_college": "더리얼",
+        "description": ""
+      },
+      {
+        "id": 58,
+        "category_id": 3,
+        "category_sequence": 7,
+        "is_polygon": false,
+        "x": 890,
+        "y": 530,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": ["images/place/67b74463-50af-4fb8-a602-734bb8292112.jpg"],
+        "language_code": "KO",
+        "name": "푸드트럭",
+        "host_college": "더리얼",
+        "description": ""
+      },
+      {
+        "id": 59,
+        "category_id": 3,
+        "category_sequence": 8,
+        "is_polygon": false,
+        "x": 907,
+        "y": 530,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": ["images/place/674f93b3-5468-4be9-a922-0e77a3cd6f07.jpg"],
+        "language_code": "KO",
+        "name": "푸드트럭",
+        "host_college": "더리얼",
+        "description": ""
+      },
+      {
+        "id": 60,
+        "category_id": 3,
+        "category_sequence": 9,
+        "is_polygon": false,
+        "x": 927,
+        "y": 530,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": ["images/place/3992d6b4-15f1-4290-90d3-262afaafcdd1.jpg"],
+        "language_code": "KO",
+        "name": "푸드트럭",
+        "host_college": "더리얼",
+        "description": ""
+      },
+      {
+        "id": 61,
+        "category_id": 3,
+        "category_sequence": 10,
+        "is_polygon": false,
+        "x": 951,
+        "y": 530,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": ["images/place/6d882173-7887-48f7-825e-ec3b7d94adaa.jpg"],
+        "language_code": "KO",
+        "name": "푸드트럭",
+        "host_college": "더리얼",
+        "description": ""
+      },
+      {
+        "id": 74,
+        "category_id": 4,
+        "category_sequence": 1,
+        "is_polygon": false,
+        "x": 792.8,
+        "y": 445,
+        "area": null,
+        "start_hour": "2026-10-07T09:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "무대 의무실",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": ""
+      },
+      {
+        "id": 86,
+        "category_id": 4,
+        "category_sequence": 13,
+        "is_polygon": true,
+        "x": null,
+        "y": null,
+        "area": [
+          {
+            "x": 205.9,
+            "y": 1081.1
+          },
+          {
+            "x": 207.5,
+            "y": 985.5
+          },
+          {
+            "x": 328.3,
+            "y": 986.1
+          },
+          {
+            "x": 329.4,
+            "y": 882.8
+          },
+          {
+            "x": 416.4,
+            "y": 882.8
+          },
+          {
+            "x": 415.8,
+            "y": 986.6
+          },
+          {
+            "x": 609.3,
+            "y": 986.6
+          },
+          {
+            "x": 608.2,
+            "y": 1082.5
+          }
+        ],
+        "start_hour": "2026-10-07T00:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "국제학사 보건실 (2F)",
+        "host_college": "한국외국어대학교",
+        "description": ""
+      },
+      {
+        "id": 62,
+        "category_id": 5,
+        "category_sequence": 1,
+        "is_polygon": false,
+        "x": 494,
+        "y": 791,
+        "area": null,
+        "start_hour": "2026-10-06T15:00:00Z",
+        "end_hour": "2026-10-07T14:59:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "쓰레기통",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": ""
+      },
+      {
+        "id": 63,
+        "category_id": 5,
+        "category_sequence": 2,
+        "is_polygon": false,
+        "x": 336.3,
+        "y": 672.5,
+        "area": null,
+        "start_hour": "2026-10-06T15:00:00Z",
+        "end_hour": "2026-10-07T14:59:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "쓰레기통",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": ""
+      },
+      {
+        "id": 64,
+        "category_id": 5,
+        "category_sequence": 3,
+        "is_polygon": false,
+        "x": 314,
+        "y": 519,
+        "area": null,
+        "start_hour": "2026-10-06T15:00:00Z",
+        "end_hour": "2026-10-07T14:59:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "쓰레기통",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": ""
+      },
+      {
+        "id": 65,
+        "category_id": 5,
+        "category_sequence": 4,
+        "is_polygon": false,
+        "x": 779,
+        "y": 724,
+        "area": null,
+        "start_hour": "2026-10-06T15:00:00Z",
+        "end_hour": "2026-10-07T14:59:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "쓰레기통",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": ""
+      },
+      {
+        "id": 66,
+        "category_id": 5,
+        "category_sequence": 5,
+        "is_polygon": false,
+        "x": 921,
+        "y": 766,
+        "area": null,
+        "start_hour": "2026-10-06T15:00:00Z",
+        "end_hour": "2026-10-07T14:59:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "쓰레기통",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": ""
+      },
+      {
+        "id": 67,
+        "category_id": 5,
+        "category_sequence": 6,
+        "is_polygon": false,
+        "x": 958,
+        "y": 927,
+        "area": null,
+        "start_hour": "2026-10-06T15:00:00Z",
+        "end_hour": "2026-10-07T14:59:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "쓰레기통",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": ""
+      },
+      {
+        "id": 68,
+        "category_id": 5,
+        "category_sequence": 7,
+        "is_polygon": false,
+        "x": 578.3,
+        "y": 559,
+        "area": null,
+        "start_hour": "2026-10-06T15:00:00Z",
+        "end_hour": "2026-10-07T14:59:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "쓰레기통",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": ""
+      },
+      {
+        "id": 69,
+        "category_id": 5,
+        "category_sequence": 8,
+        "is_polygon": false,
+        "x": 753.1,
+        "y": 408.9,
+        "area": null,
+        "start_hour": "2026-10-06T15:00:00Z",
+        "end_hour": "2026-10-07T14:59:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "쓰레기통",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": ""
+      },
+      {
+        "id": 70,
+        "category_id": 5,
+        "category_sequence": 9,
+        "is_polygon": false,
+        "x": 729.8,
+        "y": 194.5,
+        "area": null,
+        "start_hour": "2026-10-06T15:00:00Z",
+        "end_hour": "2026-10-07T14:59:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "쓰레기통",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": ""
+      },
+      {
+        "id": 71,
+        "category_id": 6,
+        "category_sequence": 1,
+        "is_polygon": false,
+        "x": 817,
+        "y": 757,
+        "area": null,
+        "start_hour": "2026-10-06T15:00:00Z",
+        "end_hour": "2026-10-07T14:59:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "포토부스",
+        "host_college": "포토에이스",
+        "description": ""
+      },
+      {
+        "id": 72,
+        "category_id": 6,
+        "category_sequence": 2,
+        "is_polygon": false,
+        "x": 845,
+        "y": 757,
+        "area": null,
+        "start_hour": "2026-10-06T15:00:00Z",
+        "end_hour": "2026-10-07T14:59:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "포토부스",
+        "host_college": "포토에이스",
+        "description": ""
+      },
+      {
+        "id": 73,
+        "category_id": 6,
+        "category_sequence": 3,
+        "is_polygon": false,
+        "x": 873,
+        "y": 757,
+        "area": null,
+        "start_hour": "2026-10-06T15:00:00Z",
+        "end_hour": "2026-10-07T14:59:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "포토부스",
+        "host_college": "포토에이스",
+        "description": ""
+      },
+      {
+        "id": 80,
+        "category_id": 6,
+        "category_sequence": 4,
+        "is_polygon": false,
+        "x": 879.6,
+        "y": 581.4,
+        "area": null,
+        "start_hour": "2026-10-07T00:00:00Z",
+        "end_hour": "2026-10-07T13:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "미네르바 컴플렉스 B1 포토부스",
+        "host_college": "포토에이스",
+        "description": ""
+      },
+      {
+        "id": 91,
+        "category_id": 6,
+        "category_sequence": 5,
+        "is_polygon": false,
+        "x": 572.5,
+        "y": 823.8,
+        "area": null,
+        "start_hour": "2026-10-06T15:00:00Z",
+        "end_hour": "2026-10-07T14:59:00Z",
+        "place_image_uri": ["images/place/5171fe51-e38d-415f-9234-8bfbf12884d5.webp"],
+        "language_code": "KO",
+        "name": "에어BOO",
+        "host_college": "제60대 총학생회",
+        "description": ""
+      },
+      {
+        "id": 75,
+        "category_id": 7,
+        "category_sequence": 1,
+        "is_polygon": false,
+        "x": 740.3,
+        "y": 451.5,
+        "area": null,
+        "start_hour": "2026-10-07T06:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "무대 출입구 1",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": ""
+      },
+      {
+        "id": 76,
+        "category_id": 7,
+        "category_sequence": 2,
+        "is_polygon": false,
+        "x": 703.8,
+        "y": 204,
+        "area": null,
+        "start_hour": "2026-10-07T10:00:00Z",
+        "end_hour": "2026-10-07T14:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "무대 출입구 2",
+        "host_college": "제60대 총학생회 '선명'",
+        "description": ""
+      },
+      {
+        "id": 81,
+        "category_id": 8,
+        "category_sequence": 1,
+        "is_polygon": true,
+        "x": null,
+        "y": null,
+        "area": [
+          {
+            "x": 762.5,
+            "y": 565.8
+          },
+          {
+            "x": 821.9,
+            "y": 635
+          },
+          {
+            "x": 886.2,
+            "y": 567.4
+          }
+        ],
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T08:00:00Z",
+        "place_image_uri": [
+          "images/place/0c22e1e0-2205-4815-a52f-277dea0589d6.webp",
+          "images/place/edb92e0c-3e19-48e2-a426-5cb65ad27868.webp",
+          "images/place/bfc82de5-64bc-44fb-aa71-d1ee90c4c3c0.webp",
+          "images/place/9cbd4a0e-f711-43ce-9ac3-8c5f93e48251.webp"
+        ],
+        "language_code": "KO",
+        "name": "팔찌 수령 장소",
+        "host_college": "제60대 총학생회 선명",
+        "description": "[🌅2026 QUINQUATRIA : Twilight 외대인 팔찌 수령 방법 안내🌅]\n\n안녕하십니까, 학우 여러분.\n한국외국어대학교 서울캠퍼스 제60대 총학생회 ‘선명’입니다.\n\n학우분들의 원활한 무대 입장 및 관람을 위하여\n이번 대동제에서는 외대인 팔찌 제도을 운영합니다.\n\n📌 외대인 팔찌 수령 시간\n- 서울캠퍼스 학부생 : 11:00 ~ 무대 종료 시\n- 기타 외대인 : 15:00 ~ 무대 종료 시\n\n📌 외대인 팔찌 수령 장소 : 미네르바 컴플렉스(오바마홀) 지하 2층 수령 창구\n\n자세한 사항은 공지사항 페이지를 참고해주시면 감사하겠습니다.\n\n감사합니다.\n\n💡 문의 사항\n📌 총학생회 카카오톡 채널 : hufsstudent\n📌 총학생회 이메일 : hufsstudent60@gmail.com"
+      },
+      {
+        "id": 88,
+        "category_id": 9,
+        "category_sequence": 1,
+        "is_polygon": false,
+        "x": 592.3,
+        "y": 500.3,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T09:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "커피차",
+        "host_college": "모두닥",
+        "description": "10월 8일(목) 11:00 ~ 18:00"
+      },
+      {
+        "id": 92,
+        "category_id": 9,
+        "category_sequence": 55,
+        "is_polygon": false,
+        "x": 354.4,
+        "y": 581.6,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T08:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "주류 판매 부스",
+        "host_college": "(주)엠케이펍",
+        "description": ""
+      },
+      {
+        "id": 8,
+        "category_id": 9,
+        "category_sequence": 108,
+        "is_polygon": false,
+        "x": 369,
+        "y": 763,
+        "area": null,
+        "start_hour": "2026-10-07T02:00:00Z",
+        "end_hour": "2026-10-07T13:00:00Z",
+        "place_image_uri": ["images/place/e371b7ae-da62-48c4-9c22-d6b2d59512f8.webp"],
+        "language_code": "KO",
+        "name": "사주타로 부스",
+        "host_college": "신세계 사주타로",
+        "description": ""
+      },
+      {
+        "id": 19,
+        "category_id": 9,
+        "category_sequence": 210,
+        "is_polygon": false,
+        "x": 503,
+        "y": 535,
+        "area": null,
+        "start_hour": "2026-10-07T01:00:00Z",
+        "end_hour": "2026-10-07T07:00:00Z",
+        "place_image_uri": null,
+        "language_code": "KO",
+        "name": "프로모션 부스",
+        "host_college": "에버랜드",
+        "description": "10월 8일(목) 11:00 ~ 18:00"
+      }
+    ],
+    "page": 1,
+    "size": 100,
+    "total": 86
+  }
+}

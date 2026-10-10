@@ -18,8 +18,8 @@ export async function generateStaticParams() {
   return notices.map(({ id }) => ({ id: String(id) }))
 }
 
-/** 빌드 뒤에 올라온 공지도 첫 요청 때 굽고 캐시한다. 재검증은 이미 있는 페이지만 다시 굽기 때문이다 */
-export const dynamicParams = true
+/** 데이터를 떠 둬서 빌드 뒤에 새 id 가 생기지 않으니, 목록 밖 id 는 굽지 않고 404 로 보낸다 */
+export const dynamicParams = false
 
 /** 공유 카드에 `[공지]`(상단 고정이면 `[중요]`) 제목과 본문 앞부분을, 사진이 있으면 첫 장을 싣는다 */
 export async function generateMetadata(
