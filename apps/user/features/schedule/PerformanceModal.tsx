@@ -8,7 +8,7 @@ import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
 import { useLocale } from '@/shared/i18n/useLocale'
 import { Photo } from '@/shared/photo/Photo'
-import placeholderImage from './images/performance-placeholder.png'
+import placeholderImage from './images/performance-placeholder.webp'
 import { MODAL_IMAGE_SIZES, type Performance } from './performance'
 
 // 타임라인 카드와 같은 종류별 색

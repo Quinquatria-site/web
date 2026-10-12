@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import type { CSSProperties } from 'react'
 import { cinzel } from '@/shared/fonts'
-import logo from './images/logo.png'
+import logo from './images/logo.webp'
 
 /** 로고가 다 펼쳐지는 데 걸리는 초. landing-title.css 의 title-reveal 길이와 같다 */
 export const TITLE_REVEAL_SECONDS = 2

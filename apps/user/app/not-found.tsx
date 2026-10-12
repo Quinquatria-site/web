@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { LightBackground } from '@/shared/background/LightBackground'
 import { pretendard } from '@/shared/fonts'
-import lostMap from './lost-map.png'
+import lostMap from './lost-map.webp'
 import '@/styles/index.css'
 
 /** 앱 전체 404. 루트 레이아웃이 언어 칸 아래라 문서를 통째로 그리고, 주소 언어와 상관없이 영어 한 벌로 둔다 */

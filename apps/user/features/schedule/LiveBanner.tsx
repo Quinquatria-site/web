@@ -3,7 +3,7 @@ import { heirOfLight } from '@/shared/fonts/heir-of-light'
 import { getLocale } from '@/shared/i18n/get-locale'
 import { contentLang } from '@/shared/i18n/locales'
 import { getMessages } from '@/shared/i18n/messages'
-import bannerAthena from './images/banner-athena.png'
+import bannerAthena from './images/banner-athena.webp'
 import type { Performance } from './performance'
 import { performanceAnchorId } from './Timeline'
 

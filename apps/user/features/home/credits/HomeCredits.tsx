@@ -5,7 +5,7 @@ import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages } from '@/shared/i18n/messages'
 import { localePath } from '@/shared/i18n/paths'
 import { CreditGroup } from './CreditGroup'
-import sunsetSky from './images/sunset-sky.jpg'
+import sunsetSky from './images/sunset-sky.webp'
 
 // 피그마에서 한 줄에 두 명씩, 사이에 점을 두고 마지막 한 명은 홀로 둔다
 const MAKERS = [['Hwang Junho', 'Kim Jiyong'], ['Lim Jaejoon', 'Kim Taeheon'], ['Wi Soomin']]
