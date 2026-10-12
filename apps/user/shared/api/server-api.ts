@@ -17,7 +17,7 @@ type GetOptions = {
 // 축제가 끝나 백엔드를 내리기 전에 언어별 응답을 `경로?쿼리` 로 떠 둔 것
 const SNAPSHOT: Record<LanguageCode, Record<string, unknown>> = { KO, EN, CHN }
 
-/** 떠 둔 응답에 없는 경로거나 Customer API 가 오류 상태로 답했을 때. 호출하는 쪽이 status 로 404 같은 경우를 가려 쓴다 */
+/** 떠 둔 응답에 없는 경로. API 가 404 로 답하던 자리라 호출하는 쪽이 status 로 가려 쓴다 */
 export class ApiError extends Error {
   status: number
 
@@ -35,46 +35,6 @@ export async function serverApi<T>(path: string, { query, source }: GetOptions =
   const body = SNAPSHOT[language][search ? `${path}?${search}` : path]
   if (body === undefined) throw new ApiError(path, 404)
   return body as T
-}
-
-// 첫 요청이 실패하면 이만큼 더 시도하고, 시도 사이에 이만큼 쉰다
-const RETRY_COUNT = 2
-const RETRY_DELAY_MS = 1000
-
-// 백엔드가 재검증 호출을 빠뜨려도 이 시간 뒤 첫 방문 때 다시 굽는다
-const REVALIDATE_SECONDS = 1800
-
-// 주소가 없으면 빈 화면을 굽지 않고 빌드를 멈춘다
-function apiBaseUrl() {
-  const base = process.env.API_BASE_URL
-  if (!base) throw new Error('API_BASE_URL 환경변수가 없습니다')
-  return base
-}
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
-
-/** 축제 뒤에도 운영하는 분실물만 쓰는 Customer API GET. 페이지 언어로 받고, 5xx·네트워크 오류는 다시 시도하며, 끝내 실패하면 던진다 */
-export async function liveApi<T>(path: string, { tags, query, source }: GetOptions): Promise<T> {
-  const language = API_LANGUAGE[source ? SOURCE_LOCALE : await getLocale()]
-  const url = new URL(`/api/v1${path}`, apiBaseUrl())
-  url.search = new URLSearchParams({ ...query, language_code: language }).toString()
-
-  for (let attempt = 0; ; attempt++) {
-    const last = attempt === RETRY_COUNT
-    let res: Response
-    try {
-      res = await fetch(url, { next: { tags, revalidate: REVALIDATE_SECONDS } })
-    } catch (error) {
-      // 연결 자체가 끊긴 경우. 잠깐 깨어나는 서버라 다시 시도할 만하다
-      if (last) throw new Error(`GET ${path} 네트워크 오류`, { cause: error })
-      await sleep(RETRY_DELAY_MS)
-      continue
-    }
-    if (res.ok) return res.json() as Promise<T>
-    // 4xx 는 요청이 틀린 것이라 다시 보내도 같다
-    if (res.status < 500 || last) throw new ApiError(path, res.status)
-    await sleep(RETRY_DELAY_MS)
-  }
 }
 
 // 백엔드를 내리기 전 구현. 기록으로 남겨 둔다
