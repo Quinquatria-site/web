@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import duskSky from './images/dusk-sky.jpg'
+import duskSky from './images/dusk-sky.webp'
 
 /** 어두운 탭 페이지 바탕. 진한 고동색 위 화면 아래에 시안의 노을 하늘을 깔아 레이아웃의 노을 물결을 덮는다 */
 export function DuskBackground({ skyOpacity = 1 }: { skyOpacity?: number }) {

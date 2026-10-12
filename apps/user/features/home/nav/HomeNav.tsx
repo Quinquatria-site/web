@@ -2,12 +2,12 @@ import { getLocale } from '@/shared/i18n/get-locale'
 import { getMessages, type Messages } from '@/shared/i18n/messages'
 import { localePath } from '@/shared/i18n/paths'
 import { HomeNavCard, type HomeNavItem } from './HomeNavCard'
-import goods from './images/goods.png'
-import lostItems from './images/lost-items.png'
-import map from './images/map.png'
-import notices from './images/notices.png'
-import online from './images/online.png'
-import timetable from './images/timetable.png'
+import goods from './images/goods.webp'
+import lostItems from './images/lost-items.webp'
+import map from './images/map.webp'
+import notices from './images/notices.webp'
+import online from './images/online.webp'
+import timetable from './images/timetable.webp'
 
 // 그림마다 피그마에서 크기와 오른쪽 여백이 조금씩 달라 카드별로 옮겨 둔다
 const ITEMS: (Omit<HomeNavItem, 'title' | 'description'> & {
