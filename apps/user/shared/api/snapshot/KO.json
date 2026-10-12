@@ -69,6 +69,73 @@
     "size": 100,
     "total": 9
   },
+  "/lost-items/7": {
+    "id": 7,
+    "image_url": "images/lost-item/f3e62c97-6eab-4360-87a8-986f797eae00.jpg",
+    "is_returned": false,
+    "created_at": "2026-10-07T05:28:00.014824Z",
+    "language_code": "KO",
+    "title": "갤럭시 버즈 왼쪽 유닛",
+    "description": "",
+    "found_location": "본관앞 경사로"
+  },
+  "/lost-items/8": {
+    "id": 8,
+    "image_url": "images/lost-item/a05d96fe-eef3-4bd8-b498-af3a94904f5f.jpg",
+    "is_returned": false,
+    "created_at": "2026-10-07T06:48:27.019456Z",
+    "language_code": "KO",
+    "title": "검은색 카드지갑",
+    "description": "외국 신분증 및 기숙사 카드 존재합니다.",
+    "found_location": "중앙부스 근처"
+  },
+  "/lost-items/9": {
+    "id": 9,
+    "image_url": "images/lost-item/1c48b9e1-0e71-4d8a-ab8f-9eaa1f874794.jpg",
+    "is_returned": false,
+    "created_at": "2026-10-07T08:31:24.752852Z",
+    "language_code": "KO",
+    "title": "아이폰",
+    "description": "",
+    "found_location": "외국어연수평가원 인근"
+  },
+  "/lost-items?size=100": {
+    "items": [
+      {
+        "id": 9,
+        "image_url": "images/lost-item/1c48b9e1-0e71-4d8a-ab8f-9eaa1f874794.jpg",
+        "is_returned": false,
+        "created_at": "2026-10-07T08:31:24.752852Z",
+        "language_code": "KO",
+        "title": "아이폰",
+        "description": "",
+        "found_location": "외국어연수평가원 인근"
+      },
+      {
+        "id": 8,
+        "image_url": "images/lost-item/a05d96fe-eef3-4bd8-b498-af3a94904f5f.jpg",
+        "is_returned": false,
+        "created_at": "2026-10-07T06:48:27.019456Z",
+        "language_code": "KO",
+        "title": "검은색 카드지갑",
+        "description": "외국 신분증 및 기숙사 카드 존재합니다.",
+        "found_location": "중앙부스 근처"
+      },
+      {
+        "id": 7,
+        "image_url": "images/lost-item/f3e62c97-6eab-4360-87a8-986f797eae00.jpg",
+        "is_returned": false,
+        "created_at": "2026-10-07T05:28:00.014824Z",
+        "language_code": "KO",
+        "title": "갤럭시 버즈 왼쪽 유닛",
+        "description": "",
+        "found_location": "본관앞 경사로"
+      }
+    ],
+    "page": 1,
+    "size": 100,
+    "total": 3
+  },
   "/notices/10": {
     "id": 10,
     "type": "PERMANENT",
