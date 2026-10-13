@@ -69,12 +69,6 @@
     "size": 100,
     "total": 9
   },
-  "/lost-items?size=100": {
-    "items": [],
-    "page": 1,
-    "size": 100,
-    "total": 0
-  },
   "/notices/10": {
     "id": 10,
     "type": "PERMANENT",

@@ -43,10 +43,7 @@ export function DevelopersShow({
       className={`${cinzel.variable} ${paperlogy.variable} relative -mb-(--dock-space) h-[calc(100svh-env(safe-area-inset-top))] overflow-hidden text-text-inverse`}
     >
       {title}
-      <div
-        ref={stageRef}
-        className="absolute inset-x-0 top-(--page-title-height) bottom-0"
-      >
+      <div ref={stageRef} className="absolute inset-x-0 top-(--page-title-height) bottom-0">
         <Constellation
           names={members.map((member) => member.name)}
           positions={members.map((member) => member.position)}
