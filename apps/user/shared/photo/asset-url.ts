@@ -4,17 +4,18 @@ export function assetUrl(src: string): string {
   return `/${src}`
 }
 
-/** 분실물 사진이 있는 S3 버킷. 분실물은 축제 뒤에도 올라와 public 으로 옮기지 않고 버킷에서 받는다 */
-export const REMOTE_ASSET_BASE = (
-  process.env.NEXT_PUBLIC_ASSET_BASE?.trim() ||
-  'https://quinquatria-544611252443-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com'
-).replace(/\/+$/, '')
-
-/** S3 key → 버킷 주소. 이미 주소이거나 `/` 로 시작하면 그대로 둔다 */
-export function remoteAssetUrl(src: string): string {
-  if (src.startsWith('/') || /^https?:\/\//.test(src)) return src
-  return `${REMOTE_ASSET_BASE}/${src}`
-}
+// 분실물 사진만 S3 에서 받던 구현. 기록으로 남겨 둔다
+// /** 분실물 사진이 있는 S3 버킷. 분실물은 축제 뒤에도 올라와 public 으로 옮기지 않고 버킷에서 받는다 */
+// export const REMOTE_ASSET_BASE = (
+//   process.env.NEXT_PUBLIC_ASSET_BASE?.trim() ||
+//   'https://quinquatria-544611252443-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com'
+// ).replace(/\/+$/, '')
+//
+// /** S3 key → 버킷 주소. 이미 주소이거나 `/` 로 시작하면 그대로 둔다 */
+// export function remoteAssetUrl(src: string): string {
+//   if (src.startsWith('/') || /^https?:\/\//.test(src)) return src
+//   return `${REMOTE_ASSET_BASE}/${src}`
+// }
 
 // S3 버킷 주소를 붙이던 구현. 기록으로 남겨 둔다
 // /**

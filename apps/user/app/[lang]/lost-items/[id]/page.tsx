@@ -18,8 +18,12 @@ export async function generateStaticParams() {
   return items.map(({ id }) => ({ id: String(id) }))
 }
 
-/** 빌드 뒤에 올라온 분실물도 첫 요청 때 굽고 캐시한다. 재검증은 이미 있는 페이지만 다시 굽기 때문이다 */
-export const dynamicParams = true
+/** 데이터를 떠 둬서 빌드 뒤에 새 id 가 생기지 않으니, 목록 밖 id 는 굽지 않고 404 로 보낸다 */
+export const dynamicParams = false
+
+// 분실물을 백엔드에서 받던 때 설정. 기록으로 남겨 둔다
+// /** 빌드 뒤에 올라온 분실물도 첫 요청 때 굽고 캐시한다. 재검증은 이미 있는 페이지만 다시 굽기 때문이다 */
+// export const dynamicParams = true
 
 /** 공유 카드에 `[분실물] 제목`, 습득 장소·반환 여부·설명, 사진을 싣는다 */
 export async function generateMetadata(

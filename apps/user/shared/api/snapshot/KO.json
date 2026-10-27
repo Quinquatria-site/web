@@ -69,6 +69,493 @@
     "size": 100,
     "total": 9
   },
+  "/lost-items/10": {
+    "id": 10,
+    "image_url": "images/lost-item/e551c7a6-a2ae-419a-bfa1-86e54f5564c8.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:40:45.142052+09:00",
+    "language_code": "KO",
+    "title": "흰색 무선 이어폰 및 케이스",
+    "description": "양쪽 유닛 있음",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/11": {
+    "id": 11,
+    "image_url": "images/lost-item/f3bf7841-1e3f-4dab-8461-c3114ff9d3fd.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:43:20.464907+09:00",
+    "language_code": "KO",
+    "title": "연주황색 무선 이어폰 및 케이스",
+    "description": "양쪽 유닛 있음",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/12": {
+    "id": 12,
+    "image_url": "images/lost-item/3edf47bd-99a7-40a7-9e51-8044d2a41264.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:45:49.141539+09:00",
+    "language_code": "KO",
+    "title": "VUSE GO 전자담배",
+    "description": "",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/13": {
+    "id": 13,
+    "image_url": "images/lost-item/6f3b290d-9edd-4037-8e05-6c450a426965.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:50:19.135030+09:00",
+    "language_code": "KO",
+    "title": "은색 전자담배",
+    "description": "우측 하단 'APEX' 글씨 각인되어있음",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/14": {
+    "id": 14,
+    "image_url": "images/lost-item/e7893dd5-4ff5-48f2-8bb4-f2233ff31d0c.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:51:39.637733+09:00",
+    "language_code": "KO",
+    "title": "ELFBAR 전자담배",
+    "description": "후면 'Ice King PINEAPPLE ICE' 글씨 기입",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/15": {
+    "id": 15,
+    "image_url": "images/lost-item/0a70f06f-4329-45e7-b655-3a329a4ba9b5.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:55:40.381053+09:00",
+    "language_code": "KO",
+    "title": "노란색 전자담배",
+    "description": "측면 'GUAVA PASSION FRUIT' 글씨 기입됨",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/16": {
+    "id": 16,
+    "image_url": "images/lost-item/ebc02594-f4d1-471b-a613-a2be8c9f4494.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:57:05.711859+09:00",
+    "language_code": "KO",
+    "title": "fwee 틴트",
+    "description": "",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/17": {
+    "id": 17,
+    "image_url": "images/lost-item/0d358e5b-aa04-4ac3-bbd7-15cc835c9504.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:59:05.564557+09:00",
+    "language_code": "KO",
+    "title": "입생로랑 립스틱",
+    "description": "상단 'GOOD LUCK' 글씨 각인됨",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/18": {
+    "id": 18,
+    "image_url": "images/lost-item/6d8bdcaa-b55a-4e61-81e4-382055206e52.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:59:51.491006+09:00",
+    "language_code": "KO",
+    "title": "샤넬 향수",
+    "description": "후면 '샹스 오 땅드르 오 드 뚜왈렛' 글씨 기입됨",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/19": {
+    "id": 19,
+    "image_url": "images/lost-item/2492be51-3be3-4359-9b95-7f64cf570679.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:02:09.018991+09:00",
+    "language_code": "KO",
+    "title": "고양이 문양 카드 지갑",
+    "description": "지갑 내 경희고등학교 김*윤 학생증 및 카드 3종, 5000원 들어 있음.",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/20": {
+    "id": 20,
+    "image_url": "images/lost-item/686e574e-cc86-4bef-a857-44fae48a4a57.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:05:54.228418+09:00",
+    "language_code": "KO",
+    "title": "갈색 지갑",
+    "description": "지갑 내 이*승(주민등록번호 앞자리 981101) 자동차운전면허증 및 카드 4종, 현금 25,000원 들어 있음.",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/21": {
+    "id": 21,
+    "image_url": "images/lost-item/d2701bd0-4425-498e-96a8-f51bf5599cf3.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:07:54.741432+09:00",
+    "language_code": "KO",
+    "title": "검은색 지갑",
+    "description": "The wallet contains six cards, including one bearing the name THIAGO O P*******, and an ID photo.",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/22": {
+    "id": 22,
+    "image_url": "images/lost-item/da26c329-7df4-468e-8c6a-e319197fcd38.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:09:43.081255+09:00",
+    "language_code": "KO",
+    "title": "Canon 카메라 및 검은색 케이스",
+    "description": "카메라 전면 'DIGITAL IXUS55' 적혀 있음.",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/23": {
+    "id": 23,
+    "image_url": "images/lost-item/5dff4041-96cd-4c1a-8167-816748234eb3.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:10:11.139710+09:00",
+    "language_code": "KO",
+    "title": "검은색 인형",
+    "description": "",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/24": {
+    "id": 24,
+    "image_url": "images/lost-item/7dff38a6-64a5-4713-8978-d9c513e88a78.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:10:26.308478+09:00",
+    "language_code": "KO",
+    "title": "흰색 인형",
+    "description": "",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/25": {
+    "id": 25,
+    "image_url": "images/lost-item/3f76f4d6-c218-4e79-916b-5e8443c76b95.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:11:21.905462+09:00",
+    "language_code": "KO",
+    "title": "흰색 빗",
+    "description": "",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/26": {
+    "id": 26,
+    "image_url": "images/lost-item/980c1f67-cf3e-4370-a353-ad27ab59cada.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:11:54.032626+09:00",
+    "language_code": "KO",
+    "title": "흰색 빗(접이식)",
+    "description": "",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/27": {
+    "id": 27,
+    "image_url": "images/lost-item/23c39f1a-8213-4ead-b01d-1ca6a52f2098.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:12:42.140909+09:00",
+    "language_code": "KO",
+    "title": "HUFS FITNESS 카드",
+    "description": "카드 뒷면 이*린 이름 기입됨",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/4": {
+    "id": 4,
+    "image_url": "images/lost-item/f1947b53-da17-4184-9a3c-28b4a525a51d.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:34:47.143429+09:00",
+    "language_code": "KO",
+    "title": "KB국민카드(CHOI *** JI)",
+    "description": "",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/5": {
+    "id": 5,
+    "image_url": "images/lost-item/65c37c7e-9924-42eb-b9ba-5311de082cfe.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:35:17.396551+09:00",
+    "language_code": "KO",
+    "title": "토스뱅크카드(LEE *** WOO)",
+    "description": "",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/6": {
+    "id": 6,
+    "image_url": "images/lost-item/2228af64-dd8f-4749-9dcb-f6b11049b80e.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:35:42.948916+09:00",
+    "language_code": "KO",
+    "title": "삼성카드(PARK ** YEON)",
+    "description": "",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/7": {
+    "id": 7,
+    "image_url": "images/lost-item/ef3ec263-11eb-407a-81c1-e5f01eeaacbc.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:36:20.952511+09:00",
+    "language_code": "KO",
+    "title": "신한카드(SEO **** MIN)",
+    "description": "",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/8": {
+    "id": 8,
+    "image_url": "images/lost-item/b3d55699-9424-4d65-9d9a-8bd21662f318.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:37:51.658433+09:00",
+    "language_code": "KO",
+    "title": "흰색 무선 이어폰 유닛(좌측)",
+    "description": "",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items/9": {
+    "id": 9,
+    "image_url": "images/lost-item/41945d88-1099-41f6-8b8a-9f941b7c6550.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:38:32.345008+09:00",
+    "language_code": "KO",
+    "title": "흰색 무선 이어폰 케이스",
+    "description": "유닛 없음",
+    "found_location": "총학생회 중앙 부스"
+  },
+  "/lost-items?size=100": {
+    "items": [
+      {
+        "id": 27,
+        "image_url": "images/lost-item/23c39f1a-8213-4ead-b01d-1ca6a52f2098.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:12:42.140909+09:00",
+        "language_code": "KO",
+        "title": "HUFS FITNESS 카드",
+        "description": "카드 뒷면 이*린 이름 기입됨",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 26,
+        "image_url": "images/lost-item/980c1f67-cf3e-4370-a353-ad27ab59cada.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:11:54.032626+09:00",
+        "language_code": "KO",
+        "title": "흰색 빗(접이식)",
+        "description": "",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 25,
+        "image_url": "images/lost-item/3f76f4d6-c218-4e79-916b-5e8443c76b95.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:11:21.905462+09:00",
+        "language_code": "KO",
+        "title": "흰색 빗",
+        "description": "",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 24,
+        "image_url": "images/lost-item/7dff38a6-64a5-4713-8978-d9c513e88a78.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:10:26.308478+09:00",
+        "language_code": "KO",
+        "title": "흰색 인형",
+        "description": "",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 23,
+        "image_url": "images/lost-item/5dff4041-96cd-4c1a-8167-816748234eb3.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:10:11.139710+09:00",
+        "language_code": "KO",
+        "title": "검은색 인형",
+        "description": "",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 22,
+        "image_url": "images/lost-item/da26c329-7df4-468e-8c6a-e319197fcd38.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:09:43.081255+09:00",
+        "language_code": "KO",
+        "title": "Canon 카메라 및 검은색 케이스",
+        "description": "카메라 전면 'DIGITAL IXUS55' 적혀 있음.",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 21,
+        "image_url": "images/lost-item/d2701bd0-4425-498e-96a8-f51bf5599cf3.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:07:54.741432+09:00",
+        "language_code": "KO",
+        "title": "검은색 지갑",
+        "description": "The wallet contains six cards, including one bearing the name THIAGO O P*******, and an ID photo.",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 20,
+        "image_url": "images/lost-item/686e574e-cc86-4bef-a857-44fae48a4a57.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:05:54.228418+09:00",
+        "language_code": "KO",
+        "title": "갈색 지갑",
+        "description": "지갑 내 이*승(주민등록번호 앞자리 981101) 자동차운전면허증 및 카드 4종, 현금 25,000원 들어 있음.",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 19,
+        "image_url": "images/lost-item/2492be51-3be3-4359-9b95-7f64cf570679.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:02:09.018991+09:00",
+        "language_code": "KO",
+        "title": "고양이 문양 카드 지갑",
+        "description": "지갑 내 경희고등학교 김*윤 학생증 및 카드 3종, 5000원 들어 있음.",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 18,
+        "image_url": "images/lost-item/6d8bdcaa-b55a-4e61-81e4-382055206e52.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:59:51.491006+09:00",
+        "language_code": "KO",
+        "title": "샤넬 향수",
+        "description": "후면 '샹스 오 땅드르 오 드 뚜왈렛' 글씨 기입됨",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 17,
+        "image_url": "images/lost-item/0d358e5b-aa04-4ac3-bbd7-15cc835c9504.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:59:05.564557+09:00",
+        "language_code": "KO",
+        "title": "입생로랑 립스틱",
+        "description": "상단 'GOOD LUCK' 글씨 각인됨",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 16,
+        "image_url": "images/lost-item/ebc02594-f4d1-471b-a613-a2be8c9f4494.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:57:05.711859+09:00",
+        "language_code": "KO",
+        "title": "fwee 틴트",
+        "description": "",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 15,
+        "image_url": "images/lost-item/0a70f06f-4329-45e7-b655-3a329a4ba9b5.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:55:40.381053+09:00",
+        "language_code": "KO",
+        "title": "노란색 전자담배",
+        "description": "측면 'GUAVA PASSION FRUIT' 글씨 기입됨",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 14,
+        "image_url": "images/lost-item/e7893dd5-4ff5-48f2-8bb4-f2233ff31d0c.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:51:39.637733+09:00",
+        "language_code": "KO",
+        "title": "ELFBAR 전자담배",
+        "description": "후면 'Ice King PINEAPPLE ICE' 글씨 기입",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 13,
+        "image_url": "images/lost-item/6f3b290d-9edd-4037-8e05-6c450a426965.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:50:19.135030+09:00",
+        "language_code": "KO",
+        "title": "은색 전자담배",
+        "description": "우측 하단 'APEX' 글씨 각인되어있음",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 12,
+        "image_url": "images/lost-item/3edf47bd-99a7-40a7-9e51-8044d2a41264.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:45:49.141539+09:00",
+        "language_code": "KO",
+        "title": "VUSE GO 전자담배",
+        "description": "",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 11,
+        "image_url": "images/lost-item/f3bf7841-1e3f-4dab-8461-c3114ff9d3fd.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:43:20.464907+09:00",
+        "language_code": "KO",
+        "title": "연주황색 무선 이어폰 및 케이스",
+        "description": "양쪽 유닛 있음",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 10,
+        "image_url": "images/lost-item/e551c7a6-a2ae-419a-bfa1-86e54f5564c8.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:40:45.142052+09:00",
+        "language_code": "KO",
+        "title": "흰색 무선 이어폰 및 케이스",
+        "description": "양쪽 유닛 있음",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 9,
+        "image_url": "images/lost-item/41945d88-1099-41f6-8b8a-9f941b7c6550.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:38:32.345008+09:00",
+        "language_code": "KO",
+        "title": "흰색 무선 이어폰 케이스",
+        "description": "유닛 없음",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 8,
+        "image_url": "images/lost-item/b3d55699-9424-4d65-9d9a-8bd21662f318.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:37:51.658433+09:00",
+        "language_code": "KO",
+        "title": "흰색 무선 이어폰 유닛(좌측)",
+        "description": "",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 7,
+        "image_url": "images/lost-item/ef3ec263-11eb-407a-81c1-e5f01eeaacbc.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:36:20.952511+09:00",
+        "language_code": "KO",
+        "title": "신한카드(SEO **** MIN)",
+        "description": "",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 6,
+        "image_url": "images/lost-item/2228af64-dd8f-4749-9dcb-f6b11049b80e.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:35:42.948916+09:00",
+        "language_code": "KO",
+        "title": "삼성카드(PARK ** YEON)",
+        "description": "",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 5,
+        "image_url": "images/lost-item/65c37c7e-9924-42eb-b9ba-5311de082cfe.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:35:17.396551+09:00",
+        "language_code": "KO",
+        "title": "토스뱅크카드(LEE *** WOO)",
+        "description": "",
+        "found_location": "총학생회 중앙 부스"
+      },
+      {
+        "id": 4,
+        "image_url": "images/lost-item/f1947b53-da17-4184-9a3c-28b4a525a51d.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:34:47.143429+09:00",
+        "language_code": "KO",
+        "title": "KB국민카드(CHOI *** JI)",
+        "description": "",
+        "found_location": "총학생회 중앙 부스"
+      }
+    ],
+    "page": 1,
+    "size": 100,
+    "total": 24
+  },
   "/notices/10": {
     "id": 10,
     "type": "PERMANENT",

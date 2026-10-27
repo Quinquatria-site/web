@@ -69,6 +69,313 @@
     "size": 100,
     "total": 9
   },
+  "/lost-items/10": {
+    "id": 10,
+    "image_url": "images/lost-item/e551c7a6-a2ae-419a-bfa1-86e54f5564c8.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:40:45.142052+09:00",
+    "language_code": "EN",
+    "title": "White wireless earbuds with charging case",
+    "description": "Both left and right earbuds included",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items/11": {
+    "id": 11,
+    "image_url": "images/lost-item/f3bf7841-1e3f-4dab-8461-c3114ff9d3fd.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:43:20.464907+09:00",
+    "language_code": "EN",
+    "title": "Light orange wireless earbuds with charging case",
+    "description": "Both left and right earbuds included",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items/13": {
+    "id": 13,
+    "image_url": "images/lost-item/6f3b290d-9edd-4037-8e05-6c450a426965.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:50:19.135030+09:00",
+    "language_code": "EN",
+    "title": "Silver vape",
+    "description": "'APEX' printed on the bottom right",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items/14": {
+    "id": 14,
+    "image_url": "images/lost-item/e7893dd5-4ff5-48f2-8bb4-f2233ff31d0c.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:51:39.637733+09:00",
+    "language_code": "EN",
+    "title": "ELFBAR vape",
+    "description": "'Ice King PINEAPPLE ICE' printed on the behind",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items/15": {
+    "id": 15,
+    "image_url": "images/lost-item/0a70f06f-4329-45e7-b655-3a329a4ba9b5.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:55:40.381053+09:00",
+    "language_code": "EN",
+    "title": "Yellow vape",
+    "description": "\"GUAVA PASSION FRUIT\" are printed on the side.",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items/16": {
+    "id": 16,
+    "image_url": "images/lost-item/ebc02594-f4d1-471b-a613-a2be8c9f4494.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:57:05.711859+09:00",
+    "language_code": "EN",
+    "title": "FWEE lip tint",
+    "description": "",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items/17": {
+    "id": 17,
+    "image_url": "images/lost-item/0d358e5b-aa04-4ac3-bbd7-15cc835c9504.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:59:05.564557+09:00",
+    "language_code": "EN",
+    "title": "Yves Saint Laurent lip stick",
+    "description": "",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items/21": {
+    "id": 21,
+    "image_url": "images/lost-item/d2701bd0-4425-498e-96a8-f51bf5599cf3.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:07:54.741432+09:00",
+    "language_code": "EN",
+    "title": "black wallet",
+    "description": "",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items/22": {
+    "id": 22,
+    "image_url": "images/lost-item/da26c329-7df4-468e-8c6a-e319197fcd38.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:09:43.081255+09:00",
+    "language_code": "EN",
+    "title": "Canon camera and black case",
+    "description": "'DIGITAL IXUS55' is inscribed on the front of the camera.",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items/23": {
+    "id": 23,
+    "image_url": "images/lost-item/5dff4041-96cd-4c1a-8167-816748234eb3.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:10:11.139710+09:00",
+    "language_code": "EN",
+    "title": "black doll",
+    "description": "",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items/24": {
+    "id": 24,
+    "image_url": "images/lost-item/7dff38a6-64a5-4713-8978-d9c513e88a78.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:10:26.308478+09:00",
+    "language_code": "EN",
+    "title": "white doll",
+    "description": "",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items/25": {
+    "id": 25,
+    "image_url": "images/lost-item/3f76f4d6-c218-4e79-916b-5e8443c76b95.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:11:21.905462+09:00",
+    "language_code": "EN",
+    "title": "white comb",
+    "description": "",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items/26": {
+    "id": 26,
+    "image_url": "images/lost-item/980c1f67-cf3e-4370-a353-ad27ab59cada.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T20:11:54.032626+09:00",
+    "language_code": "EN",
+    "title": "white comb(foldable)",
+    "description": "",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items/8": {
+    "id": 8,
+    "image_url": "images/lost-item/b3d55699-9424-4d65-9d9a-8bd21662f318.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:37:51.658433+09:00",
+    "language_code": "EN",
+    "title": "White wireless earbud (left)",
+    "description": "",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items/9": {
+    "id": 9,
+    "image_url": "images/lost-item/41945d88-1099-41f6-8b8a-9f941b7c6550.webp",
+    "is_returned": false,
+    "created_at": "2026-10-16T19:38:32.345008+09:00",
+    "language_code": "EN",
+    "title": "White wireless earbud charging case",
+    "description": "No earbuds",
+    "found_location": "HUFS student council booth"
+  },
+  "/lost-items?size=100": {
+    "items": [
+      {
+        "id": 26,
+        "image_url": "images/lost-item/980c1f67-cf3e-4370-a353-ad27ab59cada.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:11:54.032626+09:00",
+        "language_code": "EN",
+        "title": "white comb(foldable)",
+        "description": "",
+        "found_location": "HUFS student council booth"
+      },
+      {
+        "id": 25,
+        "image_url": "images/lost-item/3f76f4d6-c218-4e79-916b-5e8443c76b95.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:11:21.905462+09:00",
+        "language_code": "EN",
+        "title": "white comb",
+        "description": "",
+        "found_location": "HUFS student council booth"
+      },
+      {
+        "id": 24,
+        "image_url": "images/lost-item/7dff38a6-64a5-4713-8978-d9c513e88a78.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:10:26.308478+09:00",
+        "language_code": "EN",
+        "title": "white doll",
+        "description": "",
+        "found_location": "HUFS student council booth"
+      },
+      {
+        "id": 23,
+        "image_url": "images/lost-item/5dff4041-96cd-4c1a-8167-816748234eb3.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:10:11.139710+09:00",
+        "language_code": "EN",
+        "title": "black doll",
+        "description": "",
+        "found_location": "HUFS student council booth"
+      },
+      {
+        "id": 22,
+        "image_url": "images/lost-item/da26c329-7df4-468e-8c6a-e319197fcd38.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:09:43.081255+09:00",
+        "language_code": "EN",
+        "title": "Canon camera and black case",
+        "description": "'DIGITAL IXUS55' is inscribed on the front of the camera.",
+        "found_location": "HUFS student council booth"
+      },
+      {
+        "id": 21,
+        "image_url": "images/lost-item/d2701bd0-4425-498e-96a8-f51bf5599cf3.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T20:07:54.741432+09:00",
+        "language_code": "EN",
+        "title": "black wallet",
+        "description": "",
+        "found_location": "HUFS student council booth"
+      },
+      {
+        "id": 17,
+        "image_url": "images/lost-item/0d358e5b-aa04-4ac3-bbd7-15cc835c9504.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:59:05.564557+09:00",
+        "language_code": "EN",
+        "title": "Yves Saint Laurent lip stick",
+        "description": "",
+        "found_location": "HUFS student council booth"
+      },
+      {
+        "id": 16,
+        "image_url": "images/lost-item/ebc02594-f4d1-471b-a613-a2be8c9f4494.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:57:05.711859+09:00",
+        "language_code": "EN",
+        "title": "FWEE lip tint",
+        "description": "",
+        "found_location": "HUFS student council booth"
+      },
+      {
+        "id": 15,
+        "image_url": "images/lost-item/0a70f06f-4329-45e7-b655-3a329a4ba9b5.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:55:40.381053+09:00",
+        "language_code": "EN",
+        "title": "Yellow vape",
+        "description": "\"GUAVA PASSION FRUIT\" are printed on the side.",
+        "found_location": "HUFS student council booth"
+      },
+      {
+        "id": 14,
+        "image_url": "images/lost-item/e7893dd5-4ff5-48f2-8bb4-f2233ff31d0c.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:51:39.637733+09:00",
+        "language_code": "EN",
+        "title": "ELFBAR vape",
+        "description": "'Ice King PINEAPPLE ICE' printed on the behind",
+        "found_location": "HUFS student council booth"
+      },
+      {
+        "id": 13,
+        "image_url": "images/lost-item/6f3b290d-9edd-4037-8e05-6c450a426965.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:50:19.135030+09:00",
+        "language_code": "EN",
+        "title": "Silver vape",
+        "description": "'APEX' printed on the bottom right",
+        "found_location": "HUFS student council booth"
+      },
+      {
+        "id": 11,
+        "image_url": "images/lost-item/f3bf7841-1e3f-4dab-8461-c3114ff9d3fd.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:43:20.464907+09:00",
+        "language_code": "EN",
+        "title": "Light orange wireless earbuds with charging case",
+        "description": "Both left and right earbuds included",
+        "found_location": "HUFS student council booth"
+      },
+      {
+        "id": 10,
+        "image_url": "images/lost-item/e551c7a6-a2ae-419a-bfa1-86e54f5564c8.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:40:45.142052+09:00",
+        "language_code": "EN",
+        "title": "White wireless earbuds with charging case",
+        "description": "Both left and right earbuds included",
+        "found_location": "HUFS student council booth"
+      },
+      {
+        "id": 9,
+        "image_url": "images/lost-item/41945d88-1099-41f6-8b8a-9f941b7c6550.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:38:32.345008+09:00",
+        "language_code": "EN",
+        "title": "White wireless earbud charging case",
+        "description": "No earbuds",
+        "found_location": "HUFS student council booth"
+      },
+      {
+        "id": 8,
+        "image_url": "images/lost-item/b3d55699-9424-4d65-9d9a-8bd21662f318.webp",
+        "is_returned": false,
+        "created_at": "2026-10-16T19:37:51.658433+09:00",
+        "language_code": "EN",
+        "title": "White wireless earbud (left)",
+        "description": "",
+        "found_location": "HUFS student council booth"
+      }
+    ],
+    "page": 1,
+    "size": 100,
+    "total": 15
+  },
   "/notices/10": {
     "id": 10,
     "type": "PERMANENT",
