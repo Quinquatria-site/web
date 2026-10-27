@@ -13,6 +13,14 @@ const nextConfig: NextConfig = {
       { source: API_TRAP_SOURCE, destination: FOCUS_PATH, permanent: false },
     ]
   },
+  // 아카이브라 public 사진·영상이 바뀌지 않아, 다시 방문해도 서버에 묻지 않게 한다. 바꿀 일이 생기면 파일 이름을 바꾼다
+  async headers() {
+    const immutable = [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }]
+    return [
+      { source: '/images/:path*', headers: immutable },
+      { source: '/:file([^/]+\\.(?:webp|jpg|mp4))', headers: immutable },
+    ]
+  },
 }
 
 export default nextConfig
